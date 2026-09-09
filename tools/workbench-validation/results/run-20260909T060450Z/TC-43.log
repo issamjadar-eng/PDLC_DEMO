@@ -1,0 +1,68 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260909T060450Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-43 — Every imported QMS template that project documents instantiate has validation evidence
+purpose:     DEPLOYMENT check and inventory: joins the imported QMS registry with the form-conformance results. Passes when the inventory generates and every template that project documents instantiate was exercised by the conformance check; the inventory itself lists unused templates and doctypes with no imported template so the gaps stay visible.
+approach:    Runs qms_coverage.py, which runs the conformance checker over the DHF trees and writes the coverage JSON the report and console render; exit 0 only when no instantiated template lacks evidence.
+UUT:         medtech-docs@38
+user needs:  WUN-30, WUN-01
+scope:       deployment · method: scripted · requires_deployment: content.qms_forms, content.dhf_trees
+endpoint:    none
+protocol:    —
+test source: .claude/skills/medtech-docs/scripts/qms_coverage.py (pinned copy: tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-43)
+command:     python3 .claude/skills/medtech-docs/scripts/qms_coverage.py --root . --json-out tools/workbench-validation/qms-coverage.json docs/project/dhfs
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+tooling:     —
+timeout_s:   300
+started:     2026-09-09T06:05:31Z (UTC)
+exit_code:   0
+duration_s:  0.47
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+qms-coverage: 27 templates/forms imported — 19 instantiated, 19 tested, 0 failing, 8 unused; 45 procedures (30 documents governed by procedure); 241 documents — 177 template-governed, 34 without template
+ID               Type  Inst Tested Pass Fail  Status            Title
+GL-FORM-DC-001   FORM     3   True    3    0  covered           Design Review Record
+GL-FORM-DC-002   FORM     0  False    0    0  unused            Phase-Gate Review Checklist
+GL-FORM-PM-001   FORM     3   True    3    0  covered           Complaint Form
+GL-FORM-QM-001   FORM     4   True    4    0  covered           CAPA Form
+GL-FORM-QM-002   FORM     0  False    0    0  unused            Management Review Minutes
+GL-FORM-QM-003   FORM     0  False    0    0  unused            Training Record
+GL-FORM-QM-004   FORM     0  False    0    0  unused            Internal Audit Plan
+GL-FORM-QM-005   FORM     0  False    0    0  unused            Document Change Request
+GL-FORM-RA-001   FORM     0  False    0    0  unused            Submission Package Assembly & Sign-off Record
+GL-FORM-SP-001   FORM     0  False    0    0  unused            Supplier Qualification Package
+GL-FORM-SP-002   FORM     0  False    0    0  unused            Nonconformance Report
+GL-TMP-DC-001    TMP     10   True   10    0  covered           Design and Development Plan
+GL-TMP-DC-002    TMP     13   True   13    0  covered           Design Input Specification
+GL-TMP-DC-003    TMP     13   True   13    0  covered           Design Verification Protocol & Report
+GL-TMP-DC-004    TMP     10   True   10    0  covered           Design Validation Protocol & Report
+GL-TMP-PM-001    TMP     13   True   13    0  covered           PMS Plan
+GL-TMP-RM-001    TMP     10   True   10    0  covered           Risk Management Plan
+GL-TMP-RM-002    TMP     10   True   10    0  covered           Risk Management Report
+GL-TMP-RM-003    TMP     10   True   10    0  covered           Hazard Analysis Worksheet
+GL-TMP-RM-004    TMP      6   True    6    0  covered           FMEA Worksheet
+GL-TMP-SW-001    TMP     10   True   10    0  covered           Software Development Plan
+GL-TMP-SW-002    TMP     20   True   20    0  covered           Cybersecurity Plan
+GL-TMP-UC-001    TMP     10   True   10    0  covered           Use Specification
+GL-TMP-UC-002    TMP      1   True    1    0  covered           Usability Engineering File
+GL-TMP-UC-003    TMP      3   True    3    0  covered           Summative Usability Evaluation Protocol & Report
+GL-TMP-UC-004    TMP     18   True   18    0  covered           Clinical Evaluation Plan
+GL-TMP-UC-005    TMP     10   True   10    0  covered           Clinical Evaluation Report
+documents without a structural template:
+  architecture                   3  no template imported
+  benefit-risk-analysis          5  no template imported
+  complaints-ledger              1  no template imported
+  literature-search-strategy     5  no template imported
+  pmcf-plan                      5  no template imported
+  pmcf-study                     5  no template imported
+  requirements                   3  no template imported
+  risk-management                1  no reference (template GL-TMP-RM-001 exists)
+  trace-matrix                   2  no template imported
+  user-needs                     3  no template imported
+  vnv                            1  no template imported
+written: tools/workbench-validation/qms-coverage.json
+

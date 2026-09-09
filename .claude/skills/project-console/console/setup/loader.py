@@ -1034,8 +1034,10 @@ def load_registries(repo_root: Path, project: dict) -> dict:
 # Aggregate
 # ---------------------------------------------------------------------------
 
-def load_setup(repo_root: Path) -> dict:
-    """Everything the settings shell renders, in one defensive call."""
+def load_setup(repo_root: Path, run_id: str | None = None) -> dict:
+    """Everything the settings shell renders, in one defensive call.
+    `run_id` selects which workbench-validation run revision the Validation
+    section shows (default: latest)."""
     project, warnings = _load_project_yml(repo_root)
     connectors = load_connectors(repo_root)
     return {
@@ -1052,16 +1054,79 @@ def load_setup(repo_root: Path) -> dict:
         "cli": load_cli_tooling(repo_root),
         "appearance": _load_appearance(),
         "environment": _load_environment(repo_root),
-        "workbench": load_workbench_validation(repo_root),
+        "workbench": load_workbench_validation(repo_root, run_id=run_id),
         "warnings": warnings,
     }
 
 
 WORKBENCH_SIDECAR_REL = "tools/workbench-validation/workbench-validation-index.json"
 WORKBENCH_RUNNER_REL = ".claude/skills/workbench-validation/scripts/run_validation.py"
+WORKBENCH_EXPORTER_REL = ".claude/skills/workbench-validation/scripts/export_package.py"
+WORKBENCH_RESULTS_REL = "tools/workbench-validation/results"
+WORKBENCH_INDEX_REL = "tools/workbench-validation/results/index.json"
+WORKBENCH_EXPORT_FORMATS = {
+    "docx": ("application/vnd.openxmlformats-officedocument.wordprocessingml.document", "docx"),
+    "pdf": ("application/pdf", "pdf"),
+    "md": ("text/markdown", "md"),
+}
 
 
-def load_workbench_validation(repo_root: Path) -> dict:
+def _run_verdict_from_summary(summary: dict) -> str:
+    bad = ("FAIL", "ERROR", "NOT-EXECUTED")
+    return "FAIL" if any(summary.get(k) for k in bad) else "PASS"
+
+
+def load_workbench_runs(repo_root: Path) -> list:
+    """Roster of recorded validation runs, newest first. Reads the skill's
+    `results/index.json` when present; otherwise derives the roster from the
+    per-run `results/run-*.json` files so older skill versions still list."""
+    results = repo_root / WORKBENCH_RESULTS_REL
+    index = repo_root / WORKBENCH_INDEX_REL
+    rows: list = []
+    if index.is_file():
+        try:
+            data = json.loads(index.read_text(encoding="utf-8"))
+            if isinstance(data, dict):
+                data = data.get("runs") or []
+            rows = [r for r in data if isinstance(r, dict) and r.get("run_id")]
+        except (OSError, json.JSONDecodeError):
+            rows = []
+    if not rows and results.is_dir():
+        for f in results.glob("run-*.json"):
+            try:
+                d = json.loads(f.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            env = d.get("environment") or {}
+            summary = d.get("summary") or {}
+            rid = d.get("run_id") or f.stem
+            rows.append({
+                "run_id": rid,
+                "started": d.get("started"),
+                "finished": d.get("finished"),
+                "verdict": _run_verdict_from_summary(summary),
+                "summary": summary,
+                "partial": bool(d.get("partial")),
+                "invoked_via": d.get("invoked_via", "cli"),
+                "schema_version": d.get("schema_version"),
+                "git_sha_short": env.get("git_sha_short"),
+                "git_dirty": env.get("git_dirty"),
+                "model_id": env.get("model_id"),
+                "sidecar": f"{WORKBENCH_RESULTS_REL}/{rid}/sidecar.json",
+                "report": f"{WORKBENCH_RESULTS_REL}/{rid}/validation-report.md",
+                "derived": True,
+            })
+    for r in rows:
+        summ = r.get("summary") or {}
+        r["total_cases"] = sum(v for v in summ.values() if isinstance(v, int))
+        r["pass_cases"] = summ.get("PASS", 0)
+        st = str(r.get("started") or "")
+        r["started_label"] = (st[:10] + " " + st[11:16] + " UTC") if len(st) >= 16 else (st or "—")
+    rows.sort(key=lambda r: (str(r.get("started") or ""), r.get("run_id") or ""), reverse=True)
+    return rows
+
+
+def load_workbench_validation(repo_root: Path, run_id: str | None = None) -> dict:
     """Setup → Workbench Validation: tool-validation posture of the .claude
     toolchain itself. Pure consumer of the workbench-validation skill's sidecar
     (needs × tests × report verdicts); the console computes nothing. Degrades to
@@ -1070,13 +1135,34 @@ def load_workbench_validation(repo_root: Path) -> dict:
     validation has been run yet."""
     sidecar = repo_root / WORKBENCH_SIDECAR_REL
     skill_installed = (repo_root / WORKBENCH_RUNNER_REL).is_file()
+    runs = load_workbench_runs(repo_root)
+    latest_id = runs[0]["run_id"] if runs else None
+    selected = None
+    if run_id:
+        selected = next((r for r in runs if r["run_id"] == run_id), None)
+    if selected is None:
+        selected = runs[0] if runs else None
+    is_latest = bool(selected) and selected["run_id"] == latest_id
     out = {
-        "available": skill_installed or sidecar.is_file(),
+        "available": skill_installed or sidecar.is_file() or bool(runs),
         "skill_installed": skill_installed,
+        "exporter_installed": (repo_root / WORKBENCH_EXPORTER_REL).is_file(),
         "sidecar": WORKBENCH_SIDECAR_REL,
         "data": None,
         "stale": None,
         "head_sha": None,
+        # Run-revision selection: the roster of recorded runs (newest first),
+        # which one this view shows, and whether it is the latest. A non-latest
+        # revision reads its own per-run sidecar; a missing per-run sidecar is
+        # reported, never silently substituted (only the latest may fall back
+        # to the main sidecar, which is by construction the latest run's).
+        "runs": runs,
+        "selected_run": selected,
+        "selected_run_id": selected["run_id"] if selected else None,
+        "is_latest": is_latest,
+        "unknown_run": bool(run_id) and selected is not None and selected["run_id"] != run_id,
+        "revision_notice": None,
+        "export_formats": list(WORKBENCH_EXPORT_FORMATS),
         # Named differences between the recorded environment and the repo as
         # it is now (D8): "stale" is no longer a single SHA comparison but a
         # list a reviewer can read — commit moved, which skills changed
@@ -1086,13 +1172,27 @@ def load_workbench_validation(repo_root: Path) -> dict:
         "dirty_at_run": None,
         "model_captured": None,
     }
-    if not sidecar.is_file():
+    source = None
+    if selected:
+        per_run = repo_root / str(selected.get("sidecar") or f"{WORKBENCH_RESULTS_REL}/{selected['run_id']}/sidecar.json")
+        if per_run.is_file():
+            source = per_run
+        elif is_latest and sidecar.is_file():
+            source = sidecar
+        else:
+            out["revision_notice"] = (
+                f"Revision {selected['run_id']} has no rendered sidecar yet — run "
+                "`/workbench-validation render --all-runs` to render every recorded run.")
+    elif sidecar.is_file():
+        source = sidecar
+    if source is None:
         return out
     try:
-        out["data"] = json.loads(sidecar.read_text(encoding="utf-8"))
+        out["data"] = json.loads(source.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         out["data"] = None
         return out
+    out["data_source"] = str(source.relative_to(repo_root)) if source.is_relative_to(repo_root) else str(source)
     baseline = out["data"].get("baseline") or {}
     env = out["data"].get("environment") or {}
     out["dirty_at_run"] = bool(baseline.get("git_dirty"))

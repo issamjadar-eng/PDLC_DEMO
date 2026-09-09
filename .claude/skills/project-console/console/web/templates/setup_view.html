@@ -1140,12 +1140,39 @@
         Validates the toolchain, not the device.
       </p>
 
+      {% if wb.runs %}
+      <div class="su-actions" id="su-wb-toolbar" style="margin:8px 0 14px;align-items:center;flex-wrap:wrap;gap:8px">
+        <label class="su-type" for="su-wb-run-select" style="margin-right:2px">Revision</label>
+        <select id="su-wb-run-select" onchange="suWbSelectRun(this.value)"
+                title="Every recorded validation run is a revision of the report; pick one to view its report data and export it"
+                style="min-width:340px;padding:6px 10px;border:1px solid var(--border,rgba(255,255,255,.12));border-radius:6px;background:transparent;color:var(--body-text,#e6e9ef);font-size:.85rem">
+          {% for r in wb.runs %}
+          <option value="{{ r.run_id }}" {{ 'selected' if r.run_id == wb.selected_run_id }}>{{ r.run_id }} · {{ r.started_label }} · {{ r.verdict }} · {{ r.pass_cases }}/{{ r.total_cases }} PASS{{ ' · partial' if r.partial }}</option>
+          {% endfor %}
+        </select>
+        {% if wb.is_latest %}<span class="su-badge info" title="the most recent recorded run">latest</span>{% else %}<span class="su-badge warning" title="an earlier recorded run; re-running always produces a new latest revision">revision</span>{% endif %}
+        {% if wb.unknown_run %}<span class="su-badge warning" title="the requested run id is not in the roster; showing the latest">unknown run requested</span>{% endif %}
+        {% if wb.selected_run_id %}
+        <span style="flex-basis:100%;height:0"></span>
+        <span class="su-type">Export this revision with every evidence appendix:</span>
+        {% if wb.exporter_installed %}
+        <a class="su-btn" href="/setup/workbench/export?run={{ wb.selected_run_id }}&format=docx" download title="Word package — report + pinned manifest, environment, protocols and records, per-case evidence logs, pinned sources, QMS coverage">Export Word</a>
+        <a class="su-btn" href="/setup/workbench/export?run={{ wb.selected_run_id }}&format=pdf" download title="PDF package (same contents; needs pandoc + LibreOffice on the console host)">Export PDF</a>
+        <a class="su-btn" href="/setup/workbench/export?run={{ wb.selected_run_id }}&format=md" download title="Markdown package (same contents, no conversion)">Export Markdown</a>
+        {% else %}<span class="su-badge warning" title="export_package.py not found under .claude/skills/workbench-validation/scripts/">exporter not installed</span>{% endif %}
+        {% endif %}
+      </div>
+      {% endif %}
+      {% if wb.revision_notice %}<div class="su-warn">{{ wb.revision_notice }}</div>{% endif %}
+
       {% if not wbd %}
-      <div class="su-list"><div class="su-empty">No validation run recorded yet — run one below,
-        or in a terminal: <code>python3 .claude/skills/workbench-validation/scripts/run_validation.py --root . --render</code></div></div>
+      <div class="su-list"><div class="su-empty">{% if wb.runs %}No rendered report data for this revision.{% else %}No validation run recorded yet — run one below,
+        or in a terminal: <code>python3 .claude/skills/workbench-validation/scripts/run_validation.py --root . --render</code>{% endif %}</div></div>
+      {% if wb.is_latest or not wb.runs %}
       <div class="su-actions" style="margin-top:14px">
         <button class="su-btn" id="su-wb-run" onclick="suWbRender()">Run first validation (~1–2 min)</button>
       </div>
+      {% endif %}
       {% else %}
       {% if wbd.banner %}<div class="su-warn">{{ wbd.banner }}</div>{% endif %}
       {% if wb.stale %}
@@ -1263,11 +1290,17 @@
       </details>
       {% endif %}
 
+      {% if not wb.is_latest %}
+      <p class="su-sub" style="margin-top:10px"><strong>Viewing an earlier revision</strong>{% if wb.data_source %} ({{ wb.data_source }}){% endif %}.
+        Re-running always produces a new latest revision, so the Re-run control is available on the latest revision only.</p>
+      {% endif %}
       <div class="su-actions" style="margin-top:14px;align-items:center;flex-wrap:wrap;gap:8px">
+        {% if wb.is_latest %}
         <input id="su-wb-model" type="text" placeholder="model id (for a run of record)" value="{{ wbd.baseline.model_id or '' }}"
                title="The model operating the workbench for this run. The harness does not expose it, so state it here; without it the run is recorded as 'model not captured' (a debugging run, not a run of record)."
                style="min-width:220px;padding:6px 10px;border:1px solid var(--border,rgba(255,255,255,.12));border-radius:6px;background:transparent;color:var(--body-text,#e6e9ef);font-size:.85rem">
         <button class="su-btn" id="su-wb-run" onclick="suWbRender()">Re-run validation (~1–2 min)</button>
+        {% endif %}
         {% if wbd.report_path %}<a class="su-btn" href="/documents#path={{ wbd.report_path }}" target="_blank" rel="noopener">Open validation report ↗</a>{% endif %}
         {% if wbd.plan_path %}<a class="su-btn" href="/documents#path={{ wbd.plan_path }}" target="_blank" rel="noopener">Open validation plan ↗</a>{% endif %}
       </div>
@@ -1588,6 +1621,10 @@ async function suEnvCheck() {
 function suWbTog(id) {
   var el = document.getElementById(id);
   if (el) el.style.display = (el.style.display === 'none' || !el.style.display) ? 'block' : 'none';
+}
+function suWbSelectRun(id) {
+  if (!id) return;
+  window.location.href = '/setup?run=' + encodeURIComponent(id) + '#sec-workbench';
 }
 async function suWbRender() {
   var btn = document.getElementById('su-wb-run');

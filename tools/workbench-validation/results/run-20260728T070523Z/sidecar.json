@@ -1,0 +1,1289 @@
+{
+  "schema_version": "2.0",
+  "generated": "2026-09-09T06:00:19Z",
+  "title": "Workbench Validation Report \u2014 PDLC_DEMO AI Workbench",
+  "banner": "_Demo sample data \u2014 not for clinical use._ Illustrative of method only \u2014 not a regulatory claim; [VERIFY]-flagged clauses unchecked against licensed source text.",
+  "plan_path": "docs/project/workbench-validation/validation-plan.md",
+  "report_path": "tools/workbench-validation/validation-report.md",
+  "manifest_path": "docs/project/workbench-validation/validation.yml",
+  "run": {
+    "run_id": "run-20260728T070523Z",
+    "started": "2026-07-28T07:05:23Z",
+    "finished": "2026-07-28T07:05:39Z",
+    "duration_s": 15.6,
+    "partial": false,
+    "invoked_via": "cli",
+    "operator": {},
+    "pinned_manifest": null
+  },
+  "baseline": {
+    "git_sha_short": "1e2e6d4",
+    "git_branch": "main",
+    "git_dirty": true,
+    "git_dirty_count": 0,
+    "skills_total": 38,
+    "hooks_total": 14,
+    "model_id": null,
+    "model_captured": false,
+    "harness_version": null,
+    "skill_version_mismatches": []
+  },
+  "environment": {
+    "git_sha": "1e2e6d4a14d69371ce5a077fcc3581e759feef05",
+    "git_sha_short": "1e2e6d4",
+    "git_branch": "main",
+    "git_dirty": true,
+    "python": "3.14.5",
+    "platform": "darwin",
+    "model_id": null,
+    "hooks_installed": [
+      "block-direct-conversion.sh",
+      "check-active-task.sh",
+      "checkpoint-recover.sh",
+      "register-hook.sh",
+      "security-assert.sh",
+      "session-briefing.sh",
+      "session-cleanup.sh",
+      "session-env.sh",
+      "skill-creator-cleanup.sh",
+      "skill-creator-watch.py",
+      "task-activate.sh",
+      "taxonomy-freshness.sh",
+      "usage-metrics-publish.sh",
+      "usage-metrics-refresh.sh"
+    ],
+    "skills": {
+      "advisors": {
+        "version": "12",
+        "updated": "2026-07-22"
+      },
+      "best-practices": {
+        "version": "15",
+        "updated": "2026-04-27"
+      },
+      "change-control": {
+        "version_file": "0.14.0"
+      },
+      "commercial": {
+        "version": "14",
+        "updated": "2026-07-27"
+      },
+      "corpus": {
+        "version": "4",
+        "updated": "2026-07-27"
+      },
+      "dhf-manifest": {
+        "version": "15",
+        "updated": "2026-07-22"
+      },
+      "digest": {
+        "version": "9",
+        "updated": "2026-04-23",
+        "version_file": "1.3.0"
+      },
+      "docflow": {
+        "version": "36",
+        "updated": "2026-07-01"
+      },
+      "docx": {},
+      "explain": {
+        "version": "3",
+        "updated": "2026-06-03"
+      },
+      "file-locator": {
+        "version": "3",
+        "updated": "2026-06-10"
+      },
+      "frontend-design": {
+        "version": "1",
+        "updated": "2026-06-01"
+      },
+      "frontend-slides": {
+        "version": "0.4.1",
+        "updated": "2026-05-17"
+      },
+      "gap-analysis": {
+        "version": "7",
+        "updated": "2026-06-05"
+      },
+      "jira-pull": {
+        "version": "1",
+        "updated": "2026-05-03"
+      },
+      "knowledge-pack-export": {
+        "version": "5",
+        "updated": "2026-05-30"
+      },
+      "lessons": {
+        "version": "4",
+        "updated": "2026-04-23"
+      },
+      "md-deck": {
+        "version": "0.6.3",
+        "updated": "2026-07-21"
+      },
+      "medtech-docs": {
+        "version": "35",
+        "updated": "2026-06-15"
+      },
+      "pdf": {},
+      "pptx": {},
+      "project-console": {
+        "version": "1.58.0",
+        "updated": "2026-07-27",
+        "version_file": "1.58.0"
+      },
+      "red-team": {
+        "version": "1",
+        "updated": "2026-06-26"
+      },
+      "reference-audit": {
+        "version": "4",
+        "updated": "2026-06-11"
+      },
+      "regulatory-authoring": {
+        "version": "3",
+        "updated": "2026-07-08"
+      },
+      "secops": {
+        "version": "8",
+        "updated": "2026-05-13"
+      },
+      "skill-creator": {
+        "version": "8",
+        "updated": "2026"
+      },
+      "strategy": {
+        "version": "20",
+        "updated": "2026-06-15"
+      },
+      "submissions": {
+        "version_file": "6"
+      },
+      "sync-skills": {
+        "version": "8.4",
+        "updated": "2026-05-30"
+      },
+      "task": {
+        "version": "35",
+        "updated": "2026-07-27"
+      },
+      "trace-matrix": {
+        "version": "8",
+        "updated": "2026-05-12"
+      },
+      "tracker": {
+        "version": "14",
+        "updated": "2026-06-15"
+      },
+      "usage-metrics": {
+        "version": "12",
+        "updated": "2026-07-01"
+      },
+      "web-control": {
+        "version": "0.3.0",
+        "updated": "2026-05-02",
+        "version_file": "0.3.0"
+      },
+      "workbench-validation": {
+        "version": "3",
+        "updated": "2026-07-28",
+        "version_file": "3"
+      },
+      "writing-well": {
+        "version": "3",
+        "updated": "2026-06-25"
+      },
+      "xlsx": {}
+    }
+  },
+  "warnings": [],
+  "connections": {},
+  "deployment": {},
+  "qms_coverage": null,
+  "summary": {
+    "verdict": "FAIL",
+    "needs": {
+      "total": 30,
+      "fail": 20,
+      "pass": 10
+    },
+    "tests": {
+      "total": 16,
+      "PASS": 13,
+      "FAIL": 3
+    },
+    "tiers": {
+      "unspecified": 16
+    },
+    "scopes": {
+      "unspecified": 16
+    }
+  },
+  "needs": [
+    {
+      "id": "WUN-01",
+      "role": "DHF author",
+      "tier": "T1",
+      "class": "authoring",
+      "need": "produce a controlled document whose structure matches the governing QMS form, without me having to remember the form's rules",
+      "so_that": "my draft passes document control without structural rework",
+      "statement": "As a DHF author, I need the workbench to produce a controlled document whose structure matches the governing QMS form, without me having to remember the form's rules, so that my draft passes document control without structural rework.",
+      "implemented_by": "medtech-docs scaffolding + .taxonomy.yml doctype governance + regulatory-authoring workflow",
+      "verdict": "FAIL",
+      "reason": "no evidence \u2014 no test case maps to this need",
+      "tests": [
+        "TC-27",
+        "TC-28",
+        "TC-43"
+      ],
+      "strongest_evidence": "no mapped test case",
+      "process_controls": [
+        "doctype-governance rule: governing FORM/SOP/WI read before editing any taxonomy-governed doc",
+        "regulatory-authoring 3-stage check (lint + copy-editor + QA-conformance) on substantive edits",
+        "Mandatory human review before formal publish (change-control review tiers)"
+      ]
+    },
+    {
+      "id": "WUN-02",
+      "role": "Reviewer / approver",
+      "tier": "T1",
+      "class": "authoring",
+      "need": "show me which content in a controlled document came from the AI assistant and which a human wrote or approved",
+      "so_that": "I review AI-drafted content with the scrutiny it needs and sign off only on what a person has owned",
+      "statement": "As a reviewer / approver, I need the workbench to show me which content in a controlled document came from the AI assistant and which a human wrote or approved, so that I review AI-drafted content with the scrutiny it needs and sign off only on what a person has owned.",
+      "implemented_by": "AI-changelog metadata blocks + working-vs-formal document split + PR history",
+      "verdict": "FAIL",
+      "reason": "no evidence \u2014 no test case maps to this need",
+      "tests": [
+        "TC-29",
+        "TC-30"
+      ],
+      "strongest_evidence": "no mapped test case",
+      "process_controls": [
+        "ai-changelog rule: non-published AI-CHANGELOG metadata block on every AI-assisted controlled-doc edit",
+        "Working-markdown vs formal/ split per design-controls conventions",
+        "git/PR audit trail (PR-then-auto-merge workflow)"
+      ]
+    },
+    {
+      "id": "WUN-03",
+      "role": "Regulatory affairs lead",
+      "tier": "T1",
+      "class": "authoring",
+      "need": "visibly flag any claim it drafted but could not verify, never asserting it silently as fact",
+      "so_that": "an unverified regulatory claim can never reach a submission unnoticed",
+      "statement": "As a regulatory affairs lead, I need the workbench to visibly flag any claim it drafted but could not verify, never asserting it silently as fact, so that an unverified regulatory claim can never reach a submission unnoticed.",
+      "implemented_by": "[VERIFY] flag convention + no-fabrication policy + mandatory reference audit on citation-bearing edits",
+      "verdict": "FAIL",
+      "reason": "no evidence \u2014 no test case maps to this need",
+      "tests": [
+        "TC-25",
+        "TC-31",
+        "TC-44"
+      ],
+      "strongest_evidence": "no mapped test case",
+      "process_controls": [
+        "No-fabrication policy + [VERIFY] convention (CLAUDE.md operating notes)",
+        "reference-audit final-stage todo required for citation-bearing edits (regulatory-authoring rule \u00a76)"
+      ]
+    },
+    {
+      "id": "WUN-04",
+      "role": "DHF author",
+      "tier": "T1",
+      "class": "authoring",
+      "need": "catch mechanical writing defects (leaks, jargon, clutter, undefined terms) automatically and reliably before my document goes out for review",
+      "so_that": "reviewers spend their time on substance, not copy-editing",
+      "statement": "As a DHF author, I need the workbench to catch mechanical writing defects (leaks, jargon, clutter, undefined terms) automatically and reliably before my document goes out for review, so that reviewers spend their time on substance, not copy-editing.",
+      "implemented_by": "writing-well + regulatory-authoring deterministic lint scripts",
+      "verdict": "PASS",
+      "reason": "all 1 applicable case(s) passed",
+      "tests": [
+        "TC-05"
+      ],
+      "strongest_evidence": "tier unspecified (? scope, ?)",
+      "process_controls": []
+    },
+    {
+      "id": "WUN-05",
+      "role": "Quality engineer",
+      "tier": "T2",
+      "class": "audit",
+      "need": "give me a trustworthy answer on whether a cited standard, guidance, or internal source really says what the document claims",
+      "so_that": "citations in the controlled record survive an auditor checking them against the source text",
+      "statement": "As a quality engineer, I need the workbench to give me a trustworthy answer on whether a cited standard, guidance, or internal source really says what the document claims, so that citations in the controlled record survive an auditor checking them against the source text.",
+      "implemented_by": "reference-audit skill + citations advisor (LLM-driven verification against byte-correct sources)",
+      "verdict": "FAIL",
+      "reason": "no evidence \u2014 no test case maps to this need",
+      "tests": [
+        "TC-PROTO-CITATIONS"
+      ],
+      "strongest_evidence": "no mapped test case",
+      "process_controls": [
+        "Reference-audit runs are independent subagent passes; findings reports persisted under docs/_analysis/ with per-citation evidence for human spot-check"
+      ]
+    },
+    {
+      "id": "WUN-06",
+      "role": "Quality engineer",
+      "tier": "T2",
+      "class": "audit",
+      "need": "tell me from our own audit run which required design-history documents are missing, unmapped or out of place against the declared structure",
+      "so_that": "we find documentation gaps before an external auditor does",
+      "statement": "As a quality engineer, I need the workbench to tell me from our own audit run which required design-history documents are missing, unmapped or out of place against the declared structure, so that we find documentation gaps before an external auditor does.",
+      "implemented_by": "dhf-manifest discovery index + coverage audit (validate.py / audit-coverage.py)",
+      "verdict": "PASS",
+      "reason": "all 1 applicable case(s) passed",
+      "tests": [
+        "TC-06"
+      ],
+      "strongest_evidence": "tier unspecified (? scope, ?)",
+      "process_controls": []
+    },
+    {
+      "id": "WUN-07",
+      "role": "Program lead",
+      "tier": "T1",
+      "class": "gates",
+      "need": "refuse any change to a project file that is not anchored to a tracked task",
+      "so_that": "every change is traceable to why it was made",
+      "statement": "As a program lead, I need the workbench to refuse any change to a project file that is not anchored to a tracked task, so that every change is traceable to why it was made.",
+      "implemented_by": "task-gate PreToolUse hook (check-active-task.sh) with exempt-path list",
+      "verdict": "PASS",
+      "reason": "all 1 applicable case(s) passed",
+      "tests": [
+        "TC-01"
+      ],
+      "strongest_evidence": "tier unspecified (? scope, ?)",
+      "process_controls": []
+    },
+    {
+      "id": "WUN-08",
+      "role": "Quality engineer",
+      "tier": "T1",
+      "class": "gates",
+      "need": "block document conversion outside the controlled pipeline unless someone deliberately and visibly overrides it",
+      "so_that": "every formal document has a known conversion provenance",
+      "statement": "As a quality engineer, I need the workbench to block document conversion outside the controlled pipeline unless someone deliberately and visibly overrides it, so that every formal document has a known conversion provenance.",
+      "implemented_by": "docflow conversion-block PreToolUse hook with .state/docflow-active override marker",
+      "verdict": "PASS",
+      "reason": "all 1 applicable case(s) passed",
+      "tests": [
+        "TC-02"
+      ],
+      "strongest_evidence": "tier unspecified (? scope, ?)",
+      "process_controls": []
+    },
+    {
+      "id": "WUN-09",
+      "role": "DHF author",
+      "tier": "T1",
+      "class": "renderers",
+      "need": "keep the auto-generated sections of my documents current with their source of truth without damaging the text I wrote by hand around them",
+      "so_that": "I can trust generated content and never lose my own",
+      "statement": "As a DHF author, I need the workbench to keep the auto-generated sections of my documents current with their source of truth without damaging the text I wrote by hand around them, so that I can trust generated content and never lose my own.",
+      "implemented_by": "sentinel-block renderer (render-sentinels.py) + advisor grounding renderer, both idempotent",
+      "verdict": "PASS",
+      "reason": "all 2 applicable case(s) passed",
+      "tests": [
+        "TC-03",
+        "TC-04"
+      ],
+      "strongest_evidence": "tier unspecified (? scope, ?)",
+      "process_controls": []
+    },
+    {
+      "id": "WUN-10",
+      "role": "Program lead",
+      "tier": "T2",
+      "class": "console",
+      "need": "show me the real, current state of the project in dashboards and decks, and tell me when what I am looking at is stale",
+      "so_that": "I make decisions on today's state, not last month's",
+      "statement": "As a program lead, I need the workbench to show me the real, current state of the project in dashboards and decks, and tell me when what I am looking at is stale, so that I make decisions on today's state, not last month's.",
+      "implemented_by": "project-console loaders/views (freshness badges) + md-deck rendering",
+      "verdict": "PASS",
+      "reason": "all 2 applicable case(s) passed",
+      "tests": [
+        "TC-11",
+        "TC-12"
+      ],
+      "strongest_evidence": "tier unspecified (? scope, ?)",
+      "process_controls": []
+    },
+    {
+      "id": "WUN-11",
+      "role": "Team member",
+      "tier": "T2",
+      "class": "config-control",
+      "need": "sync shared tooling without silently overwriting my local improvements, and show me at a glance whether I am in step with the team",
+      "so_that": "no one's work is lost to a sync and drift is visible before it causes confusion",
+      "statement": "As a team member, I need the workbench to sync shared tooling without silently overwriting my local improvements, and show me at a glance whether I am in step with the team, so that no one's work is lost to a sync and drift is visible before it causes confusion.",
+      "implemented_by": "sync-skills three-way merge analysis (LOCAL_AHEAD protection) + status action",
+      "verdict": "PASS",
+      "reason": "all 2 applicable case(s) passed",
+      "tests": [
+        "TC-13",
+        "TC-14"
+      ],
+      "strongest_evidence": "tier unspecified (? scope, ?)",
+      "process_controls": []
+    },
+    {
+      "id": "WUN-12",
+      "role": "Security officer",
+      "tier": "T2",
+      "class": "config-control",
+      "need": "screen every tool added to the workbench for hostile behavior and stop unapproved tools from operating unnoticed",
+      "so_that": "a compromised or unvetted skill cannot reach project data silently",
+      "statement": "As a security officer, I need the workbench to screen every tool added to the workbench for hostile behavior and stop unapproved tools from operating unnoticed, so that a compromised or unvetted skill cannot reach project data silently.",
+      "implemented_by": "secops static artifact scanner + project.yml security allowlists + SessionStart posture check",
+      "verdict": "FAIL",
+      "reason": "TC-15 FAIL (exit code 1)",
+      "tests": [
+        "TC-15",
+        "TC-19",
+        "TC-37"
+      ],
+      "strongest_evidence": "no passing evidence",
+      "process_controls": []
+    },
+    {
+      "id": "WUN-13",
+      "role": "Quality engineer",
+      "tier": "T2",
+      "class": "cross-cutting",
+      "need": "capture at any moment exactly which tool versions and environment the team is working with",
+      "so_that": "I know what configuration was validated and when to revalidate",
+      "statement": "As a quality engineer, I need the workbench to capture at any moment exactly which tool versions and environment the team is working with, so that I know what configuration was validated and when to revalidate.",
+      "implemented_by": "per-skill version frontmatter/VERSION files + the validation runner's per-run configuration baseline",
+      "verdict": "PASS",
+      "reason": "all 1 applicable case(s) passed",
+      "tests": [
+        "TC-16"
+      ],
+      "strongest_evidence": "tier unspecified (? scope, ?)",
+      "process_controls": []
+    },
+    {
+      "id": "WUN-14",
+      "role": "Auditor (internal / external)",
+      "tier": "T1",
+      "class": "cross-cutting",
+      "need": "let me trace, for any AI-assisted change to a controlled document, when it happened, under which task, and who approved it",
+      "so_that": "AI assistance never weakens the audit trail of the controlled record",
+      "statement": "As an auditor (internal / external), I need the workbench to let me trace, for any AI-assisted change to a controlled document, when it happened, under which task, and who approved it, so that AI assistance never weakens the audit trail of the controlled record.",
+      "implemented_by": "git/PR history + AI-changelog provenance rows + task-first workflow",
+      "verdict": "FAIL",
+      "reason": "no evidence \u2014 no test case maps to this need",
+      "tests": [
+        "TC-29",
+        "TC-30"
+      ],
+      "strongest_evidence": "no mapped test case",
+      "process_controls": [
+        "git-workflow rule: PR-then-auto-merge leaves a durable, linkable record for every push",
+        "ai-changelog rule: Date | Task | Summary provenance rows in controlled docs",
+        "Task-first workflow: every non-trivial change anchored to a task doc"
+      ]
+    },
+    {
+      "id": "WUN-15",
+      "role": "Document control specialist",
+      "tier": "T1",
+      "class": "authoring",
+      "need": "move documents between the repo and the formal systems (Confluence, Google Docs) without corrupting content, images, or review state in transit",
+      "so_that": "the controlled copy in the formal system is faithful to what was reviewed",
+      "statement": "As a document control specialist, I need the workbench to move documents between the repo and the formal systems (Confluence, Google Docs) without corrupting content, images, or review state in transit, so that the controlled copy in the formal system is faithful to what was reviewed.",
+      "implemented_by": "change-control adopt/publish pipeline + review tiers (frozen-state hook currently a stub \u2014 see known anomalies)",
+      "verdict": "FAIL",
+      "reason": "TC-10 FAIL (exit code 1)",
+      "tests": [
+        "TC-10",
+        "TC-17",
+        "TC-20",
+        "TC-21"
+      ],
+      "strongest_evidence": "no passing evidence",
+      "process_controls": []
+    },
+    {
+      "id": "WUN-16",
+      "role": "Document control specialist",
+      "tier": "T1",
+      "class": "cross-cutting",
+      "need": "prove that adopting and publishing a controlled page works against our real Confluence and Jira when the workbench is connected to them, not only against a simulation",
+      "so_that": "we rely on integration evidence from the actual systems of record, not a stand-in",
+      "statement": "As a document control specialist, I need the workbench to prove that adopting and publishing a controlled page works against our real Confluence and Jira when the workbench is connected to them, not only against a simulation, so that we rely on integration evidence from the actual systems of record, not a stand-in.",
+      "implemented_by": "change-control adopt/publish over the Atlassian MCP server (agent-mediated) + REST/cookie bridge; jira-pull search over MCP",
+      "verdict": "FAIL",
+      "reason": "no evidence \u2014 no test case maps to this need",
+      "tests": [
+        "TC-17",
+        "TC-18",
+        "TC-21",
+        "TC-PROTO-LIVE-MCP"
+      ],
+      "strongest_evidence": "no mapped test case",
+      "process_controls": [
+        "MCP-mediated paths cannot be driven from pytest \u2014 the agent makes the call. They are validated by recorded live probes (scripted transcript + expected outcome; the change-control v0.6 probe set is the pattern), re-run whenever a deployment declares a connection.",
+        "The REST/cookie-bridge halves of the same paths have scripted `live` cases (TC-17, TC-18, TC-21) that execute only when `connections:` declares the endpoint; here they report NOT-APPLICABLE."
+      ]
+    },
+    {
+      "id": "WUN-17",
+      "role": "Marketing / communications lead",
+      "tier": "T1",
+      "class": "renderers",
+      "need": "publish an external-facing document with every internal note, evidence block and draft metadata removed, and refuse to publish if any internal marker survives",
+      "so_that": "nothing meant for internal eyes ever leaves the building in a white paper, article or brief",
+      "statement": "As a marketing / communications lead, I need the workbench to publish an external-facing document with every internal note, evidence block and draft metadata removed, and refuse to publish if any internal marker survives, so that nothing meant for internal eyes ever leaves the building in a white paper, article or brief.",
+      "implemented_by": "public-doc strip_internal.py (verifies no marker survives; exit 2 on a surviving marker, 3 on a malformed block) + lint_doc.py",
+      "verdict": "FAIL",
+      "reason": "no evidence \u2014 no test case maps to this need",
+      "tests": [
+        "TC-22"
+      ],
+      "strongest_evidence": "no mapped test case",
+      "process_controls": []
+    },
+    {
+      "id": "WUN-18",
+      "role": "Program lead",
+      "tier": "T2",
+      "class": "renderers",
+      "need": "tell me when a knowledge pack shared with an external assistant platform has drifted from the repository documents it was built from, and refuse to build a pack whose sources are missing",
+      "so_that": "an outside team is never working from stale or contradicted project knowledge",
+      "statement": "As a program lead, I need the workbench to tell me when a knowledge pack shared with an external assistant platform has drifted from the repository documents it was built from, and refuse to build a pack whose sources are missing, so that an outside team is never working from stale or contradicted project knowledge.",
+      "implemented_by": "knowledge-pack-export build_pack.py validate + freshness_check.py",
+      "verdict": "FAIL",
+      "reason": "no evidence \u2014 no test case maps to this need",
+      "tests": [
+        "TC-33"
+      ],
+      "strongest_evidence": "no mapped test case",
+      "process_controls": [
+        "No knowledge pack exists in this project yet; `build_pack.py validate` and `freshness_check.py` are run by the pack owner before every publish once one does (the skill's template pack does not validate here \u2014 its example sources are absent \u2014 so no scripted case is claimed)"
+      ]
+    },
+    {
+      "id": "WUN-19",
+      "role": "Commercial analyst",
+      "tier": "T1",
+      "class": "audit",
+      "need": "block approval of a business answer whose numbers are not each traceable to a pinned data snapshot, assumption, derivation or config value, or whose snapshot is stale without a waiver",
+      "so_that": "no figure reaches leadership or a customer without a resolvable, current source",
+      "statement": "As a commercial analyst, I need the workbench to block approval of a business answer whose numbers are not each traceable to a pinned data snapshot, assumption, derivation or config value, or whose snapshot is stale without a waiver, so that no figure reaches leadership or a customer without a resolvable, current source.",
+      "implemented_by": "commercial.py lint (claim markers) + check (edition integrity, approved-lint, freshness, corpus chain) + corpus.py check",
+      "verdict": "FAIL",
+      "reason": "no evidence \u2014 no test case maps to this need",
+      "tests": [
+        "TC-32"
+      ],
+      "strongest_evidence": "no mapped test case",
+      "process_controls": [
+        "`commercial.py check` runs before any edition is approved; approval is blocked on a red lint or a stale pin without a waiver",
+        "Not a scripted case: the check judges project data state (snapshot age), which changes weekly \u2014 see the known anomaly recording its current result"
+      ]
+    },
+    {
+      "id": "WUN-20",
+      "role": "Regulatory affairs lead",
+      "tier": "T1",
+      "class": "gates",
+      "need": "stop a submission package from being marked transmittable while any cross-document inconsistency, unresolved [VERIFY] tag or scope violation remains",
+      "so_that": "what we send to the regulator is internally consistent and contains no unverified claim",
+      "statement": "As a regulatory affairs lead, I need the workbench to stop a submission package from being marked transmittable while any cross-document inconsistency, unresolved [VERIFY] tag or scope violation remains, so that what we send to the regulator is internally consistent and contains no unverified claim.",
+      "implemented_by": "submissions check_package_consistency.py (--transmit-gate), qsub_scope_lint.py, estar_lint.py, provenance reconciliation",
+      "verdict": "FAIL",
+      "reason": "no evidence \u2014 no test case maps to this need",
+      "tests": [
+        "TC-25",
+        "TC-31",
+        "TC-44"
+      ],
+      "strongest_evidence": "no mapped test case",
+      "process_controls": []
+    },
+    {
+      "id": "WUN-21",
+      "role": "Program lead",
+      "tier": "T2",
+      "class": "cross-cutting",
+      "need": "carry every strategy decision and lesson tagged in a task document into the shared strategy documents and lessons ledger, and tell me about any tagged block it could not harvest",
+      "so_that": "a decision made during task work is never silently lost between the task and the durable record",
+      "statement": "As a program lead, I need the workbench to carry every strategy decision and lesson tagged in a task document into the shared strategy documents and lessons ledger, and tell me about any tagged block it could not harvest, so that a decision made during task work is never silently lost between the task and the durable record.",
+      "implemented_by": "strategy scan/assemble/validate + lessons scan/assemble/validate (agent-executed procedures; no deterministic harvester script today)",
+      "verdict": "FAIL",
+      "reason": "no evidence \u2014 no test case maps to this need",
+      "tests": [
+        "TC-35",
+        "TC-36"
+      ],
+      "strongest_evidence": "no mapped test case",
+      "process_controls": [
+        "strategy validate + lessons validate run before a strategy document is declared assembled",
+        "/strategy diff and /lessons diff reviewed by the task owner at checkpoint (a prior task found malformed tags invisible to the harvester \u2014 the precedent this need exists for)"
+      ]
+    },
+    {
+      "id": "WUN-22",
+      "role": "Team member",
+      "tier": "T2",
+      "class": "gates",
+      "need": "start every session with an accurate security posture, a briefing that reflects the team's actual recent activity, and recovery of any task left uncheckpointed",
+      "so_that": "I never begin work on a wrong picture of the project or lose an interrupted task",
+      "statement": "As a team member, I need the workbench to start every session with an accurate security posture, a briefing that reflects the team's actual recent activity, and recovery of any task left uncheckpointed, so that I never begin work on a wrong picture of the project or lose an interrupted task.",
+      "implemented_by": "SessionStart hooks: security-assert.sh (16 checks), session-briefing.sh, checkpoint-recover.sh, taxonomy-freshness.sh; digest",
+      "verdict": "FAIL",
+      "reason": "no evidence \u2014 no test case maps to this need",
+      "tests": [
+        "TC-37",
+        "TC-38"
+      ],
+      "strongest_evidence": "no mapped test case",
+      "process_controls": [
+        "hooks registered in .claude/settings.json and listed in the validation environment record (hooks_installed)",
+        "SECOPS.md attestations on a 30-day cycle; security-assert.sh warns when stale"
+      ]
+    },
+    {
+      "id": "WUN-23",
+      "role": "Program lead",
+      "tier": "T3",
+      "class": "cross-cutting",
+      "need": "attribute the team's assistant spend to the task that was active when it was incurred, and never report a number it did not measure",
+      "so_that": "cost per task is real, and an unmeasured slot reads as unknown rather than zero",
+      "statement": "As a program lead, I need the workbench to attribute the team's assistant spend to the task that was active when it was incurred, and never report a number it did not measure, so that cost per task is real, and an unmeasured slot reads as unknown rather than zero.",
+      "implemented_by": "task-activate.sh activation ledger + usage-metrics collect.py / aggregate.py (null for unmeasured) + publish hook",
+      "verdict": "FAIL",
+      "reason": "no evidence \u2014 no test case maps to this need",
+      "tests": [
+        "TC-40"
+      ],
+      "strongest_evidence": "no mapped test case",
+      "process_controls": [
+        "collect/aggregate dry-run modes reviewed at setup; aggregation is idempotent over committed per-session JSON"
+      ]
+    },
+    {
+      "id": "WUN-24",
+      "role": "DHF author",
+      "tier": "T1",
+      "class": "authoring",
+      "need": "convert a formal document to markdown and back without losing content, images, cross-references or requirement metadata, and tell me when fidelity could not be verified",
+      "so_that": "the working copy and the controlled file always say the same thing",
+      "statement": "As a DHF author, I need the workbench to convert a formal document to markdown and back without losing content, images, cross-references or requirement metadata, and tell me when fidelity could not be verified, so that the working copy and the controlled file always say the same thing.",
+      "implemented_by": "docflow verify_conversion_fidelity.py + validate_phase7.py quality gates + round-trip frontmatter (scripts exist; no fixture-based regression suite yet)",
+      "verdict": "FAIL",
+      "reason": "no evidence \u2014 no test case maps to this need",
+      "tests": [
+        "TC-34"
+      ],
+      "strongest_evidence": "no mapped test case",
+      "process_controls": [
+        "docflow quality gates run inside every adopt/export; conversion outside the pipeline is blocked (WUN-08)"
+      ]
+    },
+    {
+      "id": "WUN-25",
+      "role": "Reviewer / approver",
+      "tier": "T1",
+      "class": "audit",
+      "need": "ground every advisor answer and every search result only in canonical project sources, never in audience explainers, personal work folders or exported packs",
+      "so_that": "advice and findings rest on the controlled record, not on a retelling of it",
+      "statement": "As a reviewer / approver, I need the workbench to ground every advisor answer and every search result only in canonical project sources, never in audience explainers, personal work folders or exported packs, so that advice and findings rest on the controlled record, not on a retelling of it.",
+      "implemented_by": "file-locator corpus_excludes (articles/**, **/_work/**, _scratch) + advisors three-tier grounding (render idempotence exercised by TC-04) + articles-not-canonical rule",
+      "verdict": "PASS",
+      "reason": "all 1 applicable case(s) passed",
+      "tests": [
+        "TC-04",
+        "TC-PROTO-GROUNDING",
+        "TC-41",
+        "TC-42"
+      ],
+      "strongest_evidence": "tier unspecified (? scope, ?)",
+      "process_controls": [
+        "file-locator audit / audit --coverage after every index rebuild",
+        "advisor GROUNDING blocks regenerated only by /advisors sync"
+      ]
+    },
+    {
+      "id": "WUN-26",
+      "role": "Quality engineer",
+      "tier": "T2",
+      "class": "cross-cutting",
+      "need": "trust the validation tooling itself \u2014 its runner, report and verdict rules \u2014 to the same standard as the tools it validates",
+      "so_that": "a PASS on this report is evidence, not an artifact of an untested checker",
+      "statement": "As a quality engineer, I need the workbench to trust the validation tooling itself \u2014 its runner, report and verdict rules \u2014 to the same standard as the tools it validates, so that a PASS on this report is evidence, not an artifact of an untested checker.",
+      "implemented_by": "workbench-validation tests/test_runner_renderer.py (need-format lint, frontmatter parsing, story composition, NOT-APPLICABLE verdicts, end-to-end synthetic manifest); every run pins manifest + test sources by sha256",
+      "verdict": "FAIL",
+      "reason": "no evidence \u2014 no test case maps to this need",
+      "tests": [
+        "TC-26"
+      ],
+      "strongest_evidence": "no mapped test case",
+      "process_controls": []
+    },
+    {
+      "id": "WUN-27",
+      "role": "Quality engineer",
+      "tier": "T1",
+      "class": "audit",
+      "need": "tell me when a trace link between user needs, design inputs, outputs and verification is broken or one-directional, or when the Jira mirror and the trace matrix disagree",
+      "so_that": "traceability gaps are found by our own run, not by the reviewer",
+      "statement": "As a quality engineer, I need the workbench to tell me when a trace link between user needs, design inputs, outputs and verification is broken or one-directional, or when the Jira mirror and the trace matrix disagree, so that traceability gaps are found by our own run, not by the reviewer.",
+      "implemented_by": "trace-matrix integrity checks + jira-pull drift rules (A/B/C categories)",
+      "verdict": "PASS",
+      "reason": "all 2 applicable case(s) passed",
+      "tests": [
+        "TC-07",
+        "TC-09",
+        "TC-18"
+      ],
+      "strongest_evidence": "tier unspecified (? scope, ?)",
+      "process_controls": []
+    },
+    {
+      "id": "WUN-28",
+      "role": "Program lead",
+      "tier": "T2",
+      "class": "renderers",
+      "need": "keep the submission tracker's rows, statuses and draft actions consistent with its own inventory, so that every row I can act on actually works",
+      "so_that": "the readiness dashboard the team steers by is not lying about what exists or what can be drafted",
+      "statement": "As a program lead, I need the workbench to keep the submission tracker's rows, statuses and draft actions consistent with its own inventory, so that every row I can act on actually works, so that the readiness dashboard the team steers by is not lying about what exists or what can be drafted.",
+      "implemented_by": "tracker generate / render / build-draft-context wiring (md-only rows merged into the inventory)",
+      "verdict": "FAIL",
+      "reason": "TC-08 FAIL (exit code 1)",
+      "tests": [
+        "TC-08"
+      ],
+      "strongest_evidence": "no passing evidence",
+      "process_controls": []
+    },
+    {
+      "id": "WUN-29",
+      "role": "Document control specialist",
+      "tier": "T1",
+      "class": "gates",
+      "need": "keep a frozen controlled document frozen \u2014 refuse edits to it from inside the workbench until it is formally unfrozen",
+      "so_that": "a document under formal review or released cannot drift while its approval is in flight",
+      "statement": "As a document control specialist, I need the workbench to keep a frozen controlled document frozen \u2014 refuse edits to it from inside the workbench until it is formally unfrozen, so that a document under formal review or released cannot drift while its approval is in flight.",
+      "implemented_by": "change-control lifecycle states + hooks/pre_tool_use_frozen.py (designed; currently a stub that exits 0 \u2014 see known anomalies)",
+      "verdict": "FAIL",
+      "reason": "no evidence \u2014 no test case maps to this need",
+      "tests": [
+        "TC-39"
+      ],
+      "strongest_evidence": "no mapped test case",
+      "process_controls": [
+        "Lifecycle state recorded in document frontmatter and checked by the publish path",
+        "Edit block is NOT enforced today (inert hook) \u2014 relies on process discipline; this need is deliberately kept visible as process-control until the hook is implemented and a gate case exists"
+      ]
+    },
+    {
+      "id": "WUN-30",
+      "role": "Quality engineer",
+      "tier": "T1",
+      "class": "audit",
+      "need": "show me, for every QMS template or form imported into this project, whether project documents use it and whether the validation exercised it \u2014 and tell me which project documents have no template imported for their type",
+      "so_that": "a template imported next quarter, or a doctype we never had a template for, cannot silently go unvalidated",
+      "statement": "As a quality engineer, I need the workbench to show me, for every QMS template or form imported into this project, whether project documents use it and whether the validation exercised it \u2014 and tell me which project documents have no template imported for their type, so that a template imported next quarter, or a doctype we never had a template for, cannot silently go unvalidated.",
+      "implemented_by": "medtech-docs qms_coverage.py (registry \u00d7 conformance results) \u2192 report \u00a73 coverage table, sidecar qms_coverage, console panel",
+      "verdict": "FAIL",
+      "reason": "no evidence \u2014 no test case maps to this need",
+      "tests": [
+        "TC-43"
+      ],
+      "strongest_evidence": "no mapped test case",
+      "process_controls": []
+    }
+  ],
+  "tests": [
+    {
+      "id": "TC-01",
+      "title": "Task gate block/permit matrix (63 scenarios)",
+      "wun": [
+        "WUN-07"
+      ],
+      "uut": [
+        "task"
+      ],
+      "uut_versions": {
+        "task": "35"
+      },
+      "status": "PASS",
+      "duration_s": 2.43,
+      "endpoint": "unspecified",
+      "connection": null,
+      "scope": "unspecified",
+      "method": "unspecified",
+      "requires_deployment": [],
+      "protocol": null,
+      "execution_record": null,
+      "reason": null,
+      "log": "tools/workbench-validation/results/run-20260728T070523Z/TC-01.log",
+      "cmd": "bash .claude/skills/task/tests/test-task-gate.sh",
+      "description": "Checks the safeguard that stops project files from being changed when no work task is active. Protected files must be blocked; everyday exempt files (task notes, settings) must still be allowed.",
+      "approach": "Runs the gate's own 63-scenario self-test in a clean environment: it simulates edit attempts with and without an active task and compares every block/allow decision against the expected one. Passes only when the suite reports all scenarios passed.",
+      "judged_by": "output must contain \"ALL TESTS PASSED\" and exit code 0",
+      "source": ".claude/skills/task/tests/test-task-gate.sh",
+      "pinned": null
+    },
+    {
+      "id": "TC-02",
+      "title": "Docflow conversion-block hook: denies gated verb + office extension (exit 2), permits benign command (exit 0)",
+      "wun": [
+        "WUN-08"
+      ],
+      "uut": [
+        "docflow"
+      ],
+      "uut_versions": {
+        "docflow": "36"
+      },
+      "status": "PASS",
+      "duration_s": 0.05,
+      "endpoint": "unspecified",
+      "connection": null,
+      "scope": "unspecified",
+      "method": "unspecified",
+      "requires_deployment": [],
+      "protocol": null,
+      "execution_record": null,
+      "reason": null,
+      "log": "tools/workbench-validation/results/run-20260728T070523Z/TC-02.log",
+      "cmd": "bash -c export CLAUDE_PROJECT_DIR=\"$PWD\"; H=.claude/skills/docflow/hooks/block-direct-conversion.sh; if [ -f .state/docflow-active ]; then echo 'bypass marker present - gate cannot be exercised'; exit 1; fi; printf '%s' '{\"tool_input\":{\"command\":\"pandoc report.docx -o report.md\"}}' | bash \"$H\" 2>/dev/null; d=$?; printf '%s' '{\"tool_input\":{\"command\":\"ls docs\"}}' | bash \"$H\" 2>/dev/null; a=$?; echo \"deny_exit=$d allow_exit=$a\"; [ \"$d\" -eq 2 ] && [ \"$a\" -eq 0 ]",
+      "description": "Checks the safeguard that prevents documents from being converted outside the controlled pipeline (which preserves images, structure, and traceability).",
+      "approach": "Feeds the gate two simulated commands: a direct document conversion (must be refused) and a harmless file listing (must be permitted), then verifies both decisions came back exactly as required.",
+      "judged_by": "exit code 0",
+      "source": "docs/project/workbench-validation/validation.yml",
+      "pinned": null
+    },
+    {
+      "id": "TC-03",
+      "title": "Sentinel renderer: idempotency + merge/preserve + guardrails (medtech-docs pytest)",
+      "wun": [
+        "WUN-09"
+      ],
+      "uut": [
+        "medtech-docs"
+      ],
+      "uut_versions": {
+        "medtech-docs": "35"
+      },
+      "status": "PASS",
+      "duration_s": 0.42,
+      "endpoint": "unspecified",
+      "connection": null,
+      "scope": "unspecified",
+      "method": "unspecified",
+      "requires_deployment": [],
+      "protocol": null,
+      "execution_record": null,
+      "reason": null,
+      "log": "tools/workbench-validation/results/run-20260728T070523Z/TC-03.log",
+      "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/medtech-docs/tests -q",
+      "description": "Checks the machinery that fills in auto-generated tables and trees inside project documents: generated content must always match the source of truth, and text written by hand around it must never be touched.",
+      "approach": "Runs the generator's regression suite: it renders known inputs repeatedly and verifies the output is identical every time (idempotent), preserves hand-written content, and refuses unsafe targets.",
+      "judged_by": "exit code 0",
+      "source": ".claude/skills/medtech-docs/tests",
+      "pinned": null
+    },
+    {
+      "id": "TC-04",
+      "title": "Advisor grounding renderer: loader + GROUNDING-block render + file-locator wiring (advisors pytest)",
+      "wun": [
+        "WUN-09"
+      ],
+      "uut": [
+        "advisors"
+      ],
+      "uut_versions": {
+        "advisors": "12"
+      },
+      "status": "PASS",
+      "duration_s": 0.35,
+      "endpoint": "unspecified",
+      "connection": null,
+      "scope": "unspecified",
+      "method": "unspecified",
+      "requires_deployment": [],
+      "protocol": null,
+      "execution_record": null,
+      "reason": null,
+      "log": "tools/workbench-validation/results/run-20260728T070523Z/TC-04.log",
+      "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/advisors/tests -q",
+      "description": "Checks the machinery that prepares each AI advisor's reading list (the project documents it grounds its answers in), so advisors always cite from the right sources.",
+      "approach": "Runs the advisor tooling's regression suite: it builds grounding blocks from known configurations and verifies the generated lists, file wiring, and search integration match the expected output.",
+      "judged_by": "exit code 0",
+      "source": ".claude/skills/advisors/tests",
+      "pinned": null
+    },
+    {
+      "id": "TC-05",
+      "title": "Prose/slop lint engines: deterministic detection behavior (writing-well self-suite)",
+      "wun": [
+        "WUN-04"
+      ],
+      "uut": [
+        "writing-well"
+      ],
+      "uut_versions": {
+        "writing-well": "3"
+      },
+      "status": "PASS",
+      "duration_s": 0.56,
+      "endpoint": "unspecified",
+      "connection": null,
+      "scope": "unspecified",
+      "method": "unspecified",
+      "requires_deployment": [],
+      "protocol": null,
+      "execution_record": null,
+      "reason": null,
+      "log": "tools/workbench-validation/results/run-20260728T070523Z/TC-05.log",
+      "cmd": "bash .claude/skills/writing-well/tests/run_tests.sh",
+      "description": "Checks the automatic proof-reading tools that flag clutter, jargon, hedging, and AI-sounding text before a document goes to review.",
+      "approach": "Runs the lint engines against fixture texts with known, planted defects and verifies each defect is detected and clean text is not flagged.",
+      "judged_by": "exit code 0",
+      "source": ".claude/skills/writing-well/tests/run_tests.sh",
+      "pinned": null
+    },
+    {
+      "id": "TC-06",
+      "title": "DHF-manifest discovery index (48 scenarios)",
+      "wun": [
+        "WUN-06"
+      ],
+      "uut": [
+        "dhf-manifest"
+      ],
+      "uut_versions": {
+        "dhf-manifest": "15"
+      },
+      "status": "PASS",
+      "duration_s": 1.51,
+      "endpoint": "unspecified",
+      "connection": null,
+      "scope": "unspecified",
+      "method": "unspecified",
+      "requires_deployment": [],
+      "protocol": null,
+      "execution_record": null,
+      "reason": null,
+      "log": "tools/workbench-validation/results/run-20260728T070523Z/TC-06.log",
+      "cmd": "bash .claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "description": "Checks the audit that compares the project's document set against the catalog of documents regulations require, so gaps are found by us and not by an auditor.",
+      "approach": "Runs the audit machinery's 48-scenario self-test: it builds document sets with known gaps and verifies each gap (and each satisfied obligation) is reported correctly.",
+      "judged_by": "exit code 0",
+      "source": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
+      "pinned": null
+    },
+    {
+      "id": "TC-07",
+      "title": "Trace-matrix graph integrity: bidirectional edges + Jira mirror (pytest)",
+      "wun": [
+        "WUN-06"
+      ],
+      "uut": [
+        "trace-matrix"
+      ],
+      "uut_versions": {
+        "trace-matrix": "8"
+      },
+      "status": "PASS",
+      "duration_s": 0.28,
+      "endpoint": "unspecified",
+      "connection": null,
+      "scope": "unspecified",
+      "method": "unspecified",
+      "requires_deployment": [],
+      "protocol": null,
+      "execution_record": null,
+      "reason": null,
+      "log": "tools/workbench-validation/results/run-20260728T070523Z/TC-07.log",
+      "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/trace-matrix/tests -q",
+      "description": "Checks the tooling that verifies every requirement traces forward to design and tests and backward to user needs \u2014 the chain auditors walk.",
+      "approach": "Runs the trace tooling's regression suite: known trace graphs with deliberate breaks are analyzed and the tool must find every break and confirm intact chains in both directions.",
+      "judged_by": "exit code 0",
+      "source": ".claude/skills/trace-matrix/tests",
+      "pinned": null
+    },
+    {
+      "id": "TC-08",
+      "title": "Tracker draft-wiring regression (pytest)",
+      "wun": [
+        "WUN-06"
+      ],
+      "uut": [
+        "tracker"
+      ],
+      "uut_versions": {
+        "tracker": "14"
+      },
+      "status": "FAIL",
+      "duration_s": 0.35,
+      "endpoint": "unspecified",
+      "connection": null,
+      "scope": "unspecified",
+      "method": "unspecified",
+      "requires_deployment": [],
+      "protocol": null,
+      "execution_record": null,
+      "reason": "exit code 1",
+      "log": "tools/workbench-validation/results/run-20260728T070523Z/TC-08.log",
+      "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/tracker/tests -q",
+      "description": "Checks the dashboard tooling that tracks submission-package readiness, so status shown to the team reflects the real state of the documents.",
+      "approach": "Runs the tracker's regression suite: builds tracker rows from known inputs and verifies the generated draft-context wiring matches expectations.",
+      "judged_by": "exit code 0",
+      "source": ".claude/skills/tracker/tests",
+      "pinned": null
+    },
+    {
+      "id": "TC-09",
+      "title": "Jira drift-rule detection (jira-pull pytest)",
+      "wun": [
+        "WUN-06"
+      ],
+      "uut": [
+        "jira-pull"
+      ],
+      "uut_versions": {
+        "jira-pull": "1"
+      },
+      "status": "PASS",
+      "duration_s": 0.35,
+      "endpoint": "unspecified",
+      "connection": null,
+      "scope": "unspecified",
+      "method": "unspecified",
+      "requires_deployment": [],
+      "protocol": null,
+      "execution_record": null,
+      "reason": null,
+      "log": "tools/workbench-validation/results/run-20260728T070523Z/TC-09.log",
+      "cmd": "uv run --no-project --with pytest --with pyyaml --with openpyxl -- pytest .claude/skills/jira-pull/tests -q --deselect .claude/skills/jira-pull/tests/test_drift_rules.py::test_exec",
+      "description": "Checks the tooling that compares our requirement matrices against Jira, so silent divergence between the two systems is caught.",
+      "approach": "Runs the drift-rule suite: feeds known Jira/matrix states containing planted mismatches and verifies every mismatch type is detected (69 checks).",
+      "judged_by": "exit code 0",
+      "source": ".claude/skills/jira-pull/tests",
+      "pinned": null
+    },
+    {
+      "id": "TC-10",
+      "title": "Change-control round-trip + review-tier machinery (12-module pytest suite)",
+      "wun": [
+        "WUN-15"
+      ],
+      "uut": [
+        "change-control"
+      ],
+      "uut_versions": {
+        "change-control": "0.14.0"
+      },
+      "status": "FAIL",
+      "duration_s": 0.91,
+      "endpoint": "unspecified",
+      "connection": null,
+      "scope": "unspecified",
+      "method": "unspecified",
+      "requires_deployment": [],
+      "protocol": null,
+      "execution_record": null,
+      "reason": "exit code 1",
+      "log": "tools/workbench-validation/results/run-20260728T070523Z/TC-10.log",
+      "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/change-control/tests -q",
+      "description": "Checks the machinery that moves controlled documents between this repo and the formal systems (Confluence, Google Docs) without corrupting content or losing review state.",
+      "approach": "Runs the transfer machinery's 139-test suite covering conversion fidelity, review tiers, freeze states, and error handling against known documents.",
+      "judged_by": "exit code 0",
+      "source": ".claude/skills/change-control/tests",
+      "pinned": null
+    },
+    {
+      "id": "TC-11",
+      "title": "Project console: loaders, routers, e2e draft/tracker workflows (pytest, console env)",
+      "wun": [
+        "WUN-10"
+      ],
+      "uut": [
+        "project-console"
+      ],
+      "uut_versions": {
+        "project-console": "1.58.0"
+      },
+      "status": "PASS",
+      "duration_s": 2.73,
+      "endpoint": "unspecified",
+      "connection": null,
+      "scope": "unspecified",
+      "method": "unspecified",
+      "requires_deployment": [],
+      "protocol": null,
+      "execution_record": null,
+      "reason": null,
+      "log": "tools/workbench-validation/results/run-20260728T070523Z/TC-11.log",
+      "cmd": "uv run --project tools/project-console --with pytest -- pytest .claude/skills/project-console/tests -q",
+      "description": "Checks the team's browser console \u2014 the pages, data loaders, and workflows this very Validation view lives in \u2014 so what the team sees reflects repo truth.",
+      "approach": "Runs the console's 83-test suite in its real environment, including end-to-end workflow tests that exercise pages the way a user would.",
+      "judged_by": "exit code 0",
+      "source": ".claude/skills/project-console/tests",
+      "pinned": null
+    },
+    {
+      "id": "TC-12",
+      "title": "md-deck section-identity regression (pytest)",
+      "wun": [
+        "WUN-10"
+      ],
+      "uut": [
+        "md-deck"
+      ],
+      "uut_versions": {
+        "md-deck": "0.6.3"
+      },
+      "status": "PASS",
+      "duration_s": 0.35,
+      "endpoint": "unspecified",
+      "connection": null,
+      "scope": "unspecified",
+      "method": "unspecified",
+      "requires_deployment": [],
+      "protocol": null,
+      "execution_record": null,
+      "reason": null,
+      "log": "tools/workbench-validation/results/run-20260728T070523Z/TC-12.log",
+      "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/md-deck/tests -q",
+      "description": "Checks the presentation tooling that turns project documents into slide decks without dropping or duplicating content.",
+      "approach": "Runs the deck builder's regression suite verifying slide identity is preserved across rebuilds.",
+      "judged_by": "exit code 0",
+      "source": ".claude/skills/md-deck/tests",
+      "pinned": null
+    },
+    {
+      "id": "TC-13",
+      "title": "Sync-skills three-way merge analysis: LOCAL_AHEAD never clobbered",
+      "wun": [
+        "WUN-11"
+      ],
+      "uut": [
+        "sync-skills"
+      ],
+      "uut_versions": {
+        "sync-skills": "8.4"
+      },
+      "status": "PASS",
+      "duration_s": 1.95,
+      "endpoint": "unspecified",
+      "connection": null,
+      "scope": "unspecified",
+      "method": "unspecified",
+      "requires_deployment": [],
+      "protocol": null,
+      "execution_record": null,
+      "reason": null,
+      "log": "tools/workbench-validation/results/run-20260728T070523Z/TC-13.log",
+      "cmd": "bash .claude/skills/sync-skills/tests/test_three_way_pull.sh",
+      "description": "Checks the safeguard in the tool-sync machinery: when pulling shared tooling updates, a locally improved file must be flagged for review, never silently replaced.",
+      "approach": "Runs the sync tool's three-way-merge self-test: it constructs update scenarios (upstream newer, local newer, both changed) and verifies each is classified correctly and no local-ahead file is overwritten.",
+      "judged_by": "exit code 0",
+      "source": ".claude/skills/sync-skills/tests/test_three_way_pull.sh",
+      "pinned": null
+    },
+    {
+      "id": "TC-14",
+      "title": "Sync-skills status lockstep health check",
+      "wun": [
+        "WUN-11"
+      ],
+      "uut": [
+        "sync-skills"
+      ],
+      "uut_versions": {
+        "sync-skills": "8.4"
+      },
+      "status": "PASS",
+      "duration_s": 2.29,
+      "endpoint": "unspecified",
+      "connection": null,
+      "scope": "unspecified",
+      "method": "unspecified",
+      "requires_deployment": [],
+      "protocol": null,
+      "execution_record": null,
+      "reason": null,
+      "log": "tools/workbench-validation/results/run-20260728T070523Z/TC-14.log",
+      "cmd": "bash .claude/skills/sync-skills/tests/test_status.sh",
+      "description": "Checks the at-a-glance status report that tells a team member whether their tools are in step with the team's shared registry.",
+      "approach": "Runs the status action's self-test against constructed in-sync and out-of-sync states and verifies each is reported correctly.",
+      "judged_by": "exit code 0",
+      "source": ".claude/skills/sync-skills/tests/test_status.sh",
+      "pinned": null
+    },
+    {
+      "id": "TC-15",
+      "title": "Secops static artifact screen over skills/agents/hooks/settings (exit 1 on Critical/High)",
+      "wun": [
+        "WUN-12"
+      ],
+      "uut": [
+        "secops"
+      ],
+      "uut_versions": {
+        "secops": "8"
+      },
+      "status": "FAIL",
+      "duration_s": 1.01,
+      "endpoint": "unspecified",
+      "connection": null,
+      "scope": "unspecified",
+      "method": "unspecified",
+      "requires_deployment": [],
+      "protocol": null,
+      "execution_record": null,
+      "reason": "exit code 1",
+      "log": "tools/workbench-validation/results/run-20260728T070523Z/TC-15.log",
+      "cmd": "python3 .claude/skills/secops/scripts/audit_artifacts.py --json",
+      "description": "Checks that a security scan of every installed tool (skills, agents, hooks, settings) finds no hostile patterns \u2014 and that the scanner itself fails loudly when it does.",
+      "approach": "Runs the security scanner across the whole workbench in machine-readable mode; the case passes only when no Critical or High findings remain undispositioned.",
+      "judged_by": "exit code 0",
+      "source": ".claude/skills/secops/scripts/audit_artifacts.py",
+      "pinned": null
+    },
+    {
+      "id": "TC-16",
+      "title": "Configuration baseline capturable: every installed skill declares a version (frontmatter or VERSION file)",
+      "wun": [
+        "WUN-13"
+      ],
+      "uut": [
+        "all-skills"
+      ],
+      "uut_versions": {},
+      "status": "PASS",
+      "duration_s": 0.02,
+      "endpoint": "unspecified",
+      "connection": null,
+      "scope": "unspecified",
+      "method": "unspecified",
+      "requires_deployment": [],
+      "protocol": null,
+      "execution_record": null,
+      "reason": null,
+      "log": "tools/workbench-validation/results/run-20260728T070523Z/TC-16.log",
+      "cmd": "python3 -c import re,sys;from pathlib import Path;EXEMPT={'docx','pdf','pptx','xlsx'};missing=[d.name for d in sorted(Path('.claude/skills').iterdir()) if d.is_dir() and d.name not in EXEMPT and (d/'SKILL.md').is_file() and not (re.search(r'^version:\\s*\\S+',(d/'SKILL.md').read_text(errors='replace')[:2000],re.M) or (d/'VERSION').is_file())];print('missing version:',missing) if missing else print('all skills versioned (external office skills exempt)');sys.exit(1 if missing else 0)",
+      "description": "Checks that each installed tool states a version, so the team can always say exactly which tool versions were validated (bundled third-party office tools are exempt).",
+      "approach": "Sweeps every installed skill and verifies a version declaration exists in its metadata or VERSION file; lists any tool that has none.",
+      "judged_by": "exit code 0",
+      "source": "docs/project/workbench-validation/validation.yml",
+      "pinned": null
+    }
+  ],
+  "revision": {
+    "run_id": "run-20260728T070523Z",
+    "rendered_with": "render_report 8",
+    "rendered_at": "2026-09-09T06:00:19Z",
+    "manifest": "live",
+    "historical_note": "Historical revision: run `run-20260728T070523Z` re-rendered by render_report 8 on 2026-09-09 from its live (no pinned copy) manifest and recorded run data."
+  }
+}

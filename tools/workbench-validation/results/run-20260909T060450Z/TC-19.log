@@ -1,0 +1,28 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260909T060450Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-19 — The security scanner itself still catches real hostile patterns
+purpose:     Checks that the security screen's rules fire on genuine config-tamper and remote-execution patterns and stay quiet on comments, docstrings, heredoc help text, and temp-path fixtures — so a clean TC-15 result means 'nothing hostile', not 'the scanner went blind'.
+approach:    Runs the scanner's regression suite over synthetic fixture trees with known-positive and known-negative content, including the exit-code contract.
+UUT:         secops@10
+user needs:  WUN-12
+scope:       capability · method: scripted
+endpoint:    none
+protocol:    —
+test source: .claude/skills/secops/tests (pinned copy: tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-19)
+command:     uv run --no-project --with pytest -- pytest .claude/skills/secops/tests -q
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    uv
+tooling:     uv=uv 0.11.21 (Homebrew 2026-06-11 aarch64-apple-darwin)
+timeout_s:   300
+started:     2026-09-09T06:05:14Z (UTC)
+exit_code:   0
+duration_s:  3.44
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+.................................                                        [100%]
+33 passed in 3.13s
+

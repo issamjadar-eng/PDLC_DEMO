@@ -1,0 +1,27 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260909T060450Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-46 — The validation package exports as Markdown, Word and PDF with every evidence section present
+purpose:     DEPLOYMENT check: exports the latest run as a sectioned package in all three formats through the project's sanctioned document pipeline, and checks the Markdown carries the cover, sign-off block and appendices A–F.
+approach:    Runs export_package.py for the latest run in md, docx and pdf; passes only when all three files exist and the Markdown contains every required section.
+UUT:         workbench-validation@8, docflow@38
+user needs:  WUN-31
+scope:       deployment · method: scripted
+endpoint:    none
+protocol:    —
+test source: —
+command:     bash -c set -e; S=.claude/skills/workbench-validation/scripts/export_package.py; MD=$(python3 $S --root . --run latest --format md | tail -1); DOCX=$(python3 $S --root . --run latest --format docx | tail -1); PDF=$(python3 $S --root . --run latest --format pdf | tail -1); test -s "$MD" && test -s "$DOCX" && test -s "$PDF"; for h in 'Sign-off' 'Appendix A' 'Appendix B' 'Appendix C' 'Appendix D' 'Appendix E' 'Appendix F'; do grep -q "$h" "$MD" || { echo "missing section: $h"; exit 1; }; done; echo EXPORT-OK $MD $DOCX $PDF
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    pandoc, soffice
+tooling:     pandoc=pandoc 3.10; soffice=LibreOffice 26.2.4.2 0229ac93fcf0d7cbc6376066c6f35021cef002dc
+timeout_s:   600
+started:     2026-09-09T06:05:32Z (UTC)
+exit_code:   0
+duration_s:  39.23
+judged by:   pass_pattern='EXPORT-OK'; exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+EXPORT-OK /Users/benxavier/projects/PDLC_DEMO-wt124/tools/workbench-validation/exports/run-20260909T000311Z/validation-package.md /Users/benxavier/projects/PDLC_DEMO-wt124/tools/workbench-validation/exports/run-20260909T000311Z/validation-package.docx /Users/benxavier/projects/PDLC_DEMO-wt124/tools/workbench-validation/exports/run-20260909T000311Z/validation-package.pdf
+

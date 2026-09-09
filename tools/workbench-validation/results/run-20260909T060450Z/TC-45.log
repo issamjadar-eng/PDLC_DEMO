@@ -1,0 +1,27 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260909T060450Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-45 — Every recorded run has its own rendered report, sidecar and index row
+purpose:     DEPLOYMENT check: the runs index lists every recorded run with a verdict, and each run folder carries its own rendered report and sidecar so the console can show any revision.
+approach:    Reads results/index.json and checks every run-*.json has an index row whose sidecar and report files exist and whose sidecar revision block names that run.
+UUT:         workbench-validation@8
+user needs:  WUN-32
+scope:       deployment · method: scripted
+endpoint:    none
+protocol:    —
+test source: —
+command:     python3 -c import json,glob,sys;from pathlib import Path;R=Path('tools/workbench-validation/results');idx={r['run_id']:r for r in json.load(open(R/'index.json'))};runs=[json.load(open(f))['run_id'] for f in glob.glob(str(R/'run-*.json'))];bad=[r for r in runs if r not in idx or not idx[r]['sidecar'] or not idx[r]['report'] or not Path(idx[r]['sidecar']).is_file() or not Path(idx[r]['report']).is_file() or json.load(open(idx[r]['sidecar']))['revision']['run_id']!=r];print('runs',len(runs),'indexed',len(idx),'bad',bad);sys.exit(1 if bad or not runs else 0)
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+tooling:     —
+timeout_s:   60
+started:     2026-09-09T06:05:32Z (UTC)
+exit_code:   0
+duration_s:  0.02
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+runs 9 indexed 10 bad []
+

@@ -1,0 +1,28 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260909T060450Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-38 — An interrupted task is surfaced at the next session start
+purpose:     Checks the checkpoint-recovery hook: a planted uncheckpointed-task marker is surfaced; without one the hook stays quiet.
+approach:    Runs the task skill's pytest suite over a temp fixture project.
+UUT:         task@36
+user needs:  WUN-22
+scope:       capability · method: scripted
+endpoint:    none
+protocol:    —
+test source: .claude/skills/task/tests (pinned copy: tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-38)
+command:     uv run --no-project --with pytest -- pytest .claude/skills/task/tests -q
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    uv
+tooling:     uv=uv 0.11.21 (Homebrew 2026-06-11 aarch64-apple-darwin)
+timeout_s:   600
+started:     2026-09-09T06:05:30Z (UTC)
+exit_code:   0
+duration_s:  0.34
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+...                                                                      [100%]
+3 passed in 0.04s
+

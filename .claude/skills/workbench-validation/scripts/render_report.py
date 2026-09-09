@@ -24,8 +24,17 @@ declared absence is a fact about the instance, not a gap. Non-determinism of
 the assistant is handled by protocols with acceptance criteria under a pinned
 model, and stated as a limitation — it does not create a third verdict.
 
+Revisions: every run is rendered as its own revision — `results/<run-id>/
+validation-report.md` + `results/<run-id>/sidecar.json` — from that run's
+PINNED manifest (`results/<run-id>/validation.yml`), and `results/index.json`
+lists every run (newest first) for the console's revision drop-down. The
+top-level report/sidecar always reflect the latest run. `--all-runs` backfills
+every recorded run; a historical run's header says it was re-rendered by the
+current renderer from its pinned data.
+
 Usage:
   python3 render_report.py --root <repo_root> [--manifest <path>] [--run <results-json>]
+                           [--all-runs] [--no-per-run]
 """
 
 import argparse
@@ -716,29 +725,12 @@ def build_sidecar(manifest, run, needs, verdict, case_meta=None, qms_coverage=No
     }
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--root", default=".")
-    parser.add_argument("--manifest", default=DEFAULT_MANIFEST)
-    parser.add_argument("--run", default=None, help="results JSON (default: results_dir/latest.json)")
-    args = parser.parse_args()
+RENDERER_VERSION = "8"
 
-    root = Path(args.root).resolve()
-    manifest_path = root / args.manifest
-    if not manifest_path.is_file():
-        sys.exit(f"Manifest not found: {manifest_path}")
-    manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
-    manifest["_self_rel"] = str(manifest_path.relative_to(root))
+
+def evaluate(manifest, run, root):
+    """Needs × cases → verdicts for one run. Returns (needs, case_index, verdict, case_meta)."""
     case_meta = manifest_case_meta(manifest, root)
-
-    results_dir = root / manifest.get("results_dir", "tools/workbench-validation/results")
-    run_path = Path(args.run) if args.run else results_dir / "latest.json"
-    if not run_path.is_absolute():
-        run_path = root / run_path
-    if not run_path.is_file():
-        sys.exit(f"No run results found at {run_path} — run run_validation.py first.")
-    run = json.loads(run_path.read_text(encoding="utf-8"))
-
     case_index = {c["id"]: c for c in run.get("cases", [])}
     # Map need -> test cases from the test_cases[].wun edges (single source of truth).
     needs = [dict(n) for n in manifest.get("user_needs", [])]
@@ -748,8 +740,125 @@ def main():
         need["_verdict"] = need_verdict(need, case_index)
         need["_reason"] = need_reason(need, case_index)
         need["_strongest"] = strongest_evidence(need, case_index)
-    verdict = overall_verdict(needs)
+    return needs, case_index, overall_verdict(needs), case_meta
 
+
+def load_manifest(path, root):
+    manifest = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    manifest["_self_rel"] = str(path.relative_to(root)) if path.is_absolute() and root in path.parents else str(path)
+    return manifest
+
+
+def manifest_for_run(run, live_manifest_path, results_dir, root):
+    """The manifest a run was executed against: its pinned copy when present,
+    else the live manifest (flagged so the report says so)."""
+    pinned = results_dir / run.get("run_id", "") / live_manifest_path.name
+    if pinned.is_file():
+        m = load_manifest(pinned, root)
+        m["_pinned"] = True
+        # generated outputs still resolve against the live layout keys
+        live = load_manifest(live_manifest_path, root)
+        for key in ("results_dir", "sidecar", "report", "qms_coverage", "protocol_results_dir"):
+            if key in live and key not in m:
+                m[key] = live[key]
+        return m
+    m = load_manifest(live_manifest_path, root)
+    m["_pinned"] = False
+    return m
+
+
+def render_run(manifest, run, root, out_dir, historical_note=None, qms_coverage=None):
+    """Write this run's own revision: report + sidecar under out_dir."""
+    needs, case_index, verdict, case_meta = evaluate(manifest, run, root)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    report = build_report(manifest, run, needs, case_index, verdict, root, case_meta)
+    if historical_note:
+        lines = report.split("\n")
+        # after the title line
+        lines.insert(2, f"> {historical_note}")
+        lines.insert(3, "")
+        report = "\n".join(lines)
+    (out_dir / "validation-report.md").write_text(report, encoding="utf-8")
+    side = build_sidecar(manifest, run, needs, verdict, case_meta, qms_coverage=qms_coverage)
+    side["revision"] = {
+        "run_id": run.get("run_id"),
+        "rendered_with": f"render_report {RENDERER_VERSION}",
+        "rendered_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "manifest": "pinned" if manifest.get("_pinned") else "live",
+        "historical_note": historical_note,
+    }
+    (out_dir / "sidecar.json").write_text(json.dumps(side, indent=2) + "\n", encoding="utf-8")
+    return verdict, side
+
+
+def run_verdict_from_summary(summary):
+    return "FAIL" if any(k in summary for k in ("FAIL", "ERROR", "NOT-EXECUTED")) else "PASS"
+
+
+def write_runs_index(results_dir, root):
+    """results/index.json — every recorded run, newest first, for the
+    console's revision drop-down. Verdict comes from the run's rendered
+    sidecar when present, else from its summary."""
+    rows = []
+    for f in sorted(results_dir.glob("run-*.json"), reverse=True):
+        try:
+            run = json.loads(f.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        rid = run.get("run_id") or f.stem
+        env = run.get("environment") or {}
+        side_path = results_dir / rid / "sidecar.json"
+        verdict = None
+        if side_path.is_file():
+            try:
+                verdict = (json.loads(side_path.read_text(encoding="utf-8")).get("summary") or {}).get("verdict")
+            except (OSError, json.JSONDecodeError):
+                verdict = None
+        rows.append({
+            "run_id": rid,
+            "started": run.get("started"), "finished": run.get("finished"),
+            "verdict": verdict or run_verdict_from_summary(run.get("summary") or {}),
+            "summary": run.get("summary") or {},
+            "cases_total": len(run.get("cases", [])),
+            "partial": run.get("partial", False), "invoked_via": run.get("invoked_via", "cli"),
+            "schema_version": run.get("schema_version"),
+            "git_sha_short": env.get("git_sha_short"), "git_dirty": env.get("git_dirty"),
+            "model_id": env.get("model_id"),
+            "sidecar": str((results_dir / rid / "sidecar.json").relative_to(root)) if side_path.is_file() else None,
+            "report": str((results_dir / rid / "validation-report.md").relative_to(root))
+                      if (results_dir / rid / "validation-report.md").is_file() else None,
+            "pinned_manifest": (run.get("pinned_manifest") or {}).get("path"),
+        })
+    (results_dir / "index.json").write_text(json.dumps(rows, indent=2) + "\n", encoding="utf-8")
+    return rows
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", default=".")
+    parser.add_argument("--manifest", default=DEFAULT_MANIFEST)
+    parser.add_argument("--run", default=None, help="results JSON (default: results_dir/latest.json)")
+    parser.add_argument("--all-runs", action="store_true",
+                        help="also (re-)render every recorded run as its own revision")
+    parser.add_argument("--no-per-run", action="store_true",
+                        help="skip writing the per-run revision + index (top-level outputs only)")
+    args = parser.parse_args()
+
+    root = Path(args.root).resolve()
+    manifest_path = root / args.manifest
+    if not manifest_path.is_file():
+        sys.exit(f"Manifest not found: {manifest_path}")
+    manifest = load_manifest(manifest_path, root)
+    results_dir = root / manifest.get("results_dir", "tools/workbench-validation/results")
+    run_path = Path(args.run) if args.run else results_dir / "latest.json"
+    if not run_path.is_absolute():
+        run_path = root / run_path
+    if not run_path.is_file():
+        sys.exit(f"No run results found at {run_path} — run run_validation.py first.")
+    run = json.loads(run_path.read_text(encoding="utf-8"))
+
+    # --- top-level outputs (always the run given / latest, against the live manifest) ---
+    needs, case_index, verdict, case_meta = evaluate(manifest, run, root)
     report_rel = manifest.get("report", {}).get(
         "output", "tools/workbench-validation/validation-report.md")
     report_path = root / report_rel
@@ -757,16 +866,51 @@ def main():
     report_path.write_text(
         build_report(manifest, run, needs, case_index, verdict, root, case_meta),
         encoding="utf-8")
-
     sidecar_rel = manifest.get(
         "sidecar", "tools/workbench-validation/workbench-validation-index.json")
     sidecar_path = root / sidecar_rel
     sidecar_path.parent.mkdir(parents=True, exist_ok=True)
     cov, _ = load_qms_coverage(manifest, root)
+    cov = None if (cov or {}).get("_error") else cov
     sidecar_path.write_text(
-        json.dumps(build_sidecar(manifest, run, needs, verdict, case_meta,
-                                 qms_coverage=None if (cov or {}).get("_error") else cov),
+        json.dumps(build_sidecar(manifest, run, needs, verdict, case_meta, qms_coverage=cov),
                    indent=2) + "\n", encoding="utf-8")
+
+    # --- per-run revisions + index ---
+    if not args.no_per_run:
+        latest_id = None
+        latest_path = results_dir / "latest.json"
+        if latest_path.is_file():
+            try:
+                latest_id = json.loads(latest_path.read_text(encoding="utf-8")).get("run_id")
+            except (OSError, json.JSONDecodeError):
+                latest_id = None
+        targets = [run]
+        if args.all_runs:
+            targets = []
+            for f in sorted(results_dir.glob("run-*.json")):
+                try:
+                    targets.append(json.loads(f.read_text(encoding="utf-8")))
+                except (OSError, json.JSONDecodeError):
+                    continue
+        rendered = 0
+        for r in targets:
+            rid = r.get("run_id")
+            if not rid:
+                continue
+            m = manifest_for_run(r, manifest_path, results_dir, root)
+            is_latest = (rid == latest_id)
+            note = None
+            if not is_latest or str(r.get("schema_version", "1.0")) != str(run.get("schema_version", "1.0")):
+                note = (f"Historical revision: run `{rid}` re-rendered by render_report {RENDERER_VERSION} "
+                        f"on {datetime.now(timezone.utc).strftime('%Y-%m-%d')} from its "
+                        f"{'pinned' if m.get('_pinned') else 'live (no pinned copy)'} manifest and recorded run data.")
+            render_run(m, r, root, results_dir / rid, historical_note=note,
+                       qms_coverage=cov if is_latest else None)
+            rendered += 1
+        rows = write_runs_index(results_dir, root)
+        print(f"Revisions: {rendered} rendered · index {len(rows)} runs → "
+              f"{(results_dir / 'index.json').relative_to(root)}")
 
     print(f"Report:  {report_rel}")
     print(f"Sidecar: {sidecar_rel}")

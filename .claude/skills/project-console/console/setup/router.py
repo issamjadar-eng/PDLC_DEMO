@@ -1,8 +1,11 @@
 """Setup section routes — the project-settings surface.
 
-GET    /setup                          — settings shell (connectors, skills,
+GET    /setup[?run=<run-id>]           — settings shell (connectors, skills,
                                           agents, plugins, rules & hooks,
-                                          team & security)
+                                          team & security); `run` selects which
+                                          recorded workbench-validation run the
+                                          Validation section shows (default:
+                                          latest)
 GET    /setup/data                     — full aggregate data model as JSON
 POST   /setup/connectors/{name}        — add/update a server in .mcp.json
                                           (+ ensures the allowlist entry — the
@@ -20,6 +23,11 @@ POST   /setup/workbench/render         — run the workbench-validation skill's
                                           runner (--render): executes the
                                           validation manifest and regenerates
                                           the report + sidecar this page reads
+GET    /setup/workbench/export?run=<run-id>&format=docx|pdf|md
+                                        — run the skill's export_package.py for
+                                          one recorded run and stream the
+                                          package (report + every evidence
+                                          appendix) as a download
 POST   /setup/project/field            — update one scalar field in the
                                           project.yml `project:` block
 POST   /setup/team/access-audit        — cross-reference GitHub collaborators
@@ -39,13 +47,19 @@ from __future__ import annotations
 from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 
 from console.config import get_config
 from console.setup import writer
 from console.setup.catalog import CATALOG
-from console.setup.loader import load_connectors, load_setup
+from console.setup.loader import (
+    WORKBENCH_EXPORT_FORMATS,
+    WORKBENCH_EXPORTER_REL,
+    load_connectors,
+    load_setup,
+    load_workbench_runs,
+)
 
 router = APIRouter()
 templates = Jinja2Templates(
@@ -59,9 +73,9 @@ RESTART_NOTE = (
 
 
 @router.get("/setup", response_class=HTMLResponse)
-async def setup_index(request: Request):
+async def setup_index(request: Request, run: str | None = None):
     cfg = get_config()
-    setup = load_setup(cfg.repo_root)
+    setup = load_setup(cfg.repo_root, run_id=run)
     return templates.TemplateResponse(
         request,
         "setup_view.html",
@@ -231,6 +245,54 @@ async def setup_workbench_render(request: Request):
     tail = (proc.stdout or "").strip().splitlines()[-3:]
     return {"ok": proc.returncode in (0, 1), "exit_code": proc.returncode,
             "summary": "\n".join(tail)}
+
+
+@router.get("/setup/workbench/export")
+async def setup_workbench_export(request: Request, run: str, format: str):
+    """Export one recorded validation run as a single package (report + every
+    evidence appendix) in Word, PDF or Markdown. The console stays a pure
+    consumer: the owning skill's `export_package.py` builds the file; this
+    route validates the request, invokes it, and streams the result."""
+    import subprocess
+    import sys
+
+    import anyio
+
+    cfg = get_config()
+    fmt = (format or "").lower().strip()
+    if fmt not in WORKBENCH_EXPORT_FORMATS:
+        raise HTTPException(status_code=400,
+                            detail=f"format must be one of {', '.join(WORKBENCH_EXPORT_FORMATS)}.")
+    roster = {r["run_id"] for r in load_workbench_runs(cfg.repo_root)}
+    if run not in roster:
+        raise HTTPException(status_code=400, detail=f"unknown run {run!r}.")
+    exporter = cfg.repo_root / WORKBENCH_EXPORTER_REL
+    if not exporter.is_file():
+        raise HTTPException(status_code=400,
+                            detail="workbench-validation skill is not installed (export_package.py missing).")
+
+    def _run():
+        return subprocess.run(
+            [sys.executable, str(exporter), "--root", str(cfg.repo_root),
+             "--run", run, "--format", fmt],
+            capture_output=True, text=True, timeout=600,
+        )
+    try:
+        proc = await anyio.to_thread.run_sync(_run)
+    except subprocess.TimeoutExpired:
+        raise HTTPException(status_code=504, detail="Export timed out.")
+    if proc.returncode != 0:
+        tail = "\n".join((proc.stderr or proc.stdout or "").strip().splitlines()[-6:])
+        raise HTTPException(status_code=400, detail=f"export failed (exit {proc.returncode}): {tail}")
+    lines = [ln for ln in (proc.stdout or "").splitlines() if ln.strip()]
+    out_path = Path(lines[-1].strip()) if lines else None
+    if out_path is not None and not out_path.is_absolute():
+        out_path = cfg.repo_root / out_path
+    if not out_path or not out_path.is_file():
+        raise HTTPException(status_code=400, detail="export produced no file.")
+    media, ext = WORKBENCH_EXPORT_FORMATS[fmt]
+    return FileResponse(str(out_path), media_type=media,
+                        filename=f"validation-package-{run}.{ext}")
 
 
 @router.post("/setup/project/field", response_class=JSONResponse)

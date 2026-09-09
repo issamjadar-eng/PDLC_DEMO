@@ -80,6 +80,21 @@ the whole authoring workbench.
 
 ## Changelog
 
+- 8 (2026-09-09): **Report revisions + export package.** Every run is rendered as its
+  own revision — `results/<run-id>/validation-report.md` + `sidecar.json` (with a
+  `revision` block) from that run's **pinned** manifest — and `results/index.json`
+  lists every run newest-first for the console's revision drop-down; `render
+  --all-runs` backfills historical runs, whose header states they were re-rendered by
+  the current renderer from pinned data (or the live manifest where no pin exists).
+  New `export_package.py`: one sectioned validation package per run (cover + sign-off
+  table, the report, appendices A pinned manifest · B environment and deployment
+  declaration · C protocols with execution records and run evidence · D every case's
+  full evidence log · E pinned test sources with sha256 · F QMS coverage inventory) as
+  Markdown, or DOCX/PDF through docflow's `export_formal.py`. WUN-31/32, TC-45/46.
+  Rationale: a validation record leaving the workbench must carry its evidence, not
+  links to it, and a reviewer must be able to see what the validation said at any
+  recorded point in time.
+
 - 7 (2026-09-08): **QMS template coverage inventory.** Manifest key `qms_coverage:` names a
   JSON inventory a deployment case writes (contract: `templates[]` with
   instances/tested/pass/fail/status, `procedures[]`, `documents_without_template[]`,

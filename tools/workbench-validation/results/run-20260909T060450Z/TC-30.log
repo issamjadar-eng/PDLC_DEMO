@@ -1,0 +1,2602 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260909T060450Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-30 — AI-assisted controlled documents carry a provenance block and stay vendor-neutral
+purpose:     DEPLOYMENT check over this project's controlled trees: every document whose frontmatter says an AI produced it must carry the internal AI-CHANGELOG block, no block may sit in the rendered body, and no document content may name an AI product or vendor.
+approach:    Runs ai_changelog_check.py with --ai-authored-only over the DHF trees; passes only on exit 0.
+UUT:         medtech-docs@38
+user needs:  WUN-02, WUN-14
+scope:       deployment · method: scripted · requires_deployment: content.dhf_trees
+endpoint:    none
+protocol:    —
+test source: .claude/skills/medtech-docs/scripts/ai_changelog_check.py (pinned copy: tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-30)
+command:     python3 .claude/skills/medtech-docs/scripts/ai_changelog_check.py --root . --ai-authored-only --json docs/project/dhfs
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+tooling:     —
+timeout_s:   120
+started:     2026-09-09T06:05:24Z (UTC)
+exit_code:   0
+duration_s:  0.19
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+{
+  "root": "/Users/benxavier/projects/PDLC_DEMO-wt124",
+  "documents": 241,
+  "summary": {
+    "pass": 43,
+    "warn": 198,
+    "fail": 0
+  },
+  "results": [
+    {
+      "doc": "docs/project/dhfs/cloud-suite/clinical/benefit-risk/GL-TMP-UC-005-clinical-evaluation-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/clinical/evaluation-plans/GL-TMP-UC-004-clinical-evaluation-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/clinical/literature-search/GL-SOP-UC-002-literature-search-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/cybersecurity/GL-SOP-SW-004-vulnerability-management-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/cybersecurity/GL-TMP-SW-002-threat-model.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/cybersecurity/GL-WI-SW-002-sbom.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/design-controls/GL-FORM-DC-001-design-review-log.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/design-controls/plans/GL-TMP-DC-001-design-and-development-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/design-controls/plans/GL-TMP-PM-001-pms-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/design-controls/plans/GL-TMP-RM-001-risk-management-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/design-controls/plans/GL-TMP-SW-001-software-development-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/design-controls/plans/GL-TMP-SW-002-cybersecurity-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/design-controls/plans/GL-TMP-UC-004-clinical-evaluation-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/design-controls/requirements/GL-TMP-DC-002-design-input-specification.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/design-controls/requirements/design-inputs.md",
+      "status": "pass",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/design-controls/requirements/software-requirements.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/design-controls/tool-validation/GL-TMP-DC-003-tool-validation-record.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/design-controls/user-needs/GL-TMP-UC-001-use-specification.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/design-controls/user-needs/user-needs-register.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/design-controls/user-needs/user-needs.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/design-controls/vnv/GL-TMP-DC-003-verification-protocol-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/design-controls/vnv/GL-TMP-DC-004-validation-protocol-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/design-controls/vnv/GL-TMP-UC-003-summative-usability-evaluation.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/clinical/benefit-risk/GL-TMP-UC-005-clinical-evaluation-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/clinical/evaluation-plans/GL-TMP-UC-004-clinical-evaluation-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/cybersecurity/GL-TMP-SW-002-threat-model.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/cybersecurity/GL-WI-SW-002-sbom.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/design-controls/plans/GL-TMP-DC-001-design-and-development-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/design-controls/plans/GL-TMP-RM-001-risk-management-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/design-controls/plans/GL-TMP-SW-001-software-development-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/design-controls/plans/GL-TMP-SW-002-cybersecurity-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/design-controls/requirements/GL-TMP-DC-002-design-input-specification.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/design-controls/user-needs/GL-TMP-UC-001-use-specification.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/design-controls/vnv/GL-TMP-DC-003-verification-protocol-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/design-controls/vnv/GL-TMP-DC-004-validation-protocol-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/postmarket/GL-TMP-PM-001-pms-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/risk-management/GL-TMP-RM-002-risk-management-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/alerts-engine/risk-management/GL-TMP-RM-003-hazard-analysis.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/clinical/benefit-risk/GL-TMP-UC-005-clinical-evaluation-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/clinical/evaluation-plans/GL-TMP-UC-004-clinical-evaluation-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/cybersecurity/GL-TMP-SW-002-threat-model.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/cybersecurity/GL-WI-SW-002-sbom.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/design-controls/plans/GL-TMP-DC-001-design-and-development-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/design-controls/plans/GL-TMP-RM-001-risk-management-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/design-controls/plans/GL-TMP-SW-001-software-development-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/design-controls/plans/GL-TMP-SW-002-cybersecurity-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/design-controls/requirements/GL-TMP-DC-002-design-input-specification.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/design-controls/user-needs/GL-TMP-UC-001-use-specification.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/design-controls/vnv/GL-TMP-DC-003-verification-protocol-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/design-controls/vnv/GL-TMP-DC-004-validation-protocol-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/postmarket/GL-TMP-PM-001-pms-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/risk-management/GL-TMP-RM-002-risk-management-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/analytics-dashboard/risk-management/GL-TMP-RM-003-hazard-analysis.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/clinical/benefit-risk/GL-TMP-UC-005-clinical-evaluation-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/clinical/evaluation-plans/GL-TMP-UC-004-clinical-evaluation-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/cybersecurity/GL-TMP-SW-002-threat-model.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/cybersecurity/GL-WI-SW-002-sbom.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/design-controls/plans/GL-TMP-DC-001-design-and-development-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/design-controls/plans/GL-TMP-RM-001-risk-management-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/design-controls/plans/GL-TMP-SW-001-software-development-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/design-controls/plans/GL-TMP-SW-002-cybersecurity-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/design-controls/requirements/GL-TMP-DC-002-design-input-specification.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/design-controls/user-needs/GL-TMP-UC-001-use-specification.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/design-controls/vnv/GL-TMP-DC-003-verification-protocol-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/design-controls/vnv/GL-TMP-DC-004-validation-protocol-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/postmarket/GL-TMP-PM-001-pms-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/risk-management/GL-TMP-RM-002-risk-management-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/clinical-interface/risk-management/GL-TMP-RM-003-hazard-analysis.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/clinical/benefit-risk/GL-TMP-UC-005-clinical-evaluation-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/clinical/evaluation-plans/GL-TMP-UC-004-clinical-evaluation-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/cybersecurity/GL-TMP-SW-002-threat-model.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/cybersecurity/GL-WI-SW-002-sbom.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/design-controls/plans/GL-TMP-DC-001-design-and-development-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/design-controls/plans/GL-TMP-RM-001-risk-management-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/design-controls/plans/GL-TMP-SW-001-software-development-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/design-controls/plans/GL-TMP-SW-002-cybersecurity-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/design-controls/requirements/GL-TMP-DC-002-design-input-specification.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/design-controls/user-needs/GL-TMP-UC-001-use-specification.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/design-controls/vnv/GL-TMP-DC-003-verification-protocol-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/design-controls/vnv/GL-TMP-DC-004-validation-protocol-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/postmarket/GL-TMP-PM-001-pms-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/risk-management/GL-TMP-RM-002-risk-management-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/compliance-reports/risk-management/GL-TMP-RM-003-hazard-analysis.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/clinical/benefit-risk/GL-TMP-UC-005-clinical-evaluation-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/clinical/evaluation-plans/GL-TMP-UC-004-clinical-evaluation-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/cybersecurity/GL-TMP-SW-002-threat-model.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/cybersecurity/GL-WI-SW-002-sbom.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/design-controls/architecture/drug-library-manager-system-sad.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/design-controls/plans/GL-TMP-DC-001-design-and-development-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/design-controls/plans/GL-TMP-RM-001-risk-management-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/design-controls/plans/GL-TMP-SW-001-software-development-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/design-controls/plans/GL-TMP-SW-002-cybersecurity-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/design-controls/requirements/GL-TMP-DC-002-design-input-specification.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/design-controls/user-needs/GL-TMP-UC-001-use-specification.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/design-controls/vnv/GL-TMP-DC-003-verification-protocol-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/design-controls/vnv/GL-TMP-DC-004-validation-protocol-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/postmarket/GL-TMP-PM-001-pms-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/risk-management/GL-TMP-RM-002-risk-management-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/risk-management/GL-TMP-RM-003-hazard-analysis.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/clinical/benefit-risk/GL-TMP-UC-005-clinical-evaluation-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/clinical/evaluation-plans/GL-TMP-UC-004-clinical-evaluation-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/cybersecurity/GL-TMP-SW-002-threat-model.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/cybersecurity/GL-WI-SW-002-sbom.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/design-controls/plans/GL-TMP-DC-001-design-and-development-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/design-controls/plans/GL-TMP-RM-001-risk-management-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/design-controls/plans/GL-TMP-SW-001-software-development-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/design-controls/plans/GL-TMP-SW-002-cybersecurity-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/design-controls/requirements/GL-TMP-DC-002-design-input-specification.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/design-controls/user-needs/GL-TMP-UC-001-use-specification.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/design-controls/vnv/GL-TMP-DC-003-verification-protocol-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/design-controls/vnv/GL-TMP-DC-004-validation-protocol-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/postmarket/GL-TMP-PM-001-pms-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/risk-management/GL-TMP-RM-002-risk-management-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/fleet-management/risk-management/GL-TMP-RM-003-hazard-analysis.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/clinical/benefit-risk/GL-TMP-UC-005-clinical-evaluation-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/clinical/evaluation-plans/GL-TMP-UC-004-clinical-evaluation-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/cybersecurity/GL-TMP-SW-002-threat-model.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/cybersecurity/GL-WI-SW-002-sbom.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/design-controls/plans/GL-TMP-DC-001-design-and-development-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/design-controls/plans/GL-TMP-RM-001-risk-management-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/design-controls/plans/GL-TMP-SW-001-software-development-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/design-controls/plans/GL-TMP-SW-002-cybersecurity-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/design-controls/requirements/GL-TMP-DC-002-design-input-specification.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/design-controls/user-needs/GL-TMP-UC-001-use-specification.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/design-controls/vnv/GL-TMP-DC-003-verification-protocol-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/design-controls/vnv/GL-TMP-DC-004-validation-protocol-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/postmarket/GL-TMP-PM-001-pms-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/risk-management/GL-TMP-RM-002-risk-management-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/inventory-tracker/risk-management/GL-TMP-RM-003-hazard-analysis.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/postmarket/GL-SOP-PM-001-psur.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/postmarket/GL-TMP-PM-001-pms-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/postmarket/capa/GL-FORM-QM-001-capa-form-template.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/postmarket/complaints/GL-FORM-PM-001-complaint-intake-template.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/postmarket/pmcf-plans/GL-SOP-UC-002-pmcf-plan-template.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/risk-management/GL-TMP-RM-002-risk-management-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/risk-management/GL-TMP-RM-003-hazard-analysis.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/risk-management/GL-TMP-RM-004-design-fmea.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/risk-management/GL-TMP-RM-004-process-fmea.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/clinical/benefit-risk/GL-TMP-UC-005-clinical-evaluation-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/clinical/evaluation-plans/GL-TMP-UC-004-clinical-evaluation-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/clinical/literature-search/GL-SOP-UC-002-literature-search-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/cybersecurity/GL-SOP-SW-004-vulnerability-management-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/cybersecurity/GL-TMP-SW-002-threat-model.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/cybersecurity/GL-WI-SW-002-sbom.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/design-controls/GL-FORM-DC-001-design-review-log.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/design-controls/architecture/connectivity-adapter-system-sad.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/design-controls/plans/GL-TMP-DC-001-design-and-development-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/design-controls/plans/GL-TMP-PM-001-pms-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/design-controls/plans/GL-TMP-RM-001-risk-management-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/design-controls/plans/GL-TMP-SW-001-software-development-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/design-controls/plans/GL-TMP-SW-002-cybersecurity-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/design-controls/plans/GL-TMP-UC-004-clinical-evaluation-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/design-controls/requirements/GL-TMP-DC-002-design-input-specification.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/design-controls/requirements/design-inputs.md",
+      "status": "pass",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/design-controls/requirements/software-requirements.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/design-controls/tool-validation/GL-TMP-DC-003-tool-validation-record.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/design-controls/user-needs/GL-TMP-UC-001-use-specification.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/design-controls/user-needs/user-needs-register.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/design-controls/user-needs/user-needs.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/design-controls/vnv/GL-TMP-DC-003-verification-protocol-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/design-controls/vnv/GL-TMP-DC-004-validation-protocol-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/design-controls/vnv/GL-TMP-UC-003-summative-usability-evaluation.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/postmarket/GL-SOP-PM-001-psur.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/postmarket/GL-TMP-PM-001-pms-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/postmarket/capa/GL-FORM-QM-001-capa-form-template.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/postmarket/complaints/GL-FORM-PM-001-complaint-intake-template.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/postmarket/pmcf-plans/GL-SOP-UC-002-pmcf-plan-template.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/risk-management/GL-TMP-RM-002-risk-management-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/risk-management/GL-TMP-RM-003-hazard-analysis.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/risk-management/GL-TMP-RM-004-design-fmea.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/risk-management/GL-TMP-RM-004-process-fmea.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/benefit-risk/BRA-1001.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/benefit-risk/BRA-1002.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/benefit-risk/BRA-1003.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/benefit-risk/BRA-1004.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/benefit-risk/BRA-1005.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/benefit-risk/GL-TMP-UC-005-clinical-evaluation-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/evaluation-plans/CEP-1001.md",
+      "status": "pass",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/evaluation-plans/CEP-1002.md",
+      "status": "pass",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/evaluation-plans/CEP-1003.md",
+      "status": "pass",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/evaluation-plans/CEP-1004.md",
+      "status": "pass",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/evaluation-plans/CEP-1005.md",
+      "status": "pass",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/evaluation-plans/GL-TMP-UC-004-clinical-evaluation-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/literature-search/GL-SOP-UC-002-literature-search-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/literature-search/LSS-1001.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/literature-search/LSS-1002.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/literature-search/LSS-1003.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/literature-search/LSS-1004.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/literature-search/LSS-1005.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/cybersecurity/GL-SOP-SW-004-vulnerability-management-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/cybersecurity/GL-TMP-SW-002-threat-model.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/cybersecurity/GL-WI-SW-002-sbom.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/GL-FORM-DC-001-design-review-log.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/architecture/pca-device-system-sad.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/labeling/GL-SOP-DC-004-ifu-and-labeling.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/pccp/pccp-predetermined-change-control-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/plans/GL-TMP-DC-001-design-and-development-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/plans/GL-TMP-PM-001-pms-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/plans/GL-TMP-RM-001-risk-management-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/plans/GL-TMP-SW-001-software-development-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/plans/GL-TMP-SW-002-cybersecurity-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/plans/GL-TMP-UC-004-clinical-evaluation-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/requirements/GL-TMP-DC-002-design-input-specification.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/requirements/design-inputs.md",
+      "status": "pass",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/requirements/software-requirements.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/tool-validation/GL-TMP-DC-003-tool-validation-record.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/trace-matrix/GL-SOP-DC-003-trace-matrix-overview.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/trace-matrix/trace-matrix.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/trace-matrix/un-to-di-trace-matrix.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/usability/GL-TMP-UC-002-usability-engineering-file.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/user-needs/GL-TMP-UC-001-use-specification.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/user-needs/user-needs-register.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/user-needs/user-needs.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/vnv/GL-TMP-DC-003-verification-protocol-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/vnv/GL-TMP-DC-004-validation-protocol-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/vnv/GL-TMP-UC-003-summative-usability-evaluation.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/vnv/testing-strategy.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/GL-SOP-PM-001-psur.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/GL-TMP-PM-001-pms-plan.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/capa/CAPA-2023-001.md",
+      "status": "pass",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/capa/GL-FORM-QM-001-capa-form-template.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/complaints/GL-FORM-PM-001-complaint-intake-template.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/complaints/complaints-ledger.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/pmcf-plans/GL-SOP-UC-002-pmcf-plan-template.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "1 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/pmcf-plans/PMCF-1001.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/pmcf-plans/PMCF-1002.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/pmcf-plans/PMCF-1003.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/pmcf-plans/PMCF-1004.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/pmcf-plans/PMCF-1005.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/pmcf-studies/STUDY-0001.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/pmcf-studies/STUDY-0003.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/pmcf-studies/STUDY-0005.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/pmcf-studies/STUDY-0007.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/pmcf-studies/STUDY-0009.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/risk-management/GL-TMP-RM-002-risk-management-report.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/risk-management/GL-TMP-RM-003-hazard-analysis.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "3 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/risk-management/GL-TMP-RM-004-design-fmea.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "2 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/risk-management/GL-TMP-RM-004-process-fmea.md",
+      "status": "warn",
+      "block": true,
+      "block_detail": "3 row(s)",
+      "block_required": true,
+      "failures": [],
+      "warnings": [
+        "VENDOR-FRONTMATTER: vendor name in tool-managed frontmatter: claude"
+      ]
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/risk-management/risk-strategy.md",
+      "status": "pass",
+      "block": false,
+      "block_detail": "no <!-- AI-CHANGELOG --> block in the leading metadata zone",
+      "block_required": false,
+      "failures": [],
+      "warnings": []
+    }
+  ]
+}
+

@@ -1,0 +1,204 @@
+[
+  {
+    "run_id": "run-20260909T060450Z",
+    "started": "2026-09-09T06:04:50Z",
+    "finished": "2026-09-09T06:06:11Z",
+    "verdict": "PASS",
+    "summary": {
+      "PASS": 42,
+      "NOT-APPLICABLE": 5
+    },
+    "cases_total": 47,
+    "partial": false,
+    "invoked_via": "cli",
+    "schema_version": "2.0",
+    "git_sha_short": "3c7445f",
+    "git_dirty": false,
+    "model_id": "claude-fable-5-1",
+    "sidecar": "tools/workbench-validation/results/run-20260909T060450Z/sidecar.json",
+    "report": "tools/workbench-validation/results/run-20260909T060450Z/validation-report.md",
+    "pinned_manifest": "tools/workbench-validation/results/run-20260909T060450Z/validation.yml"
+  },
+  {
+    "run_id": "run-20260909T000311Z",
+    "started": "2026-09-09T00:03:11Z",
+    "finished": "2026-09-09T00:03:46Z",
+    "verdict": "PASS",
+    "summary": {
+      "PASS": 40,
+      "NOT-APPLICABLE": 5
+    },
+    "cases_total": 45,
+    "partial": false,
+    "invoked_via": "cli",
+    "schema_version": "2.0",
+    "git_sha_short": "1abb544",
+    "git_dirty": false,
+    "model_id": "claude-fable-5-1",
+    "sidecar": "tools/workbench-validation/results/run-20260909T000311Z/sidecar.json",
+    "report": "tools/workbench-validation/results/run-20260909T000311Z/validation-report.md",
+    "pinned_manifest": "tools/workbench-validation/results/run-20260909T000311Z/validation.yml"
+  },
+  {
+    "run_id": "run-20260908T200255Z",
+    "started": "2026-09-08T20:02:55Z",
+    "finished": "2026-09-08T20:03:27Z",
+    "verdict": "FAIL",
+    "summary": {
+      "PASS": 32,
+      "NOT-APPLICABLE": 4,
+      "FAIL": 5,
+      "NOT-EXECUTED": 2
+    },
+    "cases_total": 43,
+    "partial": false,
+    "invoked_via": "cli",
+    "schema_version": "2.0",
+    "git_sha_short": "bfc70e0",
+    "git_dirty": false,
+    "model_id": "claude-fable-5-1",
+    "sidecar": "tools/workbench-validation/results/run-20260908T200255Z/sidecar.json",
+    "report": "tools/workbench-validation/results/run-20260908T200255Z/validation-report.md",
+    "pinned_manifest": "tools/workbench-validation/results/run-20260908T200255Z/validation.yml"
+  },
+  {
+    "run_id": "run-20260908T185457Z",
+    "started": "2026-09-08T18:54:57Z",
+    "finished": "2026-09-08T18:55:17Z",
+    "verdict": "PASS",
+    "summary": {
+      "PASS": 21,
+      "NOT-APPLICABLE": 3
+    },
+    "cases_total": 24,
+    "partial": false,
+    "invoked_via": "cli",
+    "schema_version": "1.1",
+    "git_sha_short": "30f5810",
+    "git_dirty": false,
+    "model_id": "claude-fable-5-1",
+    "sidecar": "tools/workbench-validation/results/run-20260908T185457Z/sidecar.json",
+    "report": "tools/workbench-validation/results/run-20260908T185457Z/validation-report.md",
+    "pinned_manifest": "tools/workbench-validation/results/run-20260908T185457Z/validation.yml"
+  },
+  {
+    "run_id": "run-20260908T180329Z",
+    "started": "2026-09-08T18:03:29Z",
+    "finished": "2026-09-08T18:03:45Z",
+    "verdict": "PASS",
+    "summary": {
+      "PASS": 18,
+      "NOT-APPLICABLE": 3
+    },
+    "cases_total": 21,
+    "partial": false,
+    "invoked_via": "console",
+    "schema_version": "1.1",
+    "git_sha_short": "f7d746c",
+    "git_dirty": false,
+    "model_id": "claude-fable-5-1",
+    "sidecar": "tools/workbench-validation/results/run-20260908T180329Z/sidecar.json",
+    "report": "tools/workbench-validation/results/run-20260908T180329Z/validation-report.md",
+    "pinned_manifest": "tools/workbench-validation/results/run-20260908T180329Z/validation.yml"
+  },
+  {
+    "run_id": "run-20260908T180259Z",
+    "started": "2026-09-08T18:02:59Z",
+    "finished": "2026-09-08T18:03:19Z",
+    "verdict": "PASS",
+    "summary": {
+      "PASS": 18,
+      "NOT-APPLICABLE": 3
+    },
+    "cases_total": 21,
+    "partial": false,
+    "invoked_via": "cli",
+    "schema_version": "1.1",
+    "git_sha_short": "8f266ff",
+    "git_dirty": false,
+    "model_id": "claude-fable-5-1",
+    "sidecar": "tools/workbench-validation/results/run-20260908T180259Z/sidecar.json",
+    "report": "tools/workbench-validation/results/run-20260908T180259Z/validation-report.md",
+    "pinned_manifest": "tools/workbench-validation/results/run-20260908T180259Z/validation.yml"
+  },
+  {
+    "run_id": "run-20260728T071407Z",
+    "started": "2026-07-28T07:14:07Z",
+    "finished": "2026-07-28T07:14:22Z",
+    "verdict": "FAIL",
+    "summary": {
+      "PASS": 13,
+      "FAIL": 3
+    },
+    "cases_total": 16,
+    "partial": false,
+    "invoked_via": "cli",
+    "schema_version": "1.0",
+    "git_sha_short": "1e2e6d4",
+    "git_dirty": true,
+    "model_id": null,
+    "sidecar": "tools/workbench-validation/results/run-20260728T071407Z/sidecar.json",
+    "report": "tools/workbench-validation/results/run-20260728T071407Z/validation-report.md",
+    "pinned_manifest": "tools/workbench-validation/results/run-20260728T071407Z/validation.yml"
+  },
+  {
+    "run_id": "run-20260728T070932Z",
+    "started": "2026-07-28T07:09:32Z",
+    "finished": "2026-07-28T07:09:47Z",
+    "verdict": "FAIL",
+    "summary": {
+      "PASS": 13,
+      "FAIL": 3
+    },
+    "cases_total": 16,
+    "partial": false,
+    "invoked_via": "cli",
+    "schema_version": "1.0",
+    "git_sha_short": "1e2e6d4",
+    "git_dirty": true,
+    "model_id": null,
+    "sidecar": "tools/workbench-validation/results/run-20260728T070932Z/sidecar.json",
+    "report": "tools/workbench-validation/results/run-20260728T070932Z/validation-report.md",
+    "pinned_manifest": null
+  },
+  {
+    "run_id": "run-20260728T070523Z",
+    "started": "2026-07-28T07:05:23Z",
+    "finished": "2026-07-28T07:05:39Z",
+    "verdict": "FAIL",
+    "summary": {
+      "PASS": 13,
+      "FAIL": 3
+    },
+    "cases_total": 16,
+    "partial": false,
+    "invoked_via": "cli",
+    "schema_version": "1.0",
+    "git_sha_short": "1e2e6d4",
+    "git_dirty": true,
+    "model_id": null,
+    "sidecar": "tools/workbench-validation/results/run-20260728T070523Z/sidecar.json",
+    "report": "tools/workbench-validation/results/run-20260728T070523Z/validation-report.md",
+    "pinned_manifest": null
+  },
+  {
+    "run_id": "run-20260728T065817Z",
+    "started": "2026-07-28T06:58:17Z",
+    "finished": "2026-07-28T06:58:33Z",
+    "verdict": "FAIL",
+    "summary": {
+      "PASS": 13,
+      "FAIL": 3
+    },
+    "cases_total": 16,
+    "partial": false,
+    "invoked_via": "cli",
+    "schema_version": "1.0",
+    "git_sha_short": "1e2e6d4",
+    "git_dirty": true,
+    "model_id": null,
+    "sidecar": "tools/workbench-validation/results/run-20260728T065817Z/sidecar.json",
+    "report": "tools/workbench-validation/results/run-20260728T065817Z/validation-report.md",
+    "pinned_manifest": null
+  }
+]
