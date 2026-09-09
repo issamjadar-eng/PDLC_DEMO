@@ -1440,6 +1440,7 @@
   }
   function fromHash() {
     var sec = (location.hash || '#connectors').slice(1);
+    if (sec.indexOf('sec-') === 0) sec = sec.slice(4);   // tolerate '#sec-<name>' links
     if (!document.getElementById('sec-' + sec)) sec = 'connectors';
     show(sec);
   }
@@ -1624,7 +1625,7 @@ function suWbTog(id) {
 }
 function suWbSelectRun(id) {
   if (!id) return;
-  window.location.href = '/setup?run=' + encodeURIComponent(id) + '#sec-workbench';
+  window.location.href = '/setup?run=' + encodeURIComponent(id) + '#workbench';
 }
 async function suWbRender() {
   var btn = document.getElementById('su-wb-run');
