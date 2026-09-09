@@ -104,6 +104,38 @@ EDITION_META = {
 }
 
 
+def _split_verdict(text: str):
+    """A verdict headline is assembled by the computations as `"; ".join(parts)` — one
+    long string of clauses. Typeset it as a LEAD + supporting points so the most
+    important sentence on the page can be read at a glance. Characters are never
+    altered, only line-broken, so the page and the exported document carry the
+    identical claim. Semicolons inside (parens) or [brackets] are not split points;
+    fewer than three clauses stays a single paragraph (a list of two reads worse)."""
+    depth, parts, buf = 0, [], []
+    for ch in text or "":
+        if ch in "([":
+            depth += 1
+        elif ch in ")]":
+            depth = max(0, depth - 1)
+        if ch == ";" and depth == 0:
+            parts.append("".join(buf).strip()); buf = []
+        else:
+            buf.append(ch)
+    parts.append("".join(buf).strip())
+    parts = [p for p in parts if p]
+    if len(parts) < 3:
+        return (text or "").strip(), []
+    return parts[0], parts[1:]
+
+
+# Header status is EXCEPTION-ONLY: the expected states (measured/derived evidence,
+# fresh pins) say nothing a reader can act on, and rendering them permanently turns
+# real signals into wallpaper. Only these values surface in the title block; the full
+# picture always lives on the Quality & audit tab.
+NOTEWORTHY_EVIDENCE = {"assumed", "unavailable"}
+NOTEWORTHY_FRESHNESS = {"aging", "stale"}
+
+
 def _decorate_row(q: dict) -> dict:
     q["_status"] = STATUS_META.get(q.get("status"), STATUS_META["not-implemented"])
     q["_evidence"] = EVIDENCE_META.get(q.get("evidence_class") or "")
@@ -1014,6 +1046,7 @@ async def commercial_view(domain: str, request: Request, bq: str, edition: str |
            "ed_meta": None, "EDITION_META": EDITION_META,
            "expectations": [], "narrative": None, "newer_draft": None,
            "narrative_status": "missing", "exec_summary_html": "", "narr_meta": {},
+           "tab_attention": {}, "head_status": [],
            "narr_error": request.query_params.get("narr_error"), "narr_ok": request.query_params.get("narr_ok"),
            "references": [], "quality": None, "code": _decorate_code(q),
            "vplan": _decorate_vplan(q),
@@ -1039,7 +1072,9 @@ async def commercial_view(domain: str, request: Request, bq: str, edition: str |
             else:
                 s["_ref_n"] = None
         ctx["series"] = series
-        ctx["verdicts"] = ed["data"].get("verdicts", [])
+        ctx["verdicts"] = [dict(v) for v in ed["data"].get("verdicts", [])]
+        for v in ctx["verdicts"]:
+            v["_lead"], v["_points"] = _split_verdict(v.get("headline", ""))
         # plain-language explainer layer (sidecar schema 1.1; absent on 1.0 → {})
         ctx["explainers"] = _explainers_for(q, series)
         for s in series:
@@ -1113,6 +1148,32 @@ async def commercial_view(domain: str, request: Request, bq: str, edition: str |
         pstatus = (quality or {}).get("plan") or {}
         ctx["plan_status"] = PLAN_META.get(pstatus.get("status"),
                                            PLAN_META["missing"] if not plan_file.is_file() else None)
+        # ── Title-block status + tab dots, both exception-only ────────────────
+        # The edition's draft/approved state is NOT repeated here: the editions rail
+        # names it and the chart area is watermarked. Evidence class and pin freshness
+        # appear only at their noteworthy values, so a marker in the header always
+        # means "read this", never "everything is normal".
+        head = []
+        if (q.get("evidence_class") or "") in NOTEWORTHY_EVIDENCE and q.get("_evidence"):
+            head.append({"cls": q["_evidence"]["cls"], "label": q["_evidence"]["label"],
+                         "tip": q["_evidence"]["tip"]})
+        if (q.get("freshness") or "") in NOTEWORTHY_FRESHNESS and q.get("_fresh"):
+            head.append({"cls": q["_fresh"]["cls"], "label": q["_fresh"]["label"],
+                         "tip": q["_fresh"]["tip"]})
+        ctx["head_status"] = head
+        # A tab dot marks a tab whose contents need attention — no counts, no chips:
+        # the detail is one click away, and a clean tab row is the common case.
+        lint_bad = bool(quality and (quality.get("lint", {}).get("errors")
+                                     or quality.get("lint", {}).get("status") not in (None, "pass")))
+        code_bad = bool(ctx.get("code") and ctx["code"]["_status"]["cls"] == "vx-notmet")
+        plan_bad = bool(ctx["plan_status"] and ctx["plan_status"]["cls"] != "vx-met")
+        ctx["tab_attention"] = {
+            "quality": lint_bad or code_bad,
+            "quality_why": "The claim lint or the code audit reports a failure"
+                           if (lint_bad or code_bad) else "",
+            "plan": plan_bad,
+            "plan_why": (ctx["plan_status"]["label"] if plan_bad else ""),
+        }
         abs_report = cfg.repo_root / ed["report_path"]
         if abs_report.is_file():
             try:

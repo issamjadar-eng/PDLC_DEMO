@@ -46,7 +46,6 @@ body.commercial-page main { max-width: none; }
 .fr-aging { --c: #c98500; }
 .fr-stale { --c: #e34948; }
 .cm-assume-chip { --c: #c98500; text-decoration: none; }
-.cm-badges { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .5rem; }
 
 /* category rail */
 .cm-cat-rail { display: flex; flex-wrap: wrap; gap: .45rem; margin: 0 0 1.2rem; }
@@ -91,11 +90,22 @@ a.cm-card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px -12px rgb
 .cm-card-foot { display: flex; justify-content: space-between; align-items: center; gap: .5rem; margin-top: auto; font-size: .74rem; }
 
 /* verdict banner */
-.cm-verdict { display: flex; gap: .9rem; align-items: baseline; background: var(--surface, #fff);
+.cm-verdict { display: flex; gap: 1.1rem; align-items: flex-start; background: var(--surface, #fff);
   border: 1px solid var(--border, #e2e8f0); border-left: 4px solid var(--cm-series, #2a78d6);
-  border-radius: 10px; padding: .85rem 1rem; margin: 0 0 1rem; }
-.cm-verdict-k { text-transform: uppercase; font-size: .68rem; font-weight: 700; letter-spacing: .08em; color: var(--body-text-muted, #64748b); }
-.cm-verdict-h { margin: 0; font-size: 1.02rem; font-weight: 600; line-height: 1.45; }
+  border-radius: 10px; padding: .95rem 1.15rem; margin: 0 0 1rem; }
+.cm-verdict-k { text-transform: uppercase; font-size: .68rem; font-weight: 700; letter-spacing: .08em;
+  color: var(--body-text-muted, #64748b); }
+/* the fixed gutter belongs to the verdict block only — .cm-verdict-k is shared with
+   the executive-summary header, where a 4.2rem box wraps the label onto two lines */
+.cm-verdict > .cm-verdict-k { flex: 0 0 4.2rem; padding-top: .2rem; }
+.cm-verdict-body { min-width: 0; flex: 1 1 auto; }
+.cm-verdict-h { margin: 0; font-size: 1.02rem; font-weight: 600; line-height: 1.5; }
+/* supporting clauses of the same headline — the string is unchanged, only broken */
+.cm-verdict-pts { list-style: none; margin: .55rem 0 0; padding: 0; display: grid; gap: .3rem; }
+.cm-verdict-pts li { position: relative; padding-left: 1rem; font-size: .93rem; font-weight: 500;
+  line-height: 1.5; color: color-mix(in srgb, var(--body-text, #1f2937) 86%, transparent); }
+.cm-verdict-pts li::before { content: ""; position: absolute; left: 0; top: .68em; width: .45rem; height: 1.5px;
+  background: var(--cm-series, #2a78d6); opacity: .8; }
 
 /* banners */
 .cm-banner { border-radius: 10px; padding: .7rem 1rem; margin: 0 0 1rem; font-size: .85rem; }
@@ -154,11 +164,7 @@ a.cm-card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px -12px rgb
 .cm-q-bad-item { color: #e34948; }
 .cm-q-da-h { margin: .5rem 0 .2rem; }
 
-/* approve — header button + modal dialog */
-.cm-approve-open { border: 1px solid color-mix(in srgb, #008300 45%, var(--border, #e2e8f0));
-  background: color-mix(in srgb, #008300 12%, transparent); color: inherit; font-size: .72rem;
-  font-weight: 700; padding: .18rem .6rem; border-radius: 99px; cursor: pointer; }
-.cm-approve-open:hover { background: color-mix(in srgb, #008300 22%, transparent); }
+/* approve — modal dialog (the trigger is a .cm-btn in the header action cluster) */
 .cm-dialog { border: 1px solid var(--border, #e2e8f0); border-radius: 14px; padding: 1.1rem 1.3rem;
   background: var(--surface, #fff); color: var(--body-text, #1f2937); max-width: 34rem; width: calc(100vw - 3rem);
   box-shadow: 0 24px 60px -12px rgba(0,0,0,.45); }
@@ -324,7 +330,6 @@ sup.cm-ref a:hover { text-decoration: underline; }
 .cm-empty { border: 1px dashed var(--border, #cbd5e1); border-radius: 12px; padding: 1.4rem; color: var(--body-text-muted, #64748b); }
 
 @media (max-width: 720px) { .cm-head { flex-direction: column; } .cm-charts { grid-template-columns: 1fr; } }
-.cm-data-chip { --c: #2a78d6; text-decoration: none; }
 /* Data tab folds */
 .cm-data-fold { border: 1px solid var(--border, #e2e8f0); border-radius: 12px; padding: .6rem .9rem; margin: 0 0 .6rem; background: var(--surface, #fff); }
 .cm-data-fold summary { cursor: pointer; display: flex; gap: .6rem; align-items: baseline; flex-wrap: wrap; }
@@ -348,8 +353,6 @@ sup.cm-ref a:hover { text-decoration: underline; }
   color: var(--body-text, #1f2937); box-shadow: 0 12px 30px -12px rgba(0,0,0,.4);
   text-transform: none; letter-spacing: normal; }
 .cm-info-btn:hover + .cm-info-card, .cm-info-btn:focus-visible + .cm-info-card { display: block; }
-.cm-about-btn { --c: #2a78d6; border: none; cursor: pointer; }
-.cm-about-btn:hover, .cm-about-btn:focus-visible { background: color-mix(in srgb, var(--c) 24%, transparent); }
 
 /* shared explainer dialog */
 .cm-explain-dialog { max-width: 31rem; }
@@ -499,8 +502,6 @@ sup.cm-ref a:hover { text-decoration: underline; }
 .cm-narr-body { font-size: .92rem; line-height: 1.5; padding: .3rem 0 .2rem; }
 .cm-narr-body p:last-child { margin-bottom: 0; }
 .cm-narr-stale { background: color-mix(in srgb, #c98500 18%, transparent); color: #7a5200; }
-.cm-export { display: inline-flex; gap: .3rem; }
-.cm-export-chip { background: var(--surface-2, #f1f5f9); }
 
 /* ---- Full Report tab: charts placed inside the document flow, under the section's
    tables and above its narrative fold. Compact figures (no explainer button). */
@@ -509,3 +510,62 @@ sup.cm-ref a:hover { text-decoration: underline; }
 .cm-chart-inline { margin: 0; }
 .cm-fr-exec h2, .cm-fr-overview h2 { margin-top: 0; }
 .cm-fr-exec { background: color-mix(in srgb, var(--cm-series, #2a78d6) 7%, var(--surface, #fff)); border-left: 4px solid var(--cm-series, #2a78d6); border-radius: 10px; padding: .6rem 1rem; margin: 0 0 1rem; }
+
+/* ── Answer-header: status, actions and help kept visually distinct ──────────
+   Previously one .cm-chip pill served all three jobs, so seven same-weight
+   badges competed for the eye and the amber "Draft" read as a warning. */
+
+.cm-head-detail { align-items: flex-start; gap: 1.5rem; }
+.cm-head-main { min-width: 0; flex: 1 1 auto; }
+/* the ⓘ rides the identifier line: icon only, no pill, no label */
+.cm-eyebrow-info { margin-left: .35rem; }
+.cm-eyebrow-info .cm-info-btn { font-size: .92rem; color: var(--body-text-muted, #64748b); }
+.cm-eyebrow-info .cm-info-card { left: 0; transform: none; }
+
+/* exception-only status line — nothing renders in the expected state */
+.cm-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem 1.05rem; margin: .6rem 0 0;
+  font-size: .78rem; font-weight: 600; color: var(--body-text-muted, #64748b); }
+/* NB: do NOT declare `--c` here. The tone classes (.ev-assumed, .fr-stale, …) carry
+   it at equal specificity and are defined EARLIER in this file, so a default set here
+   would win on source order and flatten every marker to grey. Fall back at use. */
+.cm-meta-item { display: inline-flex; align-items: center; gap: .4rem; white-space: nowrap;
+  color: color-mix(in srgb, var(--c, var(--body-text-muted, #64748b)) 72%, var(--body-text, #1f2937)); }
+.cm-meta-item::before { content: ""; width: .5rem; height: .5rem; border-radius: 50%; flex: 0 0 auto;
+  background: var(--c, var(--body-text-muted, #64748b)); }
+.cm-meta-assume { --c: #c98500; text-decoration: none; }
+.cm-meta-assume:hover { text-decoration: underline; }
+
+/* action cluster — real buttons, right-aligned, one primary */
+.cm-actions { display: flex; align-items: center; gap: .5rem; flex: 0 0 auto; padding-top: .15rem; }
+.cm-btn { display: inline-flex; align-items: center; gap: .4rem; font-size: .8rem; font-weight: 600;
+  padding: .42rem .8rem; border-radius: 8px; border: 1px solid var(--border, #e2e8f0);
+  background: var(--surface, #fff); color: var(--body-text, #1f2937); text-decoration: none;
+  cursor: pointer; white-space: nowrap; transition: border-color .15s, background .15s; }
+.cm-btn:hover { border-color: color-mix(in srgb, var(--brand-primary, #4f46e5) 45%, var(--border, #e2e8f0));
+  background: color-mix(in srgb, var(--brand-primary, #4f46e5) 6%, var(--surface, #fff)); }
+.cm-btn-primary { border-color: color-mix(in srgb, #008300 45%, var(--border, #e2e8f0));
+  background: color-mix(in srgb, #008300 12%, transparent); }
+.cm-btn-primary:hover { background: color-mix(in srgb, #008300 22%, transparent);
+  border-color: color-mix(in srgb, #008300 60%, var(--border, #e2e8f0)); }
+
+/* Word + PDF + Markdown behind one control instead of three pills */
+.cm-menu { position: relative; }
+.cm-menu > summary { list-style: none; }
+.cm-menu > summary::-webkit-details-marker { display: none; }
+.cm-menu > summary::after { content: "▾"; font-size: .68rem; opacity: .65; margin-left: .1rem; }
+.cm-menu[open] > summary { border-color: color-mix(in srgb, var(--brand-primary, #4f46e5) 45%, var(--border, #e2e8f0)); }
+.cm-menu-pop { position: absolute; right: 0; top: calc(100% + .35rem); min-width: 11.5rem; z-index: 45;
+  display: flex; flex-direction: column; gap: .1rem; padding: .3rem;
+  background: var(--surface, #fff); border: 1px solid var(--border, #e2e8f0); border-radius: 10px;
+  box-shadow: var(--shadow-lg, 0 14px 32px -14px rgba(15, 23, 42, .32)); }
+.cm-menu-pop a { padding: .45rem .6rem; border-radius: 6px; font-size: .83rem; font-weight: 600;
+  color: var(--body-text, #1f2937); text-decoration: none; }
+.cm-menu-pop a:hover { background: color-mix(in srgb, var(--brand-primary, #4f46e5) 10%, transparent); }
+
+/* a tab speaks only when its contents need attention */
+.cm-tab-dot { width: .44rem; height: .44rem; border-radius: 50%; background: #c98500; flex: 0 0 auto; }
+
+@media (max-width: 900px) {
+  .cm-head-detail { flex-direction: column; gap: .9rem; }
+  .cm-actions { padding-top: 0; }
+}

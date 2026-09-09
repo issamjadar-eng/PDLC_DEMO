@@ -33,31 +33,45 @@
   {% macro qheader() %}
   <nav class="cm-crumb"><a href="{{ base }}">← {{ dm.name }}</a></nav>
   <header class="cm-head cm-head-detail">
-    <div>
-      <p class="cm-eyebrow">{{ q.id }} · {{ q.personas | join(', ') }} · {{ q.cadence }}</p>
+    {# Three kinds of thing, three treatments — the old row rendered status, actions,
+       navigation and help as identical pills, so nothing had priority:
+       · HELP   — the ⓘ rides the identifier line, icon only
+       · STATUS — a quiet meta line, and ONLY when noteworthy (see router
+                  head_status): the draft/approved state is already named by the
+                  editions rail and the chart watermark, and "Derived"/"Fresh" are
+                  the unremarkable states
+       · ACTIONS — real buttons, right-aligned, one primary. Word + PDF collapse
+                  into one Export menu; the old "Data view" link is gone because
+                  the Data tab already goes there. #}
+    <div class="cm-head-main">
+      <p class="cm-eyebrow">{{ q.id }} · {{ q.personas | join(', ') }} · {{ q.cadence }}{% if explainers.get('question') %}<span class="cm-info cm-eyebrow-info"><button type="button" class="cm-info-btn" data-explain="question" aria-label="About this analysis" aria-haspopup="dialog">ⓘ</button><span class="cm-info-card" role="tooltip">{{ explainers['question'].what }}</span></span>{% endif %}</p>
       <h1 class="cm-question">{{ q.question }}</h1>
-      <div class="cm-badges">
-        {% if explainers.get('question') %}
-        <span class="cm-info"><button type="button" class="cm-chip cm-about-btn" data-explain="question" aria-haspopup="dialog">ⓘ About this analysis</button><span class="cm-info-card" role="tooltip">{{ explainers['question'].what }}</span></span>
-        {% endif %}
-        {% if ed_meta %}<span class="cm-chip {{ ed_meta.cls }}">{{ ed_meta.label }}</span>{% endif %}
-        {% if q._evidence %}<span class="cm-badge {{ q._evidence.cls }}" title="{{ q._evidence.tip }}">{{ q._evidence.glyph }} {{ q._evidence.label }}</span>{% endif %}
-        {% if q._fresh %}<span class="cm-badge {{ q._fresh.cls }}" title="{{ q._fresh.tip }}">{{ q._fresh.label }}</span>{% endif %}
+      {% if head_status or assumption_chips %}
+      <p class="cm-meta">
+        {% for st in head_status %}<span class="cm-meta-item {{ st.cls }}" title="{{ st.tip }}">{{ st.label }}</span>{% endfor %}
         {% for a in assumption_chips %}
-          {% if a.link %}<a class="cm-chip cm-assume-chip" href="{{ a.link }}" target="_blank" rel="noopener" title="Open the assumption record">≈ {{ a.id }} ↗</a>
-          {% else %}<span class="cm-chip cm-assume-chip">≈ {{ a.id }}</span>{% endif %}
+          {% if a.link %}<a class="cm-meta-item cm-meta-assume" href="{{ a.link }}" target="_blank" rel="noopener" title="Open the assumption record">Rests on {{ a.id }} ↗</a>
+          {% else %}<span class="cm-meta-item cm-meta-assume">Rests on {{ a.id }}</span>{% endif %}
         {% endfor %}
-        {% if ed %}<a class="cm-chip cm-data-chip" href="{{ base }}/{{ q.id }}/data?edition={{ ed.edition }}" title="The pinned snapshot rows behind this answer — sortable, filterable, searchable">▦ Data view</a>
-        <span class="cm-export" role="group" aria-label="Export">
-          <a class="cm-chip cm-export-chip" href="{{ base }}/{{ q.id }}/export?edition={{ ed.edition }}&amp;format=docx" title="Download the formal document — executive summary, sections with narrative, references — as Word">⬇ Word</a>
-          <a class="cm-chip cm-export-chip" href="{{ base }}/{{ q.id }}/export?edition={{ ed.edition }}&amp;format=pdf" title="Download as PDF (via LibreOffice)">⬇ PDF</a>
-        </span>{% endif %}
-        {% if ed and ed.status == 'draft' %}
-        <button type="button" class="cm-approve-open" onclick="document.getElementById('cm-approve-dialog').showModal()"
-                title="Approve this draft edition and push it to the repo">✓ Approve…</button>
-        {% endif %}
-      </div>
+      </p>
+      {% endif %}
     </div>
+    {% if ed %}
+    <div class="cm-actions">
+      <details class="cm-menu">
+        <summary class="cm-btn" title="Download the formal document — executive summary, sections with their tables, charts and narrative, then references">⬇ Export</summary>
+        <div class="cm-menu-pop" role="menu">
+          <a role="menuitem" href="{{ base }}/{{ q.id }}/export?edition={{ ed.edition }}&amp;format=docx">Word <span class="cm-muted">(.docx)</span></a>
+          <a role="menuitem" href="{{ base }}/{{ q.id }}/export?edition={{ ed.edition }}&amp;format=pdf">PDF</a>
+          <a role="menuitem" href="{{ base }}/{{ q.id }}/export?edition={{ ed.edition }}&amp;format=md">Markdown</a>
+        </div>
+      </details>
+      {% if ed.status == 'draft' %}
+      <button type="button" class="cm-btn cm-btn-primary" onclick="document.getElementById('cm-approve-dialog').showModal()"
+              title="Approve this draft edition and push it to the repo">✓ Approve…</button>
+      {% endif %}
+    </div>
+    {% endif %}
   </header>
   {% endmacro %}
 
@@ -85,24 +99,34 @@
   <div class="cm-toptabs" role="tablist" aria-label="View">
     <button type="button" class="cm-toptab is-active" data-tab="cm-tab-viz" title="Quick view — verdict, executive summary, charts, expectations">Visualization</button>
     <button type="button" class="cm-toptab" data-tab="cm-tab-report" title="Document view — every section's tables with its charts and narrative; the Word / PDF export">Full Report</button>
+    {# Tabs are navigation. Status badges used to hang off three of them (lint, code,
+       verification, plan) which made the row compete with the content and stopped the
+       labels being scannable. The detail is one click away; a tab speaks only when its
+       contents need attention, via a single dot. #}
     <button type="button" class="cm-toptab" data-tab="cm-tab-quality">Quality &amp; audit
-      {% if quality %}<span class="cm-badge {{ 'ev-measured' if quality.lint.status == 'pass' else 'fr-stale' }}">{{ '✓' if quality.lint.status == 'pass' else '✗' }} lint</span>{% endif %}
-      {% if code %}<span class="cm-chip {{ code._status.cls }}" title="Computation code: {{ code._status.label }}">{{ code._status.glyph }} code</span>{% endif %}
-      {% if vplan %}<span class="cm-chip {{ vplan._cls }}" title="Verification plan: {{ vplan.met }} of {{ vplan.total }} computable declared gates satisfied (checklist on the Plan tab)">verification {{ vplan.met }}/{{ vplan.total }}</span>{% endif %}
+      {% if tab_attention.quality %}<span class="cm-tab-dot" title="{{ tab_attention.quality_why }}"></span>{% endif %}
     </button>
     <button type="button" class="cm-toptab" data-tab="cm-tab-data">Data
-      <span class="cm-cat-n">{{ tables | length }} tables</span>
+      <span class="cm-cat-n">{{ tables | length }}</span>
     </button>
     <button type="button" class="cm-toptab" data-tab="cm-tab-plan">Plan
-      {% if plan_status %}<span class="cm-chip {{ plan_status.cls }}" title="{{ plan_status.label }}">{{ plan_status.label.split(' — ')[0] }}</span>{% endif %}
+      {% if tab_attention.plan %}<span class="cm-tab-dot" title="{{ tab_attention.plan_why }}"></span>{% endif %}
     </button>
   </div>
 
   <div id="cm-tab-viz">
+  {# The headline is one long semicolon-joined string; the router line-breaks it into
+     a lead + supporting points WITHOUT altering a character, so the page and the
+     exported document carry the identical claim. #}
   {% for v in verdicts %}
   <div class="cm-verdict">
     <span class="cm-verdict-k">Verdict{{ info('verdict') }}</span>
-    <p class="cm-verdict-h">{{ v.headline }}</p>
+    <div class="cm-verdict-body">
+      <p class="cm-verdict-h">{{ v._lead }}</p>
+      {% if v._points %}
+      <ul class="cm-verdict-pts">{% for pt in v._points %}<li>{{ pt }}</li>{% endfor %}</ul>
+      {% endif %}
+    </div>
   </div>
   {% endfor %}
 
@@ -216,7 +240,15 @@
       (<a href="/documents#path={{ ed.report_path }}" target="_blank" rel="noopener">source report.md ↗</a> ·
       <a href="{{ base }}/{{ q.id }}/raw?edition={{ ed.edition }}" target="_blank" rel="noopener">data.json ↗</a>).</p>
   </div>
-  {% for v in verdicts %}<div class="cm-verdict"><span class="cm-verdict-k">Verdict</span><p class="cm-verdict-h">{{ v.headline }}</p></div>{% endfor %}
+  {% for v in verdicts %}
+  <div class="cm-verdict">
+    <span class="cm-verdict-k">Verdict</span>
+    <div class="cm-verdict-body">
+      <p class="cm-verdict-h">{{ v._lead }}</p>
+      {% if v._points %}<ul class="cm-verdict-pts">{% for pt in v._points %}<li>{{ pt }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+  </div>
+  {% endfor %}
   {% if exec_summary_html %}
   <section class="cm-fr-exec"><h2>Executive summary{% if narrative_status == 'stale' %} <span class="cm-chip cm-narr-stale">stale — regenerate</span>{% endif %}</h2>
     <div class="md-body">{{ exec_summary_html | safe }}</div></section>
@@ -664,6 +696,16 @@
 {% include "_assistant_launcher.html" %}
 <script>
 (function () {
+  // export menu: native <details>, closed on outside click and Escape
+  document.addEventListener('click', function (e) {
+    document.querySelectorAll('details.cm-menu[open]').forEach(function (d) {
+      if (!d.contains(e.target)) d.open = false;
+    });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') document.querySelectorAll('details.cm-menu[open]').forEach(function (d) { d.open = false; });
+  });
+
   var tabs = document.querySelector('.cm-toptabs');
   if (!tabs) return;
   tabs.addEventListener('click', function (e) {
