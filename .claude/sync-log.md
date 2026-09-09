@@ -1432,3 +1432,19 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - Hitachi HEAD after sync: `1ac3cc2`
 - ⚠️ **Drift-check reliability.** `collect.py` was local-ahead the whole time but absent from the first two `check` runs; it only surfaced on the third, as `UNDETERMINED — race condition`. It was nearly left unpushed. Do not treat a single `check` as a complete inventory of local-ahead work — cross-check against open `sync/*` PRs before declaring a push complete.
 - Follow-ups: PRs #296 and #297 remain open and are now superseded (#298 carries a newer `aggregate.py` + the `pricing.json` seed; #299 carries their `collect.py` verbatim). Recommend closing both. 2 merged `sync/*` branches (arthrex) pending `prune`.
+
+## 2026-09-08 — pull
+
+- Hitachi HEAD: `2c6d90f`
+- Pulled: 2 files (`UPSTREAM_ONLY`, auto-pull bucket) — `skills/project-console/themes/{dark,light}/footer.html.j2` (generic theme footer templates; local `themes.py` already supports `has_footer()`)
+- Project impact: none — the project uses its own `globallogic-blue` theme pack; no setup action changed.
+- Three-way analysis: all 32 `UPSTREAM_NEWER` rows under `commercial/` + `project-console/` classified `LOCAL_AHEAD` (upstream blob present in project history) → surfaced as push candidates, pushed below.
+
+## 2026-09-08 — push
+
+- Files: 36 — `commercial/{README.md,SKILL.md,scripts/commercial.py,templates/business-evidence-refresh.yml}` (4) · `project-console/` (32: README/SKILL/VERSION, app.py, commercial/{loader,router}.py, dashboards/router.py, doc_pipeline/loader.py, setup/{loader,router}.py, themes.py, workflows/{catalog,router}.py, 4 css, 11 templates incl. new `workflow_mgmt_review.html`, tests incl. new `test_commercial_domains.py` + `test_commercial_narrative.py`, 2 theme.yaml)
+- Branches: `sync/pdlc-demo-commercial-v18-domains-narrative-2026-09-08`, `sync/pdlc-demo-project-console-1.67.3-2026-09-08`
+- PRs: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/303 · https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/304
+- Commits: "commercial v18: N business domains, narrative layer, export, review pack, refresh Action" · "project-console 1.67.3: business-domain tabs, narrative + export, workflows D3-D6, workbench-validation settings"
+- Status: awaiting review (PR-only; `--merge` not requested)
+- Note: registry moves commercial v14 → v18 and project-console 1.61.0 → 1.67.3 in one step each; the console PR bundles ben/114–121 work (doc-pipeline, domains, narrative, workbench-validation panels). Pair the two PRs. Follow-up: `prune` after merge.
