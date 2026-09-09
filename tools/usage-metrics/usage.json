@@ -2895,7 +2895,7 @@
         "retrospective": true,
         "title": "Client PDLC Composite Deck Builder",
         "todos": 1,
-        "updated": "2026-06-08"
+        "updated": "2026-09-08"
       },
       "sessions": 0,
       "totals": {},
@@ -2940,7 +2940,7 @@
         "retrospective": true,
         "title": "Agentic-First MedTech Development: Strategy + Agent Team Design",
         "todos": 1,
-        "updated": "2026-06-08"
+        "updated": "2026-09-08"
       },
       "sessions": 0,
       "totals": {},
@@ -4030,7 +4030,7 @@
         "retrospective": true,
         "title": "Commercial Roadmap (5-Year) + KOL Gap-Analysis",
         "todos": 1,
-        "updated": "2026-06-08"
+        "updated": "2026-09-08"
       },
       "sessions": 0,
       "totals": {},
@@ -5877,7 +5877,7 @@
         "retrospective": false,
         "title": "Console: Journey, Document Pipeline & Strategy Landing",
         "todos": 11,
-        "updated": "2026-08-10"
+        "updated": "2026-09-08"
       },
       "sessions": 2,
       "totals": {
@@ -6148,7 +6148,7 @@
         "retrospective": false,
         "title": "Business Domains: Finance, Manufacturing & Workflow Automations",
         "todos": 9,
-        "updated": "2026-09-08"
+        "updated": "2026-09-09"
       },
       "sessions": 1,
       "totals": {
@@ -6310,6 +6310,74 @@
         "title": "Port the `multimodel` Provider Skill (OpenAI / Gemini / Grok Access Layer)",
         "todos": 7,
         "updated": "2026-09-08"
+      },
+      "sessions": 0,
+      "totals": {},
+      "user_turns": null
+    },
+    "ben/123": {
+      "by_model": {},
+      "cost": 0.0,
+      "estimate": {
+        "agentic_hours": null,
+        "agentic_hours_range": null,
+        "by_persona": {
+          "_unspecified": {
+            "max": 0.0,
+            "min": 0.0
+          }
+        },
+        "confidence_mix": {
+          "?": 5
+        },
+        "hours_saved": null,
+        "inverted": false,
+        "manual_hours": {
+          "max": 0.0,
+          "min": 0.0
+        },
+        "method_version": 1,
+        "personas": [
+          "_unspecified"
+        ],
+        "retrospective": false,
+        "title": "Workbench Validation: Defect Correction and QMS Template Coverage",
+        "todos": 5,
+        "updated": "2026-09-09"
+      },
+      "sessions": 0,
+      "totals": {},
+      "user_turns": null
+    },
+    "ben/124": {
+      "by_model": {},
+      "cost": 0.0,
+      "estimate": {
+        "agentic_hours": null,
+        "agentic_hours_range": null,
+        "by_persona": {
+          "_unspecified": {
+            "max": 0.0,
+            "min": 0.0
+          }
+        },
+        "confidence_mix": {
+          "?": 3
+        },
+        "hours_saved": null,
+        "inverted": false,
+        "manual_hours": {
+          "max": 0.0,
+          "min": 0.0
+        },
+        "method_version": 1,
+        "personas": [
+          "_unspecified"
+        ],
+        "retrospective": false,
+        "title": "Workbench Validation: Report Revisions and Word/PDF Export",
+        "todos": 3,
+        "updated": "2026-09-09"
       },
       "sessions": 0,
       "totals": {},
@@ -6606,6 +6674,6 @@
     "note": "MODELED, UNCALIBRATED estimate \u2014 not a measured saving. Hours saved = by-hand person-hour estimate (ranged) \u2212 agentic supervised-attention hours (conservative: floor uses agentic-max). ~half of by-hand personas are judgment-tier; most task estimates are low-confidence retrospective backfill (see tasks_retrospective). Independent blind re-estimate of a 12-task sample showed ~88% mean inter-estimator deviation \u2014 treat as order-of-magnitude, lead with the conservative `min`.",
     "tasks_inverted_excluded": 3,
     "tasks_retrospective": 94,
-    "tasks_with_estimate": 120
+    "tasks_with_estimate": 122
   }
 }
