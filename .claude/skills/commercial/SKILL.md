@@ -1,7 +1,7 @@
 ---
 name: commercial
 description: "Business-question analysis engine — turns a project's business-question catalog (commercial.yml) into data-backed, provenance-cited ANSWER EDITIONS computed deterministically from corpus-skill snapshots, with a claim lint, a gated draft→approved→superseded lifecycle, and console JSON sidecars. Every numeric claim in an answer must carry a machine-resolvable marker ([src: dataset@snapshot], [assume: A-NNN], [derived: series-id], [config: path]); approval is BLOCKED until lint + freshness are green; approved editions are hash-pinned and immutable. TRIGGER when the user wants to: answer / compute / refresh a business question ('answer BQ-23', 'what's our campaign coverage', 'run the field analysis'); lint / check / approve a business answer or report edition; render or refresh the commercial console sidecars; see the question catalog or answer statuses; audit the quality of the analysis code or file/record a code review ('code-audit the computations', 'review the BQ modules', 'is the analysis code reviewed'); or add/modify business questions, computations, or the catalog in a project's commercial tree (commercial.yml, computations, reports/). Also trigger on edits under docs/project/commercial/reports/ — approved editions are immutable and hand-edits break approval hashes; route changes through answer/approve. Consumes the corpus skill's snapshots (data tier); produces reports + sidecars only — visualization belongs to the project console."
-version: 17
+version: 18
 updated: 2026-09-08
 dependencies:
   skills:
@@ -40,6 +40,7 @@ Core guarantees downstream consumers rely on:
 
 | File | Purpose |
 |------|---------|
+| `tests/test_claim_gate.py` | Capability regression suite for the claim gate (`lint`): a synthetic domain + corpus in a temp dir where a marked, fresh claim passes, and where an unmarked numeric claim, a stale pin without waiver, and a marker citing an unpinned dataset each BLOCK (exit 1). Hermetic (socket guard in `tests/conftest.py`); independent of any project's data state. `uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/commercial/tests -q` |
 | `scripts/commercial.py` | The engine — answer / lint / approve / render / check / catalog (Python 3.9+, PyYAML) |
 | `templates/commercial.yml` | Starter question-catalog config for a new project |
 | `templates/computation-example.py` | Example computation script showing the contract |
