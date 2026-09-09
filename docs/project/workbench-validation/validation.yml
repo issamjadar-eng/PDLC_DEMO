@@ -337,6 +337,21 @@ user_needs:
     so_that: "a template imported next quarter, or a doctype we never had a template for, cannot silently go unvalidated"
     implemented_by: "medtech-docs qms_coverage.py (registry × conformance results) → report §3 coverage table, sidecar qms_coverage, console panel"
 
+  - id: WUN-31
+    role: "Auditor (internal / external)"
+    class: renderers
+    tier: T1
+    need: "let me download the validation report for any recorded run as a Word or PDF document that carries every artifact and piece of evidence in its own section — the pinned manifest, the environment and deployment declaration, the protocols with their execution records and run evidence, every case's full evidence log, the pinned test sources with checksums, and the QMS coverage inventory"
+    so_that: "the validation record can be reviewed, signed and archived outside the workbench without anything depending on a link back into it"
+    implemented_by: "workbench-validation export_package.py (one sectioned markdown package → DOCX/PDF through docflow export_formal.py); console Export buttons"
+  - id: WUN-32
+    role: "Quality engineer"
+    class: console
+    tier: T2
+    need: "pick any recorded validation run in the console and see that run's own report, verdicts and evidence — not only the latest"
+    so_that: "I can compare revisions and answer what the validation said at a given point in time"
+    implemented_by: "renderer writes results/<run-id>/validation-report.md + sidecar.json and results/index.json; console run drop-down loads the selected run's sidecar"
+
 
 # `title` / `description` / `approach` are written for a NON-SPECIALIST reviewer:
 # title = what is being checked in everyday words; description = what the case
@@ -881,3 +896,29 @@ test_cases:
     endpoint: none
     cmd: ["python3", ".claude/skills/submissions/scripts/estar_lint.py", "--crosswalk", "docs/project/submissions/510k/estar-crosswalk.md", "--transmit-gate", "--json"]
     timeout: 120
+
+  # ---- Report revisions + export package (task ben/124) ----
+  - id: TC-45
+    title: "Every recorded run has its own rendered report, sidecar and index row"
+    description: "DEPLOYMENT check: the runs index lists every recorded run with a verdict, and each run folder carries its own rendered report and sidecar so the console can show any revision."
+    approach: "Reads results/index.json and checks every run-*.json has an index row whose sidecar and report files exist and whose sidecar revision block names that run."
+    wun: [WUN-32]
+    uut: [workbench-validation]
+    scope: deployment
+    method: scripted
+    endpoint: none
+    cmd: ["python3", "-c", "import json,glob,sys;from pathlib import Path;R=Path('tools/workbench-validation/results');idx={r['run_id']:r for r in json.load(open(R/'index.json'))};runs=[json.load(open(f))['run_id'] for f in glob.glob(str(R/'run-*.json'))];bad=[r for r in runs if r not in idx or not idx[r]['sidecar'] or not idx[r]['report'] or not Path(idx[r]['sidecar']).is_file() or not Path(idx[r]['report']).is_file() or json.load(open(idx[r]['sidecar']))['revision']['run_id']!=r];print('runs',len(runs),'indexed',len(idx),'bad',bad);sys.exit(1 if bad or not runs else 0)"]
+    timeout: 60
+  - id: TC-46
+    title: "The validation package exports as Markdown, Word and PDF with every evidence section present"
+    description: "DEPLOYMENT check: exports the latest run as a sectioned package in all three formats through the project's sanctioned document pipeline, and checks the Markdown carries the cover, sign-off block and appendices A–F."
+    approach: "Runs export_package.py for the latest run in md, docx and pdf; passes only when all three files exist and the Markdown contains every required section."
+    wun: [WUN-31]
+    uut: [workbench-validation, docflow]
+    scope: deployment
+    method: scripted
+    endpoint: none
+    requires: [pandoc, soffice]
+    cmd: ["bash", "-c", "set -e; S=.claude/skills/workbench-validation/scripts/export_package.py; MD=$(python3 $S --root . --run latest --format md | tail -1); DOCX=$(python3 $S --root . --run latest --format docx | tail -1); PDF=$(python3 $S --root . --run latest --format pdf | tail -1); test -s \"$MD\" && test -s \"$DOCX\" && test -s \"$PDF\"; for h in 'Sign-off' 'Appendix A' 'Appendix B' 'Appendix C' 'Appendix D' 'Appendix E' 'Appendix F'; do grep -q \"$h\" \"$MD\" || { echo \"missing section: $h\"; exit 1; }; done; echo EXPORT-OK $MD $DOCX $PDF"]
+    pass_pattern: "EXPORT-OK"
+    timeout: 600

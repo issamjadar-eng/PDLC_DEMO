@@ -302,3 +302,48 @@ def test_protocol_record_with_bare_iso_date_is_json_safe(tmp_path):
     assert res["status"] == "PASS"
     json.dumps(res)  # must not raise
     assert res["execution_record"]["executed"] == "2026-09-08"
+
+
+def test_end_to_end_writes_per_run_revision_and_index(tmp_path):
+    root = tmp_path
+    subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+    (root / "docs").mkdir()
+    import yaml
+    manifest = {"schema_version": "2.0", "results_dir": "out/results", "sidecar": "out/index.json",
+                "report": {"title": "T", "output": "out/report.md"},
+                "user_needs": [{"id": "WUN-01", "role": "QE", "class": "gates", "tier": "T1",
+                                "need": "do x", "so_that": "y", "implemented_by": "demo"}],
+                "test_cases": [{"id": "TC-01", "title": "ok", "wun": ["WUN-01"], "uut": ["demo"], "endpoint": "none",
+                                "scope": "capability", "method": "scripted", "cmd": ["true"]}]}
+    (root / "docs" / "validation.yml").write_text(yaml.safe_dump(manifest))
+    import time
+    for i in range(2):
+        if i:
+            time.sleep(1.1)  # run ids are second-granular
+        proc = subprocess.run([sys.executable, str(SKILL / "scripts" / "run_validation.py"), "--root", str(root),
+                               "--manifest", "docs/validation.yml", "--render", "--model-id", "m"],
+                              capture_output=True, text=True)
+        assert proc.returncode == 0, proc.stdout + proc.stderr
+    index = json.loads((root / "out" / "results" / "index.json").read_text())
+    assert len(index) == 2 and index[0]["run_id"] >= index[1]["run_id"]   # newest first
+    for row in index:
+        assert row["verdict"] == "PASS" and row["sidecar"] and row["report"]
+        side = json.loads((root / row["sidecar"]).read_text())
+        assert side["revision"]["run_id"] == row["run_id"] and side["revision"]["manifest"] == "pinned"
+        assert (root / row["report"]).read_text().startswith("# T")
+    # the older revision is marked historical; the latest is not
+    old = (root / index[1]["report"]).read_text()
+    new = (root / index[0]["report"]).read_text()
+    # re-render all runs → older one gets the historical note, latest stays clean
+    proc = subprocess.run([sys.executable, str(SKILL / "scripts" / "render_report.py"), "--root", str(root),
+                           "--manifest", "docs/validation.yml", "--all-runs"], capture_output=True, text=True)
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert "Historical revision" in (root / index[1]["report"]).read_text()
+    assert "Historical revision" not in (root / index[0]["report"]).read_text()
+
+
+def test_runs_index_derives_verdict_without_sidecar(tmp_path):
+    rd = tmp_path / "results"; rd.mkdir()
+    (rd / "run-20260101T000000Z.json").write_text(json.dumps({"run_id": "run-20260101T000000Z", "summary": {"PASS": 1, "NOT-EXECUTED": 1}, "cases": [{}, {}], "environment": {"git_sha_short": "abc"}}))
+    rows = render.write_runs_index(rd, tmp_path)
+    assert rows[0]["verdict"] == "FAIL" and rows[0]["sidecar"] is None and rows[0]["cases_total"] == 2

@@ -55,3 +55,6 @@ tasks/*/_usage-metrics/
 
 # Engine-assembled export documents (md/docx/pdf) — derived from the edition; regenerate, never commit.
 docs/project/*/reports/*/*/exports/
+
+# workbench-validation export packages — regenerated on demand from results/ (5 MB PDFs)
+tools/workbench-validation/exports/
