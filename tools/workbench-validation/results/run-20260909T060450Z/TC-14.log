@@ -1,0 +1,46 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260909T060450Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-14 — The tool-sync health check reports the truth
+purpose:     Checks the at-a-glance status report that tells a team member whether their tools are in step with the team's shared registry.
+approach:    Runs the status action's self-test against constructed in-sync and out-of-sync states and verifies each is reported correctly.
+UUT:         sync-skills@8.4
+user needs:  WUN-11
+scope:       capability · method: scripted
+endpoint:    none
+protocol:    —
+test source: .claude/skills/sync-skills/tests/test_status.sh (pinned copy: tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-14)
+command:     bash .claude/skills/sync-skills/tests/test_status.sh
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+tooling:     —
+timeout_s:   600
+started:     2026-09-09T06:05:10Z (UTC)
+exit_code:   0
+duration_s:  2.04
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+test_status.sh
+==============
+
+Case 1: all synced
+  PASS: all_synced exits 0
+  PASS: all_synced project SYNCED
+  PASS: all_synced drift count zero
+Case 2: project working tree dirty
+  PASS: dirty exits 1
+  PASS: dirty mentions DIRTY
+  PASS: dirty lists mod
+Case 3: project local ahead of remote
+  PASS: ahead exits 1
+  PASS: ahead mentions AHEAD
+Case 4: skill drift between local and registry
+  PASS: drift exits 1
+  PASS: drift mentions DRIFT
+  PASS: drift names skill file
+
+Results: 11 passed, 0 failed
+

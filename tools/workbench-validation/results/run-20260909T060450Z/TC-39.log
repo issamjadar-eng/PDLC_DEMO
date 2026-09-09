@@ -1,0 +1,38 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260909T060450Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-39 — A frozen controlled document cannot be edited from inside the workbench
+purpose:     Feeds the PreToolUse freeze hook an edit on a document whose lifecycle state is frozen (or released) and expects a deny with a briefing, plus a silent allow for an unfrozen document, a non-markdown file, and an unrelated tool. The hook fails open on an unparseable payload.
+approach:    Runs the change-control tests marked freeze_gate.
+UUT:         change-control@0.15.0
+user needs:  WUN-29
+scope:       capability · method: scripted
+endpoint:    none
+protocol:    —
+test source: .claude/skills/change-control/tests (pinned copy: tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-39)
+command:     uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/change-control/tests -q -m freeze_gate
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    uv
+tooling:     uv=uv 0.11.21 (Homebrew 2026-06-11 aarch64-apple-darwin)
+timeout_s:   600
+started:     2026-09-09T06:05:30Z (UTC)
+exit_code:   0
+duration_s:  0.36
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+..                                                                       [100%]
+=============================== warnings summary ===============================
+.claude/skills/change-control/lib/config.py:63
+  /Users/benxavier/projects/PDLC_DEMO-wt124/.claude/skills/change-control/lib/config.py:63: PytestCollectionWarning: cannot collect test class 'TestTarget' because it has a __init__ constructor (from: .claude/skills/change-control/tests/test_config.py)
+    @dataclass
+
+.claude/skills/change-control/lib/config.py:63
+  /Users/benxavier/projects/PDLC_DEMO-wt124/.claude/skills/change-control/lib/config.py:63: PytestCollectionWarning: cannot collect test class 'TestTarget' because it has a __init__ constructor (from: .claude/skills/change-control/tests/test_verify.py)
+    @dataclass
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+2 passed, 144 deselected, 2 warnings in 0.07s
+

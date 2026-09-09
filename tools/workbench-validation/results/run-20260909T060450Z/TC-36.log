@@ -1,0 +1,42 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260909T060450Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-36 — This project's task documents carry no tag the harvesters would skip
+purpose:     DEPLOYMENT check: scans every task document in this instance for malformed strategy/lessons tags. A failure lists the tags a harvest would silently drop.
+approach:    Runs scan_tags.py over tasks/ with the project's domain keys; passes only when zero malformed tags remain.
+UUT:         strategy@21, lessons@5
+user needs:  WUN-21
+scope:       deployment · method: scripted · requires_deployment: content.task_docs
+endpoint:    none
+protocol:    —
+test source: .claude/skills/strategy/scripts/scan_tags.py (pinned copy: tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-36)
+command:     python3 .claude/skills/strategy/scripts/scan_tags.py --project-root . --json
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+tooling:     —
+timeout_s:   120
+started:     2026-09-09T06:05:26Z (UTC)
+exit_code:   0
+duration_s:  0.06
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+{
+  "files_scanned": 129,
+  "well_formed_blocks": 229,
+  "malformed": 0,
+  "domain_keys": [
+    "architecture",
+    "commercial",
+    "development",
+    "operations",
+    "postmarket",
+    "regulatory",
+    "risk",
+    "testing"
+  ],
+  "findings": []
+}
+

@@ -1,0 +1,82 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260909T060450Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-PROTO-CITATIONS — Citation verification returns the right verdict on citations whose truth is known
+purpose:     An operator runs the reference audit over 16 citations — 8 known-sound, 4 real defects in this project's documents, 4 constructed defects — and compares verdicts to the expected ones. Judgment-based, so validated by protocol with acceptance criteria.
+approach:    Protocol TC-PROTO-CITATIONS: three runs; 0 known-non-sound items may be reported sound; ≥ 7 of 8 known-sound must be reported sound.
+UUT:         reference-audit@6
+user needs:  WUN-05
+scope:       deployment · method: protocol
+endpoint:    none
+protocol:    docs/project/workbench-validation/protocols/TC-PROTO-CITATIONS.md · record: tools/workbench-validation/protocols/TC-PROTO-CITATIONS.result.yml
+test source: —
+command:     
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+tooling:     —
+timeout_s:   600
+started:     2026-09-09T06:05:26Z (UTC)
+exit_code:   None
+duration_s:  0.0
+judged by:   exit code
+status:      PASS (protocol executed 2026-09-08 by AI assistant (operator) for BX — main session; agent under test invoked via Agent tool (subagent_type: citations), one fresh batch call per run → PASS)
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+tc_id: TC-PROTO-CITATIONS
+protocol: docs/project/workbench-validation/protocols/TC-PROTO-CITATIONS.md
+protocol_version: '2'
+verdict: PASS
+executed: '2026-09-08'
+operator: 'AI assistant (operator) for BX — main session; agent under test invoked
+  via Agent tool (subagent_type: citations), one fresh batch call per run'
+model_id: claude-fable-5-1
+git_sha: e01c4a1
+harness_version: 2.1.265 (Claude Code)
+unit_under_test: reference-audit 6 / citations agent (deterministic paywalled-standard
+  band rule)
+runs:
+- run: 1
+  outcome: PASS
+  counts:
+    group_S_sound: 6/6
+    group_U_unverified: 5/5
+    group_B_broken_expected_kind: 5/5
+    U_or_B_reported_sound: 0
+  evidence: tools/workbench-validation/protocols/TC-PROTO-CITATIONS/v2-run-1/findings.md
+- run: 2
+  outcome: PASS
+  counts:
+    group_S_sound: 6/6
+    group_U_unverified: 5/5
+    group_B_broken_expected_kind: 4/5
+    U_or_B_reported_sound: 0
+  notes: Item 13 kind 'citation-mislabeled' instead of 'citation-absent-from-source'
+    (same band); threshold ≥ 4/5 met.
+  evidence: tools/workbench-validation/protocols/TC-PROTO-CITATIONS/v2-run-2/findings.md
+- run: 3
+  outcome: PASS
+  counts:
+    group_S_sound: 6/6
+    group_U_unverified: 5/5
+    group_B_broken_expected_kind: 5/5
+    U_or_B_reported_sound: 0
+  evidence: tools/workbench-validation/protocols/TC-PROTO-CITATIONS/v2-run-3/findings.md
+repeatability: Criterion D met — verdict band identical across the three runs for
+  all 16 items (48/48).
+evidence:
+- tools/workbench-validation/protocols/TC-PROTO-CITATIONS/v2-run-1/findings.md
+- tools/workbench-validation/protocols/TC-PROTO-CITATIONS/v2-run-2/findings.md
+- tools/workbench-validation/protocols/TC-PROTO-CITATIONS/v2-run-3/findings.md
+- tools/workbench-validation/protocols/TC-PROTO-CITATIONS.v1.result.yml
+- tasks/ben/_scratch/tc-proto-citations-operator-items.md
+deviations:
+- 'Batching: one citations-agent call per run carrying all 16 items (protocol §5 permits
+  either form).'
+- Executed on a dirty working tree (correction work of task ben/123 in flight); the
+  commit recorded is the last committed baseline.
+- Item 1's Standards Anchor body line moved from L42 to L43 after the structure fix;
+  the frontmatter line (L22) named in the protocol is unchanged.
+- Run 2 item 13 kind confusion (mislabeled vs absent-from-source) recorded; band unaffected.
+signed_off_by: 'pending: BX'
+

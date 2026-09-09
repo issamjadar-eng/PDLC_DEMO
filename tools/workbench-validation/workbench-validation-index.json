@@ -1,16 +1,16 @@
 {
   "schema_version": "2.0",
-  "generated": "2026-09-09T00:03:46Z",
+  "generated": "2026-09-09T06:06:11Z",
   "title": "Workbench Validation Report \u2014 PDLC_DEMO AI Workbench",
   "banner": "_Demo sample data \u2014 not for clinical use._ Illustrative of method only \u2014 not a regulatory claim; [VERIFY]-flagged clauses unchecked against licensed source text.",
   "plan_path": "docs/project/workbench-validation/validation-plan.md",
   "report_path": "tools/workbench-validation/validation-report.md",
   "manifest_path": "docs/project/workbench-validation/validation.yml",
   "run": {
-    "run_id": "run-20260909T000311Z",
-    "started": "2026-09-09T00:03:11Z",
-    "finished": "2026-09-09T00:03:46Z",
-    "duration_s": 35.3,
+    "run_id": "run-20260909T060450Z",
+    "started": "2026-09-09T06:04:50Z",
+    "finished": "2026-09-09T06:06:11Z",
+    "duration_s": 80.6,
     "partial": false,
     "invoked_via": "cli",
     "operator": {
@@ -21,16 +21,16 @@
       "os": "macOS-26.5.2-arm64-arm-64bit-Mach-O"
     },
     "pinned_manifest": {
-      "path": "tools/workbench-validation/results/run-20260909T000311Z/validation.yml",
-      "sha256": "0594c88c8a7c8a34298720c14e55e737d4c4430da7e6498fad40b0fb2dac1520"
+      "path": "tools/workbench-validation/results/run-20260909T060450Z/validation.yml",
+      "sha256": "e19634d332ac1698997ffbb88a3f4fdecc5c3cbbe378b15d6e963403f6b85b83"
     }
   },
   "baseline": {
-    "git_sha_short": "1abb544",
+    "git_sha_short": "3c7445f",
     "git_branch": "HEAD",
     "git_dirty": false,
     "git_dirty_count": 0,
-    "skills_total": 39,
+    "skills_total": 40,
     "hooks_total": 15,
     "model_id": "claude-fable-5-1",
     "model_captured": true,
@@ -38,8 +38,8 @@
     "skill_version_mismatches": []
   },
   "environment": {
-    "git_sha": "1abb544265c6c7bc8d3cbe0b3d7247c83e7356ec",
-    "git_sha_short": "1abb544",
+    "git_sha": "3c7445fbac741e611f1bdcd2331e5d10a6d62379",
+    "git_sha_short": "3c7445f",
     "git_branch": "HEAD",
     "git_dirty": false,
     "git_dirty_files": [],
@@ -136,7 +136,7 @@
         "version_file": "0.15.0"
       },
       "commercial": {
-        "version": "17",
+        "version": "19",
         "updated": "2026-09-08"
       },
       "corpus": {
@@ -197,12 +197,16 @@
         "version": "38",
         "updated": "2026-09-08"
       },
+      "multimodel": {
+        "version": "1",
+        "updated": "2026-09-08"
+      },
       "pdf": {},
       "pptx": {},
       "project-console": {
-        "version": "1.67.3",
-        "updated": "2026-09-08",
-        "version_file": "1.67.3"
+        "version": "1.71.0",
+        "updated": "2026-09-09",
+        "version_file": "1.71.0"
       },
       "public-doc": {
         "version": "3",
@@ -263,9 +267,9 @@
         "version_file": "0.3.1"
       },
       "workbench-validation": {
-        "version": "7",
-        "updated": "2026-09-08",
-        "version_file": "7"
+        "version": "8",
+        "updated": "2026-09-09",
+        "version_file": "8"
       },
       "writing-well": {
         "version": "6",
@@ -290,9 +294,19 @@
         "version": "jq-1.7.1-apple",
         "missing": false
       },
+      "pandoc": {
+        "path": "/opt/homebrew/bin/pandoc",
+        "version": "pandoc 3.10",
+        "missing": false
+      },
       "python3": {
         "path": "/opt/homebrew/bin/python3",
         "version": "Python 3.14.6",
+        "missing": false
+      },
+      "soffice": {
+        "path": "/opt/homebrew/bin/soffice",
+        "version": "LibreOffice 26.2.4.2 0229ac93fcf0d7cbc6376066c6f35021cef002dc",
         "missing": false
       },
       "uv": {
@@ -344,7 +358,7 @@
         "CLAUDE_SESSION_ID"
       ],
       "env_set_keys": [],
-      "cwd": "/Users/benxavier/projects/PDLC_DEMO-wt123",
+      "cwd": "/Users/benxavier/projects/PDLC_DEMO-wt124",
       "socket_guard": "owned by each suite's conftest (unit/mocked tiers block sockets; live tier allows) \u2014 not enforced by the runner"
     }
   },
@@ -377,7 +391,7 @@
     }
   },
   "qms_coverage": {
-    "generated": "2026-09-09T00:03:46Z",
+    "generated": "2026-09-09T06:05:32Z",
     "registry": "docs/internal/source-md/qms-index.md",
     "templates": [
       {
@@ -1183,23 +1197,23 @@
   "summary": {
     "verdict": "PASS",
     "needs": {
-      "total": 30,
-      "pass": 29,
+      "total": 32,
+      "pass": 31,
       "not_applicable": 1
     },
     "tests": {
-      "total": 45,
-      "PASS": 40,
+      "total": 47,
+      "PASS": 42,
       "NOT-APPLICABLE": 5
     },
     "tiers": {
-      "none": 39,
+      "none": 41,
       "mocked": 2,
       "live": 4
     },
     "scopes": {
       "capability": 29,
-      "deployment": 16
+      "deployment": 18
     }
   },
   "needs": [
@@ -1779,6 +1793,40 @@
       ],
       "strongest_evidence": "verified without external endpoints (deployment scope, scripted)",
       "process_controls": []
+    },
+    {
+      "id": "WUN-31",
+      "role": "Auditor (internal / external)",
+      "tier": "T1",
+      "class": "renderers",
+      "need": "let me download the validation report for any recorded run as a Word or PDF document that carries every artifact and piece of evidence in its own section \u2014 the pinned manifest, the environment and deployment declaration, the protocols with their execution records and run evidence, every case's full evidence log, the pinned test sources with checksums, and the QMS coverage inventory",
+      "so_that": "the validation record can be reviewed, signed and archived outside the workbench without anything depending on a link back into it",
+      "statement": "As an auditor (internal / external), I need the workbench to let me download the validation report for any recorded run as a Word or PDF document that carries every artifact and piece of evidence in its own section \u2014 the pinned manifest, the environment and deployment declaration, the protocols with their execution records and run evidence, every case's full evidence log, the pinned test sources with checksums, and the QMS coverage inventory, so that the validation record can be reviewed, signed and archived outside the workbench without anything depending on a link back into it.",
+      "implemented_by": "workbench-validation export_package.py (one sectioned markdown package \u2192 DOCX/PDF through docflow export_formal.py); console Export buttons",
+      "verdict": "PASS",
+      "reason": "all 1 applicable case(s) passed",
+      "tests": [
+        "TC-46"
+      ],
+      "strongest_evidence": "verified without external endpoints (deployment scope, scripted)",
+      "process_controls": []
+    },
+    {
+      "id": "WUN-32",
+      "role": "Quality engineer",
+      "tier": "T2",
+      "class": "console",
+      "need": "pick any recorded validation run in the console and see that run's own report, verdicts and evidence \u2014 not only the latest",
+      "so_that": "I can compare revisions and answer what the validation said at a given point in time",
+      "statement": "As a quality engineer, I need the workbench to pick any recorded validation run in the console and see that run's own report, verdicts and evidence \u2014 not only the latest, so that I can compare revisions and answer what the validation said at a given point in time.",
+      "implemented_by": "renderer writes results/<run-id>/validation-report.md + sidecar.json and results/index.json; console run drop-down loads the selected run's sidecar",
+      "verdict": "PASS",
+      "reason": "all 1 applicable case(s) passed",
+      "tests": [
+        "TC-45"
+      ],
+      "strongest_evidence": "verified without external endpoints (deployment scope, scripted)",
+      "process_controls": []
     }
   ],
   "tests": [
@@ -1795,7 +1843,7 @@
         "task": "36"
       },
       "status": "PASS",
-      "duration_s": 2.39,
+      "duration_s": 2.44,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -1804,13 +1852,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-01.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-01.log",
       "cmd": "bash .claude/skills/task/tests/test-task-gate.sh",
       "description": "Checks the safeguard that stops project files from being changed when no work task is active. Protected files must be blocked; everyday exempt files (task notes, settings) must still be allowed.",
       "approach": "Runs the gate's own 63-scenario self-test in a clean environment: it simulates edit attempts with and without an active task and compares every block/allow decision against the expected one. Passes only when the suite reports all scenarios passed.",
       "judged_by": "output must contain \"ALL TESTS PASSED\" and exit code 0",
       "source": ".claude/skills/task/tests/test-task-gate.sh",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-01"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-01"
     },
     {
       "id": "TC-02",
@@ -1834,7 +1882,7 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-02.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-02.log",
       "cmd": "bash -c export CLAUDE_PROJECT_DIR=\"$PWD\"; H=.claude/skills/docflow/hooks/block-direct-conversion.sh; if [ -f .state/docflow-active ]; then echo 'bypass marker present - gate cannot be exercised'; exit 1; fi; printf '%s' '{\"tool_input\":{\"command\":\"pandoc report.docx -o report.md\"}}' | bash \"$H\" 2>/dev/null; d=$?; printf '%s' '{\"tool_input\":{\"command\":\"ls docs\"}}' | bash \"$H\" 2>/dev/null; a=$?; echo \"deny_exit=$d allow_exit=$a\"; [ \"$d\" -eq 2 ] && [ \"$a\" -eq 0 ]",
       "description": "Checks the safeguard that prevents documents from being converted outside the controlled pipeline (which preserves images, structure, and traceability).",
       "approach": "Feeds the gate two simulated commands: a direct document conversion (must be refused) and a harmless file listing (must be permitted), then verifies both decisions came back exactly as required.",
@@ -1855,7 +1903,7 @@
         "medtech-docs": "38"
       },
       "status": "PASS",
-      "duration_s": 1.77,
+      "duration_s": 1.66,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -1864,13 +1912,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-03.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-03.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/medtech-docs/tests -q",
       "description": "Checks the machinery that fills in auto-generated tables and trees inside project documents: generated content must always match the source of truth, and text written by hand around it must never be touched.",
       "approach": "Runs the generator's regression suite: it renders known inputs repeatedly and verifies the output is identical every time (idempotent), preserves hand-written content, and refuses unsafe targets.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/medtech-docs/tests",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-03"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-03"
     },
     {
       "id": "TC-04",
@@ -1886,7 +1934,7 @@
         "advisors": "13"
       },
       "status": "PASS",
-      "duration_s": 0.63,
+      "duration_s": 0.45,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -1895,13 +1943,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-04.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-04.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/advisors/tests -q",
       "description": "Checks the machinery that prepares each AI advisor's reading list (the project documents it grounds its answers in), so advisors always cite from the right sources.",
       "approach": "Runs the advisor tooling's regression suite: it builds grounding blocks from known configurations and verifies the generated lists, file wiring, and search integration match the expected output.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/advisors/tests",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-04"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-04"
     },
     {
       "id": "TC-05",
@@ -1916,7 +1964,7 @@
         "writing-well": "6"
       },
       "status": "PASS",
-      "duration_s": 0.74,
+      "duration_s": 0.75,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -1925,13 +1973,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-05.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-05.log",
       "cmd": "bash .claude/skills/writing-well/tests/run_tests.sh",
       "description": "Checks the automatic proof-reading tools that flag clutter, jargon, hedging, and AI-sounding text before a document goes to review.",
       "approach": "Runs the lint engines against fixture texts with known, planted defects and verifies each defect is detected and clean text is not flagged.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/writing-well/tests/run_tests.sh",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-05"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-05"
     },
     {
       "id": "TC-06",
@@ -1946,7 +1994,7 @@
         "dhf-manifest": "15"
       },
       "status": "PASS",
-      "duration_s": 1.55,
+      "duration_s": 1.52,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -1955,13 +2003,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-06.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-06.log",
       "cmd": "bash .claude/skills/dhf-manifest/tests/test_discovery_index.sh",
       "description": "Checks the audit that compares the project's document set against the catalog of documents regulations require, so gaps are found by us and not by an auditor.",
       "approach": "Runs the audit machinery's 48-scenario self-test: it builds document sets with known gaps and verifies each gap (and each satisfied obligation) is reported correctly.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/dhf-manifest/tests/test_discovery_index.sh",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-06"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-06"
     },
     {
       "id": "TC-07",
@@ -1976,7 +2024,7 @@
         "trace-matrix": "8"
       },
       "status": "PASS",
-      "duration_s": 0.34,
+      "duration_s": 0.36,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -1985,13 +2033,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-07.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-07.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/trace-matrix/tests -q",
       "description": "Checks the tooling that verifies every requirement traces forward to design and tests and backward to user needs \u2014 the chain auditors walk.",
       "approach": "Runs the trace tooling's regression suite: known trace graphs with deliberate breaks are analyzed and the tool must find every break and confirm intact chains in both directions.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/trace-matrix/tests",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-07"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-07"
     },
     {
       "id": "TC-08",
@@ -2017,13 +2065,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-08.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-08.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/tracker/tests -q",
       "description": "Checks the dashboard tooling that tracks submission-package readiness, so status shown to the team reflects the real state of the documents.",
       "approach": "Runs the tracker's regression suite: builds tracker rows from known inputs and verifies the generated draft-context wiring matches expectations.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/tracker/tests",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-08"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-08"
     },
     {
       "id": "TC-09",
@@ -2038,7 +2086,7 @@
         "jira-pull": "2"
       },
       "status": "PASS",
-      "duration_s": 0.41,
+      "duration_s": 0.46,
       "endpoint": "mocked",
       "connection": null,
       "scope": "capability",
@@ -2047,13 +2095,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-09.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-09.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml --with openpyxl -- pytest .claude/skills/jira-pull/tests -q --deselect .claude/skills/jira-pull/tests/test_drift_rules.py::test_exec",
       "description": "Checks the tooling that compares our requirement matrices against Jira, so silent divergence between the two systems is caught.",
       "approach": "Runs the drift-rule suite: feeds known Jira/matrix states containing planted mismatches and verifies every mismatch type is detected (69 checks).",
       "judged_by": "exit code 0",
       "source": ".claude/skills/jira-pull/tests",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-09"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-09"
     },
     {
       "id": "TC-10",
@@ -2077,13 +2125,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-10.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-10.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/change-control/tests -q -m not freeze_gate",
       "description": "Checks the machinery that moves controlled documents between this repo and the formal systems (Confluence, Google Docs) without corrupting content or losing review state.",
       "approach": "Runs the transfer machinery's 139-test suite covering conversion fidelity, review tiers, freeze states, and error handling against known documents.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/change-control/tests",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-10"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-10"
     },
     {
       "id": "TC-11",
@@ -2095,10 +2143,10 @@
         "project-console"
       ],
       "uut_versions": {
-        "project-console": "1.67.3"
+        "project-console": "1.71.0"
       },
       "status": "PASS",
-      "duration_s": 4.37,
+      "duration_s": 6.75,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -2107,13 +2155,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-11.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-11.log",
       "cmd": "uv run --project tools/project-console --with pytest -- pytest .claude/skills/project-console/tests -q",
       "description": "Checks the team's browser console \u2014 the pages, data loaders, and workflows this very Validation view lives in \u2014 so what the team sees reflects repo truth.",
       "approach": "Runs the console's 83-test suite in its real environment, including end-to-end workflow tests that exercise pages the way a user would.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/project-console/tests",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-11"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-11"
     },
     {
       "id": "TC-12",
@@ -2128,7 +2176,7 @@
         "md-deck": "0.6.4"
       },
       "status": "PASS",
-      "duration_s": 0.41,
+      "duration_s": 0.31,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -2137,13 +2185,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-12.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-12.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/md-deck/tests -q",
       "description": "Checks the presentation tooling that turns project documents into slide decks without dropping or duplicating content.",
       "approach": "Runs the deck builder's regression suite verifying slide identity is preserved across rebuilds.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/md-deck/tests",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-12"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-12"
     },
     {
       "id": "TC-13",
@@ -2158,7 +2206,7 @@
         "sync-skills": "8.4"
       },
       "status": "PASS",
-      "duration_s": 1.68,
+      "duration_s": 1.72,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -2167,13 +2215,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-13.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-13.log",
       "cmd": "bash .claude/skills/sync-skills/tests/test_three_way_pull.sh",
       "description": "Checks the safeguard in the tool-sync machinery: when pulling shared tooling updates, a locally improved file must be flagged for review, never silently replaced.",
       "approach": "Runs the sync tool's three-way-merge self-test: it constructs update scenarios (upstream newer, local newer, both changed) and verifies each is classified correctly and no local-ahead file is overwritten.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/sync-skills/tests/test_three_way_pull.sh",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-13"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-13"
     },
     {
       "id": "TC-14",
@@ -2188,7 +2236,7 @@
         "sync-skills": "8.4"
       },
       "status": "PASS",
-      "duration_s": 2.0,
+      "duration_s": 2.04,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -2197,13 +2245,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-14.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-14.log",
       "cmd": "bash .claude/skills/sync-skills/tests/test_status.sh",
       "description": "Checks the at-a-glance status report that tells a team member whether their tools are in step with the team's shared registry.",
       "approach": "Runs the status action's self-test against constructed in-sync and out-of-sync states and verifies each is reported correctly.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/sync-skills/tests/test_status.sh",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-14"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-14"
     },
     {
       "id": "TC-15",
@@ -2218,7 +2266,7 @@
         "secops": "10"
       },
       "status": "PASS",
-      "duration_s": 1.39,
+      "duration_s": 1.51,
       "endpoint": "none",
       "connection": null,
       "scope": "deployment",
@@ -2227,13 +2275,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-15.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-15.log",
       "cmd": "python3 .claude/skills/secops/scripts/audit_artifacts.py --json",
       "description": "Checks that a security scan of every installed tool (skills, agents, hooks, settings) finds no hostile patterns \u2014 and that the scanner itself fails loudly when it does.",
       "approach": "Runs the security scanner across the whole workbench in machine-readable mode; the case passes only when no Critical or High findings remain undispositioned.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/secops/scripts/audit_artifacts.py",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-15"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-15"
     },
     {
       "id": "TC-16",
@@ -2255,7 +2303,7 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-16.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-16.log",
       "cmd": "python3 -c import re,sys;from pathlib import Path;EXEMPT={'docx','pdf','pptx','xlsx'};missing=[d.name for d in sorted(Path('.claude/skills').iterdir()) if d.is_dir() and d.name not in EXEMPT and (d/'SKILL.md').is_file() and not (re.search(r'^version:\\s*\\S+',(lambda t:t[3:t.find(chr(10)+'---',3)] if t.startswith('---') and t.find(chr(10)+'---',3)!=-1 else '')((d/'SKILL.md').read_text(errors='replace')),re.M) or (d/'VERSION').is_file())];print('missing version:',missing) if missing else print('all skills versioned (external office skills exempt)');sys.exit(1 if missing else 0)",
       "description": "Checks that each installed tool states a version, so the team can always say exactly which tool versions were validated (bundled third-party office tools are exempt).",
       "approach": "Sweeps every installed skill and verifies a version declaration exists in its metadata or VERSION file; lists any tool that has none.",
@@ -2286,13 +2334,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": "no live jira connection in this deployment (deployment.connections.jira: none)",
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-17.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-17.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/change-control/tests -q -m live --live",
       "description": "Runs the change-control Jira smoke test against the deployment's real Jira endpoint. This project has no Jira connection, so the case is reported NOT-APPLICABLE by declaration rather than pretending the integration was exercised.",
       "approach": "Runs only the tests marked `live` in the change-control suite with the `--live` opt-in; the test reads the Jira base URL from the project manifest and skips if none is configured.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/change-control/tests",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-17"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-17"
     },
     {
       "id": "TC-18",
@@ -2317,13 +2365,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": "no live jira connection in this deployment (deployment.connections.jira: none)",
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-18.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-18.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml --with openpyxl -- pytest .claude/skills/jira-pull/tests -q -m live --live",
       "description": "Runs the jira-pull live smoke test against the deployment's real Jira. NOT-APPLICABLE here by declaration (no Jira connection).",
       "approach": "Runs only the `live`-marked jira-pull tests with the `--live` opt-in.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/jira-pull/tests",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-18"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-18"
     },
     {
       "id": "TC-19",
@@ -2338,7 +2386,7 @@
         "secops": "10"
       },
       "status": "PASS",
-      "duration_s": 3.36,
+      "duration_s": 3.44,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -2347,13 +2395,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-19.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-19.log",
       "cmd": "uv run --no-project --with pytest -- pytest .claude/skills/secops/tests -q",
       "description": "Checks that the security screen's rules fire on genuine config-tamper and remote-execution patterns and stay quiet on comments, docstrings, heredoc help text, and temp-path fixtures \u2014 so a clean TC-15 result means 'nothing hostile', not 'the scanner went blind'.",
       "approach": "Runs the scanner's regression suite over synthetic fixture trees with known-positive and known-negative content, including the exit-code contract.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/secops/tests",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-19"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-19"
     },
     {
       "id": "TC-20",
@@ -2368,7 +2416,7 @@
         "web-control": "0.3.1"
       },
       "status": "PASS",
-      "duration_s": 0.33,
+      "duration_s": 0.3,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -2377,13 +2425,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-20.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-20.log",
       "cmd": "uv run --no-project --with pytest -- pytest .claude/skills/web-control/tests -q",
       "description": "Checks the pure-logic parts of the shared browser-automation library (cookie header assembly, URL/config parsing) that the document-transfer machinery reuses \u2014 hermetically, with no browser running.",
       "approach": "Runs the web-control unit suite under the socket guard; anything that would need a browser is a separate live case (TC-21).",
       "judged_by": "exit code 0",
       "source": ".claude/skills/web-control/tests",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-20"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-20"
     },
     {
       "id": "TC-21",
@@ -2408,13 +2456,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": "no live browser connection in this deployment (deployment.connections.browser: none)",
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-21.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-21.log",
       "cmd": "uv run --no-project --with pytest -- pytest .claude/skills/web-control/tests -q -m live --live",
       "description": "Runs the web-control live smoke test against a debug browser session. NOT-APPLICABLE here by declaration (no debug browser in this deployment).",
       "approach": "Runs only the `live`-marked web-control tests with the `--live` opt-in.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/web-control/tests",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-21"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-21"
     },
     {
       "id": "TC-22",
@@ -2429,7 +2477,7 @@
         "public-doc": "3"
       },
       "status": "PASS",
-      "duration_s": 0.06,
+      "duration_s": 0.07,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -2438,7 +2486,7 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-22.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-22.log",
       "cmd": "bash -c set -e; T=$(mktemp -d); printf -- '---\npublic_doc:\n  audience: x\n---\n# T\n\nPublic line.\n\n<!-- INTERNAL:BEGIN -->\nsecret\n<!-- INTERNAL:END -->\n' > \"$T/d.md\"; python3 .claude/skills/public-doc/scripts/strip_internal.py \"$T/d.md\" -o \"$T/out.md\" --quiet; grep -q 'Public line' \"$T/out.md\"; ! grep -qE 'secret|INTERNAL|public_doc' \"$T/out.md\"; printf -- '# T\n<!-- INTERNAL:BEGIN -->\nopen\n' > \"$T/bad.md\"; set +e; python3 .claude/skills/public-doc/scripts/strip_internal.py \"$T/bad.md\" -o \"$T/o2.md\" --quiet; rc=$?; set -e; [ \"$rc\" -eq 3 ]; echo STRIP-OK",
       "description": "Checks the publish step that produces the public copy of a white paper or article: internal evidence blocks and draft metadata must be removed, and a document with a malformed internal block must be refused rather than published.",
       "approach": "Builds two small documents in a temp folder \u2014 one well-formed with an internal block, one with an unclosed block \u2014 runs the strip script on each, and checks the public output carries no internal text or marker and that the malformed one is refused with the documented exit code.",
@@ -2471,13 +2519,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-25.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-25.log",
       "cmd": "python3 .claude/skills/submissions/scripts/check_package_consistency.py docs/project/submissions/qsub --transmit-gate --json",
       "description": "DEPLOYMENT check: runs the transmit gate \u2014 cross-document consistency, attachment numbering, and the unresolved-[VERIFY] check \u2014 over this project's pre-submission package. A failure here is a finding about the package, which is exactly what the gate exists to surface.",
       "approach": "Runs the package-consistency checker with --transmit-gate --json over the qsub folder; passes only on exit 0. (Exit contract: 0 clean / 1 warnings / 2 gate failure / precondition error.)",
       "judged_by": "exit code 0",
       "source": ".claude/skills/submissions/scripts/check_package_consistency.py",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-25"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-25"
     },
     {
       "id": "TC-26",
@@ -2489,10 +2537,10 @@
         "workbench-validation"
       ],
       "uut_versions": {
-        "workbench-validation": "7"
+        "workbench-validation": "8"
       },
       "status": "PASS",
-      "duration_s": 0.88,
+      "duration_s": 4.5,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -2501,13 +2549,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-26.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-26.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/workbench-validation/tests -q",
       "description": "Checks the runner and renderer that produce this report: the need-format contract, frontmatter parsing, user-story composition, NOT-APPLICABLE and other verdict rules, strongest-evidence text, and an end-to-end run over a synthetic manifest \u2014 including that a malformed manifest is refused.",
       "approach": "Runs the workbench-validation skill's pytest suite.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/workbench-validation/tests",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-26"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-26"
     },
     {
       "id": "TC-27",
@@ -2522,7 +2570,7 @@
         "medtech-docs": "38"
       },
       "status": "PASS",
-      "duration_s": 0.69,
+      "duration_s": 0.63,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -2531,13 +2579,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-27.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-27.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/medtech-docs/tests/test_form_conformance.py -q",
       "description": "Checks the checker itself: against a skill-shipped fake QMS registry, taxonomy and documents it must pass a conforming document, warn on an extra section, fail on missing or reordered sections, and treat a document with no declared form as informational.",
       "approach": "Runs the medtech-docs form-conformance pytest suite over fixtures that ship with the skill.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/medtech-docs/tests/test_form_conformance.py",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-27"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-27"
     },
     {
       "id": "TC-28",
@@ -2552,7 +2600,7 @@
         "medtech-docs": "38"
       },
       "status": "PASS",
-      "duration_s": 0.41,
+      "duration_s": 0.43,
       "endpoint": "none",
       "connection": null,
       "scope": "deployment",
@@ -2564,13 +2612,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-28.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-28.log",
       "cmd": "python3 .claude/skills/medtech-docs/scripts/form_conformance_check.py --root . --json docs/project/dhfs",
       "description": "DEPLOYMENT check: runs the form-structure checker over this project's controlled document trees, resolving each document's parent QMS template from its frontmatter (or a taxonomy where one exists). A failure lists the documents whose section structure departs from their template.",
       "approach": "Runs form_conformance_check.py over the DHF trees; passes only when no document is missing or reordering a template section.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/medtech-docs/scripts/form_conformance_check.py",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-28"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-28"
     },
     {
       "id": "TC-29",
@@ -2586,7 +2634,7 @@
         "medtech-docs": "38"
       },
       "status": "PASS",
-      "duration_s": 0.7,
+      "duration_s": 0.62,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -2595,13 +2643,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-29.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-29.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/medtech-docs/tests/test_ai_changelog_check.py -q",
       "description": "Checks the checker itself against skill-shipped fixtures: a well-formed provenance block passes; a missing block, a header with no rows, a block inside a collapsible section, or a product/vendor name in content fails; a vendor name in tool-managed frontmatter warns.",
       "approach": "Runs the medtech-docs ai-changelog pytest suite.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/medtech-docs/tests/test_ai_changelog_check.py",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-29"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-29"
     },
     {
       "id": "TC-30",
@@ -2617,7 +2665,7 @@
         "medtech-docs": "38"
       },
       "status": "PASS",
-      "duration_s": 0.2,
+      "duration_s": 0.19,
       "endpoint": "none",
       "connection": null,
       "scope": "deployment",
@@ -2628,13 +2676,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-30.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-30.log",
       "cmd": "python3 .claude/skills/medtech-docs/scripts/ai_changelog_check.py --root . --ai-authored-only --json docs/project/dhfs",
       "description": "DEPLOYMENT check over this project's controlled trees: every document whose frontmatter says an AI produced it must carry the internal AI-CHANGELOG block, no block may sit in the rendered body, and no document content may name an AI product or vendor.",
       "approach": "Runs ai_changelog_check.py with --ai-authored-only over the DHF trees; passes only on exit 0.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/medtech-docs/scripts/ai_changelog_check.py",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-30"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-30"
     },
     {
       "id": "TC-31",
@@ -2659,13 +2707,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-31.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-31.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/submissions/tests -q",
       "description": "Proves the package gates work as tools, independent of any real filing: a clean synthetic package passes; attachment-numbering drift, an unresolved [VERIFY] tag in a filed body, and a manifest/cover-letter mismatch each block transmission.",
       "approach": "Runs the submissions skill's pytest suite over a fixture package and mutated copies.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/submissions/tests",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-31"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-31"
     },
     {
       "id": "TC-32",
@@ -2677,10 +2725,10 @@
         "commercial"
       ],
       "uut_versions": {
-        "commercial": "17"
+        "commercial": "19"
       },
       "status": "PASS",
-      "duration_s": 0.45,
+      "duration_s": 0.48,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -2689,13 +2737,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-32.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-32.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/commercial/tests -q",
       "description": "Proves the claim lint works as a tool: a marked, fresh claim passes; an unmarked number, a stale pin without waiver, and a marker citing an unpinned dataset are each blocked.",
       "approach": "Runs the commercial skill's pytest suite over a synthetic domain + corpus in a temp dir.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/commercial/tests",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-32"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-32"
     },
     {
       "id": "TC-33",
@@ -2710,7 +2758,7 @@
         "knowledge-pack-export": "6"
       },
       "status": "PASS",
-      "duration_s": 0.48,
+      "duration_s": 0.43,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -2719,13 +2767,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-33.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-33.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/knowledge-pack-export/tests -q",
       "description": "Proves the pack validator works as a tool even where no pack exists: a synthetic pack validates; a missing source, a slot count over the target cap, and an unknown target each fail.",
       "approach": "Runs the knowledge-pack-export pytest suite over a synthetic repo in a temp dir.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/knowledge-pack-export/tests",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-33"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-33"
     },
     {
       "id": "TC-34",
@@ -2740,7 +2788,7 @@
         "docflow": "38"
       },
       "status": "PASS",
-      "duration_s": 0.35,
+      "duration_s": 0.33,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -2749,13 +2797,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-34.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-34.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/docflow/tests -q",
       "description": "Checks the deterministic verifier that stops a conversion from silently regenerating text: a faithful markdown rendering of a source passes, a fabricated passage fails with the span reported, moderate restructuring only warns.",
       "approach": "Runs the docflow pytest suite over fixture text pairs plus the Phase-7 gate self-test; hermetic.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/docflow/tests",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-34"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-34"
     },
     {
       "id": "TC-PROTO-CITATIONS",
@@ -2835,7 +2883,7 @@
         "signed_off_by": "pending: BX"
       },
       "reason": "protocol executed 2026-09-08 by AI assistant (operator) for BX \u2014 main session; agent under test invoked via Agent tool (subagent_type: citations), one fresh batch call per run \u2192 PASS",
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-PROTO-CITATIONS.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-PROTO-CITATIONS.log",
       "cmd": "",
       "description": "An operator runs the reference audit over 16 citations \u2014 8 known-sound, 4 real defects in this project's documents, 4 constructed defects \u2014 and compares verdicts to the expected ones. Judgment-based, so validated by protocol with acceptance criteria.",
       "approach": "Protocol TC-PROTO-CITATIONS: three runs; 0 known-non-sound items may be reported sound; \u2265 7 of 8 known-sound must be reported sound.",
@@ -2922,7 +2970,7 @@
         "signed_off_by": "pending: BX"
       },
       "reason": "protocol executed 2026-09-08 by AI assistant (operator) for BX \u2014 main session; each question put verbatim to the named advisor via the Agent tool (fresh context per call = fresh session); answers captured to run-<n>/q<#>.md; P1\u2013P4 scored mechanically (tasks/ben/_work/grounding_protocol_eval.py) with operator adjudication recorded below \u2192 PASS",
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-PROTO-GROUNDING.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-PROTO-GROUNDING.log",
       "cmd": "",
       "description": "Six questions to three advisor agents; every cited path must exist and be canonical (never articles, personal work folders, or exported packs), with a required source cited for \u2265 5 of 6.",
       "approach": "Protocol TC-PROTO-GROUNDING: three runs, fresh session each; 0 non-canonical or fabricated citations.",
@@ -2955,7 +3003,7 @@
       "protocol": "docs/project/workbench-validation/protocols/TC-PROTO-LIVE-MCP.md",
       "execution_record": null,
       "reason": "no live confluence connection in this deployment (deployment.connections.confluence: none); this deployment declares `connections.confluence` absent (deployment.connections.confluence: none); this deployment declares `connections.jira` absent (deployment.connections.jira: none)",
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-PROTO-LIVE-MCP.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-PROTO-LIVE-MCP.log",
       "cmd": "",
       "description": "Seven-step live round trip in a sandbox parent page, including divergence detection, frozen-state refusal and Jira table splicing. Not applicable here: no Confluence/Jira connection is declared.",
       "approach": "Protocol TC-PROTO-LIVE-MCP: two runs against the deployment's declared sandbox.",
@@ -2978,7 +3026,7 @@
         "lessons": "5"
       },
       "status": "PASS",
-      "duration_s": 0.41,
+      "duration_s": 0.37,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -2987,13 +3035,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-35.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-35.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/strategy/tests -q",
       "description": "Checks the lint that finds tagged blocks in task documents the strategy/lessons harvesters would skip \u2014 wrong marker text, empty values, unknown domain, unclosed comment, prose on the tag line.",
       "approach": "Runs the strategy skill's fixture suite: a well-formed task doc passes, every malformed variant is reported.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/strategy/tests",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-35"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-35"
     },
     {
       "id": "TC-36",
@@ -3021,13 +3069,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-36.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-36.log",
       "cmd": "python3 .claude/skills/strategy/scripts/scan_tags.py --project-root . --json",
       "description": "DEPLOYMENT check: scans every task document in this instance for malformed strategy/lessons tags. A failure lists the tags a harvest would silently drop.",
       "approach": "Runs scan_tags.py over tasks/ with the project's domain keys; passes only when zero malformed tags remain.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/strategy/scripts/scan_tags.py",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-36"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-36"
     },
     {
       "id": "TC-37",
@@ -3043,7 +3091,7 @@
         "secops": "10"
       },
       "status": "PASS",
-      "duration_s": 3.34,
+      "duration_s": 3.35,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -3052,13 +3100,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-37.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-37.log",
       "cmd": "uv run --no-project --with pytest -- pytest .claude/skills/secops/tests/test_session_hooks.py -q",
       "description": "Checks the posture hook that runs at every session start: against a compliant fixture project it reports clean; against one with an unapproved skill it records the finding by name.",
       "approach": "Runs the secops session-hook pytest suite over temp fixture projects.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/secops/tests/test_session_hooks.py",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-37"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-37"
     },
     {
       "id": "TC-38",
@@ -3073,7 +3121,7 @@
         "task": "36"
       },
       "status": "PASS",
-      "duration_s": 0.35,
+      "duration_s": 0.34,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -3082,13 +3130,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-38.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-38.log",
       "cmd": "uv run --no-project --with pytest -- pytest .claude/skills/task/tests -q",
       "description": "Checks the checkpoint-recovery hook: a planted uncheckpointed-task marker is surfaced; without one the hook stays quiet.",
       "approach": "Runs the task skill's pytest suite over a temp fixture project.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/task/tests",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-38"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-38"
     },
     {
       "id": "TC-39",
@@ -3103,7 +3151,7 @@
         "change-control": "0.15.0"
       },
       "status": "PASS",
-      "duration_s": 0.4,
+      "duration_s": 0.36,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -3112,13 +3160,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-39.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-39.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/change-control/tests -q -m freeze_gate",
       "description": "Feeds the PreToolUse freeze hook an edit on a document whose lifecycle state is frozen (or released) and expects a deny with a briefing, plus a silent allow for an unfrozen document, a non-markdown file, and an unrelated tool. The hook fails open on an unparseable payload.",
       "approach": "Runs the change-control tests marked freeze_gate.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/change-control/tests",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-39"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-39"
     },
     {
       "id": "TC-40",
@@ -3133,7 +3181,7 @@
         "usage-metrics": "13"
       },
       "status": "PASS",
-      "duration_s": 0.49,
+      "duration_s": 0.46,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -3142,13 +3190,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-40.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-40.log",
       "cmd": "uv run --no-project --with pytest -- pytest .claude/skills/usage-metrics/tests -q",
       "description": "Checks the aggregation step of the cost telemetry: spend lands on the task that was active at the time, an unmeasured slot is null rather than zero, and aggregating twice is byte-identical.",
       "approach": "Runs the usage-metrics pytest suite over synthetic per-session records and an activation ledger.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/usage-metrics/tests",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-40"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-40"
     },
     {
       "id": "TC-41",
@@ -3163,7 +3211,7 @@
         "advisors": "13"
       },
       "status": "PASS",
-      "duration_s": 0.38,
+      "duration_s": 0.37,
       "endpoint": "none",
       "connection": null,
       "scope": "capability",
@@ -3172,13 +3220,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-41.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-41.log",
       "cmd": "uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/advisors/tests/test_grounding_scan.py -q",
       "description": "Checks the grounding scanner itself: an agent whose GROUNDING block cites canonical paths passes; one citing an audience explainer, a personal work folder or an exported pack fails.",
       "approach": "Runs the advisors grounding-scan pytest suite over fixture agents.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/advisors/tests/test_grounding_scan.py",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-41"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-41"
     },
     {
       "id": "TC-42",
@@ -3206,13 +3254,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-42.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-42.log",
       "cmd": "python3 .claude/skills/advisors/scripts/grounding_scan.py --project-root . --json",
       "description": "DEPLOYMENT check: every installed advisor's GROUNDING block and every row of the semantic search index reference canonical sources only \u2014 never audience explainers, personal work folders or exported packs.",
       "approach": "Runs grounding_scan.py over .claude/agents and the file-locator index with --json; passes only on exit 0.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/advisors/scripts/grounding_scan.py",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-42"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-42"
     },
     {
       "id": "TC-43",
@@ -3228,7 +3276,7 @@
         "medtech-docs": "38"
       },
       "status": "PASS",
-      "duration_s": 0.48,
+      "duration_s": 0.47,
       "endpoint": "none",
       "connection": null,
       "scope": "deployment",
@@ -3240,13 +3288,13 @@
       "protocol": null,
       "execution_record": null,
       "reason": null,
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-43.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-43.log",
       "cmd": "python3 .claude/skills/medtech-docs/scripts/qms_coverage.py --root . --json-out tools/workbench-validation/qms-coverage.json docs/project/dhfs",
       "description": "DEPLOYMENT check and inventory: joins the imported QMS registry with the form-conformance results. Passes when the inventory generates and every template that project documents instantiate was exercised by the conformance check; the inventory itself lists unused templates and doctypes with no imported template so the gaps stay visible.",
       "approach": "Runs qms_coverage.py, which runs the conformance checker over the DHF trees and writes the coverage JSON the report and console render; exit 0 only when no instantiated template lacks evidence.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/medtech-docs/scripts/qms_coverage.py",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-43"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-43"
     },
     {
       "id": "TC-44",
@@ -3274,13 +3322,75 @@
       "protocol": null,
       "execution_record": null,
       "reason": "this deployment declares `content.estar_crosswalk_510k` absent (deployment.content.estar_crosswalk_510k: False)",
-      "log": "tools/workbench-validation/results/run-20260909T000311Z/TC-44.log",
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-44.log",
       "cmd": "python3 .claude/skills/submissions/scripts/estar_lint.py --crosswalk docs/project/submissions/510k/estar-crosswalk.md --transmit-gate --json",
       "description": "DEPLOYMENT check: runs the eSTAR linter over the 510(k) crosswalk (structured answers, applicable sections, attachment coverage, no unresolved [VERIFY]). Not applicable until the package has an eSTAR crosswalk \u2014 declared absent here rather than claimed by a structure-only pass.",
       "approach": "Runs estar_lint.py --transmit-gate --json with the package's crosswalk; passes only on exit 0.",
       "judged_by": "exit code 0",
       "source": ".claude/skills/submissions/scripts/estar_lint.py",
-      "pinned": "tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-44"
+      "pinned": "tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-44"
+    },
+    {
+      "id": "TC-45",
+      "title": "Every recorded run has its own rendered report, sidecar and index row",
+      "wun": [
+        "WUN-32"
+      ],
+      "uut": [
+        "workbench-validation"
+      ],
+      "uut_versions": {
+        "workbench-validation": "8"
+      },
+      "status": "PASS",
+      "duration_s": 0.02,
+      "endpoint": "none",
+      "connection": null,
+      "scope": "deployment",
+      "method": "scripted",
+      "requires_deployment": [],
+      "protocol": null,
+      "execution_record": null,
+      "reason": null,
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-45.log",
+      "cmd": "python3 -c import json,glob,sys;from pathlib import Path;R=Path('tools/workbench-validation/results');idx={r['run_id']:r for r in json.load(open(R/'index.json'))};runs=[json.load(open(f))['run_id'] for f in glob.glob(str(R/'run-*.json'))];bad=[r for r in runs if r not in idx or not idx[r]['sidecar'] or not idx[r]['report'] or not Path(idx[r]['sidecar']).is_file() or not Path(idx[r]['report']).is_file() or json.load(open(idx[r]['sidecar']))['revision']['run_id']!=r];print('runs',len(runs),'indexed',len(idx),'bad',bad);sys.exit(1 if bad or not runs else 0)",
+      "description": "DEPLOYMENT check: the runs index lists every recorded run with a verdict, and each run folder carries its own rendered report and sidecar so the console can show any revision.",
+      "approach": "Reads results/index.json and checks every run-*.json has an index row whose sidecar and report files exist and whose sidecar revision block names that run.",
+      "judged_by": "exit code 0",
+      "source": "docs/project/workbench-validation/validation.yml",
+      "pinned": null
+    },
+    {
+      "id": "TC-46",
+      "title": "The validation package exports as Markdown, Word and PDF with every evidence section present",
+      "wun": [
+        "WUN-31"
+      ],
+      "uut": [
+        "workbench-validation",
+        "docflow"
+      ],
+      "uut_versions": {
+        "workbench-validation": "8",
+        "docflow": "38"
+      },
+      "status": "PASS",
+      "duration_s": 39.23,
+      "endpoint": "none",
+      "connection": null,
+      "scope": "deployment",
+      "method": "scripted",
+      "requires_deployment": [],
+      "protocol": null,
+      "execution_record": null,
+      "reason": null,
+      "log": "tools/workbench-validation/results/run-20260909T060450Z/TC-46.log",
+      "cmd": "bash -c set -e; S=.claude/skills/workbench-validation/scripts/export_package.py; MD=$(python3 $S --root . --run latest --format md | tail -1); DOCX=$(python3 $S --root . --run latest --format docx | tail -1); PDF=$(python3 $S --root . --run latest --format pdf | tail -1); test -s \"$MD\" && test -s \"$DOCX\" && test -s \"$PDF\"; for h in 'Sign-off' 'Appendix A' 'Appendix B' 'Appendix C' 'Appendix D' 'Appendix E' 'Appendix F'; do grep -q \"$h\" \"$MD\" || { echo \"missing section: $h\"; exit 1; }; done; echo EXPORT-OK $MD $DOCX $PDF",
+      "description": "DEPLOYMENT check: exports the latest run as a sectioned package in all three formats through the project's sanctioned document pipeline, and checks the Markdown carries the cover, sign-off block and appendices A\u2013F.",
+      "approach": "Runs export_package.py for the latest run in md, docx and pdf; passes only when all three files exist and the Markdown contains every required section.",
+      "judged_by": "output must contain \"EXPORT-OK\" and exit code 0",
+      "source": "docs/project/workbench-validation/validation.yml",
+      "pinned": null
     }
   ]
 }

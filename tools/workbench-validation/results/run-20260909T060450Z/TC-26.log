@@ -1,0 +1,28 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260909T060450Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-26 — The validation tooling itself passes its own regression suite
+purpose:     Checks the runner and renderer that produce this report: the need-format contract, frontmatter parsing, user-story composition, NOT-APPLICABLE and other verdict rules, strongest-evidence text, and an end-to-end run over a synthetic manifest — including that a malformed manifest is refused.
+approach:    Runs the workbench-validation skill's pytest suite.
+UUT:         workbench-validation@8
+user needs:  WUN-26
+scope:       capability · method: scripted
+endpoint:    none
+protocol:    —
+test source: .claude/skills/workbench-validation/tests (pinned copy: tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-26)
+command:     uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/workbench-validation/tests -q
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    uv
+tooling:     uv=uv 0.11.21 (Homebrew 2026-06-11 aarch64-apple-darwin)
+timeout_s:   300
+started:     2026-09-09T06:05:17Z (UTC)
+exit_code:   0
+duration_s:  4.5
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+....................................                                     [100%]
+36 passed in 4.22s
+

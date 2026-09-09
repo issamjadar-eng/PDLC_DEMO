@@ -1,0 +1,44 @@
+# Execution record — schema: .claude/skills/workbench-validation/templates/protocol-result.yml
+tc_id: TC-PROTO-GROUNDING
+protocol: docs/project/workbench-validation/protocols/TC-PROTO-GROUNDING.md
+verdict: PASS
+executed: 2026-09-08
+operator: "AI assistant (operator) for BX — main session; each question put verbatim to the named advisor via the Agent tool (fresh context per call = fresh session); answers captured to run-<n>/q<#>.md; P1–P4 scored mechanically (tasks/ben/_work/grounding_protocol_eval.py) with operator adjudication recorded below"
+model_id: claude-fable-5-1
+git_sha: e01c4a1
+harness_version: "2.1.265 (Claude Code)"
+unit_under_test: "advisors 13 (regulatory-affairs, quality-engineering, vnv-lead agents) + file-locator index"
+runs:
+  - run: 1
+    outcome: PASS
+    counts: {P1_all_answers_cite: "6/6", P2_fabricated_paths: 0, P3_non_canonical_citations: 0, P4_must_cite_hits: "6/6 (q3 by deviation)"}
+    notes: "Scorer flagged 3 'fabricated' strings — adjudicated as false positives: two glob patterns in prose (docs/internal/source-md/**, docs/project/dhfs/**/design-controls/plans/) and one operator note quoting the protocol's non-existent must-cite (docs/internal/source-md/Forms/). No advisor cited a non-existent path."
+    evidence: tools/workbench-validation/protocols/TC-PROTO-GROUNDING/run-1/
+  - run: 2
+    outcome: PASS
+    counts: {P1_all_answers_cite: "6/6", P2_fabricated_paths: 0, P3_non_canonical_citations: 0, P4_must_cite_hits: "5/6 (q3 miss on the literal must-cite; met by deviation)"}
+    evidence: tools/workbench-validation/protocols/TC-PROTO-GROUNDING/run-2/
+  - run: 3
+    outcome: PASS
+    counts: {P1_all_answers_cite: "6/6", P2_fabricated_paths: 0, P3_non_canonical_citations: 0, P4_must_cite_hits: "5/6 (q3, same deviation)"}
+    evidence: tools/workbench-validation/protocols/TC-PROTO-GROUNDING/run-3/
+evidence:
+  - tools/workbench-validation/protocols/TC-PROTO-GROUNDING/run-1/
+  - tools/workbench-validation/protocols/TC-PROTO-GROUNDING/run-2/
+  - tools/workbench-validation/protocols/TC-PROTO-GROUNDING/run-3/
+  - tasks/ben/_work/grounding_protocol_eval.py
+deviations:
+  - "Question 3's must-cite (a .taxonomy.yml mapping and a FORM under docs/internal/source-md/Forms/) does not exist in this deployment — governance is frontmatter → qms-index.md templates. P4 for q3 was scored against the governing template GL-TMP-RM-001 and SOP GL-SOP-RM-001, both cited in every run. The ≥ 5/6 criterion holds even if q3 is counted as a miss. Protocol v2 should replace q3's must-cite with the template/SOP."
+  - "Capture form: q3 (runs 1–2) and q6 (run 1) were captured from the advisor's final message, which summarised its own earlier interim answer; all other answers captured in full. Content and citations are the advisor's."
+  - "Absolute repository paths in advisor answers were normalised to repo-relative in the captures for scoring; no citation content was changed."
+  - "P3 decoy confirmed present (articles/agentic-delivery-whitepaper.md, articles/agent-engineering-whitepaper.md match challenge topics); no run cited them."
+  - "Executed on a dirty working tree (correction work of task ben/123 in flight); run 3 q6 predates the fixer numbering correction it describes."
+  - "The 20-concurrent-subagent cap delayed one run-1 question; a usage-limit interruption killed three run-3 questions, which were re-executed as fresh calls."
+findings_surfaced_by_advisors:
+  - "Product code wrong and inconsistent (LZG in the 510(k) manifest, LZH in device records; openFDA: MEA = PCA pump) — route to RA lead."
+  - "No SE comparison table / argument exists (OBL-510K-001 GAP); Q3.1 premise vs expanded pediatric population and palliative indication."
+  - "All D&D plans anchor on repealed 21 CFR 820.30(b), inherited from GL-SOP-DC-002 / GL-TMP-DC-001 — QMS remediation backlog (program rule of 2026-07-14)."
+  - "No software verification protocols exist; 28/32 SRS rows untraced; hazard analysis cites protocol IDs that do not exist; ID scheme conflict (VER-PP3500-* vs GL-VER-*)."
+  - "Summative usability clause contested (§5.9 QMS chain vs §5.6 dhf-manifest/L1b); no RMP exists in any DHF while RM reports do; GL-TMP-RM-001 §3 scales vs GL-STD-RM-001 disagree."
+  - "regulatory-strategy.md L62 states the demo K-number as a real clearance; portfolio README describes frontmatter the device records lack."
+signed_off_by: "pending: BX"

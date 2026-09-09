@@ -1,0 +1,32 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260909T060450Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-25 — This project's pre-submission package passes the transmit gate
+purpose:     DEPLOYMENT check: runs the transmit gate — cross-document consistency, attachment numbering, and the unresolved-[VERIFY] check — over this project's pre-submission package. A failure here is a finding about the package, which is exactly what the gate exists to surface.
+approach:    Runs the package-consistency checker with --transmit-gate --json over the qsub folder; passes only on exit 0. (Exit contract: 0 clean / 1 warnings / 2 gate failure / precondition error.)
+UUT:         submissions@12
+user needs:  WUN-20, WUN-03
+scope:       deployment · method: scripted · requires_deployment: content.submission_package
+endpoint:    none
+protocol:    —
+test source: .claude/skills/submissions/scripts/check_package_consistency.py (pinned copy: tools/workbench-validation/results/run-20260909T060450Z/pinned/TC-25)
+command:     python3 .claude/skills/submissions/scripts/check_package_consistency.py docs/project/submissions/qsub --transmit-gate --json
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+tooling:     —
+timeout_s:   120
+started:     2026-09-09T06:05:17Z (UTC)
+exit_code:   0
+duration_s:  0.04
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+{
+  "findings": [],
+  "fails": 0,
+  "warns": 0,
+  "support_matrix": {}
+}
+

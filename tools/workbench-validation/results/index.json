@@ -1,8 +1,8 @@
 [
   {
-    "run_id": "run-20260909T060257Z",
-    "started": "2026-09-09T06:02:57Z",
-    "finished": "2026-09-09T06:04:14Z",
+    "run_id": "run-20260909T060450Z",
+    "started": "2026-09-09T06:04:50Z",
+    "finished": "2026-09-09T06:06:11Z",
     "verdict": "PASS",
     "summary": {
       "PASS": 42,
@@ -12,12 +12,12 @@
     "partial": false,
     "invoked_via": "cli",
     "schema_version": "2.0",
-    "git_sha_short": "f7fd424",
-    "git_dirty": true,
+    "git_sha_short": "3c7445f",
+    "git_dirty": false,
     "model_id": "claude-fable-5-1",
-    "sidecar": "tools/workbench-validation/results/run-20260909T060257Z/sidecar.json",
-    "report": "tools/workbench-validation/results/run-20260909T060257Z/validation-report.md",
-    "pinned_manifest": "tools/workbench-validation/results/run-20260909T060257Z/validation.yml"
+    "sidecar": "tools/workbench-validation/results/run-20260909T060450Z/sidecar.json",
+    "report": "tools/workbench-validation/results/run-20260909T060450Z/validation-report.md",
+    "pinned_manifest": "tools/workbench-validation/results/run-20260909T060450Z/validation.yml"
   },
   {
     "run_id": "run-20260909T000311Z",
