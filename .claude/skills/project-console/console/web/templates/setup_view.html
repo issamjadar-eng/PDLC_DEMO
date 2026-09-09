@@ -1186,13 +1186,7 @@
       </div>
       {% endif %}
       {% else %}
-      {% if wbd.banner %}<div class="su-warn">{{ wbd.banner }}</div>{% endif %}
-      {% if wb.stale %}
-      <div class="su-warn">The workbench has changed since this run — the recorded environment no longer
-        describes this checkout. Re-run the validation.
-        {% if wb.differences %}<ul style="margin:6px 0 0 18px;padding:0">{% for d in wb.differences[:12] %}<li>{{ d }}</li>{% endfor %}
-        {% if wb.differences | length > 12 %}<li>… and {{ wb.differences | length - 12 }} more</li>{% endif %}</ul>{% endif %}</div>
-      {% endif %}
+      {# demo banner stays on the report itself; staleness is shown quietly on the baseline tile #}
       {% if wbd.warnings %}
       <div class="su-warn">This run carries warnings and is a <strong>debugging run, not a run of record</strong>:
         <ul style="margin:6px 0 0 18px;padding:0">{% for w in wbd.warnings %}<li>{{ w }}</li>{% endfor %}</ul></div>
@@ -1218,7 +1212,7 @@
         </div>
         <div class="su-tile">
           <div class="su-tile-n"><code>{{ wbd.baseline.git_sha_short }}</code>{{ ' ±' if wbd.baseline.git_dirty }}</div>
-          <div class="su-tile-l">config baseline · {{ wbd.baseline.skills_total }} skills · {{ wbd.baseline.hooks_total }} hooks{{ ' · dirty tree' if wbd.baseline.git_dirty }}</div>
+          <div class="su-tile-l">config baseline · {{ wbd.baseline.skills_total }} skills · {{ wbd.baseline.hooks_total }} hooks{{ ' · dirty tree' if wbd.baseline.git_dirty }}{% if wb.stale %} · <span title="{{ wb.differences | join('; ') }}">workbench changed since ({{ wb.differences | length }}) — re-run to refresh</span>{% endif %}</div>
         </div>
         <div class="su-tile">
           <div class="su-tile-n" style="font-size:.95rem">{{ wbd.baseline.model_id or 'not captured' }}</div>

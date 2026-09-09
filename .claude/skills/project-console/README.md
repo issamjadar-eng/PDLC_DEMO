@@ -181,6 +181,8 @@ The CSS comment at `.md-content table` records the rationale.
 
 ## Changelog
 
+- 1.71.5 (2026-09-09): **Validation tab: banners removed.** The demo banner (rendered as raw markdown) and the "workbench has changed since this run" box are gone from the tab; the banner stays on the report itself, and staleness is now a quiet note on the config-baseline tile ("workbench changed since (N) — re-run to refresh", differences in the tooltip). **Files:** `console/web/templates/setup_view.html`.
+
 - 1.71.4 (2026-09-09): **Export progress modal.** Export Word / PDF / Markdown no longer navigate a bare download link; the click opens a modal with a spinner, the run and format being built, a running elapsed timer and a phase line (PDF: assemble → DOCX → LibreOffice), fetches the package, then triggers the browser download and reports filename, size and build time (plus a "Download again" link); backend errors show the HTTP status and detail. **Files:** `console/web/templates/setup_view.html`.
 
 - 1.71.3 (2026-09-09): **Revision label is verdict-first with counts spelled out.** The drop-down read `FAIL · 32/43 PASS`, which reads as a contradiction. Rows now carry `outcome_label`, e.g. `FAIL — 32 passed, 5 failed, 2 not executed, 4 n/a of 43` / `PASS — 42 passed, 5 n/a of 47`. **Files:** `console/setup/loader.py`, `console/web/templates/setup_view.html`.
