@@ -133,6 +133,7 @@ The user approved the plan with "go ahead and do it" and left three decisions to
 - [x] Built as a DERIVED view: plan sections (goal / approach / assertions), each series' recorded `derivation.method`, pins, `unavailable` gaps, corpus assumption records. Authors nothing, stores nothing, cannot drift
 - [x] "Where to push back": one row per unvalidated expectation, stated assumption, uncomputable cut, ageing/stale pin and plan drift, each with a concrete action. FQ-06 yields 4 rows, BQ-25 2, MQ-01 1 — derived, so honest by construction
 - [x] `_pin_freshness` ages pins at request time (project-console 1.70.0); 5 new tests; 111/111 green; live-verified on FQ-06, BQ-25, MQ-01, BQ-01
+- [x] User review: **not its own tab** — it belongs inside Quality & audit as a section (1.70.1). The tab row had just been de-cluttered; a sixth slot for the reader-facing companion to the machine checks undid that. Now the last card in the audit panel with a jump link + open-point count at the top of the tab
 
 ### Close-out
 - [x] READMEs: `docs/project/README.md` (+ `finance/`, `manufacturing/`, `management-review/` rows) and `docs/project/corpus/README.md` (+ `finance/`, `manufacturing/` rows), each with a changelog row

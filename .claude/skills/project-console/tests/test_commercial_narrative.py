@@ -250,21 +250,24 @@ class CommercialNarrativeTest(unittest.TestCase):
 
     # ---- "How it was built": a derived walkthrough, nothing authored ------
 
-    def test_how_tab_is_present_and_labelled_for_readers(self):
+    def test_how_it_was_built_is_a_section_of_quality_and_audit_not_its_own_tab(self):
         html = self.html
-        self.assertIn('data-tab="cm-tab-how"', html)
+        self.assertNotIn('data-tab="cm-tab-how"', html)          # no extra tab slot
         self.assertIn("How it was built", html)
+        qpanel = html.split('id="cm-tab-quality"')[1].split("<!-- /#cm-tab-quality -->")[0]
+        self.assertIn('id="cm-how"', qpanel)                     # it lives in the audit tab
+        self.assertIn("Where to push back", qpanel)
         # not framed as model reasoning: a deterministic script computes every figure
         self.assertNotIn("Chain-of-Thought", html)
 
-    def test_how_tab_shows_each_figure_s_recorded_derivation(self):
-        how = self.html.split('id="cm-tab-how"')[1].split("<!-- /#cm-tab-how -->")[0]
+    def test_how_section_shows_each_figure_s_recorded_derivation(self):
+        how = self.html.split('id="cm-how"')[1].split("<!-- /#cm-tab-quality -->")[0]
         self.assertIn("How each figure was produced", how)
         self.assertIn("gm per line", how)                 # the computation's own method
         self.assertIn("Gross margin by line", how)
 
-    def test_how_tab_lists_challengeable_points_with_an_action(self):
-        how = self.html.split('id="cm-tab-how"')[1].split("<!-- /#cm-tab-how -->")[0]
+    def test_how_section_lists_challengeable_points_with_an_action(self):
+        how = self.html.split('id="cm-how"')[1].split("<!-- /#cm-tab-quality -->")[0]
         self.assertIn("Where to push back", how)
         self.assertIn("cm-how-item", how)
         self.assertIn("To change it", how)
@@ -287,7 +290,7 @@ class CommercialNarrativeTest(unittest.TestCase):
         today = datetime.date.today().isoformat()
         self.assertEqual(_pin_freshness(self.tmp, ds, today)["band"], "fresh")
 
-    def test_how_tab_reads_the_plan_by_section(self):
+    def test_how_section_reads_the_plan_by_section(self):
         from console.commercial.router import _plan_sections
         secs = _plan_sections("## Question\nq\n\n## Goal — the decision this serves\n"
                               "the monthly review\n\n## Approach\nwindow = closed quarters\n\n"
