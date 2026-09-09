@@ -569,3 +569,46 @@ sup.cm-ref a:hover { text-decoration: underline; }
   .cm-head-detail { flex-direction: column; gap: .9rem; }
   .cm-actions { padding-top: 0; }
 }
+
+/* ── "How it was built" — the reader-facing walkthrough ──────────────────────
+   Prose-width, generously spaced: this is the one tab meant to be READ rather
+   than scanned, so it sets its own measure instead of using the page width. */
+.cm-how-lede { max-width: 46rem; font-size: .96rem; line-height: 1.6; margin: 0 0 1.6rem;
+  color: color-mix(in srgb, var(--body-text, #1f2937) 88%, transparent); }
+.cm-how-jump { display: inline-block; margin-left: .3rem; font-weight: 600; white-space: nowrap; }
+.cm-how-sec { max-width: 52rem; margin: 0 0 2rem; }
+.cm-how-sec > h2 { font-size: 1rem; margin: 0 0 .45rem; padding-bottom: .35rem;
+  border-bottom: 1px solid var(--border, #e2e8f0); }
+.cm-how-note { font-size: .84rem; line-height: 1.55; color: var(--body-text-muted, #64748b); margin: 0 0 .7rem; }
+.cm-how-sec .md-body { font-size: .93rem; line-height: 1.6; }
+.cm-how-plain { font-size: .93rem; line-height: 1.6; margin: 0; padding-left: 1.1rem; display: grid; gap: .4rem; }
+
+.cm-how-table { width: 100%; border-collapse: collapse; font-size: .86rem; }
+.cm-how-table th { text-align: left; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--body-text-muted, #64748b); padding: 0 .8rem .35rem 0; font-weight: 700; }
+.cm-how-table td { padding: .4rem .8rem .4rem 0; border-top: 1px solid var(--border, #e2e8f0); vertical-align: baseline; }
+
+.cm-how-dl { margin: 0; display: grid; gap: .7rem; }
+.cm-how-dl dt { font-weight: 600; font-size: .9rem; display: flex; gap: .45rem; align-items: center; flex-wrap: wrap; }
+.cm-how-dl dd { margin: .15rem 0 0; font-size: .88rem; line-height: 1.55;
+  color: color-mix(in srgb, var(--body-text, #1f2937) 82%, transparent); }
+.cm-how-inputs { display: block; margin-top: .15rem; font-size: .76rem; font-family: var(--font-mono, ui-monospace, monospace);
+  color: var(--body-text-muted, #64748b); word-break: break-word; }
+
+.cm-how-assume { border-left: 3px solid color-mix(in srgb, #c98500 55%, transparent);
+  padding: .1rem 0 .1rem .8rem; margin: 0 0 1rem; font-size: .9rem; line-height: 1.55; }
+.cm-how-assume p { margin: 0 0 .3rem; }
+
+/* the payload — every row names something a reader can actually change */
+.cm-how-challenge { max-width: 58rem; }
+.cm-how-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .6rem; }
+.cm-how-item { display: flex; gap: .75rem; align-items: flex-start; background: var(--surface, #fff);
+  border: 1px solid var(--border, #e2e8f0); border-radius: 10px; padding: .7rem .9rem; }
+.cm-how-item > .cm-chip { flex: 0 0 auto; margin-top: .1rem; }
+.cm-how-item-body { min-width: 0; }
+.cm-how-what { margin: 0; font-size: .9rem; line-height: 1.55; }
+.cm-how-act { margin: .35rem 0 0; font-size: .85rem; line-height: 1.5; color: var(--body-text-muted, #64748b); }
+.cm-how-act-k { text-transform: uppercase; font-size: .66rem; font-weight: 700; letter-spacing: .07em;
+  color: var(--cm-series, #2a78d6); margin-right: .4rem; }
+.cm-how-next { font-size: .9rem; line-height: 1.6; max-width: 52rem; }
+.cm-how-next p { margin: 0; color: color-mix(in srgb, var(--body-text, #1f2937) 84%, transparent); }

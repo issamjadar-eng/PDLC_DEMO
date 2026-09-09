@@ -248,6 +248,54 @@ class CommercialNarrativeTest(unittest.TestCase):
             self.assertNotIn(leaked, tabrow)
         self.assertIn("Quality &amp; audit", tabrow)
 
+    # ---- "How it was built": a derived walkthrough, nothing authored ------
+
+    def test_how_tab_is_present_and_labelled_for_readers(self):
+        html = self.html
+        self.assertIn('data-tab="cm-tab-how"', html)
+        self.assertIn("How it was built", html)
+        # not framed as model reasoning: a deterministic script computes every figure
+        self.assertNotIn("Chain-of-Thought", html)
+
+    def test_how_tab_shows_each_figure_s_recorded_derivation(self):
+        how = self.html.split('id="cm-tab-how"')[1].split("<!-- /#cm-tab-how -->")[0]
+        self.assertIn("How each figure was produced", how)
+        self.assertIn("gm per line", how)                 # the computation's own method
+        self.assertIn("Gross margin by line", how)
+
+    def test_how_tab_lists_challengeable_points_with_an_action(self):
+        how = self.html.split('id="cm-tab-how"')[1].split("<!-- /#cm-tab-how -->")[0]
+        self.assertIn("Where to push back", how)
+        self.assertIn("cm-how-item", how)
+        self.assertIn("To change it", how)
+        # the fixture has no analysis plan, so plan currency is the open point
+        self.assertIn("analysis plan", how)
+
+    def test_pin_freshness_is_computed_now_not_read_from_the_frozen_audit(self):
+        """quality.json records a pin's age at LINT time. Reading it here made the
+        challenge list say nothing while the header said "Stale" — the two surfaces
+        must never contradict each other."""
+        import datetime
+        from console.commercial.router import _pin_freshness
+        ds = "fixture/aged"
+        d = self.tmp / "docs" / "project" / "corpus" / ds
+        d.mkdir(parents=True, exist_ok=True)
+        (d / "dataset.yml").write_text("max_age_days: 7\n", encoding="utf-8")
+        old = _pin_freshness(self.tmp, ds, "2020-01-01")
+        self.assertEqual(old["band"], "stale")
+        self.assertGreater(old["age"], 7)
+        today = datetime.date.today().isoformat()
+        self.assertEqual(_pin_freshness(self.tmp, ds, today)["band"], "fresh")
+
+    def test_how_tab_reads_the_plan_by_section(self):
+        from console.commercial.router import _plan_sections
+        secs = _plan_sections("## Question\nq\n\n## Goal — the decision this serves\n"
+                              "the monthly review\n\n## Approach\nwindow = closed quarters\n\n"
+                              "## Assertions & limits\nasserts nothing else\n")
+        self.assertEqual(secs["goal"], "the monthly review")
+        self.assertEqual(secs["approach"], "window = closed quarters")
+        self.assertEqual(secs["assertions"], "asserts nothing else")
+
     def test_export_rejects_bad_format(self):
         self.assertEqual(self.client.get("/domains/finance2/FQ-91/export?format=txt").status_code, 400)
 
