@@ -67,6 +67,13 @@ silently-stale answers presented as current. This skill makes both structurally 
 
 ## Changelog
 
+- 18 (2026-09-08): **Claim-gate capability tests.** New `tests/test_claim_gate.py` (4 cases) builds a
+  synthetic domain tree + corpus in a temp dir and proves `lint` passes a marked, fresh claim and
+  BLOCKS an unmarked numeric claim, a stale pin with no `[waived:]`, and a marker citing an unpinned
+  dataset. Motivation: the workbench validation needed evidence that the gate works *as a tool*,
+  separate from whether a given project's snapshots happen to be fresh today (`check` over live
+  project data flips with snapshot age and is not a tool property). Hermetic via `tests/conftest.py`.
+
 - 17 (2026-09-08): **Narrative is automatic.** `answer` now synthesizes the edition's
   `narrative.md` after a clean lint (new `narrative_generate` + `narrative-generate
   [--force] [--retries]` action: `claude -p` with the narrative rules as an appended
