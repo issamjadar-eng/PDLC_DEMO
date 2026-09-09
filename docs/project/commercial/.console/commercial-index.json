@@ -1,6 +1,6 @@
 {
  "schema_version": "1.6",
- "generated": "2026-09-08T19:56:47+00:00",
+ "generated": "2026-09-09T00:30:00+00:00",
  "domain": {
   "key": "commercial",
   "name": "Commercial",
@@ -1755,8 +1755,8 @@
    "cadence": "annual",
    "status": "answered",
    "approved_edition": "2026-07-27.3",
-   "draft_edition": null,
-   "latest_edition": "2026-07-27.3",
+   "draft_edition": "2026-09-09",
+   "latest_edition": "2026-09-09",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -1772,14 +1772,19 @@
      "edition": "2026-07-27.3",
      "status": "approved",
      "narrative": "present"
+    },
+    {
+     "edition": "2026-09-09",
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
    "freshness": "fresh",
    "verdict_headline": "$366.0M of the $1,000.0M five-year plan sits behind FDA decisions not yet received; exposure crosses the 40% threshold in FY2029, FY2030 (peak 60.0% in FY2030)",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-05/2026-07-27.3/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-05/2026-07-27.3/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-05/2026-09-09/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-05/2026-09-09/data.json",
    "explainers": {
     "question": {
      "what": "A regulatory-exposure analysis of the revenue plan: how much planned revenue depends on FDA decisions the company has not yet received, year by year, with modeled slip scenarios.",
@@ -2135,18 +2140,18 @@
      "gate": "adversarial-verify",
      "kind": "agent",
      "note": "independent pins-only re-derivation of the headline figures",
-     "done": true,
-     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+     "done": false,
+     "evidence": "no adversarial-verify record filed on this edition"
     },
     {
      "gate": "red-team",
      "kind": "agent",
      "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
-     "done": true,
-     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+     "done": false,
+     "evidence": "no red-team record filed on this edition"
     }
    ],
-   "narrative": "present"
+   "narrative": "missing"
   },
   {
    "id": "BQ-06",
@@ -2158,8 +2163,8 @@
    "cadence": "annual",
    "status": "answered",
    "approved_edition": "2026-07-27.2",
-   "draft_edition": null,
-   "latest_edition": "2026-07-27.2",
+   "draft_edition": "2026-09-09",
+   "latest_edition": "2026-09-09",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -2175,14 +2180,19 @@
      "edition": "2026-07-27.2",
      "status": "approved",
      "narrative": "present"
+    },
+    {
+     "edition": "2026-09-09",
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
    "freshness": "fresh",
-   "verdict_headline": "Competitor 510(k) review runs a median 213 days received\u2192decision across 29 infusion-pump clearances since 2021; fastest frequent filer is Baxter Healthcare Corporation at 74 days median",
+   "verdict_headline": "Competitor 510(k) review runs a median 214.0 days received\u2192decision across 30 infusion-pump clearances since 2021; fastest frequent filer is Baxter Healthcare Corporation at 74 days median",
    "evidence_class": "measured",
-   "report_path": "docs/project/commercial/reports/BQ-06/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-06/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-06/2026-09-09/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-06/2026-09-09/data.json",
    "explainers": {
     "question": {
      "what": "A speed-of-competition analysis built from public FDA clearance records for the infusion-pump category: how long FDA review takes overall, by year, and by frequent competitor.",
@@ -2413,18 +2423,18 @@
      "gate": "adversarial-verify",
      "kind": "agent",
      "note": "independent pins-only re-derivation of the headline figures",
-     "done": true,
-     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+     "done": false,
+     "evidence": "no adversarial-verify record filed on this edition"
     },
     {
      "gate": "red-team",
      "kind": "agent",
      "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
-     "done": true,
-     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+     "done": false,
+     "evidence": "no red-team record filed on this edition"
     }
    ],
-   "narrative": "present"
+   "narrative": "missing"
   },
   {
    "id": "BQ-07",
@@ -3219,8 +3229,8 @@
    "cadence": "quarterly",
    "status": "answered",
    "approved_edition": "2026-07-27.3",
-   "draft_edition": null,
-   "latest_edition": "2026-07-27.3",
+   "draft_edition": "2026-09-09",
+   "latest_edition": "2026-09-09",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -3236,14 +3246,19 @@
      "edition": "2026-07-27.3",
      "status": "approved",
      "narrative": "present"
+    },
+    {
+     "edition": "2026-09-09",
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
    "freshness": "stale",
    "verdict_headline": "Method demo (fabricated CRM joined to REAL FDA recall dates): we win 67.3% of decided opportunities where the incumbent had an FRN recall posted within 180 days of close (n=55) vs 14.3% outside the window (n=7); there is no uniform decay across the interior buckets (65.8% \u2192 70.6% \u2192 0.0%); the >12 months / no prior recall tail sits at 50.0% (n=2)",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-09/2026-07-27.3/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-09/2026-07-27.3/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-09/2026-09-09/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-09/2026-09-09/data.json",
    "explainers": {
     "question": {
      "what": "A displacement analysis: do we win more often when the incumbent vendor at an account has a recent public recall, and how long does that window of opportunity stay open? Built by joining our sales log to real FDA recall dates.",
@@ -3581,15 +3596,15 @@
      "gate": "claim-lint",
      "kind": "machine",
      "note": "every figure marker-resolvable; zero errors before approval",
-     "done": true,
-     "evidence": "0 error(s) / 0 warning(s)"
+     "done": false,
+     "evidence": "1 error(s) / 0 warning(s)"
     },
     {
      "gate": "pin-freshness",
      "kind": "machine",
      "note": "all pinned snapshots within max_age_days (or visibly waived)",
-     "done": true,
-     "evidence": "2 pin(s) fresh"
+     "done": false,
+     "evidence": "1 pin(s) stale, 1 pin(s) fresh"
     },
     {
      "gate": "plan-currency",
@@ -3609,18 +3624,18 @@
      "gate": "adversarial-verify",
      "kind": "agent",
      "note": "independent pins-only re-derivation of the headline figures, including the 90-day window-sensitivity split",
-     "done": true,
-     "evidence": "CONFIRMED-WITH-CAVEAT by independent verify agent, 2026-07-28"
+     "done": false,
+     "evidence": "no adversarial-verify record filed on this edition"
     },
     {
      "gate": "red-team",
      "kind": "agent",
      "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
-     "done": true,
-     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+     "done": false,
+     "evidence": "no red-team record filed on this edition"
     }
    ],
-   "narrative": "present"
+   "narrative": "missing"
   },
   {
    "id": "BQ-10",
@@ -4403,8 +4418,8 @@
    "cadence": "quarterly",
    "status": "answered",
    "approved_edition": "2026-07-27.2",
-   "draft_edition": null,
-   "latest_edition": "2026-07-27.2",
+   "draft_edition": "2026-09-09",
+   "latest_edition": "2026-09-09",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -4420,14 +4435,19 @@
      "edition": "2026-07-27.2",
      "status": "approved",
      "narrative": "present"
+    },
+    {
+     "edition": "2026-09-09",
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
    "freshness": "fresh",
-   "verdict_headline": "1 infusion-pump clearance(s) in the 90-day window ending 2026-01-28; 0 flag roadmap-relevant keywords \u2014 review against the roadmap lanes",
+   "verdict_headline": "1 infusion-pump clearance(s) in the 90-day window ending 2026-07-24; 0 flag roadmap-relevant keywords \u2014 review against the roadmap lanes",
    "evidence_class": "measured",
-   "report_path": "docs/project/commercial/reports/BQ-12/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-12/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-12/2026-09-09/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-12/2026-09-09/data.json",
    "explainers": {
     "question": {
      "what": "A recurring sweep of new FDA infusion-pump clearances in the most recent window, with each clearance screened against keywords tied to our roadmap lanes.",
@@ -4652,18 +4672,18 @@
      "gate": "adversarial-verify",
      "kind": "agent",
      "note": "independent pins-only re-derivation of the headline figures",
-     "done": true,
-     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+     "done": false,
+     "evidence": "no adversarial-verify record filed on this edition"
     },
     {
      "gate": "red-team",
      "kind": "agent",
      "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
-     "done": true,
-     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+     "done": false,
+     "evidence": "no red-team record filed on this edition"
     }
    ],
-   "narrative": "present"
+   "narrative": "missing"
   },
   {
    "id": "BQ-13",
@@ -4676,8 +4696,8 @@
    "cadence": "quarterly",
    "status": "answered",
    "approved_edition": "2026-07-27.3",
-   "draft_edition": null,
-   "latest_edition": "2026-07-27.3",
+   "draft_edition": "2026-09-09",
+   "latest_edition": "2026-09-09",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -4693,16 +4713,21 @@
      "edition": "2026-07-27.3",
      "status": "approved",
      "narrative": "present"
+    },
+    {
+     "edition": "2026-09-09",
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [
     "A-005"
    ],
    "freshness": "fresh",
-   "verdict_headline": "Nobody in the competitive matrix documents predictive monitoring today, but the runway is assumption-thin: a SaMD-only entrant starting at the data anchor (2026-01-28) could clear 2027-07-28 to 2028-01-28 \u2014 about 5 months before our F6 2028-H2 launch anchor; an incumbent acquisition inherits the same clock; 0 ai/predictive-flagged clearance(s) in the trailing-12-month watch. The hardware-scenario reassurance is FRAGILE: its fast edge clears the favorable launch anchor by only 27 days and beats an end-of-2028-H2 launch reading by ~5 months \u2014 and the H2 anchor refinement is a catalog config choice, not a strategy-doc commitment",
+   "verdict_headline": "Nobody in the competitive matrix documents predictive monitoring today, but the runway is assumption-thin: a SaMD-only entrant starting at the data anchor (2026-07-24) could clear 2028-01-24 to 2028-07-24 \u2014 about 1 months after our F6 2028-H2 launch anchor; an incumbent acquisition inherits the same clock; 0 ai/predictive-flagged clearance(s) in the trailing-12-month watch. The hardware-scenario reassurance holds: its fast edge clears the favorable launch anchor by 207 days \u2014 and the H2 anchor refinement is a catalog config choice, not a strategy-doc commitment",
    "evidence_class": "assumed",
-   "report_path": "docs/project/commercial/reports/BQ-13/2026-07-27.3/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-13/2026-07-27.3/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-13/2026-09-09/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-13/2026-09-09/data.json",
    "explainers": {
     "question": {
      "what": "A runway analysis for our predictive-monitoring bet: given how long it takes an entrant to build and clear a competing capability, could someone land it before our planned launch \u2014 including the fast case where an incumbent buys an AI startup instead of building.",
@@ -5012,25 +5037,25 @@
      "gate": "adversarial-verify",
      "kind": "agent",
      "note": "independent pins-only re-derivation of the headline figures",
-     "done": true,
-     "evidence": "CONFIRMED-WITH-CAVEAT by independent verify agent, 2026-07-28"
+     "done": false,
+     "evidence": "no adversarial-verify record filed on this edition"
     },
     {
      "gate": "red-team",
      "kind": "agent",
      "note": "framing attack on basis choices, buried caveats, and verdict overclaim \u2014 incl. the RT-13.1 launch-anchor sensitivity staying verdict-level",
-     "done": true,
-     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+     "done": false,
+     "evidence": "no red-team record filed on this edition"
     },
     {
      "gate": "intent-check",
      "kind": "agent",
      "note": "agent judgment that the computed answer honors this plan's committed definitions (rerun on plan or methodology change)",
-     "done": true,
-     "evidence": "HONORED-WITH-NOTES by intent-check agent, 2026-07-28"
+     "done": false,
+     "evidence": "no intent-check record filed on this edition"
     }
    ],
-   "narrative": "present"
+   "narrative": "missing"
   },
   {
    "id": "BQ-14",
@@ -5390,8 +5415,8 @@
    "cadence": "annual",
    "status": "answered",
    "approved_edition": "2026-07-27.3",
-   "draft_edition": null,
-   "latest_edition": "2026-07-27.3",
+   "draft_edition": "2026-09-09",
+   "latest_edition": "2026-09-09",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -5407,14 +5432,19 @@
      "edition": "2026-07-27.3",
      "status": "approved",
      "narrative": "present"
+    },
+    {
+     "edition": "2026-09-09",
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
    "freshness": "fresh",
-   "verdict_headline": "ride to scheduled review (2027-04-12): both differentiators remain ahead of every documented competitor value and no refresh trigger fired. Accuracy margin ~6.6x vs best documented competitor on our LAB-basis spec (~4.6x on our volumetric-basis spec \u2014 ahead on either basis; competitor cells are nominal/field specs), battery ~2.1x; 0 FRN clearance(s) observed after the SOTA anchor date (2026-04-12) in a snapshot whose coverage ends 2026-01-28",
+   "verdict_headline": "ride to scheduled review (2027-04-12): both differentiators remain ahead of every documented competitor value and no refresh trigger fired. Accuracy margin ~6.6x vs best documented competitor on our LAB-basis spec (~4.6x on our volumetric-basis spec \u2014 ahead on either basis; competitor cells are nominal/field specs), battery ~2.1x; 1 FRN clearance(s) observed after the SOTA anchor date (2026-04-12) in a snapshot whose coverage ends 2026-07-24",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-15/2026-07-27.3/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-15/2026-07-27.3/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-15/2026-09-09/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-15/2026-09-09/data.json",
    "explainers": {
     "question": {
      "what": "A currency check on the state-of-the-art analysis: has the market moved since that document was adopted (new clearances, better competitor specs), and do our headline differentiators still lead?",
@@ -5717,25 +5747,25 @@
      "gate": "adversarial-verify",
      "kind": "agent",
      "note": "independent pins-only re-derivation of the headline figures",
-     "done": true,
-     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+     "done": false,
+     "evidence": "no adversarial-verify record filed on this edition"
     },
     {
      "gate": "red-team",
      "kind": "agent",
      "note": "framing attack on basis choices, buried caveats, and verdict overclaim \u2014 incl. the RT-15.1 lab-vs-volumetric spec-basis disclosure",
-     "done": true,
-     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+     "done": false,
+     "evidence": "no red-team record filed on this edition"
     },
     {
      "gate": "intent-check",
      "kind": "agent",
      "note": "agent judgment that the computed answer honors this plan's committed definitions (rerun on plan or methodology change)",
-     "done": true,
-     "evidence": "HONORED-WITH-NOTES by intent-check agent, 2026-07-28"
+     "done": false,
+     "evidence": "no intent-check record filed on this edition"
     }
    ],
-   "narrative": "present"
+   "narrative": "missing"
   },
   {
    "id": "BQ-16",
@@ -6092,8 +6122,8 @@
    "cadence": "annual",
    "status": "answered",
    "approved_edition": "2026-07-27.3",
-   "draft_edition": null,
-   "latest_edition": "2026-07-27.3",
+   "draft_edition": "2026-09-09",
+   "latest_edition": "2026-09-09",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -6109,14 +6139,19 @@
      "edition": "2026-07-27.3",
      "status": "approved",
      "narrative": "present"
+    },
+    {
+     "edition": "2026-09-09",
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
-   "freshness": "stale",
+   "freshness": "fresh",
    "verdict_headline": "Decision support, not the decision: pull-forward candidate F4 Alerts Engine v1 (smart alarm filtering) (composite 0.616, tie with F6 broken on earliest wave); kill candidate F9 International expansion (EU MDR / Canada) (composite 0.0, tie with F7 broken on weakest evidence base) \u2014 sentiment axis is simulated-panel only, demand axis is Cloud attach 84.8%. CAUTION on the kill read: the single F9 voice argues the slot is too LATE and too THIN \u2014 a voice FOR earlier EU investment, arithmetically converted into kill support by the 3-value sentiment vocabulary",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-17/2026-07-27.3/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-17/2026-07-27.3/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-17/2026-09-09/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-17/2026-09-09/data.json",
    "explainers": {
     "question": {
      "what": "A stack-ranking of the future roadmap bets: each candidate feature scored on the evidence streams available (clinical voice, competitive activity, adoption actuals), surfacing one pull-forward candidate and one kill candidate.",
@@ -6491,25 +6526,25 @@
      "gate": "adversarial-verify",
      "kind": "agent",
      "note": "independent pins-only re-derivation of the headline figures",
-     "done": true,
-     "evidence": "CONFIRMED-WITH-CAVEAT by independent verify agent, 2026-07-28"
+     "done": false,
+     "evidence": "no adversarial-verify record filed on this edition"
     },
     {
      "gate": "red-team",
      "kind": "agent",
      "note": "framing attack on basis choices, buried caveats, and verdict overclaim \u2014 incl. the RT-17.1 single-voice direction disclosure on the kill candidate",
-     "done": true,
-     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+     "done": false,
+     "evidence": "no red-team record filed on this edition"
     },
     {
      "gate": "intent-check",
      "kind": "agent",
      "note": "agent judgment that the computed answer honors this plan's committed definitions (rerun on plan or methodology change)",
-     "done": true,
-     "evidence": "HONORED-WITH-NOTES by intent-check agent, 2026-07-28"
+     "done": false,
+     "evidence": "no intent-check record filed on this edition"
     }
    ],
-   "narrative": "present"
+   "narrative": "missing"
   },
   {
    "id": "BQ-18",
@@ -6881,8 +6916,8 @@
    "cadence": "quarterly",
    "status": "answered",
    "approved_edition": "2026-07-27.2",
-   "draft_edition": "2026-07-22.4",
-   "latest_edition": "2026-07-27.2",
+   "draft_edition": "2026-09-09",
+   "latest_edition": "2026-09-09",
    "editions": [
     {
      "edition": "2026-07-22",
@@ -6918,16 +6953,21 @@
      "edition": "2026-07-27.2",
      "status": "approved",
      "narrative": "present"
+    },
+    {
+     "edition": "2026-09-09",
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [
     "A-001"
    ],
-   "freshness": "stale",
+   "freshness": "fresh",
    "verdict_headline": "MAUDE event COUNTS are comparable with caveats; RATE comparison is BLOCKED \u2014 the installed-base denominator (A-001) is not yet quantified",
    "evidence_class": "measured",
-   "report_path": "docs/project/commercial/reports/BQ-19/2026-07-27.2/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-19/2026-07-27.2/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-19/2026-09-09/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-19/2026-09-09/data.json",
    "explainers": {
     "question": {
      "what": "A comparison of adverse-event report volumes across infusion-pump manufacturers from FDA's public MAUDE database \u2014 with an explicit account of why report COUNTS can be compared but event RATES cannot.",
@@ -7173,18 +7213,18 @@
      "gate": "adversarial-verify",
      "kind": "agent",
      "note": "independent pins-only re-derivation of the headline figures \u2014 incl. the blocked-rate honesty check (no rate derivable while A-001 is unquantified)",
-     "done": true,
-     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+     "done": false,
+     "evidence": "no adversarial-verify record filed on this edition"
     },
     {
      "gate": "red-team",
      "kind": "agent",
      "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
-     "done": true,
-     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+     "done": false,
+     "evidence": "no red-team record filed on this edition"
     }
    ],
-   "narrative": "present"
+   "narrative": "missing"
   },
   {
    "id": "BQ-20",
@@ -7196,8 +7236,8 @@
    "cadence": "monthly",
    "status": "answered",
    "approved_edition": "2026-07-27.3",
-   "draft_edition": null,
-   "latest_edition": "2026-07-27.3",
+   "draft_edition": "2026-09-09",
+   "latest_edition": "2026-09-09",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -7213,6 +7253,11 @@
      "edition": "2026-07-27.3",
      "status": "approved",
      "narrative": "present"
+    },
+    {
+     "edition": "2026-09-09",
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [
@@ -7221,8 +7266,8 @@
    "freshness": "stale",
    "verdict_headline": "WATCH TRIGGERED on our internal log (demo-fabricated): 3 over-delivery and 2 PCA-by-proxy-suspected complaint records (2 MDR-filed, 1 under investigation) \u2014 E-20.1 zero-tolerance NOT met; the signal\u2192upgrade loop closed for 2 watch-category signals; real class-wide MAUDE context is counts-only (no denominator)",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-20/2026-07-27.3/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-20/2026-07-27.3/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-20/2026-09-09/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-20/2026-09-09/data.json",
    "explainers": {
     "question": {
      "what": "A standing watch on the franchise's nightmare scenarios: any internal field signal \u2014 complaints, near-misses, open regulatory items \u2014 around opioid over-delivery or PCA-by-proxy, set against class-wide public adverse-event volumes for PCA pumps.",
@@ -7625,15 +7670,15 @@
      "gate": "claim-lint",
      "kind": "machine",
      "note": "every figure marker-resolvable; zero errors before approval",
-     "done": true,
-     "evidence": "0 error(s) / 0 warning(s)"
+     "done": false,
+     "evidence": "1 error(s) / 0 warning(s)"
     },
     {
      "gate": "pin-freshness",
      "kind": "machine",
      "note": "all pinned snapshots within max_age_days (or visibly waived)",
-     "done": true,
-     "evidence": "4 pin(s) fresh"
+     "done": false,
+     "evidence": "3 pin(s) fresh, 1 pin(s) stale"
     },
     {
      "gate": "plan-currency",
@@ -7653,18 +7698,18 @@
      "gate": "adversarial-verify",
      "kind": "agent",
      "note": "independent pins-only re-derivation of the headline figures",
-     "done": true,
-     "evidence": "CONFIRMED by independent verify agent, 2026-07-28"
+     "done": false,
+     "evidence": "no adversarial-verify record filed on this edition"
     },
     {
      "gate": "red-team",
      "kind": "agent",
      "note": "framing attack on basis choices, buried caveats, and verdict overclaim \u2014 incl. the three-month MAUDE lag trim staying visible",
-     "done": true,
-     "evidence": "ACTIONED by red-team agent, 2026-07-28"
+     "done": false,
+     "evidence": "no red-team record filed on this edition"
     }
    ],
-   "narrative": "present"
+   "narrative": "missing"
   },
   {
    "id": "BQ-21",

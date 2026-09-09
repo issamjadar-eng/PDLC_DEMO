@@ -1,0 +1,17 @@
+bq: BQ-05
+edition: '2026-09-09'
+status: draft
+created_at: '2026-09-09T00:29:42+00:00'
+pins:
+  commercial/internal-revenue-plan: '2026-07-27'
+  commercial/openfda-510k-infusion: '2026-09-09'
+plan:
+  path: plans/BQ-05.md
+  sha256: 4297e3b42cf145974a020a2add31977a1a938532444730add26e722a85153a32
+code_artifacts:
+- path: bq_modules/bq_05.py
+  sha256: bfbb12641af3dc6ee6c4d10b1e714c3fdd79c745f52e89889455ba68553538ab
+- path: computations.py
+  sha256: 2140820494890c4c1712050248355fde06bba2331386103270bdfe48f88b3b78
+- path: corpus:commercial/internal-revenue-plan/gen.py
+  sha256: e9ee93796a07dbdf82a387f24b1e1f77f45b3831fcd6dff18e3e6ba32638c9e4

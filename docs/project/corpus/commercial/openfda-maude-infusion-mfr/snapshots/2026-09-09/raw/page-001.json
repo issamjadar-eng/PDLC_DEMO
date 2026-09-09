@@ -1,0 +1,410 @@
+{
+  "meta": {
+    "disclaimer": "Do not rely on openFDA to make decisions regarding medical care. While we make every effort to ensure that data is accurate, you should assume all results are unvalidated. We may limit or otherwise restrict your access to the API in line with our Terms of Service.",
+    "terms": "https://open.fda.gov/terms/",
+    "license": "https://open.fda.gov/license/",
+    "last_updated": "2026-08-18"
+  },
+  "results": [
+    {
+      "term": "CAREFUSION SD",
+      "count": 56066
+    },
+    {
+      "term": "BAXTER HEALTHCARE CORPORATION",
+      "count": 8256
+    },
+    {
+      "term": "CAREFUSION 303, INC.",
+      "count": 8050
+    },
+    {
+      "term": "ICU MEDICAL, INC.",
+      "count": 7597
+    },
+    {
+      "term": "SMITHS MEDICAL ASD, INC.",
+      "count": 7301
+    },
+    {
+      "term": "MEDTRONIC PUERTO RICO OPERATIONS CO.",
+      "count": 5481
+    },
+    {
+      "term": "FRESENIUS KABI USA, LLC",
+      "count": 2193
+    },
+    {
+      "term": "FRESENIUS KABI USA LLC",
+      "count": 2188
+    },
+    {
+      "term": "ZYNO MEDICAL, LLC",
+      "count": 1748
+    },
+    {
+      "term": "SMITHS MEDICAL ASD, INC",
+      "count": 1668
+    },
+    {
+      "term": "BAXTER INTERNATIONAL INC.",
+      "count": 1560
+    },
+    {
+      "term": "FRESENIUS VIAL S.A.S.",
+      "count": 1413
+    },
+    {
+      "term": "FRESENIUS VIAL S.A.S",
+      "count": 976
+    },
+    {
+      "term": "ICU MEDICAL, INC",
+      "count": 594
+    },
+    {
+      "term": "SMITH¿S MEDICAL ASD, INC.",
+      "count": 583
+    },
+    {
+      "term": "ICU MEDICAL COSTA RICA LTD.",
+      "count": 547
+    },
+    {
+      "term": "B BRAUN MELSUNGEN AG",
+      "count": 477
+    },
+    {
+      "term": "MOOG MEDICAL DEVICES GROUP",
+      "count": 449
+    },
+    {
+      "term": "B. BRAUN MELSUNGEN AG",
+      "count": 350
+    },
+    {
+      "term": "B. BRAUN AVITUM AG",
+      "count": 248
+    },
+    {
+      "term": "ICU MEDICAL",
+      "count": 225
+    },
+    {
+      "term": "MOOG MEDICAL DEVICES",
+      "count": 182
+    },
+    {
+      "term": "MEDTRONIC MINIMED",
+      "count": 166
+    },
+    {
+      "term": "MOOG COSTA RICA, SRL",
+      "count": 165
+    },
+    {
+      "term": "EITAN MEDICAL LTD.",
+      "count": 154
+    },
+    {
+      "term": "MOOG / ZEVEX, INC.",
+      "count": 139
+    },
+    {
+      "term": "ICU MEDICAL, INC., OAKDALE MN",
+      "count": 114
+    },
+    {
+      "term": "ICU Medical, Inc.",
+      "count": 107
+    },
+    {
+      "term": "RMS MEDICAL / KORU MEDICAL SYSTEMS, INC.",
+      "count": 96
+    },
+    {
+      "term": "Medtronic Puerto Rico Operations Co.",
+      "count": 77
+    },
+    {
+      "term": "KORU MEDICAL SYSTEMS, INC.",
+      "count": 75
+    },
+    {
+      "term": "ZYNO MEDICAL LLC",
+      "count": 73
+    },
+    {
+      "term": "B. BRAUN MEDICAL INC.",
+      "count": 71
+    },
+    {
+      "term": "SMITHS MEDICAL / ICU MEDICAL, INC.",
+      "count": 70
+    },
+    {
+      "term": "BELMONT MEDICAL TECHNOLOGIES",
+      "count": 69
+    },
+    {
+      "term": "MILLYARD ADVANCED MEDICAL PRODUCTS, LLC",
+      "count": 66
+    },
+    {
+      "term": "",
+      "count": 63
+    },
+    {
+      "term": "SMITHS MEDICAL MD, INC",
+      "count": 58
+    },
+    {
+      "term": "RMS MEDICAL/ KORU MEDICAL SYSTEMS, INC.",
+      "count": 45
+    },
+    {
+      "term": "RMS MEDICAL/KORU MEDICAL SYSTEMS, INC.",
+      "count": 44
+    },
+    {
+      "term": "FRESENIUS KABI DEUTSCHLAND GMBH",
+      "count": 42
+    },
+    {
+      "term": "KORU MEDICAL SYSTEMS",
+      "count": 42
+    },
+    {
+      "term": "ZEVEX, INC.",
+      "count": 41
+    },
+    {
+      "term": "Fresenius Kabi USA LLC",
+      "count": 38
+    },
+    {
+      "term": "Zyno Medical, LLC",
+      "count": 37
+    },
+    {
+      "term": "MOOG/ZEVEX, INC.",
+      "count": 35
+    },
+    {
+      "term": "SMITHS MEDICAL/ICU MEDICAL, INC.",
+      "count": 35
+    },
+    {
+      "term": "IRADIMED CORPORATION",
+      "count": 32
+    },
+    {
+      "term": "PHILLIPS-MEDISIZE A/S",
+      "count": 27
+    },
+    {
+      "term": "B.BRAUN MELSUNGEN AG",
+      "count": 26
+    },
+    {
+      "term": "EITAN MEDICAL LTD",
+      "count": 26
+    },
+    {
+      "term": "ICU MEDICAL, INC./SMITHS MEDICAL",
+      "count": 25
+    },
+    {
+      "term": "ZEVEX, INC./MOOG, INC.",
+      "count": 22
+    },
+    {
+      "term": "RMS MEDICAL /KORU MEDICAL SYSTEMS, INC.",
+      "count": 21
+    },
+    {
+      "term": "BD/CAREFUSION 303, INC.",
+      "count": 19
+    },
+    {
+      "term": "BECTON DICKINSON INFUSION THERAPY SYSTEMS INC. S.A. DE C.V.",
+      "count": 17
+    },
+    {
+      "term": "UNK",
+      "count": 17
+    },
+    {
+      "term": "UNKNOWN",
+      "count": 17
+    },
+    {
+      "term": "ZEVEX, INC./ MOOG, INC.",
+      "count": 17
+    },
+    {
+      "term": "AVANOS MEDICAL INC.",
+      "count": 16
+    },
+    {
+      "term": "MOOG, INC. / ZEVEX, INC.",
+      "count": 16
+    },
+    {
+      "term": "SMITHS MEDICAL ASD, INC./ ICU MEDICAL, INC.",
+      "count": 16
+    },
+    {
+      "term": "KORU MEDICAL SYSTEMS, INC./RMS MEDICAL",
+      "count": 14
+    },
+    {
+      "term": "SMITHS MEDICAL ASD, INC. / ICU MEDICAL, INC.",
+      "count": 14
+    },
+    {
+      "term": "SMITHS MEDICAL INTERNATIONAL LTD.",
+      "count": 14
+    },
+    {
+      "term": "ZEVEX INC.",
+      "count": 14
+    },
+    {
+      "term": "INFUTRONIX, LLC",
+      "count": 13
+    },
+    {
+      "term": "SMITHS MEDICAL /ICU MEDICAL, INC.",
+      "count": 13
+    },
+    {
+      "term": "FRESENIUS KABI AG",
+      "count": 10
+    },
+    {
+      "term": "SMITHS MEDICAL MD, INC.",
+      "count": 10
+    },
+    {
+      "term": "MOOG/ ZEVEX, INC.",
+      "count": 9
+    },
+    {
+      "term": "SMITHS HEALTHCARE MANUFACTURING S.A. DE C.V.",
+      "count": 9
+    },
+    {
+      "term": "BD/ CAREFUSION 303, INC.",
+      "count": 8
+    },
+    {
+      "term": "Eitan Medical Ltd.",
+      "count": 8
+    },
+    {
+      "term": "ICU MEDICAL HEALTHCARE MANUFACTURING S.A. DE C.V.",
+      "count": 8
+    },
+    {
+      "term": "MOOG COSTA RICA, SRL.",
+      "count": 8
+    },
+    {
+      "term": "MOOG, INC./ZEVEX, INC.",
+      "count": 8
+    },
+    {
+      "term": "SMITHS MEDICAL ASD",
+      "count": 8
+    },
+    {
+      "term": "SMITH¿S MEDICAL INTERNATIONAL LTD.",
+      "count": 8
+    },
+    {
+      "term": "BD / CAREFUSION 303, INC.",
+      "count": 7
+    },
+    {
+      "term": "MOOG COSTA RICA, SRL/ZEVEX, INC.",
+      "count": 7
+    },
+    {
+      "term": "ST PAUL",
+      "count": 7
+    },
+    {
+      "term": "BAXTER HEALTHCARE CORPORATION.",
+      "count": 6
+    },
+    {
+      "term": "CAREFUSION 303, INC./BECTON DICKINSON & COMPANY",
+      "count": 6
+    },
+    {
+      "term": "ICU MEDICAL DE MEXICO, S. DE R.L. DE C.V.",
+      "count": 6
+    },
+    {
+      "term": "ICU MEDICAL INC",
+      "count": 6
+    },
+    {
+      "term": "ICU Medical Costa Rica Ltd.",
+      "count": 6
+    },
+    {
+      "term": "PUMP, INFUSION",
+      "count": 6
+    },
+    {
+      "term": "SMITHS MEDIAL ASD, INC.",
+      "count": 6
+    },
+    {
+      "term": "SMITHS MEDICAL ASD, INC./ICU MEDICAL, INC.",
+      "count": 6
+    },
+    {
+      "term": "ZEVEX, INC. / MOOG, INC.",
+      "count": 6
+    },
+    {
+      "term": "B. Braun Melsungen AG",
+      "count": 5
+    },
+    {
+      "term": "BECTON DICKINSON",
+      "count": 5
+    },
+    {
+      "term": "CONMED UTICA",
+      "count": 5
+    },
+    {
+      "term": "ICU MEDICAL COSTA RICA LTD",
+      "count": 5
+    },
+    {
+      "term": "MOOG, INC.",
+      "count": 5
+    },
+    {
+      "term": "SMITH MEDICAL/ICU MEDICAL, INC.",
+      "count": 5
+    },
+    {
+      "term": "SMITH'S MEDICAL/ICU MEDICAL",
+      "count": 5
+    },
+    {
+      "term": "SMITIHS MEDICAL ASD, INC.",
+      "count": 5
+    },
+    {
+      "term": "WELLS JOHNSON CO.",
+      "count": 5
+    }
+  ]
+}

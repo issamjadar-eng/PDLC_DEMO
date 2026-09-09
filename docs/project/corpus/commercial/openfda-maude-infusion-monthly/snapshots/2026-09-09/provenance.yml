@@ -1,0 +1,26 @@
+dataset: commercial/openfda-maude-infusion-monthly
+snapshot: '2026-09-09'
+created_at: '2026-09-09T00:29:39+00:00'
+sources:
+- type: openfda-count
+  url: https://api.fda.gov/device/event.json?search=device.device_report_product_code%3AFRN+AND+date_received%3A%5B20230101+TO+20301231%5D&count=date_received
+  retrieved_at: '2026-09-09T00:29:38+00:00'
+  usage_rights: public-domain (openFDA — https://open.fda.gov/license/)
+  files:
+  - path: raw/page-001.json
+    sha256: 1241b13ff4750d1fc333cc2fb001cd90865fd74e6c048b684730036cedd79d2f
+transforms:
+- step: normalize
+  spec:
+    type: openfda-count
+    output: records.csv
+  outputs:
+  - path: normalized/records.csv
+    sha256: ab02fc2bb95daa9d5b06cb974a96c489b18602773a4a0db8fc3d2ae4b4487a3f
+    parents:
+    - 1241b13ff4750d1fc333cc2fb001cd90865fd74e6c048b684730036cedd79d2f
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 1207
