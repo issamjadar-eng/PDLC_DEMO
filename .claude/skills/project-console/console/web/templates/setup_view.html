@@ -211,6 +211,11 @@
   .su-modal .su-modal-actions { margin-top: 14px; display: flex; gap: 8px; justify-content: flex-end; }
   .su-modal .su-ok-mark { color: #58c17a; font-weight: 700; margin-right: 8px; }
   .su-modal .su-err-mark { color: #e06b6b; font-weight: 700; margin-right: 8px; }
+  /* ---- per-list search (sticky heading row) ---- */
+  .su-h2-search { display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 5;
+    background: var(--body-bg,#0f1116); padding: 8px 0 6px; margin: 22px 0 6px; }
+  .su-h2-search .su-list-search { margin-left: auto; }
+  .su-h2-search .su-list-search input { width: 220px; }
 </style>
 {% endblock %}
 
@@ -1139,8 +1144,7 @@
     <section class="su-sec" id="sec-workbench" data-title="Workbench Validation">
       <div class="su-head">
         <h1>Workbench Validation</h1>
-        <div class="su-search"><svg class="su-ico"><use href="#su-ic-search"/></svg>
-          <input type="search" placeholder="Search needs & tests…" data-filter="workbench"></div>
+
       </div>
       <p class="su-sub">
         Tool validation of the AI workbench itself — the <code>.claude/</code> toolchain
@@ -1338,8 +1342,10 @@
       </details>
       {% endif %}
 
-      <div class="su-h2">User needs (WUN register)</div>
-      <div class="su-list" data-list="workbench">
+      <div class="su-h2 su-h2-search"><span>User needs (WUN register)</span>
+        <div class="su-search su-list-search"><svg class="su-ico"><use href="#su-ic-search"/></svg>
+          <input type="search" placeholder="Filter needs…" data-list-filter="wb-needs"></div></div>
+      <div class="su-list" data-list="workbench" data-list-id="wb-needs">
         <div class="su-cols" style="grid-template-columns:64px 145px 1fr 36px 118px 110px">
           <span>ID</span><span>Role</span><span>Need</span><span>Tier</span><span>Coverage</span><span>Verdict</span></div>
         {% for n in wbd.needs %}
@@ -1364,12 +1370,14 @@
         {% endfor %}
       </div>
 
-      <div class="su-h2">Test results — run <code>{{ wbd.run.run_id }}</code></div>
+      <div class="su-h2 su-h2-search"><span>Test results — run <code>{{ wbd.run.run_id }}</code></span>
+        <div class="su-search su-list-search"><svg class="su-ico"><use href="#su-ic-search"/></svg>
+          <input type="search" placeholder="Filter tests…" data-list-filter="wb-tests"></div></div>
       <p class="su-sub">Click a row for a plain-language explanation of what the case checks
         and how. The ID links to the actual test source; the Log column opens the case's
         full execution evidence (command, environment, timestamps, exit code, judgment
         rule, complete captured output).</p>
-      <div class="su-list" data-list="workbench">
+      <div class="su-list" data-list="workbench" data-list-id="wb-tests">
         <div class="su-cols" style="grid-template-columns:56px minmax(0,1fr) 130px 84px 76px 92px 52px 48px;column-gap:12px">
           <span>ID</span><span>Test case</span><span>UUT</span><span>Needs</span><span title="scope (cap = capability: skill fixtures, portable · dep = deployment: this instance) · method (scrip = scripted · proto = protocol · inspe = inspection) · endpoint (none / mocked / live)">Scope · method · endpoint</span><span>Status</span><span>Time</span><span>Log</span></div>
         {% for t in wbd.tests %}
@@ -1528,6 +1536,23 @@ document.querySelectorAll('.su-search input').forEach(function (input) {
       var det = row.nextElementSibling;
       if (det && det.classList.contains('su-detail') && !hit) det.classList.remove('open');
     });
+  });
+});
+
+/* ---- per-list search filter (scoped to one list, lives in its heading row) ---- */
+document.querySelectorAll('input[data-list-filter]').forEach(function (input) {
+  var list = document.querySelector('.su-list[data-list-id="' + input.getAttribute('data-list-filter') + '"]');
+  if (!list) return;
+  input.addEventListener('input', function () {
+    var q = input.value.trim().toLowerCase(), shown = 0, total = 0;
+    list.querySelectorAll('.su-row[data-search]').forEach(function (row) {
+      total += 1;
+      var hit = !q || row.getAttribute('data-search').indexOf(q) !== -1;
+      row.style.display = hit ? '' : 'none'; if (hit) shown += 1;
+      var det = row.nextElementSibling;
+      if (det && det.id && det.id.indexOf('su-wbx-') === 0 && !hit) det.style.display = 'none';
+    });
+    input.title = q ? (shown + ' of ' + total + ' shown') : '';
   });
 });
 

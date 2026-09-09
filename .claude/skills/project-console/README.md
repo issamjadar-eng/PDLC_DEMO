@@ -181,6 +181,8 @@ The CSS comment at `.md-content table` records the rationale.
 
 ## Changelog
 
+- 1.71.6 (2026-09-09): **Validation tab: search lives with the lists.** The section-header search box (far from the long needs/tests lists) is replaced by a filter box in each list's heading row — "Filter needs…", "Filter tests…" — and the heading row is sticky, so the filter stays in view while scrolling that list; the input tooltip shows "N of M shown". **Files:** `console/web/templates/setup_view.html`.
+
 - 1.71.5 (2026-09-09): **Validation tab: banners removed.** The demo banner (rendered as raw markdown) and the "workbench has changed since this run" box are gone from the tab; the banner stays on the report itself, and staleness is now a quiet note on the config-baseline tile ("workbench changed since (N) — re-run to refresh", differences in the tooltip). **Files:** `console/web/templates/setup_view.html`.
 
 - 1.71.4 (2026-09-09): **Export progress modal.** Export Word / PDF / Markdown no longer navigate a bare download link; the click opens a modal with a spinner, the run and format being built, a running elapsed timer and a phase line (PDF: assemble → DOCX → LibreOffice), fetches the package, then triggers the browser download and reports filename, size and build time (plus a "Download again" link); backend errors show the HTTP status and detail. **Files:** `console/web/templates/setup_view.html`.
