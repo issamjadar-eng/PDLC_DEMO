@@ -1147,7 +1147,7 @@
                 title="Every recorded validation run is a revision of the report; pick one to view its report data and export it"
                 style="min-width:340px;padding:6px 10px;border:1px solid var(--border,rgba(255,255,255,.12));border-radius:6px;background:transparent;color:var(--body-text,#e6e9ef);font-size:.85rem">
           {% for r in wb.runs %}
-          <option value="{{ r.run_id }}" {{ 'selected' if r.run_id == wb.selected_run_id }}>{{ r.run_id }} · {{ r.started_label }} · {{ r.verdict }} · {{ r.pass_cases }}/{{ r.total_cases }} PASS{{ ' · partial' if r.partial }}</option>
+          <option value="{{ r.run_id }}" {{ 'selected' if r.run_id == wb.selected_run_id }}>{{ r.run_id }} · {{ r.started_label }} · {{ r.outcome_label }}{{ ' · partial' if r.partial }}</option>
           {% endfor %}
         </select>
         {% if wb.is_latest %}<span class="su-badge info" title="the most recent recorded run">latest</span>{% else %}<span class="su-badge warning" title="an earlier recorded run; re-running always produces a new latest revision">revision</span>{% endif %}
