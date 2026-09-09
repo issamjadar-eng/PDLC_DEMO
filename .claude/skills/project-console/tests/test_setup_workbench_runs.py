@@ -207,3 +207,12 @@ def test_export_buttons_use_progress_modal():
     assert 'id="su-export-modal"' in html and "function suWbExport(" in html
     assert html.count('onclick="return suWbExport(event, this)"') == 3
     assert 'id="su-export-elapsed"' in html and "su-spinner" in html
+
+
+def test_workbench_lists_have_their_own_sticky_filters():
+    from pathlib import Path
+    html = (Path(__file__).resolve().parents[1] / "console" / "web" / "templates" / "setup_view.html").read_text()
+    assert 'data-list-filter="wb-needs"' in html and 'data-list-filter="wb-tests"' in html
+    assert 'data-list-id="wb-needs"' in html and 'data-list-id="wb-tests"' in html
+    assert 'data-filter="workbench"' not in html          # header search gone from this section
+    assert ".su-h2-search" in html and "position: sticky" in html
