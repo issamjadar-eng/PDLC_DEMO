@@ -209,7 +209,12 @@ echo "project-console: launching on http://$HOST:$PORT ..."
 # trace-matrix/ because the `Initialize with Claude` flow writes adapters
 # there at runtime and we don't want the file write to kill the in-flight
 # SSE stream. Also exclude common venv/cache dirs.
+# The console package lives under the skill folder, OUTSIDE this cwd; uvicorn's
+# default --reload watches the cwd only, so Python changes (loaders, routers)
+# never hot-reloaded while Jinja templates did. Watch both.
 exec uv run uvicorn console.app:app --reload \
+  --reload-dir "$SKILL_CONSOLE" \
+  --reload-dir . \
   --reload-exclude 'trace-matrix/*' \
   --reload-exclude 'trace-matrix/**/*' \
   --reload-exclude '.venv/*' \
@@ -538,7 +543,7 @@ def sync_scaffold(project_root: Path, skill_root: Path, apply_agent_updates: boo
         print("No changes.")
     print()
     print("If the console is running, restart it to pick up skill code changes.")
-    print("(uvicorn --reload watches tools/project-console/, not the skill package.)")
+    print("(launchers scaffolded before 1.71.1 watched tools/project-console/ only; the current run.sh also watches the skill package.)")
 
 
 # ---------------- status ----------------
