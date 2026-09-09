@@ -826,29 +826,90 @@ def _md_to_html(text: str) -> str:
     return _md_lib.markdown(text, extensions=["tables", "sane_lists"])
 
 
-def _narrative_ctx(cfg, repo_root: Path, ed: dict, refbook, report_html: str, domain: str) -> dict:
-    """Read narrative.md (if any) -> executive-summary HTML, staleness, and the
-    report HTML with a "What this tells us" fold appended to each matching section."""
+# Section placement for charts — MIRRORS the engine's `place_series` (commercial.py)
+# so the Full Report tab and the exported document put every figure in the same
+# section: explicit `section:` → first DATA section citing `[derived: <id>]` → token
+# overlap with a data heading → unplaced (rendered as an Overview block up front).
+_NON_DATA_HEADS = ("method & provenance", "assumptions & expectations", "narrative")
+_STOP = {"by", "vs", "and", "the", "of", "per", "a", "in", "to", "on", "for", "with", "an", "or"}
+
+
+def _place_series(report_md: str, series: list):
+    heads = list(_NARR_H2_RE.finditer(report_md))
+    secs = []
+    for i, h in enumerate(heads):
+        end = heads[i + 1].start() if i + 1 < len(heads) else len(report_md)
+        secs.append((h.group(1).strip(), report_md[h.end():end]))
+    placed = {h: [] for h, _ in secs}
+    extra = []
+    lower = {h.lower(): h for h, _ in secs}
+    for sr in series:
+        sid = sr.get("id", "")
+        target = None
+        exp = (sr.get("section") or "").strip().lower()
+        if exp and exp in lower:
+            target = lower[exp]
+        if target is None:
+            for h, body in secs:
+                if h.lower().startswith(_NON_DATA_HEADS):
+                    continue
+                if f"[derived: {sid}]" in body:
+                    target = h
+                    break
+        if target is None:
+            toks = set(re.findall(r"[a-z0-9]+", (sid + " " + str(sr.get("label", ""))).lower())) - _STOP
+            best = (0, None)
+            for h, _ in secs:
+                if h.lower().startswith(_NON_DATA_HEADS):
+                    continue
+                ov = len(toks & (set(re.findall(r"[a-z0-9]+", h.lower())) - _STOP))
+                if ov > best[0]:
+                    best = (ov, h)
+            if best[1] and (best[0] >= 2 or (best[0] == 1 and len(toks) <= 3)):
+                target = best[1]
+        (extra if target is None else placed[target]).append(sr)
+    return placed, extra
+
+
+def _chart_html(s: dict) -> str:
+    """Render one decorated series through the shared chart macro (no explainer
+    button in document context — the Visualization tab carries those)."""
+    return templates.env.get_template("_cm_chart.html").module.chart(s, "", True)
+
+
+def _narrative_ctx(cfg, repo_root: Path, ed: dict, refbook, report_html: str, domain: str,
+                   series: list | None = None) -> dict:
+    """Read narrative.md (if any) -> executive-summary HTML, staleness, and the Full
+    Report HTML: the report with each section's charts placed after its table(s)
+    and a "What this tells us" fold appended; headline charts no section cites go
+    into an Overview block ahead of the first section."""
     from console.commercial.loader import _root as _domain_root
     edir = _domain_root(repo_root, domain) / "reports" / ed["bq"] / ed["edition"]
     np = edir / "narrative.md"
     out = {"narrative_status": "missing", "exec_summary_html": "", "narr_meta": {},
-           "report_html_narrated": report_html, "narr_sections_used": 0}
-    if not np.is_file():
-        return out
-    fm, sections = _parse_narrative(np.read_text(encoding="utf-8"))
+           "report_html_narrated": report_html, "narr_sections_used": 0, "overview_html": ""}
+    fm, sections, stale = {}, {}, False
+    if np.is_file():
+        fm, sections = _parse_narrative(np.read_text(encoding="utf-8"))
     import hashlib
 
     def _sha(p):
         return hashlib.sha256(p.read_bytes()).hexdigest() if p.is_file() else None
-    stale = fm.get("report_sha256") != _sha(edir / "report.md") or fm.get("data_sha256") != _sha(edir / "data.json")
-    out["narrative_status"] = "stale" if stale else "present"
-    out["narr_meta"] = {"generated_at": fm.get("generated_at"), "author": fm.get("author")}
+    if np.is_file():
+        stale = fm.get("report_sha256") != _sha(edir / "report.md") or fm.get("data_sha256") != _sha(edir / "data.json")
+        out["narrative_status"] = "stale" if stale else "present"
+        out["narr_meta"] = {"generated_at": fm.get("generated_at"), "author": fm.get("author")}
     by_key = {k.lower(): v for k, v in sections.items()}
     es = by_key.pop("executive summary", None)
     if es:
         out["exec_summary_html"] = refbook.referencize_html(_md_to_html(es))
-    # append a fold after each report section whose heading matches
+    # charts by section (same rule as the engine's export)
+    report_md = (edir / "report.md").read_text(encoding="utf-8") if (edir / "report.md").is_file() else ""
+    placed, extra = _place_series(report_md, series or [])
+    placed_l = {k.lower(): v for k, v in placed.items()}
+    if extra:
+        out["overview_html"] = '<div class="cm-fr-charts">' + "".join(_chart_html(s) for s in extra) + "</div>"
+    # per section: heading + body (tables) + its charts + the narrative fold
     parts = _HTML_H2_RE.split(report_html)  # [pre, h1text, body1, h2text, body2, ...]
     if len(parts) > 1:
         rebuilt = [parts[0]]
@@ -856,6 +917,9 @@ def _narrative_ctx(cfg, repo_root: Path, ed: dict, refbook, report_html: str, do
             head_html, body = parts[i], parts[i + 1] if i + 1 < len(parts) else ""
             key = _html.unescape(_TAG_RE.sub("", head_html)).strip().lower()
             rebuilt.append(f"<h2>{head_html}</h2>{body}")
+            figs = placed_l.get(key) or []
+            if figs:
+                rebuilt.append('<div class="cm-fr-charts">' + "".join(_chart_html(s) for s in figs) + "</div>")
             n = by_key.get(key)
             if n:
                 out["narr_sections_used"] += 1
@@ -1058,7 +1122,7 @@ async def commercial_view(domain: str, request: Request, bq: str, edition: str |
                 ctx["report_html"] = refbook.referencize_html(html)
             except Exception:
                 ctx["report_html"] = ""
-        ctx.update(_narrative_ctx(cfg, cfg.repo_root, ed, refbook, ctx["report_html"], domain))
+        ctx.update(_narrative_ctx(cfg, cfg.repo_root, ed, refbook, ctx["report_html"], domain, ctx["series"]))
         ctx["report_html"] = ctx.pop("report_html_narrated")
         ctx["references"] = refbook.refs
         # assumption chips → open the record in the Documents viewer when possible

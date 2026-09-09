@@ -67,6 +67,15 @@ silently-stale answers presented as current. This skill makes both structurally 
 
 ## Changelog
 
+- 19 (2026-09-08): **Charts in the exported document, placed by section.** `export` now
+  renders every series to SVG (`render_series_svg`: bars / paired-bars / timeseries /
+  stat, pure python, values verbatim) under `exports/charts/` and embeds each figure in
+  the report section it explains via `place_series` (explicit `section:` → first data
+  section citing `[derived: <id>]` → heading token overlap → an Overview block after the
+  executive summary); non-data sections never capture charts. pandoc embeds the SVGs in
+  the docx (`--resource-path`); LibreOffice renders them into the PDF. The evidence-refresh
+  Action template's weekly leg now refreshes EVERY corpus dataset (internal exports too),
+  not just openFDA, so internal pins stop ageing past `max_age_days` between runs.
 - 18 (2026-09-08): **Claim-gate capability tests.** New `tests/test_claim_gate.py` (4 cases) builds a
   synthetic domain tree + corpus in a temp dir and proves `lint` passes a marked, fresh claim and
   BLOCKS an unmarked numeric claim, a stale pin with no `[waived:]`, and a marker citing an unpinned

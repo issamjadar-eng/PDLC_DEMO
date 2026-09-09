@@ -501,3 +501,11 @@ sup.cm-ref a:hover { text-decoration: underline; }
 .cm-narr-stale { background: color-mix(in srgb, #c98500 18%, transparent); color: #7a5200; }
 .cm-export { display: inline-flex; gap: .3rem; }
 .cm-export-chip { background: var(--surface-2, #f1f5f9); }
+
+/* ---- Full Report tab: charts placed inside the document flow, under the section's
+   tables and above its narrative fold. Compact figures (no explainer button). */
+.cm-fr-head { margin: 0 0 .8rem; }
+.cm-fr-charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: .8rem; margin: .5rem 0 .9rem; }
+.cm-chart-inline { margin: 0; }
+.cm-fr-exec h2, .cm-fr-overview h2 { margin-top: 0; }
+.cm-fr-exec { background: color-mix(in srgb, var(--cm-series, #2a78d6) 7%, var(--surface, #fff)); border-left: 4px solid var(--cm-series, #2a78d6); border-radius: 10px; padding: .6rem 1rem; margin: 0 0 1rem; }

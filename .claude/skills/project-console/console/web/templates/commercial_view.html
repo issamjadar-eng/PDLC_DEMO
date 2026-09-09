@@ -7,6 +7,7 @@
   {# Explainer ⓘ — hover/focus shows the compact "what" card; click opens the
      shared plain-language dialog. Renders nothing when the sidecar carries no
      explainer for the target (schema 1.0 degrades to no icons). #}
+  {% from "_cm_chart.html" import chart %}
   {% macro info(key) %}{% set ex = explainers.get(key) %}{% if ex %}<span class="cm-info"><button type="button" class="cm-info-btn" data-explain="{{ key }}" aria-label="Explain: {{ ex.label }}" aria-haspopup="dialog">ⓘ</button><span class="cm-info-card" role="tooltip">{{ ex.what }}</span></span>{% endif %}{% endmacro %}
 
   {# Kind-glossary ⓘ — console-owned plain-language copy for artifact kinds. #}
@@ -82,7 +83,8 @@
   {{ qheader() }}
 
   <div class="cm-toptabs" role="tablist" aria-label="View">
-    <button type="button" class="cm-toptab is-active" data-tab="cm-tab-report">Report</button>
+    <button type="button" class="cm-toptab is-active" data-tab="cm-tab-viz" title="Quick view — verdict, executive summary, charts, expectations">Visualization</button>
+    <button type="button" class="cm-toptab" data-tab="cm-tab-report" title="Document view — every section's tables with its charts and narrative; the Word / PDF export">Full Report</button>
     <button type="button" class="cm-toptab" data-tab="cm-tab-quality">Quality &amp; audit
       {% if quality %}<span class="cm-badge {{ 'ev-measured' if quality.lint.status == 'pass' else 'fr-stale' }}">{{ '✓' if quality.lint.status == 'pass' else '✗' }} lint</span>{% endif %}
       {% if code %}<span class="cm-chip {{ code._status.cls }}" title="Computation code: {{ code._status.label }}">{{ code._status.glyph }} code</span>{% endif %}
@@ -96,7 +98,7 @@
     </button>
   </div>
 
-  <div id="cm-tab-report">
+  <div id="cm-tab-viz">
   {% for v in verdicts %}
   <div class="cm-verdict">
     <span class="cm-verdict-k">Verdict{{ info('verdict') }}</span>
@@ -200,86 +202,45 @@
   {% endif %}
 
   <div class="cm-charts {% if ed.status == 'draft' %}cm-draftmark{% endif %}">
-    {% for s in series %}
-    <figure class="cm-chart">
-      <figcaption class="cm-chart-cap">
-        <span class="cm-chart-title">{{ s.label }}{% if s._explainer %}{{ info(s.id) }}{% endif %}</span>
-        <span class="cm-badge {{ s._evidence.cls }}" title="{{ s._evidence.tip }}">{{ s._evidence.glyph }} {{ s._evidence.label }}</span>
-      </figcaption>
-      {% if s._stat %}
-      <div class="cm-stats-row">
-        {% for t in s._stat %}
-        <div class="cm-stat-tile">
-          <span class="cm-stat-n">{{ t.value }}{% if s.unit == '%' %}%{% endif %}</span>
-          <span class="cm-stat-l">{{ t.label }}{% if s.unit and s.unit != '%' %} ({{ s.unit }}){% endif %}</span>
-          {% if t.sub %}<span class="cm-stat-sub">{{ t.sub }}</span>{% endif %}
-        </div>
-        {% endfor %}
-      </div>
-      {% elif s._paired %}
-      <div class="cm-bars" role="img" aria-label="{{ s.label }}">
-        {% for r in s._paired.rows %}
-        <div class="cm-pair-row" title="{{ r.tip }}">
-          <span class="cm-bar-label">{{ r.label }}</span>
-          <span class="cm-pair-tracks">
-            <span class="cm-bar-track"><span class="cm-bar-fill cm-pair-a" style="width: {{ r.a_pct }}%"></span></span>
-            <span class="cm-bar-track"><span class="cm-bar-fill cm-pair-b" style="width: {{ r.b_pct }}%"></span></span>
-          </span>
-          <span class="cm-bar-value">{{ r.a }} / {{ r.b }}</span>
-        </div>
-        {% endfor %}
-      </div>
-      <div class="cm-ts-legend">
-        <span class="cm-ts-key"><span class="cm-ts-swatch cm-pair-a"></span>{{ s._paired.a_label }}</span>
-        <span class="cm-ts-key"><span class="cm-ts-swatch cm-pair-b"></span>{{ s._paired.b_label }}</span>
-        {% if s.unit %}<span class="cm-muted">· {{ s.unit }}</span>{% endif %}
-      </div>
-      {% elif s._ts %}
-      <div class="cm-ts">
-        <svg viewBox="0 0 {{ s._ts.w }} {{ s._ts.h }}" role="img" aria-label="{{ s.label }}" preserveAspectRatio="xMidYMid meet">
-          <line x1="{{ s._ts.left }}" y1="{{ s._ts.y0_y }}" x2="{{ s._ts.right }}" y2="{{ s._ts.y0_y }}" class="cm-ts-axis"/>
-          {% for ln in s._ts.lines %}
-          <polyline points="{{ ln.path }}" fill="none" stroke="{{ ln.color }}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-          {% for d0 in ln.dots %}<circle cx="{{ d0.cx }}" cy="{{ d0.cy }}" r="9" fill="transparent" class="cm-ts-hit" tabindex="0" data-tip="{{ d0.tip }}" aria-label="{{ d0.tip }}"/>{% endfor %}
-          {% for d0 in ln.dots %}<circle cx="{{ d0.cx }}" cy="{{ d0.cy }}" r="2" fill="{{ ln.color }}"/>{% endfor %}
-          {% for lb in ln.labels %}<text x="{{ lb.x }}" y="{{ lb.y }}" class="cm-ts-vlabel" text-anchor="middle">{{ lb.v }}</text>{% endfor %}
-          {% endfor %}
-          <text x="{{ s._ts.left }}" y="{{ s._ts.h - 6 }}" class="cm-ts-tick">{{ s._ts.x0 }}</text>
-          <text x="{{ s._ts.right }}" y="{{ s._ts.h - 6 }}" class="cm-ts-tick" text-anchor="end">{{ s._ts.x1 }}</text>
-          <text x="{{ s._ts.left }}" y="{{ s._ts.ymax_y - 3 }}" class="cm-ts-tick">{{ s._ts.ymax }}</text>
-        </svg>
-        <div class="cm-ts-legend">
-          {% for ln in s._ts.lines %}<span class="cm-ts-key"><span class="cm-ts-swatch" style="background: {{ ln.color }}"></span>{{ ln.label }}</span>{% endfor %}
-          {% if s.unit %}<span class="cm-muted">· {{ s.unit }}</span>{% endif %}
-        </div>
-      </div>
-      {% elif s._rows %}
-        {% if s._numeric %}
-        <div class="cm-bars" role="img" aria-label="{{ s.label }}">
-          {% for r in s._rows %}
-          <div class="cm-bar-row" title="{{ r.tip }}">
-            <span class="cm-bar-label">{{ r.label }}</span>
-            <span class="cm-bar-track"><span class="cm-bar-fill" style="width: {{ r.pct }}%"></span></span>
-            <span class="cm-bar-value">{{ '{:,}'.format(r.value) if r.value is integer else r.value }}{% if s.unit == '%' %}%{% endif %}</span>
-          </div>
-          {% endfor %}
-        </div>
-        {% if s.unit and s.unit != '%' %}<p class="cm-unit">{{ s.unit }}</p>{% endif %}
-        {% else %}
-        <dl class="cm-kv">
-          {% for r in s._rows %}<div><dt>{{ r.label }}</dt><dd>{{ r.value }}</dd></div>{% endfor %}
-        </dl>
-        {% endif %}
-      {% else %}
-      <p class="cm-chart-none">{{ s._evidence.label }} — {{ s._prov_label or 'no data points' }}</p>
-      {% endif %}
-      <p class="cm-prov">Source{% if s._ref_n %}<sup class="cm-ref"><a href="#cm-ref-{{ s._ref_n }}">{{ s._ref_n }}</a></sup>{% endif %}:
-        {% if s._prov_link %}<a href="{{ s._prov_link }}" target="_blank" rel="noopener">{{ s._prov_label }} ↗</a>
-        {% else %}{{ s._prov_label }}{% endif %}
-      </p>
-    </figure>
-    {% endfor %}
+    {% for s in series %}{{ chart(s, info(s.id) if s._explainer else '') }}{% endfor %}
   </div>
+
+
+  </div><!-- /#cm-tab-viz -->
+
+  <div id="cm-tab-report" hidden>
+  <div class="cm-fr-head">
+    <p class="cm-muted">Document view — every section's tables with its charts placed alongside, the narrative under each, then references. This is what
+      <a href="{{ base }}/{{ q.id }}/export?edition={{ ed.edition }}&amp;format=docx">⬇ Word</a> and
+      <a href="{{ base }}/{{ q.id }}/export?edition={{ ed.edition }}&amp;format=pdf">⬇ PDF</a> produce
+      (<a href="/documents#path={{ ed.report_path }}" target="_blank" rel="noopener">source report.md ↗</a> ·
+      <a href="{{ base }}/{{ q.id }}/raw?edition={{ ed.edition }}" target="_blank" rel="noopener">data.json ↗</a>).</p>
+  </div>
+  {% for v in verdicts %}<div class="cm-verdict"><span class="cm-verdict-k">Verdict</span><p class="cm-verdict-h">{{ v.headline }}</p></div>{% endfor %}
+  {% if exec_summary_html %}
+  <section class="cm-fr-exec"><h2>Executive summary{% if narrative_status == 'stale' %} <span class="cm-chip cm-narr-stale">stale — regenerate</span>{% endif %}</h2>
+    <div class="md-body">{{ exec_summary_html | safe }}</div></section>
+  {% endif %}
+  {% if overview_html %}
+  <section class="cm-fr-overview"><h2>Overview</h2>{{ overview_html | safe }}</section>
+  {% endif %}
+  <details class="cm-pins">
+    <summary>Provenance — pinned snapshots{% if ed.approval %} · approval record{% endif %}</summary>
+    <ul>
+      {% for ds, snap in ed.pins.items() %}
+      <li><code>{{ ds }}@{{ snap }}</code> — <a href="/documents#path=docs/project/corpus/{{ ds }}/README.md" target="_blank" rel="noopener">dataset ↗</a></li>
+      {% endfor %}
+    </ul>
+    {% if ed.approval %}
+    <p class="cm-muted">Approved by <strong>{{ ed.approval.approved_by }}</strong> at {{ ed.approval.approved_at }} —
+      checks: lint {{ ed.approval.checks.lint_errors }} errors, freshness {{ ed.approval.checks.freshness }},
+      verify: {{ ed.approval.checks.verify_note }}. Content hash-pinned.</p>
+    {% endif %}
+  </details>
+
+  <section class="cm-report">
+    <div class="cm-report-body md-body">{{ report_html | safe }}</div>
+  </section>
 
   {% if narrative %}
   <section class="cm-narrative">
@@ -302,25 +263,6 @@
     {% endfor %}
   </section>
   {% endif %}
-
-  <details class="cm-pins">
-    <summary>Provenance — pinned snapshots{% if ed.approval %} · approval record{% endif %}</summary>
-    <ul>
-      {% for ds, snap in ed.pins.items() %}
-      <li><code>{{ ds }}@{{ snap }}</code> — <a href="/documents#path=docs/project/corpus/{{ ds }}/README.md" target="_blank" rel="noopener">dataset ↗</a></li>
-      {% endfor %}
-    </ul>
-    {% if ed.approval %}
-    <p class="cm-muted">Approved by <strong>{{ ed.approval.approved_by }}</strong> at {{ ed.approval.approved_at }} —
-      checks: lint {{ ed.approval.checks.lint_errors }} errors, freshness {{ ed.approval.checks.freshness }},
-      verify: {{ ed.approval.checks.verify_note }}. Content hash-pinned.</p>
-    {% endif %}
-  </details>
-
-  <section class="cm-report">
-    <h2>Full report <span class="cm-muted">(every figure marker-cited · <a href="{{ base }}/{{ q.id }}/data?edition={{ ed.edition }}">Data view — tables &amp; filters</a> · <a href="/documents#path={{ ed.report_path }}" target="_blank" rel="noopener">open in Documents ↗</a> · <a href="{{ base }}/{{ q.id }}/raw?edition={{ ed.edition }}" target="_blank" rel="noopener">data.json ↗</a>)</span></h2>
-    <div class="cm-report-body md-body">{{ report_html | safe }}</div>
-  </section>
 
   {% if references %}
   <section class="cm-refs">
@@ -728,7 +670,7 @@
     var btn = e.target.closest('.cm-toptab'); if (!btn) return;
     tabs.querySelectorAll('.cm-toptab').forEach(function (b) { b.classList.remove('is-active'); });
     btn.classList.add('is-active');
-    ['cm-tab-report', 'cm-tab-quality', 'cm-tab-data', 'cm-tab-plan'].forEach(function (id) {
+    ['cm-tab-viz', 'cm-tab-report', 'cm-tab-quality', 'cm-tab-data', 'cm-tab-plan'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) el.hidden = id !== btn.getAttribute('data-tab');
     });

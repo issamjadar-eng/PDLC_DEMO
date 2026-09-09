@@ -38,6 +38,8 @@ _Demo sample data — not for clinical use._
 |---|---|
 | PP3500 [src: {DS}@{SNAP}] | 60.1 |
 
+Line margins are charted [derived: margin-by-line].
+
 ## Method & provenance
 
 - Summed from [src: {DS}@{SNAP}].
@@ -68,7 +70,19 @@ def _seed(repo: Path, domain: str, qid: str, narrative: str | None, stale: bool 
     edir = root / "reports" / qid / EDITION
     edir.mkdir(parents=True, exist_ok=True)
     (edir / "report.md").write_text(REPORT, encoding="utf-8")
-    (edir / "data.json").write_text(json.dumps({"series": [], "verdicts": [{"id": "v-main", "headline": "margin 51.5%", "evidence_class": "derived"}]}), encoding="utf-8")
+    series = [
+        # cited by the "Margin by line" section via [derived: margin-by-line] -> placed there
+        {"id": "margin-by-line", "label": "Gross margin by line", "unit": "%", "evidence_class": "derived",
+         "derivation": {"method": "gm per line", "inputs": [f"src: {DS}@{SNAP}"]},
+         "provenance": {"dataset": DS, "snapshot": SNAP},
+         "points": [{"label": "PP3500", "value": 60.1}, {"label": "PP3000", "value": 45.3}]},
+        # cited nowhere, no heading overlap -> Overview block
+        {"id": "gm-stat", "label": "Company margin", "unit": "%", "kind": "stat", "evidence_class": "derived",
+         "derivation": {"method": "total", "inputs": [f"src: {DS}@{SNAP}"]},
+         "provenance": {"dataset": DS, "snapshot": SNAP},
+         "points": [{"label": "H1 margin", "value": 51.5}]},
+    ]
+    (edir / "data.json").write_text(json.dumps({"series": series, "verdicts": [{"id": "v-main", "headline": "margin 51.5%", "evidence_class": "derived"}]}), encoding="utf-8")
     (edir / "edition.yml").write_text(
         f"bq: {qid}\nedition: '{EDITION}'\nstatus: draft\ncreated_at: '2026-09-08T09:00:00'\n"
         f"pins:\n  {DS}: '{SNAP}'\n", encoding="utf-8")
@@ -167,6 +181,38 @@ class CommercialNarrativeTest(unittest.TestCase):
         r = self.client.get("/domains/finance/FQ-90/export?edition=2026-09-08&format=md")
         self.assertEqual(r.status_code, 200)
         self.assertIn("No executive summary has been written", r.text)
+
+    def test_full_report_places_chart_in_cited_section_and_overview(self):
+        html = self.client.get("/domains/finance2/FQ-91").text
+        self.assertIn('data-tab="cm-tab-viz"', html)
+        self.assertIn('data-tab="cm-tab-report"', html)
+        full = html.split('id="cm-tab-report"')[1].split("<!-- /#cm-tab-report -->")[0]
+        # section order inside the document: heading -> table -> chart -> narrative fold
+        h = full.index("Margin by line</h2>")
+        tbl = full.index("<table", h)
+        fig = full.index("cm-chart-inline", h)
+        fold = full.index('class="cm-narr"', h)
+        self.assertTrue(h < tbl < fig < fold, (h, tbl, fig, fold))
+        self.assertIn("Gross margin by line", full)
+        # the uncited stat chart lands in the Overview block ahead of the sections
+        ov = full.index("cm-fr-overview")
+        self.assertIn("Company margin", full[ov:h])
+        self.assertTrue(ov < h)
+
+    def test_export_md_embeds_charts_by_section(self):
+        r = self.client.get("/domains/finance2/FQ-91/export?edition=2026-09-08&format=md")
+        self.assertEqual(r.status_code, 200)
+        body = r.text
+        sec = body.index("## Margin by line")
+        img = body.index("![](charts/margin-by-line.svg)")
+        self.assertIn("_Figure — Gross margin by line (%)", body)
+        nxt = body.index("### What this tells us", sec)
+        self.assertTrue(sec < img < nxt, (sec, img, nxt))
+        ov = body.index("## Overview")
+        self.assertIn("charts/gm-stat.svg", body[ov:sec])
+        svg = self.tmp / "docs" / "project" / "finance2" / "reports" / "FQ-91" / EDITION / "exports" / "charts" / "margin-by-line.svg"
+        self.assertTrue(svg.is_file())
+        self.assertIn("PP3500", svg.read_text())
 
     def test_export_rejects_bad_format(self):
         self.assertEqual(self.client.get("/domains/finance2/FQ-91/export?format=txt").status_code, 400)

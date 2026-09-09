@@ -1,11 +1,11 @@
 {
  "bq": "BQ-09",
  "edition": "2026-09-09",
- "generated_at": "2026-09-09T00:29:53+00:00",
+ "generated_at": "2026-09-09T00:30:40+00:00",
  "lint": {
   "status": "fail",
   "errors": [
-   "pin commercial/internal-winloss@2026-07-27.4 is STALE (44d > 30d) and report carries no [waived: W-NNN]"
+   "pin commercial/internal-winloss@2026-07-27.4 is STALE (43d > 30d) and report carries no [waived: W-NNN]"
   ],
   "warnings": [],
   "checks": [
@@ -45,7 +45,7 @@
     "findings": [
      {
       "severity": "error",
-      "message": "pin commercial/internal-winloss@2026-07-27.4 is STALE (44d > 30d) and report carries no [waived: W-NNN]"
+      "message": "pin commercial/internal-winloss@2026-07-27.4 is STALE (43d > 30d) and report carries no [waived: W-NNN]"
      }
     ]
    },
@@ -132,7 +132,7 @@
   {
    "dataset": "commercial/internal-winloss",
    "snapshot": "2026-07-27.4",
-   "age_days": 44,
+   "age_days": 43,
    "max_age_days": 30,
    "band": "stale",
    "waived": false
@@ -140,7 +140,7 @@
   {
    "dataset": "commercial/openfda-recalls-infusion",
    "snapshot": "2026-09-09",
-   "age_days": 0,
+   "age_days": -1,
    "max_age_days": 30,
    "band": "fresh",
    "waived": false
