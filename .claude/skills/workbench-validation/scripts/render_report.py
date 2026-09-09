@@ -297,6 +297,82 @@ def environment_details(env, run):
     return out
 
 
+def load_qms_coverage(manifest, root):
+    """The QMS template coverage inventory written by a deployment case
+    (default: tools/workbench-validation/qms-coverage.json). None when absent —
+    the report then states that no inventory was produced in this run."""
+    rel = manifest.get("qms_coverage", "tools/workbench-validation/qms-coverage.json")
+    path = root / rel
+    if not path.is_file():
+        return None, rel
+    try:
+        return json.loads(path.read_text(encoding="utf-8")), rel
+    except (OSError, json.JSONDecodeError) as exc:
+        return {"_error": f"unreadable: {exc}"}, rel
+
+
+def qms_coverage_section(cov, rel):
+    """§3b — which imported QMS templates/forms have validation evidence, which
+    are imported but unused, and which project doctypes have no template
+    imported at all. A project acquires QMS content over time; this table is
+    what tells a reviewer whether the validation kept up."""
+    out = []
+    add = out.append
+    add("### QMS template coverage — what the imported QMS governs, and what has evidence")
+    add("")
+    if cov is None:
+        add(f"_No QMS coverage inventory was produced in this run (expected at `{rel}`). "
+            "Add a deployment case that runs the inventory script, or declare "
+            "`deployment.content.qms_forms: false` if this instance has no QMS templates._")
+        add("")
+        return out
+    if cov.get("_error"):
+        add(f"_QMS coverage inventory at `{rel}` could not be read: {cov['_error']}_")
+        add("")
+        return out
+    sm = cov.get("summary") or {}
+    add(f"Registry: `{cov.get('registry', '?')}` · generated {cov.get('generated', '?')}. "
+        f"**{sm.get('templates_total', 0)} templates/forms imported** — "
+        f"{sm.get('templates_instantiated', 0)} instantiated by project documents, "
+        f"{sm.get('templates_tested', 0)} exercised by the conformance check, "
+        f"{sm.get('templates_unused', 0)} imported but not yet used (no project evidence); "
+        f"{sm.get('procedures_total', 0)} procedures (SOP/WI) referenced; "
+        f"**{sm.get('documents_governed', 0)} of {sm.get('documents_total', 0)} project documents governed by a template, "
+        f"{sm.get('documents_without_template', 0)} with no template imported for their doctype.**")
+    add("")
+    templates = cov.get("templates") or []
+    if templates:
+        add("| Template / form | Type | Project documents | Conformance evidence | Pass / Fail | Status |")
+        add("|---|---|---|---|---|---|")
+        order = {"covered-failing": 0, "covered": 1, "unused": 2}
+        for t in sorted(templates, key=lambda t: (order.get(t.get("status"), 9), t.get("id", ""))):
+            tested = "tested" if t.get("tested") else "**not tested**"
+            status = {"covered": "covered", "covered-failing": "**covered — failing**",
+                      "unused": "_imported, unused — no project evidence_"}.get(t.get("status"), t.get("status", "?"))
+            add(f"| `{t.get('id', '?')}` {md_escape(t.get('title') or '')} | {t.get('doc_type', '?')} "
+                f"| {t.get('instances', 0)} | {tested} | {t.get('pass', 0)} / {t.get('fail', 0)} | {status} |")
+        add("")
+    procs = cov.get("procedures") or []
+    if procs:
+        add("Procedures referenced by project documents (govern process, not structure — no template test applies): "
+            + ", ".join(f"`{p.get('id', '?')}` ({p.get('referenced_by', 0)})" for p in procs) + ".")
+        add("")
+    gaps = cov.get("documents_without_template") or []
+    if gaps:
+        by = {}
+        for g in gaps:
+            by.setdefault((g.get("doctype_hint") or "?", g.get("reason") or "?"), []).append(g.get("doc"))
+        add("**QMS gaps — project doctypes with no imported template** (a finding for QMS import, not for the documents):")
+        add("")
+        add("| Doctype (folder) | Reason | Documents |")
+        add("|---|---|---|")
+        for (hint, reason), docs in sorted(by.items()):
+            shown = ", ".join(f"`{Path(d).name}`" for d in docs[:6]) + (f" … +{len(docs) - 6}" if len(docs) > 6 else "")
+            add(f"| `{hint}` | {reason} | {len(docs)}: {shown} |")
+        add("")
+    return out
+
+
 def build_report(manifest, run, needs, case_index, verdict, root, case_meta=None):
     case_meta = case_meta or {}
     env = run.get("environment", {})
@@ -462,6 +538,9 @@ def build_report(manifest, run, needs, case_index, verdict, root, case_meta=None
                 f"| {case.get('duration_s', '?')}s | {log} | {md_escape(detail) or '—'} |")
         add("")
 
+    cov, cov_rel = load_qms_coverage(manifest, root)
+    lines.extend(qms_coverage_section(cov, cov_rel))
+
     add("### What each test case checks (for reviewers)")
     add("")
     add("Written for a reviewer who is not a toolchain specialist: what the case "
@@ -549,7 +628,7 @@ def build_report(manifest, run, needs, case_index, verdict, root, case_meta=None
     return "\n".join(lines) + "\n"
 
 
-def build_sidecar(manifest, run, needs, verdict, case_meta=None):
+def build_sidecar(manifest, run, needs, verdict, case_meta=None, qms_coverage=None):
     case_meta = case_meta or {}
     env = run.get("environment", {})
     need_counts = {}
@@ -594,6 +673,7 @@ def build_sidecar(manifest, run, needs, verdict, case_meta=None):
         "warnings": run.get("warnings", []),
         "connections": run.get("connections") or env.get("connections", {}).get("declared", {}),
         "deployment": run.get("deployment") or {},
+        "qms_coverage": qms_coverage,
         "summary": {
             "verdict": verdict,
             "needs": {"total": len(needs), **need_counts},
@@ -682,8 +762,10 @@ def main():
         "sidecar", "tools/workbench-validation/workbench-validation-index.json")
     sidecar_path = root / sidecar_rel
     sidecar_path.parent.mkdir(parents=True, exist_ok=True)
+    cov, _ = load_qms_coverage(manifest, root)
     sidecar_path.write_text(
-        json.dumps(build_sidecar(manifest, run, needs, verdict, case_meta),
+        json.dumps(build_sidecar(manifest, run, needs, verdict, case_meta,
+                                 qms_coverage=None if (cov or {}).get("_error") else cov),
                    indent=2) + "\n", encoding="utf-8")
 
     print(f"Report:  {report_rel}")

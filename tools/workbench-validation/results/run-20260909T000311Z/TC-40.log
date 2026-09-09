@@ -1,0 +1,28 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260909T000311Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-40 — Assistant spend is attributed to the active task and unmeasured slots read as unknown
+purpose:     Checks the aggregation step of the cost telemetry: spend lands on the task that was active at the time, an unmeasured slot is null rather than zero, and aggregating twice is byte-identical.
+approach:    Runs the usage-metrics pytest suite over synthetic per-session records and an activation ledger.
+UUT:         usage-metrics@13
+user needs:  WUN-23
+scope:       capability · method: scripted
+endpoint:    none
+protocol:    —
+test source: .claude/skills/usage-metrics/tests (pinned copy: tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-40)
+command:     uv run --no-project --with pytest -- pytest .claude/skills/usage-metrics/tests -q
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    uv
+tooling:     uv=uv 0.11.21 (Homebrew 2026-06-11 aarch64-apple-darwin)
+timeout_s:   600
+started:     2026-09-09T00:03:45Z (UTC)
+exit_code:   0
+duration_s:  0.49
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+...                                                                      [100%]
+3 passed in 0.16s
+

@@ -1,0 +1,28 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260909T000311Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-27 — The form-structure checker catches missing and reordered sections
+purpose:     Checks the checker itself: against a skill-shipped fake QMS registry, taxonomy and documents it must pass a conforming document, warn on an extra section, fail on missing or reordered sections, and treat a document with no declared form as informational.
+approach:    Runs the medtech-docs form-conformance pytest suite over fixtures that ship with the skill.
+UUT:         medtech-docs@38
+user needs:  WUN-01
+scope:       capability · method: scripted
+endpoint:    none
+protocol:    —
+test source: .claude/skills/medtech-docs/tests/test_form_conformance.py (pinned copy: tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-27)
+command:     uv run --no-project --with pytest --with pyyaml -- pytest .claude/skills/medtech-docs/tests/test_form_conformance.py -q
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    uv
+tooling:     uv=uv 0.11.21 (Homebrew 2026-06-11 aarch64-apple-darwin)
+timeout_s:   600
+started:     2026-09-09T00:03:36Z (UTC)
+exit_code:   0
+duration_s:  0.69
+judged by:   exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+..............                                                           [100%]
+14 passed in 0.33s
+

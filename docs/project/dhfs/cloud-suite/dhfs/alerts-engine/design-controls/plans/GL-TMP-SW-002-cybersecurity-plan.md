@@ -25,6 +25,14 @@ conversion_history:
     source: "v0.1 DRAFT — placeholder stub via task ben/023"
 notes: "Placeholder instantiating parent QMS template GL-TMP-SW-002. Fill in with DHF-specific data."
 ---
+<!-- AI-CHANGELOG — internal provenance of AI-assisted edits. Metadata only:
+     NOT published downstream (Confluence/Doc-Control), NOT part of the controlled
+     record, stripped on DOCX/PDF export. Vendor-neutral by convention.
+| Date       | Task    | Summary |
+|------------|---------|---------|
+| 2026-09-08 | ben/123 | Provenance block added retroactively; document originally AI-assisted (frontmatter conversion_method) — restructured to its governing template's sections by form_conformance_fix where applicable |
+| 2026-09-08 | ben/123 | Section skeleton re-shaped by form_conformance_fix: template numbering restored on reused sections, empty template-skeleton sections dropped, sections with content retained under a single appendix |
+-->
 
 # CLOUD-SUITE-DHFS-ALERTS-ENGINE-GL-TMP-SW-002-cybersecurity-plan — Cybersecurity Plan
 
@@ -52,17 +60,49 @@ _Demo sample data — not for clinical use._
 
 `{{Plan scope — per the parent QMS template}}`
 
-## 3. Contents
+## 3. Security Risk Criteria
 
-`{{Fill per the parent QMS template's section list}}`
+_[TBD — section required by GL-TMP-SW-002; content to be authored.]_
 
-## 4. Approvals
+## 4. Threat Model
+
+_[TBD — section required by GL-TMP-SW-002; content to be authored.]_
+
+## 5. Security Requirements
+
+_[TBD — section required by GL-TMP-SW-002; content to be authored.]_
+
+## 6. Secure Development Practices
+
+_[TBD — section required by GL-TMP-SW-002; content to be authored.]_
+
+## 7. Verification
+
+_[TBD — section required by GL-TMP-SW-002; content to be authored.]_
+
+## 8. SBOM
+
+_[TBD — section required by GL-TMP-SW-002; content to be authored.]_
+
+## 9. Vulnerability Management
+
+_[TBD — section required by GL-TMP-SW-002; content to be authored.]_
+
+## 10. Coordinated Vulnerability Disclosure
+
+_[TBD — section required by GL-TMP-SW-002; content to be authored.]_
+
+## 11. Incident Response
+
+_[TBD — section required by GL-TMP-SW-002; content to be authored.]_
+
+## 12. Approvals
 
 | Role | Name | Date | Signature |
 |---|---|---|---|
 | | | | |
 
-## 5. Revision History
+## 13. Revision History
 
 | Rev | Date | Author | Summary |
 |---|---|---|---|

@@ -32,7 +32,7 @@ findings:
     reference_target: "..."
     reference_class: external-formal | internal-formal | informal-link
     status: sound | unverified | broken
-    kind: sound | broken-link | stale-citation | unresolved-anchor | unreachable-source | ambiguous-source
+    kind: sound | sound-by-distillation | broken-link | stale-citation | citation-absent-from-source | citation-mislabeled | unresolved-anchor | unreachable-source | ambiguous-source | registry-gap
     evidence:
       - source_path_or_url: "..."
       - excerpt: "..."                   # excerpt from the source supporting the verdict
@@ -121,7 +121,8 @@ Never invent verification you did not perform. If the researcher returns `unveri
 
 | Kind | When | Status |
 |---|---|---|
-| `sound` | Reference resolves and content matches claim (per semantic-predicate match) | `sound` |
+| `sound` | Reference resolves and content matches claim (per semantic-predicate match); source-md-backed or internal | `sound` |
+| `sound-by-distillation` (v1.2) | Paywalled standard with no bundled source-md: L1a covers the clause number, the claim's predicate matches, L1b agrees or is silent, and no clause-numbering quarantine applies. The band is `sound` (two-tier cite-both satisfied); the kind carries the limitation "original not on file". Emitted **deterministically** by the external researcher's paywalled-standard band rule — never capped at `unverified` for paywall alone. | `sound` |
 | `broken-link` | Internal link / path does not exist | `broken` |
 | `stale-citation` | External source exists but its content does not match the claim's predicate — same clause number, different topic | `broken` |
 | `unresolved-anchor` | Doc + section heading does not resolve | `broken` |
@@ -135,7 +136,7 @@ v2 candidate kinds (do not emit in v1.1): `applicability-gap`, `applicability-co
 
 - **Verify, do not adjudicate.** You confirm whether a citation is sound. You do not decide whether the citation is the *best* reference for the claim, whether a different standard would be more appropriate, or whether an uncited claim *should* have a citation. Those are domain-advisor calls.
 - **Always dispatch to a researcher.** Do not verify references yourself. The researchers know the layer-specific lookup paths and conventions.
-- **Honest `unverified` beats false `sound`.** In a regulated context, a wrong `sound` verdict erodes trust in the entire audit. When in doubt, return `unverified`.
+- **Honest `unverified` beats false `sound`.** In a regulated context, a wrong `sound` verdict erodes trust in the entire audit. When in doubt, return `unverified` — but "in doubt" is defined by the band rules, not by mood: the same evidence must produce the same band every time (a validation protocol executed 2026-09-08 found the band for paywalled clauses drifting between runs; the external researcher's paywalled-standard band rule closes that).
 - **No domain opinions.** Do not write regulatory analysis, risk arguments, or clinical reasoning in your output. The verdict + evidence + suggested fix is the entire output.
 - **Stay within the project root + the medtech-docs skill's references corpus.** Do not follow symlinks elsewhere. Do not recommend files outside `docs/`, `project.yml`, `glossary.md`, or `.claude/skills/medtech-docs/references/`.
 - **Within the registry tier, `source-md/` is the citation authority; the distilled file is a finding aid.** Where a `source-md/<base>.md` exists (fda-guidance + regulations), the researcher reads it for clause existence, exact wording, and predicate match, and the verdict cites **source-md** as the L1a evidence; the distilled file is used only to *locate* the clause and is never the cited authority. Where no source-md is bundled (copyrighted standards, most frameworks), the distilled file is the best available local text — confirm the predicate against it, but an exact-clause-text claim cannot reach `sound` on registry evidence alone (only the external original is authoritative; say so). **Never read `source/` binaries (PDF/XML)** — they are the byte archive, consulted only to confirm a verbatim quote against source-md.

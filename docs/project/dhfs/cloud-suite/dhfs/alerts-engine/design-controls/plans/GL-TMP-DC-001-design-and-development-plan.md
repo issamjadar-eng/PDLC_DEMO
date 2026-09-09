@@ -25,6 +25,14 @@ conversion_history:
     source: "v0.1 DRAFT — placeholder stub via task ben/023"
 notes: "Placeholder instantiating parent QMS template GL-TMP-DC-001. Fill in with DHF-specific data."
 ---
+<!-- AI-CHANGELOG — internal provenance of AI-assisted edits. Metadata only:
+     NOT published downstream (Confluence/Doc-Control), NOT part of the controlled
+     record, stripped on DOCX/PDF export. Vendor-neutral by convention.
+| Date       | Task    | Summary |
+|------------|---------|---------|
+| 2026-09-08 | ben/123 | Provenance block added retroactively; document originally AI-assisted (frontmatter conversion_method) — restructured to its governing template's sections by form_conformance_fix where applicable |
+| 2026-09-08 | ben/123 | Section skeleton re-shaped by form_conformance_fix: template numbering restored on reused sections, empty template-skeleton sections dropped, sections with content retained under a single appendix |
+-->
 
 # CLOUD-SUITE-DHFS-ALERTS-ENGINE-GL-TMP-DC-001-design-and-development-plan — Design and Development Plan
 
@@ -41,28 +49,57 @@ _Demo sample data — not for clinical use._
 
 ---
 
-## 1. Identification
-| Field | Value |
-|---|---|
-| DHF | `{{DHF_NAME}}` |
-| Plan Revision | `{{X.X DRAFT}}` |
-| Owner | `{{NAME, ROLE}}` |
+## 1. Project Identification
 
-## 2. Scope
+_[TBD — section required by GL-TMP-DC-001; content to be authored.]_
 
-`{{Plan scope — per the parent QMS template}}`
+## 2. Scope and Intended Use
 
-## 3. Contents
+_[TBD — section required by GL-TMP-DC-001; content to be authored.]_
 
-`{{Fill per the parent QMS template's section list}}`
+## 3. Phases and Stages (ISO 13485 §7.3.2(a))
 
-## 4. Approvals
+_[TBD — section required by GL-TMP-DC-001; content to be authored.]_
+
+## 4. Reviews at Each Stage (§7.3.2(b))
+
+_[TBD — section required by GL-TMP-DC-001; content to be authored.]_
+
+## 5. V&V and Transfer Activities (§7.3.2(c))
+
+_[TBD — section required by GL-TMP-DC-001; content to be authored.]_
+
+## 6. Responsibilities and Authorities (§7.3.2(d))
+
+_[TBD — section required by GL-TMP-DC-001; content to be authored.]_
+
+## 7. Traceability Approach (§7.3.2(e))
+
+_[TBD — section required by GL-TMP-DC-001; content to be authored.]_
+
+## 8. Resources and Competence (§7.3.2(f))
+
+_[TBD — section required by GL-TMP-DC-001; content to be authored.]_
+
+## 9. Interfaces to Other QMS Processes
+
+_[TBD — section required by GL-TMP-DC-001; content to be authored.]_
+
+## 10. Schedule
+
+_[TBD — section required by GL-TMP-DC-001; content to be authored.]_
+
+## 11. Risk-Based Tailoring Rationale
+
+_[TBD — section required by GL-TMP-DC-001; content to be authored.]_
+
+## 12. Approvals
 
 | Role | Name | Date | Signature |
 |---|---|---|---|
 | | | | |
 
-## 5. Revision History
+## 13. Revision History
 
 | Rev | Date | Author | Summary |
 |---|---|---|---|

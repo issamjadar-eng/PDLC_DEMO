@@ -1,0 +1,42 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260909T000311Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-22 — Internal notes cannot survive into a published external document
+purpose:     Checks the publish step that produces the public copy of a white paper or article: internal evidence blocks and draft metadata must be removed, and a document with a malformed internal block must be refused rather than published.
+approach:    Builds two small documents in a temp folder — one well-formed with an internal block, one with an unclosed block — runs the strip script on each, and checks the public output carries no internal text or marker and that the malformed one is refused with the documented exit code.
+UUT:         public-doc@3
+user needs:  WUN-17
+scope:       capability · method: scripted
+endpoint:    none
+protocol:    —
+test source: —
+command:     bash -c set -e; T=$(mktemp -d); printf -- '---
+public_doc:
+  audience: x
+---
+# T
+
+Public line.
+
+<!-- INTERNAL:BEGIN -->
+secret
+<!-- INTERNAL:END -->
+' > "$T/d.md"; python3 .claude/skills/public-doc/scripts/strip_internal.py "$T/d.md" -o "$T/out.md" --quiet; grep -q 'Public line' "$T/out.md"; ! grep -qE 'secret|INTERNAL|public_doc' "$T/out.md"; printf -- '# T
+<!-- INTERNAL:BEGIN -->
+open
+' > "$T/bad.md"; set +e; python3 .claude/skills/public-doc/scripts/strip_internal.py "$T/bad.md" -o "$T/o2.md" --quiet; rc=$?; set -e; [ "$rc" -eq 3 ]; echo STRIP-OK
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+tooling:     —
+timeout_s:   60
+started:     2026-09-09T00:03:35Z (UTC)
+exit_code:   0
+duration_s:  0.06
+judged by:   pass_pattern='STRIP-OK'; exit code
+status:      PASS
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+error: unbalanced INTERNAL markers: 1 BEGIN vs 0 END (every block must be a single comment: '<!-- INTERNAL:BEGIN ... INTERNAL:END -->')
+STRIP-OK
+

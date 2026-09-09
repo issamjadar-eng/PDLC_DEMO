@@ -80,6 +80,17 @@ the whole authoring workbench.
 
 ## Changelog
 
+- 7 (2026-09-08): **QMS template coverage inventory.** Manifest key `qms_coverage:` names a
+  JSON inventory a deployment case writes (contract: `templates[]` with
+  instances/tested/pass/fail/status, `procedures[]`, `documents_without_template[]`,
+  `summary{}`); the report gains §3 "QMS template coverage" (per imported template/form:
+  project documents, conformance evidence, pass/fail, covered / covered-failing /
+  imported-unused; plus doctypes with no template imported), the sidecar a
+  `qms_coverage` block, and the console a collapsed panel. Absent inventory renders as
+  an explicit note, never silently. Rationale: validation of a deployed workbench is only
+  as complete as the QMS content it ran against — a template imported later must show
+  up as untested by itself.
+
 - 6 (2026-09-08): **GxP verdict model + capability/deployment scope (manifest + run/sidecar
   schema 2.0).** Verdicts are **PASS / FAIL / NOT-APPLICABLE** only; PROCESS-CONTROL,
   EXPLORATORY, PARTIAL and NO-EVIDENCE are gone — they were evidence methods standing in

@@ -75,15 +75,21 @@ DETAILS_OPEN = re.compile(r"<details\b", re.I)
 DETAILS_CLOSE = re.compile(r"</details\s*>", re.I)
 
 
+INTERNAL_BQ_OPEN = re.compile(r"^\s*>\s*(?:\*\*|__)?\s*🔒\s*INTERNAL\b", re.I)
+
+
 def strip_zones(text: str) -> tuple[str, list[str]]:
-    """Return (filed_body, integrity_notes). Strips leading <!-- --> metadata and every
-    balanced <details>…</details> container BY TAG (nesting-safe). Filed lines outside any
-    open container survive; their original 1-based line numbers are preserved via a map."""
+    """Return (filed_body, integrity_notes). Strips leading <!-- --> metadata, every
+    balanced <details>…</details> container BY TAG (nesting-safe), and every blockquote
+    container whose first line opens with `> **🔒 INTERNAL` (the working-apparatus
+    blockquote form — the block runs while lines keep their leading `>`). Filed lines
+    outside any container survive; their original 1-based line numbers are preserved."""
     lines = text.split("\n")
     # drop leading HTML-comment metadata block(s)
     depth = 0
     filed: list[tuple[int, str]] = []
     in_comment = False
+    in_internal_bq = False
     for i, ln in enumerate(lines, 1):
         s = ln
         if in_comment:
@@ -92,6 +98,13 @@ def strip_zones(text: str) -> tuple[str, list[str]]:
             continue
         if s.lstrip().startswith("<!--") and "-->" not in s:
             in_comment = True
+            continue
+        if in_internal_bq:
+            if s.lstrip().startswith(">"):
+                continue  # continuation line of the 🔒 INTERNAL blockquote
+            in_internal_bq = False
+        if INTERNAL_BQ_OPEN.match(s):
+            in_internal_bq = True
             continue
         opens = len(DETAILS_OPEN.findall(s))
         closes = len(DETAILS_CLOSE.findall(s))

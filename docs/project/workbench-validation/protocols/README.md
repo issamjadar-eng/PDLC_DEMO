@@ -39,3 +39,4 @@ output and live at `tools/workbench-validation/protocols/<TC-ID>.result.yml`.
 | Date | Author | Summary |
 |------|--------|---------|
 | 2026-09-08 | BX / AI Assistant | task 121: folder created with three protocols (citations, grounding, live MCP round trip) under the GxP verdict model. |
+| 2026-09-08 | BX / AI Assistant | task 123: TC-PROTO-CITATIONS revised to v2 after its first execution (FAIL) — answer key regrouped S/U/B per the reference-audit v6 deterministic band rule, four wrong expectations corrected, band-repeatability criterion added; v1 record kept under `tools/workbench-validation/protocols/`. |

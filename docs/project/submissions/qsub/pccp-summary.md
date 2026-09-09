@@ -4,11 +4,18 @@ status: draft
 summary: PP3500 PCCP scope distilled for FDA discussion — change categories (drug library, firmware, predictive-alarm SaMD), modification protocols, and post-market monitoring.
 ---
 
+<!-- AI-CHANGELOG — internal provenance of AI-assisted edits. Metadata only:
+     NOT published downstream (Confluence/Doc-Control), NOT part of the controlled
+     record, stripped on DOCX/PDF export. Vendor-neutral by convention.
+| Date       | Task    | Summary |
+|------------|---------|---------|
+| 2026-09-08 | ben/123 | Two `[VERIFY]` tags resolved: category count confirmed against regulatory-strategy.md; the precedent-K-number reference replaced by the honest statement that no PCCP precedents exist in the project record. |
+-->
 # PCCP Summary — PainEase PCA Advanced (PP3500)
 
 _Demo sample data — not for clinical use._
 
-> **🔒 INTERNAL.** Document control v0.1. Internal source mapping: regulatory-strategy.md § 1 (Critical-Requirement Carve-out; PCCP envelope = Ct*-tagged change types within pre-specified bounds). Strategic posture notes internal-only.
+> **🔒 INTERNAL.** Document control v0.1. Internal source mapping: regulatory-strategy.md § 1 (Critical-Requirement Carve-out; PCCP envelope = Ct*-tagged change types within pre-specified bounds). Strategic posture notes internal-only. Category count (3: drug library, firmware, predictive-alarm SaMD) verified in sync with regulatory-strategy.md § 2 on 2026-09-08; the 510(k) composition manifest § 3.1 was amended to name all three.
 
 ## 1. Purpose 📤
 
@@ -26,7 +33,6 @@ The PCCP covers the PCA device (PP3500) and its dose-enforcement accessory. The 
 | C2 | Firmware updates against a fixed risk profile | Defect fixes and performance updates with no new hazard family |
 | C3 | Predictive-alarm SaMD additions | Alarm models meeting the change-protocol acceptance criteria |
 
-`[VERIFY] keep category counts in sync with regulatory-strategy.md as the PCCP detail is authored.`
 
 ## 4. Modification Protocol Structure 📤
 
@@ -46,4 +52,4 @@ Category-specific performance monitoring, rollback triggers on drug-library or f
 
 ## 8. Precedent Landscape 📖
 
-_Reference — cleared infusion-pump PCCPs as precedent. `[VERIFY] K-numbers before citing.`_
+_Reference — no cleared infusion-pump PCCP precedents have been identified in the project record; precedent research is open (owner: RA lead)._

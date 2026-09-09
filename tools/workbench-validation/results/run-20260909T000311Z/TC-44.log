@@ -1,0 +1,26 @@
+==== workbench-validation evidence log ====
+run_id:      run-20260909T000311Z
+run by:      benxavier-gl <ben.xavier@globallogic.com> (benxavier@Bens-MBP) · invoked via cli
+case:        TC-44 — The 510(k) eSTAR package passes the admissibility and coverage gate
+purpose:     DEPLOYMENT check: runs the eSTAR linter over the 510(k) crosswalk (structured answers, applicable sections, attachment coverage, no unresolved [VERIFY]). Not applicable until the package has an eSTAR crosswalk — declared absent here rather than claimed by a structure-only pass.
+approach:    Runs estar_lint.py --transmit-gate --json with the package's crosswalk; passes only on exit 0.
+UUT:         submissions@12
+user needs:  WUN-20, WUN-03
+scope:       deployment · method: scripted · requires_deployment: content.submission_package, content.estar_crosswalk_510k
+endpoint:    none
+protocol:    —
+test source: .claude/skills/submissions/scripts/estar_lint.py (pinned copy: tools/workbench-validation/results/run-20260909T000311Z/pinned/TC-44)
+command:     python3 .claude/skills/submissions/scripts/estar_lint.py --crosswalk docs/project/submissions/510k/estar-crosswalk.md --transmit-gate --json
+cwd:         .
+env_unset:   —
+env_set:     —
+requires:    —
+tooling:     —
+timeout_s:   120
+started:     2026-09-09T00:03:46Z (UTC)
+exit_code:   None
+duration_s:  0.0
+judged by:   exit code
+status:      NOT-APPLICABLE (this deployment declares `content.estar_crosswalk_510k` absent (deployment.content.estar_crosswalk_510k: False))
+==== captured output — stdout+stderr merged, ANSI escapes stripped ====
+(no output captured)

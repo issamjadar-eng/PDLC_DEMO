@@ -181,6 +181,8 @@ The CSS comment at `.md-content table` records the rationale.
 
 ## Changelog
 
+- 1.67.3 (2026-09-08): **Settings → Workbench Validation: QMS template coverage panel.** Reads the sidecar's `qms_coverage` block (workbench-validation 7): per imported template/form — project documents, conformance evidence, pass/fail, status (covered / covered-failing / imported-unused) — plus the list of project doctypes with no template imported. **Files:** `console/web/templates/setup_view.html`.
+
 - 1.67.2 (2026-09-08): **Settings → Workbench Validation: binary verdicts, scope/method, protocols.** Consumes workbench-validation sidecar schema 2.0: needs show PASS / FAIL / n/a with the sidecar `reason`; the tests table column becomes *scope · method · endpoint* with a `not executed` badge for protocols without a record; expanded rows link the written protocol and its execution record; the Environment panel prints the deployment declaration; tiles count n/a needs, not-executed protocols and cases per scope. **Files:** `console/web/templates/setup_view.html`.
 
 - 1.67.1 (2026-09-08): **Narrative: one implementation, in the engine.** The console no longer synthesizes narratives itself; `POST /domains/{domain}/{bq}/narrative` shells the commercial engine's `narrative-generate --force` (off the event loop via `anyio.to_thread`, 900 s budget) and re-renders. Every `answer` already writes a narrative automatically (commercial skill v17), so the button is now a *Regenerate* affordance, not the way narratives come to exist. Removed the console-side Agent SDK prompt/synthesis code and the `tempfile` import.

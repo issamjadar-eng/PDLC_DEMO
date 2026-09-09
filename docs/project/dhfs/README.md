@@ -63,3 +63,4 @@ Canonical check: `project.yml` beats this table. If they drift, trust `project.y
 | Date | Author | Summary |
 |------|--------|---------|
 | 2026-04-13 | Ben Xavier | Initial version — created as part of task 009 README review (gap flagged by README audit). |
+| 2026-09-08 | BX / AI Assistant | task 123: bulk structural alignment of 165 controlled working documents to their governing QMS templates (missing sections inserted in template order with TBD placeholders, existing content preserved and extra sections kept); retroactive AI-CHANGELOG provenance blocks on 195 AI-authored documents; 3 vendor mentions neutralised; 9 documents given a Parent QMS template reference. Driven by the workbench validation findings (form conformance, provenance). |

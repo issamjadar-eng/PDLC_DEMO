@@ -25,6 +25,14 @@ conversion_history:
     source: "v0.1 DRAFT — placeholder stub via task ben/023"
 notes: "Placeholder instantiating parent QMS template GL-FORM-QM-001. Fill in with DHF-specific data."
 ---
+<!-- AI-CHANGELOG — internal provenance of AI-assisted edits. Metadata only:
+     NOT published downstream (Confluence/Doc-Control), NOT part of the controlled
+     record, stripped on DOCX/PDF export. Vendor-neutral by convention.
+| Date       | Task    | Summary |
+|------------|---------|---------|
+| 2026-09-08 | ben/123 | Provenance block added retroactively; document originally AI-assisted (frontmatter conversion_method) — restructured to its governing template's sections by form_conformance_fix where applicable |
+| 2026-09-08 | ben/123 | Section skeleton re-shaped by form_conformance_fix: template numbering restored on reused sections, empty template-skeleton sections dropped, sections with content retained under a single appendix |
+-->
 
 # CLOUD-SUITE-GL-FORM-QM-001-capa-form-template — CAPA Form (per device)
 
@@ -41,19 +49,41 @@ _Demo sample data — not for clinical use._
 
 ---
 
-## Identification
+## 1. Identification
 | Field | Value |
 |---|---|
 | DHF | `{{DHF_NAME}}` |
 | Record Revision | `{{X.X DRAFT}}` |
 
-## Entries
+## 2. Issue Description
 
-| # | Date | Subject | Owner | Status |
-|---|---|---|---|---|
-| | | | | |
+_[TBD — section required by GL-FORM-QM-001; content to be authored.]_
 
-## Revision History
+## 3. Risk / Impact Assessment
+
+_[TBD — section required by GL-FORM-QM-001; content to be authored.]_
+
+## 4. Investigation and Root-Cause Analysis
+
+_[TBD — section required by GL-FORM-QM-001; content to be authored.]_
+
+## 5. Action Plan
+
+_[TBD — section required by GL-FORM-QM-001; content to be authored.]_
+
+## 6. Effectiveness Verification Plan
+
+_[TBD — section required by GL-FORM-QM-001; content to be authored.]_
+
+## 7. Effectiveness Results
+
+_[TBD — section required by GL-FORM-QM-001; content to be authored.]_
+
+## 8. Closure
+
+_[TBD — section required by GL-FORM-QM-001; content to be authored.]_
+
+## 9. Revision History
 
 | Rev | Date | Author | Summary |
 |---|---|---|---|

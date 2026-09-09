@@ -134,4 +134,4 @@ Electromechanical hardware (pump mechanism, sensors, display, enclosure) lives i
 
 | Date | Author | Summary |
 |---|---|---|
-| 2026-04-14 | Claude (first-stab) | Initial scaffold derived from architecture + regulatory strategy docs. Seven-module decomposition for PP3500 on-device software. Task 013. |
+| 2026-04-14 | AI assistant (first-stab) | Initial scaffold derived from architecture + regulatory strategy docs. Seven-module decomposition for PP3500 on-device software. Task 013. |

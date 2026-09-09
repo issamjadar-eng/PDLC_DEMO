@@ -1272,6 +1272,33 @@
         {% if wbd.plan_path %}<a class="su-btn" href="/documents#path={{ wbd.plan_path }}" target="_blank" rel="noopener">Open validation plan ↗</a>{% endif %}
       </div>
 
+      {% set cov = wbd.qms_coverage %}
+      {% if cov and cov.summary %}
+      <details class="su-list" style="margin-top:12px;padding:0">
+        <summary style="cursor:pointer;padding:10px 14px;font-weight:600;color:var(--body-text,#e6e9ef);list-style:revert">
+          QMS template coverage
+          <span class="su-type" style="font-weight:400;margin-left:8px">{{ cov.summary.templates_instantiated }} of {{ cov.summary.templates_total }} imported templates in use · {{ cov.summary.templates_tested }} tested · {{ cov.summary.templates_unused }} unused · {{ cov.summary.documents_without_template }} document(s) with no template imported</span>
+        </summary>
+        <div style="padding:4px 14px 14px;font-size:.82rem;line-height:1.55;color:var(--body-text,#e6e9ef)">
+          <p class="su-type" style="margin:6px 0">A project acquires QMS templates over time. This inventory joins the imported registry ({{ cov.registry }}) with the form-conformance results, so a newly imported template — or a doctype with no template yet — shows up here without anyone remembering to add a test.</p>
+          <div class="su-cols" style="grid-template-columns:150px minmax(0,1fr) 60px 90px 80px 150px;column-gap:10px"><span>Template</span><span>Title</span><span>Docs</span><span>Evidence</span><span>Pass/Fail</span><span>Status</span></div>
+          {% for t in cov.templates | sort(attribute='id') %}
+          <div class="su-row" style="grid-template-columns:150px minmax(0,1fr) 60px 90px 80px 150px;column-gap:10px">
+            <span class="su-type">{{ t.id }}</span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.title }}</span>
+            <span class="su-type">{{ t.instances }}</span>
+            <span class="su-type">{% if t.tested %}tested{% else %}<strong>not tested</strong>{% endif %}</span>
+            <span class="su-type">{{ t.pass }} / {{ t.fail }}</span>
+            <span>{% if t.status == 'covered' %}<span class="su-ok">covered</span>{% elif t.status == 'covered-failing' %}<span class="su-badge warning" style="color:#e06b6b;border-color:rgba(224,107,107,.45)">covered — failing</span>{% else %}<span class="su-badge info">imported, unused</span>{% endif %}</span>
+          </div>
+          {% endfor %}
+          {% if cov.documents_without_template %}
+          <p style="margin:10px 0 4px"><strong>QMS gaps — doctypes with no imported template</strong> ({{ cov.documents_without_template | length }} documents):</p>
+          <div class="su-type">{% for g in cov.documents_without_template %}<div>{{ g.doc }} <span style="opacity:.7">— {{ g.reason }}</span></div>{% endfor %}</div>
+          {% endif %}
+        </div>
+      </details>
+      {% endif %}
+
       <div class="su-h2">User needs (WUN register)</div>
       <div class="su-list" data-list="workbench">
         <div class="su-cols" style="grid-template-columns:64px 145px 1fr 36px 118px 110px">

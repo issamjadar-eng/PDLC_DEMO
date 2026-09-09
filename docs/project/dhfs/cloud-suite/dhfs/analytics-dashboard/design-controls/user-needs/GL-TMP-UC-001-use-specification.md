@@ -25,6 +25,14 @@ conversion_history:
     source: "v0.1 DRAFT — placeholder stub via task ben/023"
 notes: "Placeholder instantiating parent QMS template GL-TMP-UC-001. Fill in with DHF-specific data."
 ---
+<!-- AI-CHANGELOG — internal provenance of AI-assisted edits. Metadata only:
+     NOT published downstream (Confluence/Doc-Control), NOT part of the controlled
+     record, stripped on DOCX/PDF export. Vendor-neutral by convention.
+| Date       | Task    | Summary |
+|------------|---------|---------|
+| 2026-09-08 | ben/123 | Provenance block added retroactively; document originally AI-assisted (frontmatter conversion_method) — restructured to its governing template's sections by form_conformance_fix where applicable |
+| 2026-09-08 | ben/123 | Section skeleton re-shaped by form_conformance_fix: template numbering restored on reused sections, empty template-skeleton sections dropped, sections with content retained under a single appendix |
+-->
 
 # CLOUD-SUITE-DHFS-ANALYTICS-DASHBOARD-GL-TMP-UC-001-use-specification — Use Specification
 
@@ -47,21 +55,31 @@ _Demo sample data — not for clinical use._
 | DHF | `{{DHF_NAME}}` |
 | Revision | `{{X.X DRAFT}}` |
 
-## 2. Content
+## 2. Intended Medical Indication
 
-`{{Populate per the parent QMS template — e.g., UN/DI rows with IDs, criteria, traceability}}`
+_[TBD — section required by GL-TMP-UC-001; content to be authored.]_
 
-| ID | Statement | Acceptance Criteria | Source | Trace |
-|---|---|---|---|---|
-| | | | | |
+## 3. Intended Patient Population
 
-## 3. Approvals
+_[TBD — section required by GL-TMP-UC-001; content to be authored.]_
 
-| Role | Name | Date | Signature |
-|---|---|---|---|
-| | | | |
+## 4. Intended Body Tissue / Interaction
 
-## 4. Revision History
+_[TBD — section required by GL-TMP-UC-001; content to be authored.]_
+
+## 5. Intended User Profile(s)
+
+_[TBD — section required by GL-TMP-UC-001; content to be authored.]_
+
+## 6. Intended Use Environment(s)
+
+_[TBD — section required by GL-TMP-UC-001; content to be authored.]_
+
+## 7. Operating Principle
+
+_[TBD — section required by GL-TMP-UC-001; content to be authored.]_
+
+## 8. Revision History
 
 | Rev | Date | Author | Summary |
 |---|---|---|---|

@@ -1,3 +1,21 @@
+---
+doc_id: "DHF-PP3500-DI-001"
+doc_type: "QSD"
+references:
+  - doc_id: "GL-TMP-DC-002"
+    title: "Parent QMS template"
+    resolved: true
+    match: null
+    note: "21 CFR 820.30(c); ISO 13485 §7.3.3 — mapped under task ben/123"
+---
+<!-- AI-CHANGELOG — internal provenance of AI-assisted edits. Metadata only:
+     NOT published downstream (Confluence/Doc-Control), NOT part of the controlled
+     record, stripped on DOCX/PDF export. Vendor-neutral by convention.
+| Date       | Task    | Summary |
+|------------|---------|---------|
+| 2026-09-08 | ben/123 | Provenance block added retroactively; document originally AI-assisted (frontmatter conversion_method) |
+-->
+
 # Design Inputs — PainEase PCA Advanced (DEV-PP3500)
 
 > _Demo sample data — not for clinical use. Illustrative content for the PDLC_DEMO project._
@@ -17,60 +35,19 @@
 | Predicate | K190567 (PainEase PCA, DEV-PP3000) |
 | Applicable Standards | IEC 60601-1, IEC 60601-1-2 (EMC), IEC 60601-2-24 (infusion pumps), IEC 62304 (software), ISO 14971 (risk), IEC 62366-1 (usability), IEC 81001-5-1 (cybersecurity), ISO 10993-1 (biocompat) |
 
-## Intended Use
+## 1. Project Identification
+
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
+
+## 2. Intended Use and Indications for Use
 
 The PainEase PCA Advanced (Model PP-3500) is a portable, battery-powered patient-controlled analgesia (PCA) infusion pump intended for the controlled intravenous administration of analgesic medications by trained healthcare professionals. The device delivers programmed continuous (basal) infusions and patient-activated bolus doses within prescriber-defined limits to support the management of acute and chronic pain. It is intended for use in supervised acute-care environments where qualified clinical staff are available to monitor the patient and respond to alarms.
 
-## Indications for Use
+## 3. User Needs (Summary)
 
-The PainEase PCA Advanced is indicated for the patient-controlled intravenous (IV) administration of opioid and non-opioid analgesics — including morphine, hydromorphone, fentanyl, and compatible local anesthetic agents — for the management of moderate to severe acute postoperative pain, acute pain associated with trauma or medical procedures, and chronic pain (including cancer-related pain) in adult and adolescent patients (≥12 years of age and ≥40 kg). The device is intended for use in hospitals, ambulatory surgical centers, and other supervised acute-care facilities under the direction of a qualified prescriber. Pediatric use below 12 years of age requires additional clinical judgment and is outside the scope of the cleared indication. The device is **not** indicated for intrathecal, epidural, or arterial administration; it is **not** intended for unsupervised home or ambulatory use; and it is **not** MRI-safe. PCA therapy with this device requires that the patient be cognitively capable of self-administration and that trained clinical staff be available for monitoring and alarm response. Standard opioid warnings — including risks of respiratory depression, sedation, and abuse — apply to all use of this device.
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
 
-## Scope of This Document
-
-This document captures the design inputs (system requirements) for the PainEase PCA Advanced (DEV-PP3500), derived from the validated user needs in `../user-needs/user-needs.md` (DHF-PP3500-UN-001). Each requirement carries a category, criticality classification, acceptance criteria, upstream user-need traces, and a planned verification method. Revision A is the Phase 4 baseline supporting design verification planning.
-
----
-
-## Classification
-
-**Category** — what kind of requirement:
-
-| Category | Description |
-|---|---|
-| **Functional (FUNC)** | What the device does |
-| **Performance (PERF)** | How well it does it — measurable |
-| **Safety (SAFE)** | Hazard mitigations and protective features |
-| **Usability (USAB)** | Human-factors requirements |
-| **Interface (INTE)** | External interfaces (HW, SW, network, user) |
-
-**Criticality** — how critical the requirement is:
-
-| Class | Symbol | Definition |
-|---|---|---|
-| Critical to Safety | **CTS** | Failure can directly cause patient or operator harm |
-| Critical to Function | **CTF** | Failure prevents the device from performing its intended use (no direct safety harm) |
-| Critical to Compliance | **CTC** | Driven by regulation, standard, or label claim |
-| Supporting | **S** | Enabling or nice-to-have; non-critical |
-
-Every design input has exactly one Category and exactly one Criticality.
-
-## Functional Groups
-
-The design inputs in this document are organized into 9 functional groups aligned with the device architecture, matching the structure of `../user-needs/user-needs.md`.
-
-| # | Group | Scope |
-|---|---|---|
-| G1 | Therapy Delivery | Continuous rate, PCA bolus, lockout, cumulative dose limits, flow-rate accuracy |
-| G2 | Drug Library & Medication Safety | Drug library, hard/soft limits, barcode scanning, medication verification |
-| G3 | Alarms & Annunciation | Occlusion, air-in-line, over-infusion, end-of-therapy, priority, audible/visual |
-| G4 | Hazard Controls & Essential Performance | Free-flow, electrical safety, EMC, biocompat, IEC 60601 essential performance |
-| G5 | User Interface & Usability | Touchscreen, decimal-point legibility, home screen, programming task flow |
-| G6 | Power, Portability & Physical | Battery, charging, weight, mounting, cleaning, lockbox, tamper-evidence |
-| G7 | Connectivity & Interoperability | Wi-Fi, Bluetooth, HL7 v2.5, FHIR R4, EHR integration |
-| G8 | Cybersecurity & Data Integrity | Authentication, TLS, signed firmware, SBOM, audit log |
-| G9 | Regulatory, Labeling & Lifecycle Compliance | UDI/GUDID, IFU/labeling, IEC 62304 Class C, IEC 62366-1, serviceability |
-
-## Design Inputs by Functional Group
+## 4. Design Inputs (Requirements)
 
 ### G1 — Therapy Delivery
 
@@ -169,9 +146,83 @@ _SBOM, IEC 62304 Class C lifecycle, IEC 62366-1 usability process, UDI/GUDID, an
 | G9 | DI-029 | INTE | **CTC** | The Instructions for Use (IFU), labeling, and warning content shall comply with 21 CFR 801 and EU MDR Annex I labeling requirements, including the required opioid warning content. | Regulatory labeling review checklist; no open findings. | UN-018 | Inspection |
 | G9 | DI-031 | FUNC | **S** | The device shall provide a serviceability menu (PIN-protected) exposing diagnostic logs, calibration routines, sensor readouts, and field-replaceable unit identifiers for biomedical engineering. | Functional verification of all service menu items; access gated by service PIN. | UN-017 | Software test |
 
-## Traceability Summary
+## 5. Standards and Regulations Claimed
 
-### By Category and Criticality
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
+
+## 6. Dependencies and Assumptions
+
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
+
+## 7. Open Items
+
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
+
+## 8. Approvals
+
+_[TBD — section required by GL-TMP-DC-002; content to be authored.]_
+
+## 9. Revision History
+
+| Rev | Date | Author | Description |
+|---|---|---|---|
+| B | 2026-04-12 | Ben Xavier | Reorganized into 9 functional groups (G1–G9). No change to DI content; added Group column, per-group H3 sections, and by-group traceability breakdown. |
+| A | 2026-04-12 | Ben Xavier | Initial draft — Phase 4 of PDLC_DEMO. Authored from sample corpus (18 UN-/DI- files) with broad adaptation for realism. |
+
+## Appendix — Sections retained from the previous structure
+
+### Indications for Use
+
+The PainEase PCA Advanced is indicated for the patient-controlled intravenous (IV) administration of opioid and non-opioid analgesics — including morphine, hydromorphone, fentanyl, and compatible local anesthetic agents — for the management of moderate to severe acute postoperative pain, acute pain associated with trauma or medical procedures, and chronic pain (including cancer-related pain) in adult and adolescent patients (≥12 years of age and ≥40 kg). The device is intended for use in hospitals, ambulatory surgical centers, and other supervised acute-care facilities under the direction of a qualified prescriber. Pediatric use below 12 years of age requires additional clinical judgment and is outside the scope of the cleared indication. The device is **not** indicated for intrathecal, epidural, or arterial administration; it is **not** intended for unsupervised home or ambulatory use; and it is **not** MRI-safe. PCA therapy with this device requires that the patient be cognitively capable of self-administration and that trained clinical staff be available for monitoring and alarm response. Standard opioid warnings — including risks of respiratory depression, sedation, and abuse — apply to all use of this device.
+
+### Scope of This Document
+
+This document captures the design inputs (system requirements) for the PainEase PCA Advanced (DEV-PP3500), derived from the validated user needs in `../user-needs/user-needs.md` (DHF-PP3500-UN-001). Each requirement carries a category, criticality classification, acceptance criteria, upstream user-need traces, and a planned verification method. Revision A is the Phase 4 baseline supporting design verification planning.
+
+---
+
+### Classification
+
+**Category** — what kind of requirement:
+
+| Category | Description |
+|---|---|
+| **Functional (FUNC)** | What the device does |
+| **Performance (PERF)** | How well it does it — measurable |
+| **Safety (SAFE)** | Hazard mitigations and protective features |
+| **Usability (USAB)** | Human-factors requirements |
+| **Interface (INTE)** | External interfaces (HW, SW, network, user) |
+
+**Criticality** — how critical the requirement is:
+
+| Class | Symbol | Definition |
+|---|---|---|
+| Critical to Safety | **CTS** | Failure can directly cause patient or operator harm |
+| Critical to Function | **CTF** | Failure prevents the device from performing its intended use (no direct safety harm) |
+| Critical to Compliance | **CTC** | Driven by regulation, standard, or label claim |
+| Supporting | **S** | Enabling or nice-to-have; non-critical |
+
+Every design input has exactly one Category and exactly one Criticality.
+
+### Functional Groups
+
+The design inputs in this document are organized into 9 functional groups aligned with the device architecture, matching the structure of `../user-needs/user-needs.md`.
+
+| # | Group | Scope |
+|---|---|---|
+| G1 | Therapy Delivery | Continuous rate, PCA bolus, lockout, cumulative dose limits, flow-rate accuracy |
+| G2 | Drug Library & Medication Safety | Drug library, hard/soft limits, barcode scanning, medication verification |
+| G3 | Alarms & Annunciation | Occlusion, air-in-line, over-infusion, end-of-therapy, priority, audible/visual |
+| G4 | Hazard Controls & Essential Performance | Free-flow, electrical safety, EMC, biocompat, IEC 60601 essential performance |
+| G5 | User Interface & Usability | Touchscreen, decimal-point legibility, home screen, programming task flow |
+| G6 | Power, Portability & Physical | Battery, charging, weight, mounting, cleaning, lockbox, tamper-evidence |
+| G7 | Connectivity & Interoperability | Wi-Fi, Bluetooth, HL7 v2.5, FHIR R4, EHR integration |
+| G8 | Cybersecurity & Data Integrity | Authentication, TLS, signed firmware, SBOM, audit log |
+| G9 | Regulatory, Labeling & Lifecycle Compliance | UDI/GUDID, IFU/labeling, IEC 62304 Class C, IEC 62366-1, serviceability |
+
+### Traceability Summary
+
+#### By Category and Criticality
 
 | Category | CTS | CTF | CTC | S | Total |
 |---|---|---|---|---|---|
@@ -182,7 +233,7 @@ _SBOM, IEC 62304 Class C lifecycle, IEC 62366-1 usability process, UDI/GUDID, an
 | INTE | 1 | 2 | 3 | 2 | 8 |
 | **Total** | **13** | **13** | **5** | **3** | **34** |
 
-### By Functional Group
+#### By Functional Group
 
 | Group | DIs | CTS | CTF | CTC | S | UN Coverage |
 |---|---|---|---|---|---|---|
@@ -200,10 +251,3 @@ _SBOM, IEC 62304 Class C lifecycle, IEC 62366-1 usability process, UDI/GUDID, an
 The by-group "UN Coverage" column lists every UN traced by any DI in that group (which may include UNs whose primary group is elsewhere — e.g., DI-009 in G3 traces to UN-001 from G1).
 
 Every user need UN-001 through UN-022 is covered by at least one design input above. The full UN ↔ DI bidirectional trace matrix lives in `../trace-matrix/un-to-di-trace-matrix.md`.
-
-## Revision History
-
-| Rev | Date | Author | Description |
-|---|---|---|---|
-| B | 2026-04-12 | Ben Xavier | Reorganized into 9 functional groups (G1–G9). No change to DI content; added Group column, per-group H3 sections, and by-group traceability breakdown. |
-| A | 2026-04-12 | Ben Xavier | Initial draft — Phase 4 of PDLC_DEMO. Authored from sample corpus (18 UN-/DI- files) with broad adaptation for realism. |

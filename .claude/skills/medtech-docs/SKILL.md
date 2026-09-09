@@ -1,7 +1,7 @@
 ---
 name: medtech-docs
 description: "Scaffold and manage documentation for regulated medical device projects — init docs structure, manage DHFs, manage standards, import FDA guidance / standards / industry frameworks, generate compliance dashboard"
-version: 36
+version: 38
 updated: 2026-09-08
 # v35: render-sentinels.py guardrail — refuses to write any file under `.claude/skills/**` (registry-tracked skill files must stay project-agnostic; rendering project.yml/folder-tree data into them caused permanent per-project sync drift). The sentinel-blocks rule gains a "never render project data into a registry-tracked skill file" guardrail section; templates render only after instantiation into the project copy, never in place. Paired with strategy v20 (de-rendered its Domain Registry + init-briefs tables).
 ---
@@ -53,6 +53,9 @@ This skill includes template files in `${CLAUDE_SKILL_DIR}/templates/` and auto-
 | `claude-md-task-discipline.md` | `init` (Step 2c Check 8) | Source for the "Update as you go (HARD RULE)" task-discipline block inserted into CLAUDE.md. Single source of truth — edits here, then re-seed downstream. |
 | `scripts/form_conformance_check.py` | on-demand; workbench validation | Deterministic checker behind `rules/doctype-governance.md`: does a controlled document carry the level-2 section skeleton of its governing QMS form? Resolves the form via `--form`, the nearest `.taxonomy.yml` `governing_qms.forms[]`, or the document's frontmatter `references[]` parent-template entry (through `source-md/qms-index.md`). Missing / reordered sections fail, extra sections warn (`--strict` fails). `--json`; exit 0/1/2. Capability fixtures + tests: `tests/fixtures/form-conformance/`, `tests/test_form_conformance.py`. |
 | `scripts/ai_changelog_check.py` | on-demand; workbench validation | Deterministic checker behind `rules/ai-changelog.md`: the `<!-- AI-CHANGELOG -->` block exists in the leading metadata zone with a `Date \| Task \| Summary` table and ≥1 row, never in the rendered body / a `<details>` block, and no AI model / tool / vendor product name appears in content (frontmatter hits warn; `--strict` fails). `--ai-authored-only` requires the block only where `conversion_method` names an AI method. `--json`; exit 0/1/2. Fixtures + tests: `tests/fixtures/ai-changelog/`, `tests/test_ai_changelog_check.py`. |
+| `scripts/form_conformance_fix.py` | on-demand; after `form_conformance_check` fails | Rebuilds a failing document's section skeleton to its governing template's level-2 sections in template order — matching sections moved into place unchanged, missing ones inserted as `## <heading>` + a single `_[TBD — section required by <template id>…]_` placeholder, every remaining section appended after (the checker's EXTRA, a warning). Frontmatter, metadata zone and preamble are byte-preserved; a per-document content-preservation check refuses to write if any non-blank line would be lost. `--alias DOC=FORM` + `--rename-aliases` re-heads synonyms with the template's heading. Dry run by default; `--apply` writes. Tests: `tests/test_form_conformance_fix.py`. |
+| `scripts/ai_changelog_backfill.py` | on-demand; after `ai_changelog_check` fails | Inserts the `<!-- AI-CHANGELOG -->` block (one dated `Date \| Task \| Summary` row, vendor-neutral) at the end of the leading metadata zone of every document that needs one; `--fix-vendor` replaces AI product/vendor names in the rendered body with "AI assistant" (frontmatter left as tool-managed metadata). Dry run by default; `--apply` writes. |
+| `scripts/qms_coverage.py` | on-demand; workbench validation | QMS template coverage inventory: joins the imported registry (`source-md/qms-index.md` + frontmatter `doc_type`) with the form-conformance results — per template/form: instances, tested, pass/fail, `covered \| covered-failing \| unused`; procedures (SOP/WI) with reference counts; every document without a structural template with a doctype hint and reason (`no template imported`, `no reference (template X exists)`, `intentionally none`). Writes JSON (`--json-out`) + prints a table; exit 0/1 (instantiated template without evidence)/2. Tests: `tests/test_qms_coverage.py`. |
 | `dashboard.html` | `dashboard` | HTML template for compliance dashboard |
 | `register-hook.sh` | `init` | Shared hook registration helper — installed to `.claude/hooks/` for skills to use |
 
@@ -1051,10 +1054,29 @@ python3 ${CLAUDE_SKILL_DIR}/scripts/ai_changelog_check.py   --root . --json docs
 ```
 
 *Form conformance* compares a document's ordered level-2 headings with its governing
-form's; missing or reordered sections fail, extra sections warn. A document with no
-governing form (no taxonomy mapping, no parent-template reference) is reported
-`no-form`, not failed — that absence is the doctype-governance rule's "unverified
-mapping" signal. *AI changelog* enforces block presence / placement and vendor
+form's; missing or reordered sections fail, extra sections warn. Only a registry
+document whose `doc_type` is a template or form (TMP, FORM) is a structural governor: a
+parent reference that resolves to an SOP/WI is reported `procedure` — governed by
+procedure, no template structure to check — informational and listed under
+`procedures` in `--json`, with `template_id` / `resolved_via` reported per document. A
+document with no governing form (no taxonomy mapping, no parent-template reference) is
+reported `no-form`, not failed — that absence is the doctype-governance rule's
+"unverified mapping" signal.
+
+Two companions turn findings into fixes without touching content: `form_conformance_fix.py`
+rebuilds a failing document to its template's section order (missing sections inserted
+as TBD placeholders, everything else preserved and appended) and
+`ai_changelog_backfill.py` inserts the provenance block / neutralises vendor names. Both
+dry-run by default.
+
+*QMS coverage* (`qms_coverage.py`) is the deployment-side inventory a validation report
+needs when a project acquires QMS documents over time: for every imported template/form
+— how many project documents instantiate it, whether the conformance check exercised it,
+how they fared (`covered`, `covered-failing`, `unused`); which documents are governed by a
+procedure instead; and every document with no structural template, with its doctype hint
+and whether that is because no template has been imported for that doctype or because the
+document simply does not declare an existing one. The JSON it writes is the contract the
+workbench-validation report renders. *AI changelog* enforces block presence / placement and vendor
 neutrality; the YAML frontmatter is read as tool-managed conversion metadata, so a
 vendor name there warns rather than fails unless `--strict`. Both ship capability
 fixtures under `tests/fixtures/` so the checkers themselves are regression-tested in

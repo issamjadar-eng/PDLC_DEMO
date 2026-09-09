@@ -1,0 +1,804 @@
+{
+  "generated": "2026-09-09T00:03:46Z",
+  "registry": "docs/internal/source-md/qms-index.md",
+  "templates": [
+    {
+      "id": "GL-FORM-DC-001",
+      "title": "Design Review Record",
+      "path": "docs/internal/source-md/design-controls/templates/design-review-record.md",
+      "doc_type": "FORM",
+      "instances": 3,
+      "tested": true,
+      "pass": 3,
+      "fail": 0,
+      "status": "covered"
+    },
+    {
+      "id": "GL-FORM-DC-002",
+      "title": "Phase-Gate Review Checklist",
+      "path": "docs/internal/source-md/design-controls/templates/phase-gate-checklist.md",
+      "doc_type": "FORM",
+      "instances": 0,
+      "tested": false,
+      "pass": 0,
+      "fail": 0,
+      "status": "unused"
+    },
+    {
+      "id": "GL-FORM-PM-001",
+      "title": "Complaint Form",
+      "path": "docs/internal/source-md/post-market/templates/complaint-form.md",
+      "doc_type": "FORM",
+      "instances": 3,
+      "tested": true,
+      "pass": 3,
+      "fail": 0,
+      "status": "covered"
+    },
+    {
+      "id": "GL-FORM-QM-001",
+      "title": "CAPA Form",
+      "path": "docs/internal/source-md/quality-management/templates/capa-form.md",
+      "doc_type": "FORM",
+      "instances": 4,
+      "tested": true,
+      "pass": 4,
+      "fail": 0,
+      "status": "covered"
+    },
+    {
+      "id": "GL-FORM-QM-002",
+      "title": "Management Review Minutes",
+      "path": "docs/internal/source-md/quality-management/templates/management-review-minutes.md",
+      "doc_type": "FORM",
+      "instances": 0,
+      "tested": false,
+      "pass": 0,
+      "fail": 0,
+      "status": "unused"
+    },
+    {
+      "id": "GL-FORM-QM-003",
+      "title": "Training Record",
+      "path": "docs/internal/source-md/quality-management/templates/training-record.md",
+      "doc_type": "FORM",
+      "instances": 0,
+      "tested": false,
+      "pass": 0,
+      "fail": 0,
+      "status": "unused"
+    },
+    {
+      "id": "GL-FORM-QM-004",
+      "title": "Internal Audit Plan",
+      "path": "docs/internal/source-md/quality-management/templates/audit-plan.md",
+      "doc_type": "FORM",
+      "instances": 0,
+      "tested": false,
+      "pass": 0,
+      "fail": 0,
+      "status": "unused"
+    },
+    {
+      "id": "GL-FORM-QM-005",
+      "title": "Document Change Request",
+      "path": "docs/internal/source-md/quality-management/templates/document-change-request.md",
+      "doc_type": "FORM",
+      "instances": 0,
+      "tested": false,
+      "pass": 0,
+      "fail": 0,
+      "status": "unused"
+    },
+    {
+      "id": "GL-FORM-RA-001",
+      "title": "Submission Package Assembly & Sign-off Record",
+      "path": "docs/internal/source-md/regulatory-affairs/templates/submission-package-record.md",
+      "doc_type": "FORM",
+      "instances": 0,
+      "tested": false,
+      "pass": 0,
+      "fail": 0,
+      "status": "unused"
+    },
+    {
+      "id": "GL-FORM-SP-001",
+      "title": "Supplier Qualification Package",
+      "path": "docs/internal/source-md/supplier-production/templates/supplier-qualification-package.md",
+      "doc_type": "FORM",
+      "instances": 0,
+      "tested": false,
+      "pass": 0,
+      "fail": 0,
+      "status": "unused"
+    },
+    {
+      "id": "GL-FORM-SP-002",
+      "title": "Nonconformance Report",
+      "path": "docs/internal/source-md/supplier-production/templates/nonconformance-report.md",
+      "doc_type": "FORM",
+      "instances": 0,
+      "tested": false,
+      "pass": 0,
+      "fail": 0,
+      "status": "unused"
+    },
+    {
+      "id": "GL-TMP-DC-001",
+      "title": "Design and Development Plan",
+      "path": "docs/internal/source-md/design-controls/templates/design-and-development-plan.md",
+      "doc_type": "TMP",
+      "instances": 10,
+      "tested": true,
+      "pass": 10,
+      "fail": 0,
+      "status": "covered"
+    },
+    {
+      "id": "GL-TMP-DC-002",
+      "title": "Design Input Specification",
+      "path": "docs/internal/source-md/design-controls/templates/design-input-specification.md",
+      "doc_type": "TMP",
+      "instances": 13,
+      "tested": true,
+      "pass": 13,
+      "fail": 0,
+      "status": "covered"
+    },
+    {
+      "id": "GL-TMP-DC-003",
+      "title": "Design Verification Protocol & Report",
+      "path": "docs/internal/source-md/design-controls/templates/verification-protocol-report.md",
+      "doc_type": "TMP",
+      "instances": 13,
+      "tested": true,
+      "pass": 13,
+      "fail": 0,
+      "status": "covered"
+    },
+    {
+      "id": "GL-TMP-DC-004",
+      "title": "Design Validation Protocol & Report",
+      "path": "docs/internal/source-md/design-controls/templates/validation-protocol-report.md",
+      "doc_type": "TMP",
+      "instances": 10,
+      "tested": true,
+      "pass": 10,
+      "fail": 0,
+      "status": "covered"
+    },
+    {
+      "id": "GL-TMP-PM-001",
+      "title": "PMS Plan",
+      "path": "docs/internal/source-md/post-market/templates/pms-plan.md",
+      "doc_type": "TMP",
+      "instances": 13,
+      "tested": true,
+      "pass": 13,
+      "fail": 0,
+      "status": "covered"
+    },
+    {
+      "id": "GL-TMP-RM-001",
+      "title": "Risk Management Plan",
+      "path": "docs/internal/source-md/risk-management/templates/risk-management-plan.md",
+      "doc_type": "TMP",
+      "instances": 10,
+      "tested": true,
+      "pass": 10,
+      "fail": 0,
+      "status": "covered"
+    },
+    {
+      "id": "GL-TMP-RM-002",
+      "title": "Risk Management Report",
+      "path": "docs/internal/source-md/risk-management/templates/risk-management-report.md",
+      "doc_type": "TMP",
+      "instances": 10,
+      "tested": true,
+      "pass": 10,
+      "fail": 0,
+      "status": "covered"
+    },
+    {
+      "id": "GL-TMP-RM-003",
+      "title": "Hazard Analysis Worksheet",
+      "path": "docs/internal/source-md/risk-management/templates/hazard-analysis.md",
+      "doc_type": "TMP",
+      "instances": 10,
+      "tested": true,
+      "pass": 10,
+      "fail": 0,
+      "status": "covered"
+    },
+    {
+      "id": "GL-TMP-RM-004",
+      "title": "FMEA Worksheet",
+      "path": "docs/internal/source-md/risk-management/templates/fmea-worksheet.md",
+      "doc_type": "TMP",
+      "instances": 6,
+      "tested": true,
+      "pass": 6,
+      "fail": 0,
+      "status": "covered"
+    },
+    {
+      "id": "GL-TMP-SW-001",
+      "title": "Software Development Plan",
+      "path": "docs/internal/source-md/software-cybersecurity/templates/software-development-plan.md",
+      "doc_type": "TMP",
+      "instances": 10,
+      "tested": true,
+      "pass": 10,
+      "fail": 0,
+      "status": "covered"
+    },
+    {
+      "id": "GL-TMP-SW-002",
+      "title": "Cybersecurity Plan",
+      "path": "docs/internal/source-md/software-cybersecurity/templates/cybersecurity-plan.md",
+      "doc_type": "TMP",
+      "instances": 20,
+      "tested": true,
+      "pass": 20,
+      "fail": 0,
+      "status": "covered"
+    },
+    {
+      "id": "GL-TMP-UC-001",
+      "title": "Use Specification",
+      "path": "docs/internal/source-md/usability-clinical/templates/use-specification.md",
+      "doc_type": "TMP",
+      "instances": 10,
+      "tested": true,
+      "pass": 10,
+      "fail": 0,
+      "status": "covered"
+    },
+    {
+      "id": "GL-TMP-UC-002",
+      "title": "Usability Engineering File",
+      "path": "docs/internal/source-md/usability-clinical/templates/usability-engineering-file.md",
+      "doc_type": "TMP",
+      "instances": 1,
+      "tested": true,
+      "pass": 1,
+      "fail": 0,
+      "status": "covered"
+    },
+    {
+      "id": "GL-TMP-UC-003",
+      "title": "Summative Usability Evaluation Protocol & Report",
+      "path": "docs/internal/source-md/usability-clinical/templates/summative-evaluation-protocol.md",
+      "doc_type": "TMP",
+      "instances": 3,
+      "tested": true,
+      "pass": 3,
+      "fail": 0,
+      "status": "covered"
+    },
+    {
+      "id": "GL-TMP-UC-004",
+      "title": "Clinical Evaluation Plan",
+      "path": "docs/internal/source-md/usability-clinical/templates/clinical-evaluation-plan.md",
+      "doc_type": "TMP",
+      "instances": 18,
+      "tested": true,
+      "pass": 18,
+      "fail": 0,
+      "status": "covered"
+    },
+    {
+      "id": "GL-TMP-UC-005",
+      "title": "Clinical Evaluation Report",
+      "path": "docs/internal/source-md/usability-clinical/templates/clinical-evaluation-report.md",
+      "doc_type": "TMP",
+      "instances": 10,
+      "tested": true,
+      "pass": 10,
+      "fail": 0,
+      "status": "covered"
+    }
+  ],
+  "procedures": [
+    {
+      "id": "GL-MAN-QM-001",
+      "title": "Quality Manual",
+      "path": "docs/internal/source-md/quality-management/quality-manual.md",
+      "doc_type": "MAN",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-DC-001",
+      "title": "Design Control (Master)",
+      "path": "docs/internal/source-md/design-controls/design-control-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-DC-002",
+      "title": "Design and Development Planning",
+      "path": "docs/internal/source-md/design-controls/design-planning-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-DC-003",
+      "title": "Design Inputs",
+      "path": "docs/internal/source-md/design-controls/design-inputs-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 6
+    },
+    {
+      "id": "GL-SOP-DC-004",
+      "title": "Design Outputs",
+      "path": "docs/internal/source-md/design-controls/design-outputs-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 1
+    },
+    {
+      "id": "GL-SOP-DC-005",
+      "title": "Design Review",
+      "path": "docs/internal/source-md/design-controls/design-review-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-DC-006",
+      "title": "Design V&V",
+      "path": "docs/internal/source-md/design-controls/design-verification-validation-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-DC-007",
+      "title": "Design Transfer",
+      "path": "docs/internal/source-md/design-controls/design-transfer-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-DC-008",
+      "title": "Design Change Control",
+      "path": "docs/internal/source-md/design-controls/design-change-control-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 1
+    },
+    {
+      "id": "GL-SOP-PM-001",
+      "title": "Post-Market Surveillance",
+      "path": "docs/internal/source-md/post-market/post-market-surveillance-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 3
+    },
+    {
+      "id": "GL-SOP-PM-002",
+      "title": "Complaint Handling",
+      "path": "docs/internal/source-md/post-market/complaint-handling-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-PM-003",
+      "title": "Adverse Event Reporting (Vigilance)",
+      "path": "docs/internal/source-md/post-market/adverse-event-reporting-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-QM-001",
+      "title": "Document and Records Control",
+      "path": "docs/internal/source-md/quality-management/document-and-records-control-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-QM-002",
+      "title": "Management Review",
+      "path": "docs/internal/source-md/quality-management/management-review-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-QM-003",
+      "title": "Training and Competence",
+      "path": "docs/internal/source-md/quality-management/training-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-QM-004",
+      "title": "Internal Audit",
+      "path": "docs/internal/source-md/quality-management/internal-audit-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-QM-005",
+      "title": "CAPA",
+      "path": "docs/internal/source-md/quality-management/capa-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-QM-006",
+      "title": "Good Documentation Practices",
+      "path": "docs/internal/source-md/quality-management/good-documentation-practices-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-RA-001",
+      "title": "Regulatory Operations",
+      "path": "docs/internal/source-md/regulatory-affairs/regulatory-operations-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-RM-001",
+      "title": "Risk Management (Master)",
+      "path": "docs/internal/source-md/risk-management/risk-management-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-SP-001",
+      "title": "Supplier Management",
+      "path": "docs/internal/source-md/supplier-production/supplier-management-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-SP-002",
+      "title": "Purchasing Controls",
+      "path": "docs/internal/source-md/supplier-production/purchasing-controls-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-SP-003",
+      "title": "Production and Process Controls",
+      "path": "docs/internal/source-md/supplier-production/production-process-controls-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-SP-004",
+      "title": "Control of Nonconforming Product",
+      "path": "docs/internal/source-md/supplier-production/nonconformance-control-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-SW-001",
+      "title": "Medical Device Software Lifecycle",
+      "path": "docs/internal/source-md/software-cybersecurity/software-lifecycle-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-SW-002",
+      "title": "SOUP / OTS Software Management",
+      "path": "docs/internal/source-md/software-cybersecurity/soup-management-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-SW-003",
+      "title": "Software Problem Resolution",
+      "path": "docs/internal/source-md/software-cybersecurity/software-problem-resolution-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-SW-004",
+      "title": "Medical Device Cybersecurity",
+      "path": "docs/internal/source-md/software-cybersecurity/cybersecurity-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 3
+    },
+    {
+      "id": "GL-SOP-UC-001",
+      "title": "Usability Engineering",
+      "path": "docs/internal/source-md/usability-clinical/usability-engineering-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-SOP-UC-002",
+      "title": "Clinical Evaluation",
+      "path": "docs/internal/source-md/usability-clinical/clinical-evaluation-sop.md",
+      "doc_type": "SOP",
+      "referenced_by": 6
+    },
+    {
+      "id": "GL-STD-RM-001",
+      "title": "Risk Assessment Criteria",
+      "path": "docs/internal/source-md/risk-management/risk-assessment-criteria.md",
+      "doc_type": "STD",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-STD-RM-002",
+      "title": "Master Harms List",
+      "path": "docs/internal/source-md/risk-management/master-harms-list.md",
+      "doc_type": "STD",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-WI-DC-001",
+      "title": "Design History File Process",
+      "path": "docs/internal/source-md/design-controls/design-history-file-process-wi.md",
+      "doc_type": "WI",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-WI-DC-002",
+      "title": "Design Traceability Matrix",
+      "path": "docs/internal/source-md/design-controls/design-traceability-matrix-wi.md",
+      "doc_type": "WI",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-WI-QM-001",
+      "title": "Deviation Procedure",
+      "path": "docs/internal/source-md/quality-management/deviation-procedure-wi.md",
+      "doc_type": "WI",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-WI-RA-001",
+      "title": "510(k) Submission Process",
+      "path": "docs/internal/source-md/regulatory-affairs/510k-submission-process-wi.md",
+      "doc_type": "WI",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-WI-RA-002",
+      "title": "De Novo Submission Process",
+      "path": "docs/internal/source-md/regulatory-affairs/de-novo-submission-process-wi.md",
+      "doc_type": "WI",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-WI-RA-003",
+      "title": "PMA Submission Process",
+      "path": "docs/internal/source-md/regulatory-affairs/pma-submission-process-wi.md",
+      "doc_type": "WI",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-WI-RM-001",
+      "title": "Hazard Analysis",
+      "path": "docs/internal/source-md/risk-management/hazard-analysis-wi.md",
+      "doc_type": "WI",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-WI-RM-002",
+      "title": "FMEA (dFMEA / pFMEA)",
+      "path": "docs/internal/source-md/risk-management/fmea-wi.md",
+      "doc_type": "WI",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-WI-SP-001",
+      "title": "Incoming Inspection",
+      "path": "docs/internal/source-md/supplier-production/incoming-inspection-wi.md",
+      "doc_type": "WI",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-WI-SW-001",
+      "title": "Software Safety Classification",
+      "path": "docs/internal/source-md/software-cybersecurity/software-safety-classification-wi.md",
+      "doc_type": "WI",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-WI-SW-002",
+      "title": "SBOM Generation",
+      "path": "docs/internal/source-md/software-cybersecurity/sbom-wi.md",
+      "doc_type": "WI",
+      "referenced_by": 10
+    },
+    {
+      "id": "GL-WI-SW-003",
+      "title": "Threat Modeling",
+      "path": "docs/internal/source-md/software-cybersecurity/threat-modeling-wi.md",
+      "doc_type": "WI",
+      "referenced_by": 0
+    },
+    {
+      "id": "GL-WI-SW-004",
+      "title": "Software Verification and Validation",
+      "path": "docs/internal/source-md/software-cybersecurity/software-vv-wi.md",
+      "doc_type": "WI",
+      "referenced_by": 0
+    }
+  ],
+  "documents_without_template": [
+    {
+      "doc": "docs/project/dhfs/cloud-suite/design-controls/requirements/software-requirements.md",
+      "doctype_hint": "requirements",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/design-controls/user-needs/user-needs.md",
+      "doctype_hint": "user-needs",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/cloud-suite/dhfs/drug-library-manager/design-controls/architecture/drug-library-manager-system-sad.md",
+      "doctype_hint": "architecture",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/design-controls/architecture/connectivity-adapter-system-sad.md",
+      "doctype_hint": "architecture",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/design-controls/requirements/software-requirements.md",
+      "doctype_hint": "requirements",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/connectivity-adapter/design-controls/user-needs/user-needs.md",
+      "doctype_hint": "user-needs",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/benefit-risk/BRA-1001.md",
+      "doctype_hint": "benefit-risk-analysis",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/benefit-risk/BRA-1002.md",
+      "doctype_hint": "benefit-risk-analysis",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/benefit-risk/BRA-1003.md",
+      "doctype_hint": "benefit-risk-analysis",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/benefit-risk/BRA-1004.md",
+      "doctype_hint": "benefit-risk-analysis",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/benefit-risk/BRA-1005.md",
+      "doctype_hint": "benefit-risk-analysis",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/literature-search/LSS-1001.md",
+      "doctype_hint": "literature-search-strategy",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/literature-search/LSS-1002.md",
+      "doctype_hint": "literature-search-strategy",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/literature-search/LSS-1003.md",
+      "doctype_hint": "literature-search-strategy",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/literature-search/LSS-1004.md",
+      "doctype_hint": "literature-search-strategy",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/clinical/literature-search/LSS-1005.md",
+      "doctype_hint": "literature-search-strategy",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/architecture/pca-device-system-sad.md",
+      "doctype_hint": "architecture",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/requirements/software-requirements.md",
+      "doctype_hint": "requirements",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/trace-matrix/trace-matrix.md",
+      "doctype_hint": "trace-matrix",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/trace-matrix/un-to-di-trace-matrix.md",
+      "doctype_hint": "trace-matrix",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/user-needs/user-needs.md",
+      "doctype_hint": "user-needs",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/design-controls/vnv/testing-strategy.md",
+      "doctype_hint": "vnv",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/complaints/complaints-ledger.md",
+      "doctype_hint": "complaints-ledger",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/pmcf-plans/PMCF-1001.md",
+      "doctype_hint": "pmcf-plan",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/pmcf-plans/PMCF-1002.md",
+      "doctype_hint": "pmcf-plan",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/pmcf-plans/PMCF-1003.md",
+      "doctype_hint": "pmcf-plan",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/pmcf-plans/PMCF-1004.md",
+      "doctype_hint": "pmcf-plan",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/pmcf-plans/PMCF-1005.md",
+      "doctype_hint": "pmcf-plan",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/pmcf-studies/STUDY-0001.md",
+      "doctype_hint": "pmcf-study",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/pmcf-studies/STUDY-0003.md",
+      "doctype_hint": "pmcf-study",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/pmcf-studies/STUDY-0005.md",
+      "doctype_hint": "pmcf-study",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/pmcf-studies/STUDY-0007.md",
+      "doctype_hint": "pmcf-study",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/postmarket/pmcf-studies/STUDY-0009.md",
+      "doctype_hint": "pmcf-study",
+      "reason": "no template imported"
+    },
+    {
+      "doc": "docs/project/dhfs/pca-device/risk-management/risk-strategy.md",
+      "doctype_hint": "risk-management",
+      "reason": "no reference (template GL-TMP-RM-001 exists)"
+    }
+  ],
+  "summary": {
+    "templates_total": 27,
+    "templates_instantiated": 19,
+    "templates_tested": 19,
+    "templates_unused": 8,
+    "templates_failing": 0,
+    "procedures_total": 45,
+    "documents_total": 241,
+    "documents_governed": 177,
+    "documents_governed_by_procedure": 30,
+    "documents_without_template": 34
+  }
+}

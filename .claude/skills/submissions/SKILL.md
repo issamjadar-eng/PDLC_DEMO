@@ -6,7 +6,7 @@ description: |
   TRIGGER when the user wants to **scaffold, build, author, seed, generate, assemble, or render** a Q-Submission / pre-submission / 510(k) / PCCP / PMA **content package** — phrasings include: "scaffold the Q-Sub package", "set up the qsub documents", "scaffold the 510(k)", "create the FDA questions doc", "build the cover letter / device description / intended-use / substantial-equivalence / PCCP summary", "seed submission content", "assemble the composition manifest", "render the submission console view", "refresh the submission sidecars", "what's in the Q-Sub package", "is the qsub package ready to transmit". Also fire on any edit/write under `docs/project/submissions/<filing>/` content docs or `_provenance/`.
 
   Sibling boundaries — this skill owns submission **content** + its console sidecars. It is NOT `/tracker` (deliverable × phase readiness dashboard), NOT `/change-control` (publish to Confluence/Windchill), NOT `/medtech-docs` (DHF scaffolding), NOT `/dhf-manifest` (deliverable-coverage projection). When a fact is canonical elsewhere (regulatory-strategy.md D-REG-* blocks, the system SAD, project.yml), submission docs reference it — they do not redeclare it.
-version: 11
+version: 12
 updated: 2026-09-08
 ---
 
@@ -55,7 +55,10 @@ Every transmitted content doc is authored in three zones, top to bottom:
    never published), and optional Confluence/doc-control metadata. Never transmitted.
 2. **`🔒 INTERNAL` working apparatus** — a leading container: document-control table,
    reading convention, internal source mapping to `D-REG-*` decisions / task refs,
-   open conflicts. Stripped before transmission.
+   open conflicts. Stripped before transmission. Recognised container forms: a
+   `<details>` block, or a blockquote whose first line opens with `> **🔒 INTERNAL`
+   (the block runs while lines keep their leading `>`); the zone stripper used by the
+   package gates (`qsub_scope_lint.strip_zones`) treats both as non-filed.
 3. **Filed body** — the FDA-facing content, sections tagged with the scope labels
    from the `internal-vs-external-scope-labels` rule (📤 external-bound · 📝 internal
    inline · ⏸️ deferred · 📖 reference). Only 📤/filed-body content goes to FDA.

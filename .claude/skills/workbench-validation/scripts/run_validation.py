@@ -456,7 +456,21 @@ def load_protocol_result(case, root, protocol_results_dir):
         data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     except Exception as exc:  # malformed record → surfaced, not hidden
         return {"_error": f"unreadable execution record: {exc}"}, path
-    return data, path
+    return _jsonable(data), path
+
+
+def _jsonable(obj):
+    """YAML yields date/datetime objects for bare ISO dates; the run JSON
+    needs strings. Recursively normalise so an execution record can never
+    break the results write."""
+    import datetime as _dt
+    if isinstance(obj, dict):
+        return {str(k): _jsonable(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_jsonable(v) for v in obj]
+    if isinstance(obj, (_dt.date, _dt.datetime)):
+        return obj.isoformat()
+    return obj
 
 
 def execute_case(case, root, connections=None, deployment=None, protocol_results_dir=None):

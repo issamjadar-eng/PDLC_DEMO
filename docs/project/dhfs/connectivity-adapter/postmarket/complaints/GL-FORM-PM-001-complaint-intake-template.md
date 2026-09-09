@@ -25,6 +25,14 @@ conversion_history:
     source: "v0.1 DRAFT — placeholder stub via task ben/023"
 notes: "Placeholder instantiating parent QMS template GL-FORM-PM-001. Fill in with DHF-specific data."
 ---
+<!-- AI-CHANGELOG — internal provenance of AI-assisted edits. Metadata only:
+     NOT published downstream (Confluence/Doc-Control), NOT part of the controlled
+     record, stripped on DOCX/PDF export. Vendor-neutral by convention.
+| Date       | Task    | Summary |
+|------------|---------|---------|
+| 2026-09-08 | ben/123 | Provenance block added retroactively; document originally AI-assisted (frontmatter conversion_method) — restructured to its governing template's sections by form_conformance_fix where applicable |
+| 2026-09-08 | ben/123 | Section skeleton re-shaped by form_conformance_fix: template numbering restored on reused sections, empty template-skeleton sections dropped, sections with content retained under a single appendix |
+-->
 
 # CONNECTIVITY-ADAPTER-GL-FORM-PM-001-complaint-intake-template — Complaint Intake Template (per device)
 
@@ -41,19 +49,39 @@ _Demo sample data — not for clinical use._
 
 ---
 
-## Identification
-| Field | Value |
-|---|---|
-| DHF | `{{DHF_NAME}}` |
-| Record Revision | `{{X.X DRAFT}}` |
+## 1. Intake
 
-## Entries
+_[TBD — section required by GL-FORM-PM-001; content to be authored.]_
 
-| # | Date | Subject | Owner | Status |
-|---|---|---|---|---|
-| | | | | |
+## 2. Complainant
 
-## Revision History
+_[TBD — section required by GL-FORM-PM-001; content to be authored.]_
+
+## 3. Device
+
+_[TBD — section required by GL-FORM-PM-001; content to be authored.]_
+
+## 4. Event Description
+
+_[TBD — section required by GL-FORM-PM-001; content to be authored.]_
+
+## 5. Triage
+
+_[TBD — section required by GL-FORM-PM-001; content to be authored.]_
+
+## 6. Investigation
+
+_[TBD — section required by GL-FORM-PM-001; content to be authored.]_
+
+## 7. Reportable Event Record
+
+_[TBD — section required by GL-FORM-PM-001; content to be authored.]_
+
+## 8. Closure
+
+_[TBD — section required by GL-FORM-PM-001; content to be authored.]_
+
+## 9. Revision History
 
 | Rev | Date | Author | Summary |
 |---|---|---|---|

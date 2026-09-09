@@ -51,7 +51,7 @@ Standards evaluated and determined not applicable, with rationale:
 
 | Standard | Title | Rationale for Exclusion |
 |----------|-------|------------------------|
-| ISO 13485 | Medical devices — Quality management systems | QMS-level standard — owned at the organization/QMS level, not the project DHF |
+| ISO 13485 | Medical devices — Quality management systems | QMS-level standard — owned at the organization/QMS level, not the project DHF. **Known registry gap (2026-09-08):** no distillation exists in this tier or in the registry (L1a), so any DHF citation of an ISO 13485 clause (e.g. the design-and-development plans `GL-TMP-DC-001-*` frontmatter L22 "ISO 13485 §7.3.2", and the 21 CFR 820.10(c) → Clause 7.3 anchor the QMSR now requires) verifies as `registry-gap` — the clause number cannot be confirmed locally. Closing it needs the licensed standard; until then cite Clause 7.3 by topic. |
 | 21 CFR 820 / QMSR | FDA Quality Management System Regulation | QMS-level regulation — organization-owned, not project-scoped |
 | AAMI TIR57 | Principles for medical device security — Risk management | Cybersecurity guidance covered by IEC 81001-5-1 + NIST CSF — no incremental obligations |
 | ISO/IEC 23894 | Information technology — Artificial intelligence — Guidance on risk management | AI risk management — covered by GMLP + ISO 14971 for this project |
@@ -78,3 +78,4 @@ Standards evaluated and determined not applicable, with rationale:
 | YYYY-MM-DD | XX | Initial version — created by /medtech-docs init |
 | 2026-04-12 | medtech-docs init | Initial population: added 6 active standards (IEC 62304, ISO 14971, IEC 62366-1, IEC 82304-1, IEC 81001-5-1, IEC 60601-1) and 4 evaluated-not-required entries (ISO 13485, 21 CFR 820/QMSR, AAMI TIR57, ISO/IEC 23894). IEC 60601-1 created as a stub with [VERIFY] markers; remaining standards copied from distilled references. |
 | 2026-04-14 | BX | Added "Original Source" column to the Distilled Standards table per medtech-docs v15. All 5 skill-library standards already present from initial population — `update-external-references` reported 0 created / 5 unchanged / 1 unchanged-not-in-skill-library (iec-60601-1). See `tasks/ben/012-medtech-docs-update-external-references.md`. |
+| 2026-09-08 | BX / AI Assistant | task 123: `iec-62366-1.md` re-synced with the registry quarantine banner (invented Clause 5 skeleton; every clause label marked `[VERIFY]`) — found by validation protocol TC-PROTO-CITATIONS; ISO 13485 row now states the registry gap and the citing DHF documents affected. |

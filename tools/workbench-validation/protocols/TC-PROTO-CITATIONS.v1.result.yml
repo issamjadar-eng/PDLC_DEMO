@@ -1,0 +1,38 @@
+# Execution record — schema: .claude/skills/workbench-validation/templates/protocol-result.yml
+tc_id: TC-PROTO-CITATIONS
+protocol: docs/project/workbench-validation/protocols/TC-PROTO-CITATIONS.md
+verdict: FAIL
+executed: 2026-09-08
+operator: "AI assistant (operator) for BX — main session; agent under test invoked via Agent tool (subagent_type: citations), one fresh batch call per run"
+model_id: claude-fable-5-1
+git_sha: e01c4a1
+harness_version: "2.1.265 (Claude Code)"
+runs:
+  - run: 1
+    outcome: FAIL
+    counts: {known_sound_reported_sound: "5/8", known_non_sound_reported_sound: 2, defect_kind_matches_9_12: "2/4"}
+    notes: "Items 9 and 12 reported sound (answer key disputed — L1a carries a '4.3 Software Safety Classification' label; the audited IEC 62366-1 sequence places summative at 5.9); items 6, 7, 8 broken (8 is a genuinely broken relative link the key marked sound)."
+    evidence: tools/workbench-validation/protocols/TC-PROTO-CITATIONS/run-1/findings.md
+  - run: 2
+    outcome: FAIL
+    counts: {known_sound_reported_sound: "4/8", known_non_sound_reported_sound: 1, defect_kind_matches_9_12: "2/4"}
+    notes: "Item 4 capped at unverified (paywalled standard); item 9 reported sound; 12 and 14 unverified instead of absent-from-source."
+    evidence: tools/workbench-validation/protocols/TC-PROTO-CITATIONS/run-2/findings.md
+  - run: 3
+    outcome: FAIL
+    counts: {known_sound_reported_sound: "0/8", known_non_sound_reported_sound: 0, defect_kind_matches_9_12: "2/4"}
+    notes: "Every paywalled-standard clause capped at unverified (unreachable-source) by policy; criterion A met, B and C not."
+    evidence: tools/workbench-validation/protocols/TC-PROTO-CITATIONS/run-3/findings.md
+evidence:
+  - tools/workbench-validation/protocols/TC-PROTO-CITATIONS/run-1/findings.md
+  - tools/workbench-validation/protocols/TC-PROTO-CITATIONS/run-2/findings.md
+  - tools/workbench-validation/protocols/TC-PROTO-CITATIONS/run-3/findings.md
+  - tools/workbench-validation/protocols/TC-PROTO-CITATIONS.run-0-dryrun.md
+  - tasks/ben/_scratch/tc-proto-citations-operator-items.md
+deviations:
+  - "Batching: each run invoked the citations agent once with all 16 items rather than one point query per item (protocol §5 step 3 permits either)."
+  - "Repeatability defect in the unit under test: the verdict BAND for the same evidence varied across runs — items 1–5, 9, 12 were 'sound' in run 1, partly 'unverified' in run 2, all 'unverified (unreachable-source)' in run 3. The agent applies the paywalled-standard cap inconsistently. This alone fails §7 repeatability."
+  - "Answer-key defects found by execution: item 7 expected 'sound' but the heading 'Pre-Submission Package Contents' exists only in the finding aids (L1a distilled, L1b), not in source-md → the agent's 'citation-mislabeled' is the correct verdict; item 8 expected 'sound' but the tracker's relative href '../510k/composition-manifest.md' resolves to docs/project/510k/ (does not exist) → 'broken-link' is correct; items 9 and 12 expected defect kinds that the L1a evidence contradicts (a '4.3' label exists; the audited sequence has 5.9). The protocol needs a v2 answer key before re-execution."
+  - "Registry defects surfaced (not protocol items): docs/external/standards/iec-62366-1.md carries invented Clause 5 numbering without the L1a quarantine banner; the 'Pre-Submission Package Contents' heading originates in both finding aids; ISO 13485 has no distillation in either tier."
+  - "Baseline recorded on a dirty working tree (correction work in flight); protocol §3 asks for the commit — recorded as-is."
+signed_off_by: "pending: BX"

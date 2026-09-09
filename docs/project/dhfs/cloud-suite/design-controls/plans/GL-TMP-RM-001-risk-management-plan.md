@@ -25,6 +25,14 @@ conversion_history:
     source: "v0.1 DRAFT — placeholder stub via task ben/023"
 notes: "Placeholder instantiating parent QMS template GL-TMP-RM-001. Fill in with DHF-specific data."
 ---
+<!-- AI-CHANGELOG — internal provenance of AI-assisted edits. Metadata only:
+     NOT published downstream (Confluence/Doc-Control), NOT part of the controlled
+     record, stripped on DOCX/PDF export. Vendor-neutral by convention.
+| Date       | Task    | Summary |
+|------------|---------|---------|
+| 2026-09-08 | ben/123 | Provenance block added retroactively; document originally AI-assisted (frontmatter conversion_method) — restructured to its governing template's sections by form_conformance_fix where applicable |
+| 2026-09-08 | ben/123 | Section skeleton re-shaped by form_conformance_fix: template numbering restored on reused sections, empty template-skeleton sections dropped, sections with content retained under a single appendix |
+-->
 
 # CLOUD-SUITE-GL-TMP-RM-001-risk-management-plan — Risk Management Plan
 
@@ -41,28 +49,37 @@ _Demo sample data — not for clinical use._
 
 ---
 
-## 1. Identification
-| Field | Value |
-|---|---|
-| DHF | `{{DHF_NAME}}` |
-| Plan Revision | `{{X.X DRAFT}}` |
-| Owner | `{{NAME, ROLE}}` |
-
-## 2. Scope
+## 1. Scope
 
 `{{Plan scope — per the parent QMS template}}`
 
-## 3. Contents
+## 2. Responsibilities
 
-`{{Fill per the parent QMS template's section list}}`
+_[TBD — section required by GL-TMP-RM-001; content to be authored.]_
 
-## 4. Approvals
+## 3. Risk Acceptability Criteria
+
+_[TBD — section required by GL-TMP-RM-001; content to be authored.]_
+
+## 4. Review Activities
+
+_[TBD — section required by GL-TMP-RM-001; content to be authored.]_
+
+## 5. Verification of Risk Controls
+
+_[TBD — section required by GL-TMP-RM-001; content to be authored.]_
+
+## 6. Production and Post-Production Information
+
+_[TBD — section required by GL-TMP-RM-001; content to be authored.]_
+
+## 7. Approvals
 
 | Role | Name | Date | Signature |
 |---|---|---|---|
 | | | | |
 
-## 5. Revision History
+## 8. Revision History
 
 | Rev | Date | Author | Summary |
 |---|---|---|---|

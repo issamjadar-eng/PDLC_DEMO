@@ -1,0 +1,16 @@
+{
+  "_fixture": "Canned response in the wrapped-MCP envelope shape `{issues: {nodes: [...]}}` emitted by the Atlassian MCP wrapper.",
+  "issues": {
+    "nodes": [
+      {
+        "key": "DEMO-301",
+        "fields": {
+          "summary": "Story wrapped in nodes envelope",
+          "status": {"name": "To Do"},
+          "issuetype": {"name": "Story"},
+          "parent": {"key": "DEMO-101", "fields": {"summary": "DI-0001 Pump shall limit bolus volume"}}
+        }
+      }
+    ]
+  }
+}
