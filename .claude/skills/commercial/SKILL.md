@@ -1,7 +1,7 @@
 ---
 name: commercial
 description: "Business-question analysis engine — turns a project's business-question catalog (commercial.yml) into data-backed, provenance-cited ANSWER EDITIONS computed deterministically from corpus-skill snapshots, with a claim lint, a gated draft→approved→superseded lifecycle, and console JSON sidecars. Every numeric claim in an answer must carry a machine-resolvable marker ([src: dataset@snapshot], [assume: A-NNN], [derived: series-id], [config: path]); approval is BLOCKED until lint + freshness are green; approved editions are hash-pinned and immutable. TRIGGER when the user wants to: answer / compute / refresh a business question ('answer BQ-23', 'what's our campaign coverage', 'run the field analysis'); lint / check / approve a business answer or report edition; render or refresh the commercial console sidecars; see the question catalog or answer statuses; audit the quality of the analysis code or file/record a code review ('code-audit the computations', 'review the BQ modules', 'is the analysis code reviewed'); or add/modify business questions, computations, or the catalog in a project's commercial tree (commercial.yml, computations, reports/). Also trigger on edits under docs/project/commercial/reports/ — approved editions are immutable and hand-edits break approval hashes; route changes through answer/approve. Consumes the corpus skill's snapshots (data tier); produces reports + sidecars only — visualization belongs to the project console."
-version: 18
+version: 19
 updated: 2026-09-08
 dependencies:
   skills:
@@ -376,10 +376,25 @@ written yet" line), then every report section followed by its `### What this tel
 narrative when present (a stale narrative is included with a visible flag), then a
 numbered **References** list resolving every marker (dataset@snapshot + provenance path,
 assumption record + confidence, computed series, config file, waiver) and the pins line.
-Markers render as superscript reference numbers so the page reads as a document. `md` is
-always written; `docx` via pandoc; `pdf` via LibreOffice headless from the docx (a clear
-error names the missing tool). Default output `reports/<BQ>/<edition>/exports/` (gitignored
-— derived). The console's **⬇ Word / ⬇ PDF** chips call this.
+Markers render as superscript reference numbers so the page reads as a document.
+
+**Charts travel with the document.** Every `data.json` series is rendered to a print-ready
+SVG (`render_series_svg` — bars, paired-bars, timeseries, stat tiles; pure python, values
+verbatim, never recomputed) into `exports/charts/<series-id>.svg`, and placed **inside the
+section it explains** by `place_series`: (1) an explicit `section:` field on the series,
+else (2) the first DATA section whose body cites `[derived: <series-id>]` — the report's own
+citation — else (3) token overlap between the series id/label and a data heading, else
+(4) an **Overview** block right after the executive summary (headline stats and trend
+lines that no single section cites). Method-&-provenance, expectations and narrative
+sections never capture charts. Each figure carries a caption with its evidence class and
+source. The project console's Full Report tab mirrors the same rule so screen and
+document agree.
+
+`md` is always written; `docx` via pandoc (SVG embedded directly — Word 2016+ and
+LibreOffice render it; pandoc's rsvg-convert warning is about an optional PNG fallback);
+`pdf` via LibreOffice headless from the docx (a clear error names a missing tool). Default
+output `reports/<BQ>/<edition>/exports/` (gitignored — derived). The console's **⬇ Word /
+⬇ PDF** chips call this.
 
 ### `dependents <dataset | prefix | *>`
 Print the ids of every **implemented** question whose `corpus_deps` name the dataset

@@ -1683,9 +1683,200 @@ def cmd_narrative_stamp(args):
     return 0
 
 
+# ---------------------------------------------------------------- charts (export)
+
+CHART_COLORS = ["#3987e5", "#d95926", "#199e70", "#c98500"]
+NON_DATA_HEADS = ("method & provenance", "assumptions & expectations", "narrative")
+_STOP = {"by", "vs", "and", "the", "of", "per", "a", "in", "to", "on", "for", "with", "an", "or"}
+
+
+def report_sections(report_md: str):
+    """[(heading, body)] for every `## ` section of a report, in order."""
+    heads = list(NARR_SECTION_RE.finditer(report_md))
+    out = []
+    for i, h in enumerate(heads):
+        end = heads[i + 1].start() if i + 1 < len(heads) else len(report_md)
+        out.append((h.group(1).strip(), report_md[h.end():end]))
+    return out
+
+
+def place_series(report_md: str, series: list) -> tuple:
+    """Which report section each chart belongs to. Rule, in order:
+    1. an explicit `section:` on the series (must match a heading, case-insensitive);
+    2. the FIRST section whose body cites `[derived: <series-id>]` — the report's own
+       citation is the strongest signal that a figure explains that section;
+    3. token overlap between the series id/label and a data section's heading
+       (≥2 shared tokens, or ≥1 when the series name has ≤3 tokens);
+    4. otherwise unplaced → callers render these under an "Additional charts" tail.
+    Returns ({heading: [series, ...]} in report order, [unplaced series])."""
+    secs = report_sections(report_md)
+    placed = {h: [] for h, _ in secs}
+    extra = []
+    lower = {h.lower(): h for h, _ in secs}
+    for sr in series:
+        sid = sr.get("id", "")
+        target = None
+        exp = (sr.get("section") or "").strip().lower()
+        if exp and exp in lower:
+            target = lower[exp]
+        if target is None:
+            # data sections only — the method/provenance and narrative sections cite
+            # every series and would otherwise capture all of them
+            for h, body in secs:
+                if h.lower().startswith(NON_DATA_HEADS):
+                    continue
+                if f"[derived: {sid}]" in body:
+                    target = h
+                    break
+        if target is None:
+            toks = set(re.findall(r"[a-z0-9]+", (sid + " " + str(sr.get("label", ""))).lower())) - _STOP
+            best = (0, None)
+            for h, _ in secs:
+                if h.lower().startswith(NON_DATA_HEADS):
+                    continue
+                ov = len(toks & (set(re.findall(r"[a-z0-9]+", h.lower())) - _STOP))
+                if ov > best[0]:
+                    best = (ov, h)
+            if best[1] and (best[0] >= 2 or (best[0] == 1 and len(toks) <= 3)):
+                target = best[1]
+        if target is None:
+            extra.append(sr)
+        else:
+            placed[target].append(sr)
+    return placed, extra
+
+
+def _svg_esc(t) -> str:
+    from xml.sax.saxutils import escape
+    return escape(str(t))
+
+
+def _is_num(v) -> bool:
+    return isinstance(v, (int, float)) and not isinstance(v, bool)
+
+
+def _fmt(v, unit=""):
+    if _is_num(v):
+        t = f"{v:,.0f}" if float(v).is_integer() and abs(v) >= 100 else f"{v:,.1f}".rstrip("0").rstrip(".")
+    else:
+        t = str(v)
+    return t + ("%" if unit == "%" else "")
+
+
+def render_series_svg(sr: dict) -> str:
+    """A print-ready SVG for one data.json series — bars, paired-bars, timeseries or
+    stat tiles — drawn from the values verbatim (the export never recomputes). Pure
+    python, no dependencies, white background, system fonts."""
+    W, FS = 640, 12
+    unit = sr.get("unit", "")
+    kind = sr.get("kind", "bars")
+    pts = sr.get("points") or []
+    fam = 'font-family="Helvetica, Arial, sans-serif"'
+    font = f'{fam} font-size="{FS}"'
+    parts = []
+
+    def frame(h):
+        # declared at 2x pixels with a 1x viewBox: viewers scale by the viewBox, and a
+        # rasterizer (LibreOffice) produces a crisp print-resolution bitmap
+        return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W*2}" height="{h*2}" viewBox="0 0 {W} {h}">'
+                f'<rect width="{W}" height="{h}" fill="#ffffff"/>' + "".join(parts) + "</svg>")
+
+    if kind == "stat":
+        n = max(1, len(pts))
+        tw = W // n
+        for i, p in enumerate(pts):
+            x = i * tw + 12
+            parts.append(f'<text x="{x}" y="34" {fam} font-size="26" font-weight="700" fill="#0f172a">{_svg_esc(_fmt(p.get("value"), unit))}</text>')
+            parts.append(f'<text x="{x}" y="54" {font} fill="#475569">{_svg_esc(p.get("label", ""))}</text>')
+            if p.get("sub"):
+                parts.append(f'<text x="{x}" y="70" {fam} font-size="11" fill="#64748b">{_svg_esc(p["sub"])}</text>')
+        return frame(84)
+
+    if kind == "timeseries":
+        lines = sr.get("lines") or []
+        allp = [(p["x"], p.get("y")) for ln in lines for p in ln.get("points", []) if p.get("y") is not None]
+        if not allp:
+            parts.append(f'<text x="12" y="30" {font} fill="#64748b">no observations</text>')
+            return frame(48)
+        xs = sorted({x for x, _ in allp})
+        xi = {x: i for i, x in enumerate(xs)}
+        ys = [y for _, y in allp]
+        ymin, ymax = min(0, min(ys)), max(ys) or 1
+        H, L, R, T, B = 220, 52, 16, 14, 40
+        span = max(1, len(xs) - 1)
+        X = lambda x: L + (W - L - R) * xi[x] / span
+        Y = lambda y: T + (H - T - B) * (1 - (y - ymin) / (ymax - ymin or 1))
+        parts.append(f'<line x1="{L}" y1="{Y(0):.1f}" x2="{W-R}" y2="{Y(0):.1f}" stroke="#cbd5e1"/>')
+        parts.append(f'<text x="{L-6}" y="{Y(ymax)+4:.1f}" {font} text-anchor="end" fill="#64748b">{_svg_esc(_fmt(ymax, unit))}</text>')
+        parts.append(f'<text x="{L-6}" y="{Y(0)+4:.1f}" {font} text-anchor="end" fill="#64748b">{_svg_esc(_fmt(0, unit))}</text>')
+        parts.append(f'<text x="{L}" y="{H-24}" {font} fill="#64748b">{_svg_esc(xs[0])}</text>')
+        parts.append(f'<text x="{W-R}" y="{H-24}" {font} text-anchor="end" fill="#64748b">{_svg_esc(xs[-1])}</text>')
+        lx = L
+        for i, ln in enumerate(lines):
+            col = CHART_COLORS[i % len(CHART_COLORS)]
+            pp = sorted((p for p in ln.get("points", []) if p.get("y") is not None), key=lambda p: p["x"])
+            if not pp:
+                continue
+            parts.append('<polyline fill="none" stroke="%s" stroke-width="2" points="%s"/>' % (
+                col, " ".join(f"{X(p['x']):.1f},{Y(p['y']):.1f}" for p in pp)))
+            for p in pp:
+                parts.append(f'<circle cx="{X(p["x"]):.1f}" cy="{Y(p["y"]):.1f}" r="2.2" fill="{col}"/>')
+            parts.append(f'<rect x="{lx}" y="{H-14}" width="10" height="10" fill="{col}"/>')
+            parts.append(f'<text x="{lx+14}" y="{H-5}" {font} fill="#334155">{_svg_esc(ln.get("label", ""))}</text>')
+            lx += 24 + 7 * len(str(ln.get("label", "")))
+        if unit:
+            parts.append(f'<text x="{W-R}" y="{H-5}" {font} text-anchor="end" fill="#64748b">{_svg_esc(unit)}</text>')
+        return frame(H)
+
+    if kind == "paired-bars":
+        pairs = sr.get("pairs") or {}
+        rows = [(p.get("label", ""), p.get("a"), p.get("b")) for p in pts]
+        mx = max((max(abs(a or 0), abs(b or 0)) for _, a, b in rows), default=0) or 1
+        RH, LW, VW = 30, 170, 120
+        H = 16 + RH * len(rows) + 26
+        for i, (lab, a, b) in enumerate(rows):
+            y = 10 + i * RH
+            parts.append(f'<text x="{LW-8}" y="{y+13}" {font} text-anchor="end" fill="#0f172a">{_svg_esc(lab)}</text>')
+            tw = W - LW - VW - 12
+            for j, (v, col) in enumerate(((a, CHART_COLORS[0]), (b, CHART_COLORS[1]))):
+                w = 0 if v is None else tw * abs(v) / mx
+                parts.append(f'<rect x="{LW}" y="{y + 2 + j*11}" width="{w:.1f}" height="9" fill="{col}" rx="2"/>')
+            parts.append(f'<text x="{W-VW+6}" y="{y+13}" {font} fill="#475569">{_svg_esc(_fmt(a, unit) if a is not None else "—")} / {_svg_esc(_fmt(b, unit) if b is not None else "—")}</text>')
+        ly = H - 8
+        parts.append(f'<rect x="{LW}" y="{ly-9}" width="10" height="10" fill="{CHART_COLORS[0]}"/><text x="{LW+14}" y="{ly}" {font} fill="#334155">{_svg_esc(pairs.get("a_label", "a"))}</text>')
+        parts.append(f'<rect x="{LW+120}" y="{ly-9}" width="10" height="10" fill="{CHART_COLORS[1]}"/><text x="{LW+134}" y="{ly}" {font} fill="#334155">{_svg_esc(pairs.get("b_label", "b"))}</text>')
+        if unit:
+            parts.append(f'<text x="{W-12}" y="{ly}" {font} text-anchor="end" fill="#64748b">{_svg_esc(unit)}</text>')
+        return frame(H)
+
+    # default: horizontal bars for numeric points, key-value list otherwise
+    if pts and all(_is_num(p.get("value")) for p in pts):
+        mx = max((abs(p["value"]) for p in pts), default=0) or 1
+        RH, LW, VW = 24, 190, 110
+        H = 12 + RH * len(pts) + (18 if unit and unit != "%" else 6)
+        tw = W - LW - VW - 12
+        for i, p in enumerate(pts):
+            y = 8 + i * RH
+            v = p["value"]
+            parts.append(f'<text x="{LW-8}" y="{y+13}" {font} text-anchor="end" fill="#0f172a">{_svg_esc(p.get("label", ""))}</text>')
+            parts.append(f'<rect x="{LW}" y="{y+3}" width="{tw*abs(v)/mx:.1f}" height="13" fill="{CHART_COLORS[0] if v >= 0 else CHART_COLORS[1]}" rx="2"/>')
+            parts.append(f'<text x="{W-VW+6}" y="{y+13}" {font} fill="#475569">{_svg_esc(_fmt(v, unit))}</text>')
+        if unit and unit != "%":
+            parts.append(f'<text x="{W-12}" y="{H-6}" {font} text-anchor="end" fill="#64748b">{_svg_esc(unit)}</text>')
+        return frame(H)
+    if pts:
+        H = 12 + 20 * len(pts)
+        for i, p in enumerate(pts):
+            parts.append(f'<text x="12" y="{20 + i*20}" {font} fill="#0f172a"><tspan fill="#64748b">{_svg_esc(p.get("label", ""))}:</tspan> {_svg_esc(p.get("value", ""))}</text>')
+        return frame(H)
+    note = (sr.get("provenance") or {}).get("note") or "no data points"
+    parts.append(f'<text x="12" y="28" {font} fill="#64748b">{_svg_esc(sr.get("evidence_class", "unavailable"))} — {_svg_esc(note[:110])}</text>')
+    return frame(44)
+
+
 # ---------------------------------------------------------------- export
 
-def _export_markdown(root: Path, corpus_root: Path, cfg: dict, q: dict, ed: dict) -> str:
+def _export_markdown(root: Path, corpus_root: Path, cfg: dict, q: dict, ed: dict, out_dir: Path) -> str:
     """Assemble the formal document: title block, executive summary, then each
     report section followed by its narrative ("What this tells us"), then the
     references list resolving every marker. The narrative is included only when
@@ -1724,6 +1915,26 @@ def _export_markdown(root: Path, corpus_root: Path, cfg: dict, q: dict, ed: dict
 
     approved = ed.get("status") == "approved"
     cats = {c["key"]: c.get("name", c["key"]) for c in cfg.get("categories", [])}
+    # charts: render every series to SVG next to the document, placed by section
+    charts_dir = out_dir / "charts"
+    charts_dir.mkdir(parents=True, exist_ok=True)
+    placed, extra = place_series(report, data.get("series") or [])
+    # a series placed in a section the document omits (method & provenance is folded
+    # into References) must still appear — under the tail section
+    for h in list(placed):
+        if h.lower().startswith("method & provenance"):
+            extra.extend(placed.pop(h))
+
+    def chart_block(sr):
+        fn = re.sub(r"[^A-Za-z0-9_.-]", "-", sr.get("id", "series")) + ".svg"
+        (charts_dir / fn).write_text(render_series_svg(sr))
+        prov = sr.get("provenance") or {}
+        src = (f"{prov['dataset']}@{prov.get('snapshot', '?')}" if prov.get("dataset")
+               else prov.get("assumption") or prov.get("note", ""))
+        cap = f"Figure — {sr.get('label', sr.get('id'))}" + (f" ({sr['unit']})" if sr.get("unit") else "") \
+              + f". Evidence: {sr.get('evidence_class', '?')}." + (f" Source: {src}." if src else "")
+        # empty alt on purpose: pandoc would otherwise render the alt as a second caption
+        return [f"![](charts/{fn}){{width=6.2in}}", "", f"_{cap}_", ""]
     out = [f"% {q['id']} — {q['question']}",
            f"% {dblock['name']} · {cats.get(q.get('category'), q.get('category'))}",
            f"% Edition {ed['edition']} ({ed.get('status', 'draft')})", "",
@@ -1747,11 +1958,18 @@ def _export_markdown(root: Path, corpus_root: Path, cfg: dict, q: dict, ed: dict
         out += [referencize(es), ""]
     else:
         out += ["_No executive summary has been written for this edition yet. Generate the narrative in the console (or author `narrative.md`) to add one._", ""]
+    # headline stats / trend lines that no single section cites belong up front
+    if extra:
+        out += ["## Overview", ""]
+        for sr in extra:
+            out += chart_block(sr)
     # body sections + narratives
     for head, body in blocks:
         if head.lower().startswith("method & provenance"):
             continue  # folded into the references below
         out += [f"## {head}", "", referencize(body), ""]
+        for sr in placed.get(head, []):
+            out += chart_block(sr)
         n = nsec.get(head.lower())
         if n:
             out += ["### What this tells us", "", referencize(n), ""]
@@ -1787,9 +2005,9 @@ def cmd_export(args):
     ed = find_edition(root, args.bq, args.edition)
     if ed is None:
         raise CommercialError(f"{args.bq}: no editions")
-    md = _export_markdown(root, corpus_root, cfg, q, ed)
     out_dir = Path(args.out) if args.out else (bq_dir(root, args.bq) / ed["edition"] / "exports")
     out_dir.mkdir(parents=True, exist_ok=True)
+    md = _export_markdown(root, corpus_root, cfg, q, ed, out_dir)
     stem = f"{args.bq}-{ed['edition']}"
     md_path = out_dir / f"{stem}.md"
     md_path.write_text(md)
@@ -1799,8 +2017,27 @@ def cmd_export(args):
         if shutil.which("pandoc") is None:
             raise CommercialError("pandoc not found — install it (brew install pandoc) or export --format md")
         docx_path = out_dir / f"{stem}.docx"
-        subprocess.run(["pandoc", str(md_path), "-o", str(docx_path), "--from", "markdown+superscript"],
-                       check=True, capture_output=True, text=True)
+        # Charts for the office formats: LibreOffice draws an SVG embedded in a docx as a
+        # blank box when it renders the PDF, so rasterize every chart to PNG first (one
+        # headless LibreOffice call; the SVGs are declared at 2x pixels) and point the
+        # document at the PNGs. Without LibreOffice the SVGs stay (Word 2016+ renders them).
+        print_md = md
+        charts_dir = out_dir / "charts"
+        soffice = shutil.which("soffice") or shutil.which("libreoffice")
+        svgs = sorted(charts_dir.glob("*.svg"))
+        if soffice and svgs:
+            subprocess.run([soffice, "--headless", "--convert-to", "png", "--outdir", str(charts_dir),
+                            *[str(p) for p in svgs]], capture_output=True, text=True, timeout=300)
+            for svg in svgs:
+                if svg.with_suffix(".png").is_file():
+                    print_md = print_md.replace(f"charts/{svg.name})", f"charts/{svg.with_suffix('.png').name})")
+        print_path = out_dir / f".{stem}.print.md"
+        print_path.write_text(print_md)
+        try:
+            subprocess.run(["pandoc", str(print_path), "-o", str(docx_path), "--from", "markdown+superscript",
+                            "--resource-path", str(out_dir)], check=True, capture_output=True, text=True)
+        finally:
+            print_path.unlink(missing_ok=True)
         produced.append(docx_path)
         if fmt == "pdf":
             soffice = shutil.which("soffice") or shutil.which("libreoffice")

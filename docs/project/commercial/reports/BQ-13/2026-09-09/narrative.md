@@ -1,0 +1,25 @@
+---
+report_sha256: 9144b436a18b89682ad7602c5e36a58110ef874320202f126f67caa52d1dda54
+data_sha256: f25993cb3b69ca55c8f57c2962892e65f20807542651b1f8334df98c7fe2ccd0
+generated_at: '2026-09-09T00:34:36+00:00'
+author: AI assistant (grounded on report.md + data.json)
+---
+## Executive summary
+
+No competitor in the tracked matrix documents shipping predictive monitoring today — 5 products checked, 0 flagged [derived: predictive-shipping-check] [src: commercial/external-competitor-features@2026-07-27]. The runway is real but thin: a SaMD-only entrant starting at the data anchor could clear as late as 2028-07-24, about 1 months after our F6 2028-H2 launch anchor [derived: runway-margin] [assume: A-005] [src: commercial/openfda-510k-infusion@2026-09-09] [config: commercial.yml]. A hardware-integrated build clears later, with its fast edge ahead of the favorable launch anchor by 207 days [derived: hardware-edge-margin] [assume: A-005] [config: commercial.yml]. The decision this informs: whether to hold the F6 schedule as-is or move to close the gap against the SaMD fast edge. The biggest caveat is that the lead-time model runs on A-005 at medium confidence, and any program already in flight is ahead of every projected date [assume: A-005] [src: commercial/openfda-510k-infusion@2026-09-09].
+
+## Premise check — does anyone document shipping predictive monitoring?
+
+All 5 products in the tracked matrix show reactive-alarm architectures — 0 document predictive monitoring [derived: predictive-shipping-check] [src: commercial/external-competitor-features@2026-07-27]. This is the field of evidence available, not a guarantee of the full market: named competitors are covered; unannounced entrants are not. The positive reading stands: no current documentation of competitive predictive capability means the first-mover window remains open as of the snapshot date.
+
+## Runway model — A-005 lead-time bands from the data anchor
+
+The SaMD window is narrow: a new entrant starting at the data anchor (2026-07-24) could clear anywhere from 2028-01-24 to 2028-07-24, straddling our launch anchor [assume: A-005] [derived: entry-scenarios] [src: commercial/openfda-510k-infusion@2026-09-09]. The slow edge lands about 1 months after the 2028-H2 anchor, so the worst-case SaMD scenario no longer beats us outright — only the fast edge does [derived: runway-margin] [assume: A-005] [config: commercial.yml]. The hardware-integrated path (2029-01-24 → 2030-07-24) clears later still, with the fast edge clearing the favorable anchor by 207 days [assume: A-005] [derived: entry-scenarios] [derived: hardware-edge-margin] [config: commercial.yml]. The whole margin picture is sensitive to the launch anchor: the H2 half-year refinement lives only in the catalog config, not in the strategy doc, so every gap figure is config-sensitive until the plan of record commits to a specific half-year [config: commercial.yml] [derived: v-main].
+
+## Recent-clearance watch (trailing 12 months ending at the data anchor)
+
+Two clearances in the trailing-12-month window carry software-adjacent flags; 0 carry the ai/predictive flag [derived: watch-flagged] [src: commercial/openfda-510k-infusion@2026-09-09]. Both flagged entries — K251640 and K251636 — are Baxter Spectrum submissions [src: commercial/openfda-510k-infusion@2026-09-09] [config: entity-aliases.yml], indicating software iteration on an existing platform rather than a new predictive entrant. A flat zero on ai/predictive flags across the full tracked period is itself the finding: no public clearance evidence of a predictive-monitoring push in the window or before it. The scope caveat holds: FRN-only coverage cannot surface a De Novo or non-FRN predictive SaMD, so zero is a triage finding, not a market certification.
+
+## Narrative — Risks / Mitigations / Issues
+
+Three risks bracket the runway verdict. R1 (high) is structural: the lead-time model runs entirely on A-005 at medium confidence, and the entrant clock starts at the data anchor (2026-07-24) — any program already in flight is ahead of every figure here [assume: A-005] [src: commercial/openfda-510k-infusion@2026-09-09]. R2 (medium) is the acquisition path: an incumbent buying a SaMD entrant inherits the 2028-01-24 → 2028-07-24 clearance band but launches into an established hospital channel — this is a scenario, not an observed signal, and a deal announcement would collapse the runway to the SaMD band immediately [assume: A-005] [derived: entry-scenarios] [config: commercial.yml]. R3 (medium) is the anchor-commitment gap: the hardware reassurance holds by 207 days at the fast edge under the favorable reading [derived: hardware-edge-margin] [assume: A-005] [config: commercial.yml], but the strategy doc commits only to 'Y3 (2028)' with no half-year precision — that gap should be closed before the margin is quoted in external materials. Watch item W1 runs underneath all three: FRN-only scope cannot detect a De Novo or non-FRN predictive entrant, so silence in the data is not the same as a clear field [src: commercial/openfda-510k-infusion@2026-09-09] [derived: watch-flagged].

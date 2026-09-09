@@ -1,12 +1,10 @@
 {
- "bq": "BQ-20",
- "edition": "2026-09-09",
- "generated_at": "2026-09-09T00:30:40+00:00",
+ "bq": "BQ-09",
+ "edition": "2026-09-08",
+ "generated_at": "2026-09-09T00:30:58+00:00",
  "lint": {
-  "status": "fail",
-  "errors": [
-   "pin commercial/internal-regulatory-docket@2026-07-27 is STALE (43d > 30d) and report carries no [waived: W-NNN]"
-  ],
+  "status": "pass",
+  "errors": [],
   "warnings": [],
   "checks": [
    {
@@ -41,13 +39,8 @@
     "id": "pin-freshness",
     "name": "Pin freshness",
     "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
-    "status": "fail",
-    "findings": [
-     {
-      "severity": "error",
-      "message": "pin commercial/internal-regulatory-docket@2026-07-27 is STALE (43d > 30d) and report carries no [waived: W-NNN]"
-     }
-    ]
+    "status": "pass",
+    "findings": []
    },
    {
     "id": "series-hygiene",
@@ -74,38 +67,26 @@
  },
  "references": [
   {
-   "kind": "assume",
-   "value": "A-001",
-   "resolved": true,
-   "note": "active assumption (low confidence)"
-  },
-  {
    "kind": "config",
    "value": "commercial.yml",
    "resolved": true,
    "note": "versioned configuration file present"
   },
   {
+   "kind": "config",
+   "value": "entity-aliases.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
    "kind": "derived",
-   "value": "alarm-data-gap",
+   "value": "decay-buckets",
    "resolved": true,
    "note": "computed series/verdict in this edition's data.json"
   },
   {
    "kind": "derived",
-   "value": "class-monthly-events",
-   "resolved": true,
-   "note": "computed series/verdict in this edition's data.json"
-  },
-  {
-   "kind": "derived",
-   "value": "docket-watch",
-   "resolved": true,
-   "note": "computed series/verdict in this edition's data.json"
-  },
-  {
-   "kind": "derived",
-   "value": "total-class-events",
+   "value": "quarterly-outcomes",
    "resolved": true,
    "note": "computed series/verdict in this edition's data.json"
   },
@@ -117,165 +98,147 @@
   },
   {
    "kind": "derived",
-   "value": "watch-events",
+   "value": "window-sensitivity",
    "resolved": true,
    "note": "computed series/verdict in this edition's data.json"
   },
   {
    "kind": "derived",
-   "value": "watch-signals",
+   "value": "window-split",
    "resolved": true,
    "note": "computed series/verdict in this edition's data.json"
   },
   {
    "kind": "src",
-   "value": "commercial/internal-complaints@2026-09-08",
+   "value": "commercial/internal-winloss@2026-09-08",
    "resolved": true,
    "note": "pinned immutable snapshot present on disk"
   },
   {
    "kind": "src",
-   "value": "commercial/internal-regulatory-docket@2026-07-27",
-   "resolved": true,
-   "note": "pinned immutable snapshot present on disk"
-  },
-  {
-   "kind": "src",
-   "value": "commercial/internal-signal-register@2026-07-27.2",
-   "resolved": true,
-   "note": "pinned immutable snapshot present on disk"
-  },
-  {
-   "kind": "src",
-   "value": "commercial/openfda-maude-pca-monthly@2026-09-09",
+   "value": "commercial/openfda-recalls-infusion@2026-09-09",
    "resolved": true,
    "note": "pinned immutable snapshot present on disk"
   }
  ],
  "freshness": [
   {
-   "dataset": "commercial/internal-complaints",
+   "dataset": "commercial/internal-winloss",
    "snapshot": "2026-09-08",
    "age_days": 0,
-   "max_age_days": 7,
+   "max_age_days": 30,
    "band": "fresh",
    "waived": false
   },
   {
-   "dataset": "commercial/internal-signal-register",
-   "snapshot": "2026-07-27.2",
-   "age_days": 43,
-   "max_age_days": 90,
-   "band": "fresh",
-   "waived": false
-  },
-  {
-   "dataset": "commercial/openfda-maude-pca-monthly",
+   "dataset": "commercial/openfda-recalls-infusion",
    "snapshot": "2026-09-09",
    "age_days": -1,
    "max_age_days": 30,
    "band": "fresh",
-   "waived": false
-  },
-  {
-   "dataset": "commercial/internal-regulatory-docket",
-   "snapshot": "2026-07-27",
-   "age_days": 43,
-   "max_age_days": 30,
-   "band": "stale",
    "waived": false
   }
  ],
  "data_availability": {
   "have": [
    {
-    "what": "Watch-category field events (internal log)",
-    "series": "watch-stat",
-    "evidence_class": "measured",
-    "source": "commercial/internal-complaints@2026-09-08"
-   },
-   {
-    "what": "Watch-category events by category",
-    "series": "watch-events",
-    "evidence_class": "measured",
-    "source": "commercial/internal-complaints@2026-09-08"
-   },
-   {
-    "what": "Internal watch-category events per month (demo)",
-    "series": "watch-monthly",
-    "evidence_class": "measured",
-    "source": "commercial/internal-complaints@2026-09-08"
-   },
-   {
-    "what": "Watch-category signals and dispositions",
-    "series": "watch-signals",
-    "evidence_class": "measured",
-    "source": "commercial/internal-signal-register@2026-07-27.2"
-   },
-   {
-    "what": "Open docket MDR items in watch categories",
-    "series": "docket-watch",
+    "what": "In-window win rate",
+    "series": "inwindow-rate",
     "evidence_class": "derived",
-    "source": "commercial/internal-regulatory-docket@2026-07-27",
+    "source": "commercial/internal-winloss@2026-09-08",
     "derivation": {
-     "method": "open MDR-type docket records whose category is on the declared watch list; joined to complaints by category only (no shared key between the two logs)",
+     "method": "won \u00f7 decided over opportunities whose canonical incumbent had an FRN recall posted within 180d before close",
      "inputs": [
-      "src: commercial/internal-regulatory-docket@2026-07-27",
-      "config: commercial.yml"
+      "src: commercial/internal-winloss@2026-09-08",
+      "src: commercial/openfda-recalls-infusion@2026-09-09",
+      "config: commercial.yml",
+      "config: entity-aliases.yml"
      ]
     }
    },
    {
-    "what": "Class-wide PCA MAUDE events per month (REAL)",
-    "series": "class-monthly-events",
-    "evidence_class": "measured",
-    "source": "commercial/openfda-maude-pca-monthly@2026-09-09"
+    "what": "Win rate in vs out of the disruption window",
+    "series": "window-split",
+    "evidence_class": "derived",
+    "source": "commercial/internal-winloss@2026-09-08",
+    "derivation": {
+     "method": "win rate per population; in-window per the recall join above",
+     "inputs": [
+      "src: commercial/internal-winloss@2026-09-08",
+      "src: commercial/openfda-recalls-infusion@2026-09-09",
+      "config: commercial.yml",
+      "config: entity-aliases.yml"
+     ]
+    }
    },
    {
-    "what": "Class-wide PCA MAUDE events (charted window)",
-    "series": "total-class-events",
-    "evidence_class": "measured",
-    "source": "commercial/openfda-maude-pca-monthly@2026-09-09"
-   }
-  ],
-  "assumed": [
-   {
-    "what": "figure(s) citing A-001",
-    "series": null,
-    "evidence_class": "assumed",
-    "source": "A-001"
-   }
-  ],
-  "missing": [
-   {
-    "what": "PCA-class event rate per installed device",
-    "series": "class-event-rate",
-    "evidence_class": "unavailable",
-    "source": "A-001",
-    "note": "MAUDE has no denominator; blocked until A-001 quantifies installed bases \u2014 never published as a rate"
+    "what": "Win rate split at the 90-day sensitivity window",
+    "series": "window-sensitivity",
+    "evidence_class": "derived",
+    "source": "commercial/internal-winloss@2026-09-08",
+    "derivation": {
+     "method": "the same recall join recomputed with a 90-day window \u2014 committed sensitivity check on the window definition",
+     "inputs": [
+      "src: commercial/internal-winloss@2026-09-08",
+      "src: commercial/openfda-recalls-infusion@2026-09-09",
+      "config: commercial.yml",
+      "config: entity-aliases.yml"
+     ]
+    }
    },
    {
-    "what": "Alarm-analytics event-level data",
-    "series": "alarm-data-gap",
-    "evidence_class": "unavailable",
-    "source": "raw alarm telemetry is not a corpus dataset \u2014 only signals sourced from alarm analytics are visible in the register",
-    "note": "raw alarm telemetry is not a corpus dataset \u2014 only signals sourced from alarm analytics are visible in the register"
+    "what": "Win rate by months since incumbent's most recent recall",
+    "series": "decay-buckets",
+    "evidence_class": "derived",
+    "source": "commercial/internal-winloss@2026-09-08",
+    "derivation": {
+     "method": "decided opps bucketed by days since the most recent prior recall posting \u00f7 30.44; win rate per bucket",
+     "inputs": [
+      "src: commercial/internal-winloss@2026-09-08",
+      "src: commercial/openfda-recalls-infusion@2026-09-09",
+      "config: commercial.yml",
+      "config: entity-aliases.yml"
+     ]
+    }
+   },
+   {
+    "what": "FRN recalls posted since 2021, by canonical firm",
+    "series": "recalls-by-incumbent",
+    "evidence_class": "measured",
+    "source": "commercial/openfda-recalls-infusion@2026-09-09"
+   },
+   {
+    "what": "Quarterly decided outcomes, in vs out of window",
+    "series": "quarterly-outcomes",
+    "evidence_class": "derived",
+    "source": "commercial/internal-winloss@2026-09-08",
+    "derivation": {
+     "method": "decided opps per close-quarter, split by the recall join",
+     "inputs": [
+      "src: commercial/internal-winloss@2026-09-08",
+      "src: commercial/openfda-recalls-infusion@2026-09-09",
+      "config: commercial.yml",
+      "config: entity-aliases.yml"
+     ]
+    }
    }
-  ]
+  ],
+  "assumed": [],
+  "missing": []
  },
  "plan": {
-  "path": "plans/BQ-20.md",
+  "path": "plans/BQ-09.md",
   "status": "in-sync",
-  "pinned": "77784151b48ebcf2167774c0643b910811036d0c5a7c2f3eb44fcc4b4b0d3adc",
-  "current": "77784151b48ebcf2167774c0643b910811036d0c5a7c2f3eb44fcc4b4b0d3adc"
+  "pinned": "b994d05fc9906548ef17a3afa847e0a7e57d426d9d972128efe0f6e159d34b31",
+  "current": "b994d05fc9906548ef17a3afa847e0a7e57d426d9d972128efe0f6e159d34b31"
  },
  "verifications": [],
  "code": {
   "status": "reviewed-current",
   "artifacts": [
    {
-    "path": "bq_modules/bq_20.py",
-    "sha256_12": "f93cdd0f18f7",
+    "path": "bq_modules/bq_09.py",
+    "sha256_12": "bd7a743b959e",
     "role": "module",
     "static_lint": {
      "status": "pass",
@@ -288,7 +251,7 @@
     },
     "determinism": {
      "status": "pass",
-     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-20"
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-09"
     },
     "review": {
      "verdict": "APPROVED",
@@ -296,42 +259,54 @@
      "date": "2026-07-27",
      "current": true,
      "findings": [],
-     "detail_ref": "tasks/ben/_work/108-code-review-safety-econ-2026-07-27.md"
+     "detail_ref": "tasks/ben/_work/108-code-review-market-2026-07-27.md"
     },
     "review_history": [
      {
-      "sha256_12": "2a5b45cf34fc",
+      "sha256_12": "74a149768025",
       "date": "2026-07-27",
-      "verdict": "changes-requested",
+      "verdict": "APPROVED-WITH-FINDINGS",
       "by": "AI code reviewer",
-      "summary": "All prior fixes landed (derived docket join, 3-month lag trim + caveat); but the headline hardcodes WATCH TRIGGERED / E-20.1 NOT met, so the zero-event steady state renders a false triggered watch contradicting the computed verdict.",
+      "summary": "Plan-conformant; computed decay phrasing and 90d sensitivity fixes verified. Gaps: no alias-coverage guard for new incumbents; two shape-phrase branches can contradict their own printed rates; split-table demo caption from prior dossier not implemented.",
       "findings": [
        {
         "id": "F-1",
-        "severity": "high",
-        "summary": "Headline hardcodes 'WATCH TRIGGERED' + 'E-20.1 NOT met'; zero watch events still renders a triggered watch",
-        "disposition": "fix: branch headline on events; derive met/NOT-met from computed verdict"
+        "severity": "medium",
+        "summary": "Unaliased incumbent_vendor silently joins zero recalls and lands in no-prior/out-of-window \u2014 no coverage guard",
+        "disposition": "fix: warn/assert when canon() returns an incumbent unchanged, or report unmatched incumbents"
        },
        {
         "id": "F-2",
         "severity": "medium",
-        "summary": "Report body literal '(both over-delivery signals landed as upgrade-items)' beside a computed count",
-        "disposition": "fix: derive from watch-signal rows or drop; table already shows the facts"
+        "summary": "Shape branch C prints 'not a monotone decay' for weakly-monotone declining profiles \u2014 a false claim vs its own rates",
+        "disposition": "fix: add weakly-monotone branch or reword to 'no uniform decay'"
        },
        {
         "id": "F-3",
         "severity": "low",
-        "summary": "W1 'loop is demonstrably closing' unconditional even when closed_loop == 0",
-        "disposition": "fix: gate the clause on closed_loop"
+        "summary": "Tail clause claims 'far lower' for any tail below min interior rate, even by 0.1pt",
+        "disposition": "fix: require a margin before 'far lower'"
        },
        {
         "id": "F-4",
         "severity": "low",
-        "summary": "Lag trim degrades to no trim when MAUDE series has <= LAG_TRIM_MONTHS months",
-        "disposition": "accept: unreachable on the 40-month pin; note for reuse"
+        "summary": "Empty bucket feeds shape logic as 0.0% and escapes the small-n annotation (0<n<10)",
+        "disposition": "fix: exclude n=0 buckets from shape derivation; annotate '(empty)'"
+       },
+       {
+        "id": "F-5",
+        "severity": "low",
+        "summary": "'FRN recalls posted since 2021' table header is a typed dataset-span literal",
+        "disposition": "fix: derive start year from the joined recall dates"
+       },
+       {
+        "id": "F-6",
+        "severity": "low",
+        "summary": "Prior-dossier fix (demo-of-method note in split-table caption) not implemented; caveats stay outside the table",
+        "disposition": "fix: add the caption note or record an explicit accept"
        }
       ],
-      "detail_ref": "tasks/ben/_work/108-code-review-safety-econ-2026-07-27.md",
+      "detail_ref": "tasks/ben/_work/108-code-review-market-2026-07-27.md",
       "superseded": true
      }
     ]
@@ -478,35 +453,8 @@
     ]
    },
    {
-    "path": "corpus:commercial/internal-complaints/gen.py",
-    "sha256_12": "557b73673e87",
-    "role": "generator",
-    "static_lint": {
-     "status": "pass",
-     "tool": "py_compile",
-     "findings": []
-    },
-    "poison_scan": {
-     "status": "pass",
-     "hits": []
-    },
-    "determinism": {
-     "status": "n/a",
-     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
-    },
-    "review": {
-     "verdict": "APPROVED",
-     "by": "AI code reviewer (fix-verification)",
-     "date": "2026-07-27",
-     "current": true,
-     "findings": [],
-     "detail_ref": "tasks/ben/_work/108-code-review-generators-2026-07-27.md"
-    },
-    "review_history": []
-   },
-   {
-    "path": "corpus:commercial/internal-signal-register/gen.py",
-    "sha256_12": "7e77638cf3c4",
+    "path": "corpus:commercial/internal-winloss/gen.py",
+    "sha256_12": "acf035fcd572",
     "role": "generator",
     "static_lint": {
      "status": "pass",
@@ -531,57 +479,23 @@
     },
     "review_history": [
      {
-      "sha256_12": "9f26045d0ddf",
+      "sha256_12": "46183f0bc94b",
       "date": "2026-07-27",
       "verdict": "APPROVED-WITH-FINDINGS",
       "by": "AI code reviewer",
-      "summary": "Deterministic; literal planted rows consume no rng (sound append hygiene); 16/40 died-in-spreadsheet knob verified; but planted UPG refs collide with generated ones.",
+      "summary": "make_fleet + site_segment byte-identical; fleet burned first; win-rate, pm-gap, and disruption-window knobs reproduced exactly on snapshot 2026-07-27.2.",
       "findings": [
        {
         "id": "F-1",
         "severity": "medium",
-        "summary": "UPG-0051/0052 each assigned to two signals: planted literals collide with counter-generated refs UPG-0050..0053",
-        "disposition": "fix: renumber planted refs outside generated range (e.g. UPG-0061/0062) or start refno above 53; land via refresh"
+        "summary": "PRO-NN prospect ids redrawn per opportunity: 14 accounts carry conflicting segments, 11 conflicting regions across rows",
+        "disposition": "fix: cache region/segment per PRO id (as names are) or make prospect ids unique; land via refresh"
        }
       ],
       "detail_ref": "tasks/ben/_work/108-code-review-generators-2026-07-27.md",
       "superseded": true
      }
     ]
-   },
-   {
-    "path": "corpus:commercial/internal-regulatory-docket/gen.py",
-    "sha256_12": "2e32cc4e73c7",
-    "role": "generator",
-    "static_lint": {
-     "status": "pass",
-     "tool": "py_compile",
-     "findings": []
-    },
-    "poison_scan": {
-     "status": "pass",
-     "hits": []
-    },
-    "determinism": {
-     "status": "n/a",
-     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
-    },
-    "review": {
-     "verdict": "APPROVED",
-     "by": "AI code reviewer",
-     "date": "2026-07-27",
-     "current": true,
-     "findings": [
-      {
-       "id": "F-1",
-       "severity": "low",
-       "summary": "Knob record ids (MDR-2025-0007/0018, MDR-2026-0005) are emergent from seed-42 draws, not pinned; re-knobbing renumbers them",
-       "disposition": "accept: verified at locked seed; re-verify README + complaints tie on any regeneration"
-      }
-     ],
-     "detail_ref": "tasks/ben/_work/108-code-review-generators-2026-07-27.md"
-    },
-    "review_history": []
    }
   ]
  },
@@ -590,15 +504,15 @@
    "gate": "claim-lint",
    "kind": "machine",
    "note": "every figure marker-resolvable; zero errors before approval",
-   "done": false,
-   "evidence": "1 error(s) / 0 warning(s)"
+   "done": true,
+   "evidence": "0 error(s) / 0 warning(s)"
   },
   {
    "gate": "pin-freshness",
    "kind": "machine",
    "note": "all pinned snapshots within max_age_days (or visibly waived)",
-   "done": false,
-   "evidence": "3 pin(s) fresh, 1 pin(s) stale"
+   "done": true,
+   "evidence": "2 pin(s) fresh"
   },
   {
    "gate": "plan-currency",
@@ -617,14 +531,14 @@
   {
    "gate": "adversarial-verify",
    "kind": "agent",
-   "note": "independent pins-only re-derivation of the headline figures",
+   "note": "independent pins-only re-derivation of the headline figures, including the 90-day window-sensitivity split",
    "done": false,
    "evidence": "no adversarial-verify record filed on this edition"
   },
   {
    "gate": "red-team",
    "kind": "agent",
-   "note": "framing attack on basis choices, buried caveats, and verdict overclaim \u2014 incl. the three-month MAUDE lag trim staying visible",
+   "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
    "done": false,
    "evidence": "no red-team record filed on this edition"
   }

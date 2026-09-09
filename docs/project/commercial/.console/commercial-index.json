@@ -1,6 +1,6 @@
 {
  "schema_version": "1.6",
- "generated": "2026-09-09T00:30:00+00:00",
+ "generated": "2026-09-09T00:36:57+00:00",
  "domain": {
   "key": "commercial",
   "name": "Commercial",
@@ -1776,7 +1776,7 @@
     {
      "edition": "2026-09-09",
      "status": "draft",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -2151,7 +2151,7 @@
      "evidence": "no red-team record filed on this edition"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-06",
@@ -2184,7 +2184,7 @@
     {
      "edition": "2026-09-09",
      "status": "draft",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -2434,7 +2434,7 @@
      "evidence": "no red-team record filed on this edition"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-07",
@@ -3229,8 +3229,8 @@
    "cadence": "quarterly",
    "status": "answered",
    "approved_edition": "2026-07-27.3",
-   "draft_edition": "2026-09-09",
-   "latest_edition": "2026-09-09",
+   "draft_edition": "2026-09-08",
+   "latest_edition": "2026-09-08",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -3251,14 +3251,19 @@
      "edition": "2026-09-09",
      "status": "draft",
      "narrative": "missing"
+    },
+    {
+     "edition": "2026-09-08",
+     "status": "draft",
+     "narrative": "present"
     }
    ],
    "assumptions": [],
-   "freshness": "stale",
+   "freshness": "fresh",
    "verdict_headline": "Method demo (fabricated CRM joined to REAL FDA recall dates): we win 67.3% of decided opportunities where the incumbent had an FRN recall posted within 180 days of close (n=55) vs 14.3% outside the window (n=7); there is no uniform decay across the interior buckets (65.8% \u2192 70.6% \u2192 0.0%); the >12 months / no prior recall tail sits at 50.0% (n=2)",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-09/2026-09-09/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-09/2026-09-09/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-09/2026-09-08/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-09/2026-09-08/data.json",
    "explainers": {
     "question": {
      "what": "A displacement analysis: do we win more often when the incumbent vendor at an account has a recent public recall, and how long does that window of opportunity stay open? Built by joining our sales log to real FDA recall dates.",
@@ -3596,15 +3601,15 @@
      "gate": "claim-lint",
      "kind": "machine",
      "note": "every figure marker-resolvable; zero errors before approval",
-     "done": false,
-     "evidence": "1 error(s) / 0 warning(s)"
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
     },
     {
      "gate": "pin-freshness",
      "kind": "machine",
      "note": "all pinned snapshots within max_age_days (or visibly waived)",
-     "done": false,
-     "evidence": "1 pin(s) stale, 1 pin(s) fresh"
+     "done": true,
+     "evidence": "2 pin(s) fresh"
     },
     {
      "gate": "plan-currency",
@@ -3635,7 +3640,7 @@
      "evidence": "no red-team record filed on this edition"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-10",
@@ -4439,7 +4444,7 @@
     {
      "edition": "2026-09-09",
      "status": "draft",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -4683,7 +4688,7 @@
      "evidence": "no red-team record filed on this edition"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-13",
@@ -4717,7 +4722,7 @@
     {
      "edition": "2026-09-09",
      "status": "draft",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [
@@ -5055,7 +5060,7 @@
      "evidence": "no intent-check record filed on this edition"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-14",
@@ -5436,7 +5441,7 @@
     {
      "edition": "2026-09-09",
      "status": "draft",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -5765,7 +5770,7 @@
      "evidence": "no intent-check record filed on this edition"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-16",
@@ -6143,7 +6148,7 @@
     {
      "edition": "2026-09-09",
      "status": "draft",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [],
@@ -6544,7 +6549,7 @@
      "evidence": "no intent-check record filed on this edition"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-18",
@@ -6957,7 +6962,7 @@
     {
      "edition": "2026-09-09",
      "status": "draft",
-     "narrative": "missing"
+     "narrative": "present"
     }
    ],
    "assumptions": [
@@ -7224,7 +7229,7 @@
      "evidence": "no red-team record filed on this edition"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-20",
@@ -7236,8 +7241,8 @@
    "cadence": "monthly",
    "status": "answered",
    "approved_edition": "2026-07-27.3",
-   "draft_edition": "2026-09-09",
-   "latest_edition": "2026-09-09",
+   "draft_edition": "2026-09-08",
+   "latest_edition": "2026-09-08",
    "editions": [
     {
      "edition": "2026-07-27",
@@ -7258,16 +7263,21 @@
      "edition": "2026-09-09",
      "status": "draft",
      "narrative": "missing"
+    },
+    {
+     "edition": "2026-09-08",
+     "status": "draft",
+     "narrative": "present"
     }
    ],
    "assumptions": [
     "A-001"
    ],
-   "freshness": "stale",
+   "freshness": "fresh",
    "verdict_headline": "WATCH TRIGGERED on our internal log (demo-fabricated): 3 over-delivery and 2 PCA-by-proxy-suspected complaint records (2 MDR-filed, 1 under investigation) \u2014 E-20.1 zero-tolerance NOT met; the signal\u2192upgrade loop closed for 2 watch-category signals; real class-wide MAUDE context is counts-only (no denominator)",
    "evidence_class": "derived",
-   "report_path": "docs/project/commercial/reports/BQ-20/2026-09-09/report.md",
-   "data_path": "docs/project/commercial/reports/BQ-20/2026-09-09/data.json",
+   "report_path": "docs/project/commercial/reports/BQ-20/2026-09-08/report.md",
+   "data_path": "docs/project/commercial/reports/BQ-20/2026-09-08/data.json",
    "explainers": {
     "question": {
      "what": "A standing watch on the franchise's nightmare scenarios: any internal field signal \u2014 complaints, near-misses, open regulatory items \u2014 around opioid over-delivery or PCA-by-proxy, set against class-wide public adverse-event volumes for PCA pumps.",
@@ -7670,15 +7680,15 @@
      "gate": "claim-lint",
      "kind": "machine",
      "note": "every figure marker-resolvable; zero errors before approval",
-     "done": false,
-     "evidence": "1 error(s) / 0 warning(s)"
+     "done": true,
+     "evidence": "0 error(s) / 0 warning(s)"
     },
     {
      "gate": "pin-freshness",
      "kind": "machine",
      "note": "all pinned snapshots within max_age_days (or visibly waived)",
-     "done": false,
-     "evidence": "3 pin(s) fresh, 1 pin(s) stale"
+     "done": true,
+     "evidence": "4 pin(s) fresh"
     },
     {
      "gate": "plan-currency",
@@ -7709,7 +7719,7 @@
      "evidence": "no red-team record filed on this edition"
     }
    ],
-   "narrative": "missing"
+   "narrative": "present"
   },
   {
    "id": "BQ-21",

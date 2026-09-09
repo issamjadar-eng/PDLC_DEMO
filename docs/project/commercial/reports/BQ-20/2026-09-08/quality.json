@@ -1,12 +1,10 @@
 {
  "bq": "BQ-20",
- "edition": "2026-09-09",
- "generated_at": "2026-09-09T00:30:40+00:00",
+ "edition": "2026-09-08",
+ "generated_at": "2026-09-09T00:34:31+00:00",
  "lint": {
-  "status": "fail",
-  "errors": [
-   "pin commercial/internal-regulatory-docket@2026-07-27 is STALE (43d > 30d) and report carries no [waived: W-NNN]"
-  ],
+  "status": "pass",
+  "errors": [],
   "warnings": [],
   "checks": [
    {
@@ -41,13 +39,8 @@
     "id": "pin-freshness",
     "name": "Pin freshness",
     "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
-    "status": "fail",
-    "findings": [
-     {
-      "severity": "error",
-      "message": "pin commercial/internal-regulatory-docket@2026-07-27 is STALE (43d > 30d) and report carries no [waived: W-NNN]"
-     }
-    ]
+    "status": "pass",
+    "findings": []
    },
    {
     "id": "series-hygiene",
@@ -135,7 +128,7 @@
   },
   {
    "kind": "src",
-   "value": "commercial/internal-regulatory-docket@2026-07-27",
+   "value": "commercial/internal-regulatory-docket@2026-09-08",
    "resolved": true,
    "note": "pinned immutable snapshot present on disk"
   },
@@ -179,10 +172,10 @@
   },
   {
    "dataset": "commercial/internal-regulatory-docket",
-   "snapshot": "2026-07-27",
-   "age_days": 43,
+   "snapshot": "2026-09-08",
+   "age_days": 0,
    "max_age_days": 30,
-   "band": "stale",
+   "band": "fresh",
    "waived": false
   }
  ],
@@ -216,11 +209,11 @@
     "what": "Open docket MDR items in watch categories",
     "series": "docket-watch",
     "evidence_class": "derived",
-    "source": "commercial/internal-regulatory-docket@2026-07-27",
+    "source": "commercial/internal-regulatory-docket@2026-09-08",
     "derivation": {
      "method": "open MDR-type docket records whose category is on the declared watch list; joined to complaints by category only (no shared key between the two logs)",
      "inputs": [
-      "src: commercial/internal-regulatory-docket@2026-07-27",
+      "src: commercial/internal-regulatory-docket@2026-09-08",
       "config: commercial.yml"
      ]
     }
@@ -590,15 +583,15 @@
    "gate": "claim-lint",
    "kind": "machine",
    "note": "every figure marker-resolvable; zero errors before approval",
-   "done": false,
-   "evidence": "1 error(s) / 0 warning(s)"
+   "done": true,
+   "evidence": "0 error(s) / 0 warning(s)"
   },
   {
    "gate": "pin-freshness",
    "kind": "machine",
    "note": "all pinned snapshots within max_age_days (or visibly waived)",
-   "done": false,
-   "evidence": "3 pin(s) fresh, 1 pin(s) stale"
+   "done": true,
+   "evidence": "4 pin(s) fresh"
   },
   {
    "gate": "plan-currency",

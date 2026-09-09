@@ -5,11 +5,13 @@
 # (every docs/project/<slug>/ holding a commercial.yml or <slug>.yml catalog).
 #
 # Two cadences, one job:
-#   weekly  (Mon 05:00 UTC) — re-snapshot every external openFDA dataset in the corpus
-#                             (recalls, clearances, MAUDE), then re-answer ONLY the
-#                             questions that depend on a refreshed dataset (engine
-#                             `dependents`), so a new competitor recall or clearance
-#                             lands as a fresh DRAFT edition with a delta report.
+#   weekly  (Mon 05:00 UTC) — re-snapshot EVERY dataset in the corpus — external openFDA
+#                             (recalls, clearances, MAUDE) and the internal exports (in a
+#                             real deployment the ERP / CRM / QMS drop; here seeded demo
+#                             generators) — then re-answer ONLY the questions that depend
+#                             on a refreshed dataset (engine `dependents`), so a new recall
+#                             or clearance lands as a fresh DRAFT with a delta report and no
+#                             internal pin ages past its max_age_days between runs.
 #   monthly (1st 05:30 UTC) — re-answer every implemented question in every domain
 #                             (month-end close: finance margin / budget questions,
 #                             manufacturing yield / CAPA, commercial economics), render
@@ -92,12 +94,13 @@ jobs:
           echo "list=$(echo $doms)" >> "$GITHUB_OUTPUT"
           echo "domains:$doms"
 
-      - name: Weekly — refresh external openFDA snapshots + re-answer dependents
+      - name: Weekly — refresh every corpus dataset + re-answer dependents
         if: steps.mode.outputs.mode == 'weekly' || steps.mode.outputs.mode == 'both'
         run: |
           set +e
           refreshed=""
-          for ds in docs/project/corpus/*/openfda-*/; do
+          for ds in docs/project/corpus/*/*/; do
+            [ -f "$ds/dataset.yml" ] || continue
             name="$(basename "$(dirname "$ds")")/$(basename "$ds")"
             echo "::group::corpus refresh $name"
             if python3 "$CORPUS" refresh "$name"; then refreshed="$refreshed $name"; else echo "::warning::refresh failed for $name (nothing landed)"; fi
