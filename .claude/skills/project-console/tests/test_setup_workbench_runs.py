@@ -198,3 +198,12 @@ class WorkbenchRunsWithoutIndexTest(_Base):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_export_buttons_use_progress_modal():
+    """Export links must open the progress modal (fetch + elapsed timer) rather than a bare navigation."""
+    from pathlib import Path
+    html = (Path(__file__).resolve().parents[1] / "console" / "web" / "templates" / "setup_view.html").read_text()
+    assert 'id="su-export-modal"' in html and "function suWbExport(" in html
+    assert html.count('onclick="return suWbExport(event, this)"') == 3
+    assert 'id="su-export-elapsed"' in html and "su-spinner" in html

@@ -199,6 +199,18 @@
     .su-cols, .su-row { grid-template-columns: minmax(0,1fr) 150px; }
     .su-type { display: none; }
   }
+  /* ---- export progress modal ---- */
+  .su-modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.55); display: none; align-items: center; justify-content: center; z-index: 1000; }
+  .su-modal-bg.open { display: flex; }
+  .su-modal { background: var(--surface,#181b22); color: var(--body-text,#e6e9ef); border: 1px solid var(--border,#2a2f3a); border-radius: 10px; padding: 20px 22px; min-width: 360px; max-width: 520px; box-shadow: 0 12px 40px rgba(0,0,0,.45); }
+  .su-modal h3 { margin: 0 0 8px; font-size: 1rem; }
+  .su-modal .su-type { display: block; margin-top: 4px; }
+  .su-spinner { width: 18px; height: 18px; border: 2px solid var(--border,#2a2f3a); border-top-color: var(--brand-primary,#6ea8fe); border-radius: 50%; animation: su-spin .9s linear infinite; display: inline-block; vertical-align: middle; margin-right: 10px; }
+  @keyframes su-spin { to { transform: rotate(360deg); } }
+  .su-modal .su-elapsed { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .su-modal .su-modal-actions { margin-top: 14px; display: flex; gap: 8px; justify-content: flex-end; }
+  .su-modal .su-ok-mark { color: #58c17a; font-weight: 700; margin-right: 8px; }
+  .su-modal .su-err-mark { color: #e06b6b; font-weight: 700; margin-right: 8px; }
 </style>
 {% endblock %}
 
@@ -1156,9 +1168,9 @@
         <span style="flex-basis:100%;height:0"></span>
         <span class="su-type">Export this revision with every evidence appendix:</span>
         {% if wb.exporter_installed %}
-        <a class="su-btn" href="/setup/workbench/export?run={{ wb.selected_run_id }}&format=docx" download title="Word package — report + pinned manifest, environment, protocols and records, per-case evidence logs, pinned sources, QMS coverage">Export Word</a>
-        <a class="su-btn" href="/setup/workbench/export?run={{ wb.selected_run_id }}&format=pdf" download title="PDF package (same contents; needs pandoc + LibreOffice on the console host)">Export PDF</a>
-        <a class="su-btn" href="/setup/workbench/export?run={{ wb.selected_run_id }}&format=md" download title="Markdown package (same contents, no conversion)">Export Markdown</a>
+        <a class="su-btn su-export-btn" data-format="docx" data-run="{{ wb.selected_run_id }}" href="/setup/workbench/export?run={{ wb.selected_run_id }}&format=docx" onclick="return suWbExport(event, this)" title="Word package — report + pinned manifest, environment, protocols and records, per-case evidence logs, pinned sources, QMS coverage">Export Word</a>
+        <a class="su-btn su-export-btn" data-format="pdf" data-run="{{ wb.selected_run_id }}" href="/setup/workbench/export?run={{ wb.selected_run_id }}&format=pdf" onclick="return suWbExport(event, this)" title="PDF package (same contents; needs pandoc + LibreOffice on the console host)">Export PDF</a>
+        <a class="su-btn su-export-btn" data-format="md" data-run="{{ wb.selected_run_id }}" href="/setup/workbench/export?run={{ wb.selected_run_id }}&format=md" onclick="return suWbExport(event, this)" title="Markdown package (same contents, no conversion)">Export Markdown</a>
         {% else %}<span class="su-badge warning" title="export_package.py not found under .claude/skills/workbench-validation/scripts/">exporter not installed</span>{% endif %}
         {% endif %}
       </div>
@@ -1426,6 +1438,69 @@
 
 <div class="su-toast" id="su-toast"></div>
 
+<div class="su-modal-bg" id="su-export-modal" role="dialog" aria-modal="true" aria-labelledby="su-export-title">
+  <div class="su-modal">
+    <h3 id="su-export-title"><span class="su-spinner" id="su-export-spin"></span><span id="su-export-head">Building export…</span></h3>
+    <span class="su-type" id="su-export-what"></span>
+    <span class="su-type">Elapsed: <span class="su-elapsed" id="su-export-elapsed">0:00</span> <span id="su-export-phase">— the backend is assembling the package (report + evidence appendices) and converting it; PDF runs take longest.</span></span>
+    <span class="su-type" id="su-export-result" style="display:none"></span>
+    <div class="su-modal-actions">
+      <a class="su-btn" id="su-export-again" href="#" style="display:none">Download again</a>
+      <button class="su-btn" id="su-export-close" onclick="suWbExportClose()" style="display:none">Close</button>
+    </div>
+  </div>
+</div>
+<script>
+/* ---- export with progress modal ---- */
+var suExportTimer = null, suExportUrl = null;
+function suFmtElapsed(ms) { var s = Math.floor(ms / 1000); return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); }
+function suWbExportClose() {
+  var bg = document.getElementById('su-export-modal'); bg.classList.remove('open');
+  if (suExportTimer) { clearInterval(suExportTimer); suExportTimer = null; }
+  if (suExportUrl) { setTimeout(function () { URL.revokeObjectURL(suExportUrl); suExportUrl = null; }, 60000); }
+}
+function suWbExport(ev, a) {
+  if (ev) ev.preventDefault();
+  var fmt = a.getAttribute('data-format'), run = a.getAttribute('data-run'), url = a.getAttribute('href');
+  var names = { docx: 'Word', pdf: 'PDF', md: 'Markdown' };
+  var bg = document.getElementById('su-export-modal');
+  var head = document.getElementById('su-export-head'), what = document.getElementById('su-export-what');
+  var elapsed = document.getElementById('su-export-elapsed'), phase = document.getElementById('su-export-phase');
+  var result = document.getElementById('su-export-result'), spin = document.getElementById('su-export-spin');
+  var again = document.getElementById('su-export-again'), close = document.getElementById('su-export-close');
+  head.textContent = 'Building ' + (names[fmt] || fmt) + ' package…';
+  head.className = ''; spin.style.display = ''; what.textContent = 'Run ' + run + ' · format ' + fmt;
+  result.style.display = 'none'; result.innerHTML = ''; again.style.display = 'none'; close.style.display = 'none';
+  phase.textContent = fmt === 'pdf' ? '— assembling the package, converting to DOCX, then to PDF via LibreOffice (this is the slow one).'
+                    : fmt === 'docx' ? '— assembling the package and converting to DOCX.' : '— assembling the package.';
+  var t0 = Date.now(); elapsed.textContent = '0:00';
+  if (suExportTimer) clearInterval(suExportTimer);
+  suExportTimer = setInterval(function () { elapsed.textContent = suFmtElapsed(Date.now() - t0); }, 250);
+  bg.classList.add('open');
+  fetch(url, { method: 'GET', headers: { 'Accept': '*/*' } }).then(function (res) {
+    if (!res.ok) { return res.text().then(function (t) { var d = t; try { d = JSON.parse(t).detail || t; } catch (e) {} throw new Error('HTTP ' + res.status + ' — ' + d); }); }
+    var cd = res.headers.get('Content-Disposition') || '';
+    var m = /filename="?([^";]+)"?/.exec(cd); var fname = m ? m[1] : ('validation-package-' + run + '.' + fmt);
+    return res.blob().then(function (blob) { return { blob: blob, fname: fname }; });
+  }).then(function (r) {
+    clearInterval(suExportTimer); suExportTimer = null;
+    var took = suFmtElapsed(Date.now() - t0); elapsed.textContent = took;
+    suExportUrl = URL.createObjectURL(r.blob);
+    var dl = document.createElement('a'); dl.href = suExportUrl; dl.download = r.fname; document.body.appendChild(dl); dl.click(); dl.remove();
+    spin.style.display = 'none'; head.innerHTML = '<span class="su-ok-mark">✓</span>Ready — download started';
+    phase.textContent = '';
+    var kb = r.blob.size >= 1048576 ? (r.blob.size / 1048576).toFixed(1) + ' MB' : Math.round(r.blob.size / 1024) + ' KB';
+    result.style.display = ''; result.textContent = r.fname + ' · ' + kb + ' · built in ' + took;
+    again.href = suExportUrl; again.download = r.fname; again.style.display = ''; close.style.display = '';
+  }).catch(function (e) {
+    clearInterval(suExportTimer); suExportTimer = null;
+    spin.style.display = 'none'; head.innerHTML = '<span class="su-err-mark">✕</span>Export failed';
+    phase.textContent = ''; result.style.display = ''; result.textContent = String(e.message || e);
+    close.style.display = '';
+  });
+  return false;
+}
+</script>
 <script>
 /* ---- section (hash) routing ---- */
 (function () {
