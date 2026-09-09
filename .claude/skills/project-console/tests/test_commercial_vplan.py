@@ -136,11 +136,15 @@ class CommercialVplanTest(unittest.TestCase):
         # never-hand-ticked framing present
         self.assertIn("never hand-ticked", html)
 
-    def test_quality_tab_chip_counts_computable_gates_only(self):
+    def test_verification_count_lives_on_the_panel_not_the_tab(self):
+        """The gate count is panel content, not a tab badge: tabs are navigation, and
+        hanging lint / code / verification chips off them made the row compete with the
+        page. 3 of 5 computable gates done; the custom gate is excluded from N/M."""
         html = self.client.get("/commercial/BQ-97").text
-        # 3 of 5 computable gates done; the custom gate is excluded from N/M
-        self.assertIn("verification 3/5", html)
         self.assertIn("3/5 satisfied", html)
+        tabrow = html.split('class="cm-toptabs"')[1].split("</div>")[0]
+        for leaked in ("verification 3/5", "lint", "code"):
+            self.assertNotIn(leaked, tabrow)
 
     # ---- schema ≤1.3 degradation ----------------------------------------
 

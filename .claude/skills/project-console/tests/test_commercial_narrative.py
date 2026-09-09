@@ -106,7 +106,10 @@ def _seed(repo: Path, domain: str, qid: str, narrative: str | None, stale: bool 
                             "freshness": None, "verdict_headline": "margin 51.5%", "evidence_class": "derived",
                             "report_path": f"docs/project/{domain}/reports/{qid}/{EDITION}/report.md",
                             "data_path": f"docs/project/{domain}/reports/{qid}/{EDITION}/data.json",
-                            "explainers": {}, "terms": [], "code": None}]}
+                            "explainers": {"question": {"label": "This analysis",
+                                                       "what": "What this analysis covers.",
+                                                       "why": "Why it matters."}},
+                            "terms": [], "code": None}]}
     (root / ".console" / f"{domain}-index.json").write_text(json.dumps(index), encoding="utf-8")
 
 
@@ -214,8 +217,69 @@ class CommercialNarrativeTest(unittest.TestCase):
         self.assertTrue(svg.is_file())
         self.assertIn("PP3500", svg.read_text())
 
+    # ---- header: status ≠ actions ≠ navigation ≠ help --------------------
+
+    @property
+    def html(self):
+        return self.client.get("/domains/finance2/FQ-91").text
+
+    def test_info_icon_rides_the_identifier_line_without_a_label(self):
+        eyebrow = self.html.split('class="cm-eyebrow"')[1].split("</p>")[0]
+        self.assertIn("cm-eyebrow-info", eyebrow)
+        self.assertNotIn("About this analysis<", self.html)   # no labelled pill
+
+    def test_export_is_one_menu_and_data_view_is_gone(self):
+        self.assertIn('class="cm-menu"', self.html)
+        self.assertIn("format=docx", self.html)
+        self.assertIn("format=pdf", self.html)
+        self.assertIn("format=md", self.html)
+        self.assertNotIn("Data view", self.html)              # the Data tab goes there
+        self.assertNotIn("cm-export-chip", self.html)
+
+    def test_expected_state_renders_no_status_line(self):
+        """Derived evidence with no freshness flag is unremarkable — the header stays
+        silent so a marker always means "read this"."""
+        self.assertNotIn('class="cm-meta"', self.html)
+        self.assertNotIn("Draft — not approved", self.html)   # the editions rail names it
+
+    def test_tab_row_carries_no_status_badges(self):
+        tabrow = self.html.split('class="cm-toptabs"')[1].split("</div>")[0]
+        for leaked in ("lint", "verification", "In sync", "cm-chip", "cm-badge"):
+            self.assertNotIn(leaked, tabrow)
+        self.assertIn("Quality &amp; audit", tabrow)
+
     def test_export_rejects_bad_format(self):
         self.assertEqual(self.client.get("/domains/finance2/FQ-91/export?format=txt").status_code, 400)
+
+
+class VerdictTypesettingTest(unittest.TestCase):
+    """The headline is `"; ".join(parts)` from the computation. The console breaks it
+    into a lead + points for readability; it must never alter a character."""
+
+    def setUp(self):
+        from console.commercial.router import _split_verdict
+        self.split = _split_verdict
+
+    def test_three_or_more_clauses_become_lead_plus_points(self):
+        lead, pts = self.split("portfolio yield 96.6%; 0 of 5 lines below the floor; scrap 1.0%")
+        self.assertEqual(lead, "portfolio yield 96.6%")
+        self.assertEqual(pts, ["0 of 5 lines below the floor", "scrap 1.0%"])
+
+    def test_semicolon_inside_parentheses_is_not_a_break(self):
+        lead, pts = self.split("yield 96.6% (down 0.1 pts; prior window); 0 of 5 below; scrap 1.0%")
+        self.assertEqual(lead, "yield 96.6% (down 0.1 pts; prior window)")
+        self.assertEqual(len(pts), 2)
+
+    def test_short_headline_stays_one_paragraph(self):
+        lead, pts = self.split("margin 51.5%; below the 55% floor")
+        self.assertEqual(lead, "margin 51.5%; below the 55% floor")
+        self.assertEqual(pts, [])
+
+    def test_no_characters_are_lost(self):
+        raw = ("Trailing window 2026-06..2026-08: yield 96.6% on 10970 units (down 0.1 pts); "
+               "0 of 5 lines below the 95% floor; erosion is rev-specific — rev C 92.5%; scrap 1.0%")
+        lead, pts = self.split(raw)
+        self.assertEqual("; ".join([lead] + pts), raw)
 
 
 if __name__ == "__main__":
