@@ -1122,6 +1122,13 @@ def load_workbench_runs(repo_root: Path) -> list:
         r["pass_cases"] = summ.get("PASS", 0)
         st = str(r.get("started") or "")
         r["started_label"] = (st[:10] + " " + st[11:16] + " UTC") if len(st) >= 16 else (st or "—")
+        # Verdict-first outcome label with the counts spelled out, so the verdict
+        # word never sits next to a pass count ("FAIL · 32/43 PASS" read as a
+        # contradiction). e.g. "FAIL — 32 passed, 5 failed, 2 not executed, 4 n/a of 43".
+        words = (("PASS", "passed"), ("FAIL", "failed"), ("ERROR", "errored"), ("SKIPPED", "skipped"),
+                 ("NOT-EXECUTED", "not executed"), ("NOT-APPLICABLE", "n/a"))
+        parts = [f"{summ[k]} {w}" for k, w in words if isinstance(summ.get(k), int) and summ.get(k)]
+        r["outcome_label"] = f"{r.get('verdict') or '?'} — " + (", ".join(parts) if parts else "no cases") + f" of {r['total_cases']}"
     rows.sort(key=lambda r: (str(r.get("started") or ""), r.get("run_id") or ""), reverse=True)
     return rows
 

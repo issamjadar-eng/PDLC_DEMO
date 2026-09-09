@@ -181,6 +181,8 @@ The CSS comment at `.md-content table` records the rationale.
 
 ## Changelog
 
+- 1.71.3 (2026-09-09): **Revision label is verdict-first with counts spelled out.** The drop-down read `FAIL · 32/43 PASS`, which reads as a contradiction. Rows now carry `outcome_label`, e.g. `FAIL — 32 passed, 5 failed, 2 not executed, 4 n/a of 43` / `PASS — 42 passed, 5 n/a of 47`. **Files:** `console/setup/loader.py`, `console/web/templates/setup_view.html`.
+
 - 1.71.2 (2026-09-09): **Revision drop-down landed on Connectors.** The selector navigated to `#sec-workbench` while the settings page's hash router prefixes `sec-` itself (`#workbench` → `sec-workbench`), so the target was `sec-sec-workbench`, not found, and the router fell back to the first section. Selector now uses `#workbench`; the router also tolerates a `#sec-<name>` hash. **Files:** `console/web/templates/setup_view.html`.
 
 - 1.71.1 (2026-09-09): **Launcher reloads on console code changes.** `run.sh` (via `scaffold.py`) now passes `--reload-dir "$SKILL_CONSOLE" --reload-dir .` to uvicorn. Root cause: the console package lives under `.claude/skills/project-console/console`, outside the launcher's cwd, and uvicorn's default `--reload` watches the cwd only — Python changes (loaders, routers) never hot-reloaded while Jinja templates did, so a running console served a new template against stale loader data (the Settings → Validation revision toolbar and Export buttons did not appear until a manual restart). Run `/project-console sync` then `start` to pick it up. **Files:** `scripts/scaffold.py`.
