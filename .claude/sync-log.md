@@ -4,6 +4,14 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 
 ---
 
+## 2026-09-09 — push
+
+- Files: 39 under `skills/medtech-docs`, `skills/workbench-validation`, `skills/reference-audit`, `agents/citations*`, `skills/submissions`, `skills/change-control`, `skills/docflow` (7 LOCAL_ONLY + 32 LOCAL_AHEAD). Excluded: `skills/tracker/scripts/render.py` (BOTH_DIVERGED, untouched); `skills/project-console` (diverged fork).
+- Branch: `sync/pdlc-demo-defect-correction-2026-09-09`
+- PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/302
+- Commit: "Defect correction from workbench validation: fixers, coverage inventory, deterministic citations, freeze hook" (`87eeb97`)
+- Status: awaiting review (PR-only; task ben/123, PDLC_DEMO PR #193)
+
 ## 2026-09-08 — push
 
 - Files: 46 under `skills/change-control`, `skills/digest`, `skills/jira-pull`, `skills/secops`, `skills/submissions`, `skills/tracker`, `skills/web-control`, `skills/workbench-validation` (17 LOCAL_ONLY new tests/fixtures/conftests + 29 LOCAL_AHEAD). Excluded: `skills/tracker/scripts/render.py` (BOTH_DIVERGED, untouched) and all of `skills/project-console` (diverged fork; 1.64.0 Settings → Validation changes need a manual port).

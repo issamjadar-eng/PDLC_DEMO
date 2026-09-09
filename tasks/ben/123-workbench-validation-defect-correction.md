@@ -2,7 +2,7 @@
 
 **ID**: 123
 **Created**: 2026-09-08
-**Status**: In Progress
+**Status**: Complete
 **Created By**: Ben Xavier
 **Owner**: Ben Xavier
 **Priority**: High
@@ -54,7 +54,7 @@ Follow-on to ben/121 (honest red report). Two asks from the user on 2026-09-08:
   - **TC-PROTO-CITATIONS: v1 → FAIL (3 runs), then v2 → PASS (3 runs)**. v1 failed for two reasons that were themselves findings: the citations agent's verdict band for the same evidence varied across runs (paywalled-standard cap applied inconsistently), and four answer-key entries were wrong (item 8 was a genuinely broken tracker link; item 7 a heading that exists only in finding aids; items 9/12 contradicted by L1a evidence). Corrected at the source: reference-audit 6 deterministic band rule (`sound-by-distillation`, quarantine → `ambiguous-source`), L1b `iec-62366-1.md` quarantine banner, qsub aid headings relabelled, ISO 13485 gap stated, tracker link fixed; protocol v2 with corrected key + new criterion D (band identical across runs). v2: 48/48 bands identical, all criteria met. Records: `TC-PROTO-CITATIONS.result.yml` (v2 PASS) with `TC-PROTO-CITATIONS.v1.result.yml` retained.
   - **TC-PROTO-GROUNDING: PASS (3 runs × 6 advisors)**. P3 0 non-canonical citations (decoy articles present, never cited), P2 0 fabricated paths (3 scorer false positives adjudicated), P1 all, P4 6/6, 5/6, 5/6 (q3's must-cite does not exist in this deployment — scored against the governing template; deviation recorded for protocol v2). Advisors surfaced six further real project findings (product code LZG/LZH vs MEA; no SE comparison; repealed 820.30(b) inherited from SOP/template; no software verification protocols; §5.9 vs §5.6 usability clause; no RMP in any DHF) — recorded in the execution record for their owners.
 - [x] Runner defect found by the first real execution record and fixed (workbench-validation 7): YAML bare-date `executed:` broke the JSON write; values now normalised; regression test added (27 tests)
-- [~] Re-run: debug run `run-20260909T000120Z` **PASS — 40/45 PASS, 0 FAIL, 5 NOT-APPLICABLE, 0 NOT-EXECUTED; needs 29 PASS / 1 N/A**. Commit → run of record → PR → merge → registry sync in progress
+- [x] Run of record `run-20260909T000311Z` on a clean worktree at `1abb544`: **PASS — 40/45, 0 FAIL, 5 NOT-APPLICABLE, 0 NOT-EXECUTED; needs 29 PASS / 1 N/A**, model captured, no warnings. Commits `1abb544` (corrections) · `aad5196` (run of record) → PR #193 merged (`336c5cf`). Registry: hitachi PR #302 (`87eeb97`, 39 files, PR-only)
 
 ## Economics
 
@@ -64,7 +64,13 @@ Follow-on to ben/121 (honest red report). Two asks from the user on 2026-09-08:
     "method_version": 1,
     "method_ref": ".claude/skills/usage-metrics/references/effort-estimation-rubric.md",
     "agentic_hours": null,
-    "todos": []
+    "todos": [
+      {"id": "sync", "title": "Registry merge + local main sync around a concurrent session (stash/pull/pop with three hand-resolved conflicts)", "hours_low": 1, "hours_high": 2, "persona": "senior-engineer"},
+      {"id": "content", "title": "195 DHF documents restructured to template (fixer + regression correction), 198 provenance blocks, 9 template mappings, 34 QMS gaps recorded", "hours_low": 40, "hours_high": 80, "persona": "quality-engineer"},
+      {"id": "coverage", "title": "QMS template coverage inventory (script, report/sidecar/console, need + case)", "hours_low": 6, "hours_high": 10, "persona": "senior-engineer"},
+      {"id": "gates", "title": "Submissions gate widening + 8 VERIFY adjudications applied; freeze hook implemented + registered; 22 tag repairs; docflow self-test", "hours_low": 10, "hours_high": 16, "persona": "regulatory-affairs"},
+      {"id": "protocols", "title": "Two protocols executed for real (6 batch runs + 18 advisor calls), v1 FAIL adjudicated, tool + registry + protocol v2 corrections, v2 re-executed, records written", "hours_low": 16, "hours_high": 28, "persona": "quality-engineer"}
+    ]
   }
 }
 ```
@@ -79,3 +85,15 @@ Follow-on to ben/121 (honest red report). Two asks from the user on 2026-09-08:
 - 2026-09-08 (rate limit): session limit hit mid-flight — killed the fixer-numbering fork (partial rework on disk, syntax ok, not applied), citations v2 runs 1–3, and grounding run 3 q2/q5/q6. Run 3 q1/q3/q4 completed and captured. After reset: all seven relaunched (fixer fork resumes from the partial file; citations v2 ×3; grounding q2/q5/q6).
 - 2026-09-08 (later): fixer numbering correction applied (139 → 0 restarts; 174 docs reshaped; provenance rows added per the one-row-per-pass rule). Waiting on citations v2 ×3 and grounding run 3 q2/q6.
 - 2026-09-09: All correction work landed on disk. Citations v2 3× PASS (bands identical); grounding 3× PASS; runner date-serialisation defect fixed; full debug run **PASS 40/45 + 5 N/A, 0 FAIL**, needs 29/30 PASS + 1 N/A. Landing now.
+- 2026-09-09: **Landed.** PR #193 merged (`336c5cf`) with the run of record PASS 40/45; registry PR hitachi #302 open (39 files). Task Complete.
+
+## Resume / follow-up
+
+Everything is on `main` (origin). Open items, each with an owner, are carried in `tools/workbench-validation/protocols/TC-PROTO-GROUNDING.result.yml` (`findings_surfaced_by_advisors`) and the report's known anomalies:
+1. **RA lead** — product code (LZG/LZH vs MEA) across manifest and device records; SE comparison table (OBL-510K-001); the four managed TBDs in the qsub INTERNAL containers; `regulatory-strategy.md` L62 demo-K-number wording; precedent PCCP research.
+2. **Quality Engineering** — QMS remediation backlog: repealed 21 CFR 820.30(b) in GL-SOP-DC-002 / GL-TMP-DC-001 and ~15 sibling QMS documents (program rule of 2026-07-14); GL-TMP-RM-001 §3 scales vs GL-STD-RM-001; no Risk Management Plan in any DHF; IEC 62366-1 clause (§5.9 vs §5.6) confirmed against the licensed standard, then rebuild `docs/external/standards/iec-62366-1.md` and `OBL-62366-008`.
+3. **V&V lead** — no software verification protocols (28/32 SRS rows untraced; hazard analysis cites non-existent protocol IDs; ID scheme `VER-PP3500-*` vs `GL-VER-*`); URRA before the summative protocol.
+4. **Registry owners** — merge hitachi #302 then `/sync-skills pull`; import the QMS templates for the 34 template-less doctypes (architecture/SAD, benefit-risk, complaints ledger, literature search, PMCF plan/study, software requirements, user needs, trace matrix, V&V strategy) or record them as intentionally template-free; port project-console 1.64.0 → 1.67.3 Settings → Validation changes to the registry fork by hand.
+5. **Validation** — protocol v2 for TC-PROTO-GROUNDING (q3 must-cite → governing template); sign-off of the three execution records by BX; re-run `/workbench-validation validate --model-id <model>` after any skill change (the console flags named differences).
+6. **Local checkout note** — the local `main` of the shared clone is behind origin because another live session holds uncommitted work (task 122 multimodel) that collides with its own merged copy; that session should reconcile and pull. Nothing of this task depends on it.
+Reactivate with `bash .claude/hooks/task-activate.sh add <SESSION_ID> ben/123` only if these follow-ups are worked under this task.
