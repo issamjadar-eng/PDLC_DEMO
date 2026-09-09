@@ -10,7 +10,9 @@ Append-only record of `/sync-skills` pull/push actions. Most recent entries at t
 - Branch: `sync/pdlc-demo-defect-correction-2026-09-09`
 - PR: https://github.com/GlobalLogic-a-Hitachi-Company/hitachi/pull/302
 - Commit: "Defect correction from workbench validation: fixers, coverage inventory, deterministic citations, freeze hook" (`87eeb97`)
-- Status: awaiting review (PR-only; task ben/123, PDLC_DEMO PR #193)
+- Status: merged 2026-09-09 (squash `2c6d90f`, requested by the user in-session); hitachi main fast-forwarded; sync check afterwards: 0 UNDETERMINED for the pushed files
+- Merge commit: `2c6d90f`
+- Hitachi HEAD after sync: `2c6d90f`
 
 ## 2026-09-08 — push
 
