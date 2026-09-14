@@ -1,0 +1,368 @@
+{
+ "bq": "BQ-11",
+ "series": [
+  {
+   "id": "flagged-stat",
+   "label": "Underused connected sites",
+   "unit": "sites",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "sites with hours-weighted utilization < 60% over the trailing 3 months; material = \u226510 connected devices",
+    "inputs": [
+     "src: commercial/internal-telemetry-utilization@2026-09-14",
+     "src: commercial/internal-fleet@2026-09-14",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-telemetry-utilization",
+    "snapshot": "2026-09-14"
+   },
+   "points": [
+    {
+     "label": "below 60% of expected hours (2026-05..2026-07)",
+     "value": 6
+    },
+    {
+     "label": "of which material (\u226510 connected devices)",
+     "value": 2
+    }
+   ]
+  },
+  {
+   "id": "site-utilization",
+   "label": "Window utilization \u2014 flagged sites vs fleet median",
+   "unit": "%",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-telemetry-utilization",
+    "snapshot": "2026-09-14"
+   },
+   "points": [
+    {
+     "label": "S-NA-13",
+     "value": 34.0,
+     "connected_devices": 5
+    },
+    {
+     "label": "S-NA-22",
+     "value": 35.3,
+     "connected_devices": 19
+    },
+    {
+     "label": "S-NA-03",
+     "value": 36.4,
+     "connected_devices": 8
+    },
+    {
+     "label": "S-NA-16",
+     "value": 36.5,
+     "connected_devices": 5
+    },
+    {
+     "label": "S-EMEA-02",
+     "value": 36.6,
+     "connected_devices": 16
+    },
+    {
+     "label": "S-APAC-06",
+     "value": 37.0,
+     "connected_devices": 6
+    },
+    {
+     "label": "connected-fleet median",
+     "value": 89.6
+    }
+   ]
+  },
+  {
+   "id": "flagged-sites",
+   "label": "Flagged sites (tiered by materiality)",
+   "unit": "",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "utilization threshold + connected-device materiality bar",
+    "inputs": [
+     "src: commercial/internal-telemetry-utilization@2026-09-14",
+     "src: commercial/internal-fleet@2026-09-14",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-telemetry-utilization",
+    "snapshot": "2026-09-14"
+   },
+   "points": [
+    {
+     "label": "S-NA-13",
+     "value": "watch (below materiality bar)"
+    },
+    {
+     "label": "S-NA-22",
+     "value": "material"
+    },
+    {
+     "label": "S-NA-03",
+     "value": "watch (below materiality bar)"
+    },
+    {
+     "label": "S-NA-16",
+     "value": "watch (below materiality bar)"
+    },
+    {
+     "label": "S-EMEA-02",
+     "value": "material"
+    },
+    {
+     "label": "S-APAC-06",
+     "value": "watch (below materiality bar)"
+    }
+   ]
+  },
+  {
+   "id": "monthly-utilization",
+   "label": "Monthly utilization \u2014 worst 3 flagged sites vs median",
+   "unit": "%",
+   "kind": "timeseries",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-telemetry-utilization",
+    "snapshot": "2026-09-14"
+   },
+   "lines": [
+    {
+     "label": "S-NA-13",
+     "points": [
+      {
+       "x": "2026-02-01",
+       "y": 37.7
+      },
+      {
+       "x": "2026-03-01",
+       "y": 32.1
+      },
+      {
+       "x": "2026-04-01",
+       "y": 37.4
+      },
+      {
+       "x": "2026-05-01",
+       "y": 33.6
+      },
+      {
+       "x": "2026-06-01",
+       "y": 37.6
+      },
+      {
+       "x": "2026-07-01",
+       "y": 30.6
+      }
+     ]
+    },
+    {
+     "label": "S-NA-22",
+     "points": [
+      {
+       "x": "2026-02-01",
+       "y": 33.1
+      },
+      {
+       "x": "2026-03-01",
+       "y": 36.5
+      },
+      {
+       "x": "2026-04-01",
+       "y": 37.8
+      },
+      {
+       "x": "2026-05-01",
+       "y": 35.9
+      },
+      {
+       "x": "2026-06-01",
+       "y": 35.5
+      },
+      {
+       "x": "2026-07-01",
+       "y": 34.6
+      }
+     ]
+    },
+    {
+     "label": "S-NA-03",
+     "points": [
+      {
+       "x": "2026-02-01",
+       "y": 41.8
+      },
+      {
+       "x": "2026-03-01",
+       "y": 36.6
+      },
+      {
+       "x": "2026-04-01",
+       "y": 34.9
+      },
+      {
+       "x": "2026-05-01",
+       "y": 36.8
+      },
+      {
+       "x": "2026-06-01",
+       "y": 36.6
+      },
+      {
+       "x": "2026-07-01",
+       "y": 35.7
+      }
+     ]
+    },
+    {
+     "label": "connected-fleet median",
+     "points": [
+      {
+       "x": "2026-02-01",
+       "y": 89.1
+      },
+      {
+       "x": "2026-03-01",
+       "y": 88.5
+      },
+      {
+       "x": "2026-04-01",
+       "y": 88.8
+      },
+      {
+       "x": "2026-05-01",
+       "y": 90.5
+      },
+      {
+       "x": "2026-06-01",
+       "y": 88.8
+      },
+      {
+       "x": "2026-07-01",
+       "y": 90.4
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "account-revenue-at-risk",
+   "label": "Account revenue tied to flagged sites",
+   "unit": "USD",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "note": "no site\u2192account key in any pinned dataset (sales-accounts is account-level with no site list) \u2014 needs a CRM account-hierarchy export as a corpus dataset; regional revenue shown as context only"
+   },
+   "points": []
+  },
+  {
+   "id": "region-revenue-context",
+   "label": "FY2026H1 direct-book revenue by region (context)",
+   "unit": "USD",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-sales-accounts",
+    "snapshot": "2026-09-14"
+   },
+   "points": [
+    {
+     "label": "APAC",
+     "value": 4898604
+    },
+    {
+     "label": "EMEA",
+     "value": 7039112
+    },
+    {
+     "label": "NA",
+     "value": 13187364
+    }
+   ]
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "6 connected site(s) ran below 60% of expected infusion hours over 2026-05..2026-07 (worst 34.0%); 2 clear the \u226510-connected-device materiality bar (S-NA-22, S-EMEA-02); the account-revenue tie the question asks for is blocked \u2014 no site\u2192account key exists in any pinned dataset",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "high",
+    "statement": "S-NA-22 runs at 35.3% of expected hours across 19 connected devices over 2026-05..2026-07 \u2014 sold-but-underused at material scale (early churn warning)",
+    "action": "Customer-success intervention this month: confirm case-mix vs shelfware vs connectivity root cause on site; review against renewal timeline",
+    "evidence": [
+     "derived: flagged-sites",
+     "src: commercial/internal-telemetry-utilization@2026-09-14",
+     "src: commercial/internal-fleet@2026-09-14"
+    ]
+   },
+   {
+    "id": "I2",
+    "severity": "high",
+    "statement": "S-EMEA-02 runs at 36.6% of expected hours across 16 connected devices over 2026-05..2026-07 \u2014 sold-but-underused at material scale (early churn warning)",
+    "action": "Customer-success intervention this month: confirm case-mix vs shelfware vs connectivity root cause on site; review against renewal timeline",
+    "evidence": [
+     "derived: flagged-sites",
+     "src: commercial/internal-telemetry-utilization@2026-09-14",
+     "src: commercial/internal-fleet@2026-09-14"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "high",
+    "statement": "Account-level revenue-at-risk cannot be computed: no pinned dataset carries a site\u2192account key (sales-accounts is account-level with no site list) \u2014 the churn-risk framing stops at regional context",
+    "mitigation": "Acquire a site\u2192account mapping (CRM account-hierarchy export) as a corpus dataset; until then intervention priority uses site scale, not dollars",
+    "evidence": [
+     "derived: account-revenue-at-risk"
+    ]
+   },
+   {
+    "id": "R2",
+    "severity": "medium",
+    "statement": "expected_hours is the dataset's per-segment norm, not a contract term \u2014 a site with a legitimately different case mix looks underused against it",
+    "mitigation": "Validate the norm against contracted usage or peer-cohort baselines before escalating beyond customer-success outreach",
+    "evidence": [
+     "src: commercial/internal-telemetry-utilization@2026-09-14"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "4 additional site(s) below the floor but under the 10-device materiality bar: S-NA-13 (34.0%, 5 devices), S-NA-03 (36.4%, 8 devices), S-NA-16 (36.5%, 5 devices), S-APAC-06 (37.0%, 6 devices) \u2014 materiality filters priority, not visibility",
+    "evidence": [
+     "derived: flagged-sites",
+     "src: commercial/internal-fleet@2026-09-14"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-11.1",
+   "statement": "No material account runs its connected fleet below the utilization floor",
+   "expected": ">= 60% of expected hours at every account with >= 10 connected devices",
+   "basis": "stand-in utilization floor; contracts set no usage commitment",
+   "set_by": "customer-success (demo)",
+   "validated": false,
+   "actual": "site-level proxy (account join unavailable): 2 site(s) with >= 10 connected devices below 60%: S-NA-22 35.3%; S-EMEA-02 36.6%",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: flagged-sites",
+    "src: commercial/internal-telemetry-utilization@2026-09-14",
+    "src: commercial/internal-fleet@2026-09-14"
+   ]
+  }
+ ]
+}

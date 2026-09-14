@@ -1,0 +1,27 @@
+dataset: commercial/internal-upgrade-campaign
+snapshot: '2026-09-14'
+created_at: '2026-09-14T10:30:27+00:00'
+sources:
+- type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for campaign-management export)
+  retrieved_at: '2026-09-14T10:30:27+00:00'
+  usage_rights: internal
+  files:
+  - path: raw/export.json
+    sha256: cd0e2706afb145fc9c3c282dfa85997ba5e7bb7180790ec50a6ed8f23c3851bf
+transforms:
+- step: normalize
+  spec:
+    command: python3 gen.py normalize {raw_dir} {normalized_dir}
+  outputs:
+  - path: normalized/records.csv
+    sha256: c6342893dc5e9be0f4318176afd79039a54425d8827fc1317bb649c8b1fd2e61
+    parents:
+    - cd0e2706afb145fc9c3c282dfa85997ba5e7bb7180790ec50a6ed8f23c3851bf
+  script_sha256: 90b0d06b9503e9ee2aae6ba5e0b74ebad2513893d6ac8f8866c73bcdb4976e3b
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 389

@@ -1,0 +1,1088 @@
+{
+ "banner": "_Demo sample data - not for clinical use._",
+ "generator": "gen.py",
+ "seed": 42,
+ "as_of": "2026-08-31",
+ "rows": [
+  {
+   "period": "2026-01",
+   "function": "R&D",
+   "cost_center": "RD-FW",
+   "budget_usd": 380000,
+   "actual_usd": 389762,
+   "headcount_budget": 18,
+   "headcount_actual": 18
+  },
+  {
+   "period": "2026-01",
+   "function": "R&D",
+   "cost_center": "RD-SW",
+   "budget_usd": 320000,
+   "actual_usd": 323338,
+   "headcount_budget": 15,
+   "headcount_actual": 15
+  },
+  {
+   "period": "2026-01",
+   "function": "R&D",
+   "cost_center": "RD-HW",
+   "budget_usd": 300000,
+   "actual_usd": 291000,
+   "headcount_budget": 12,
+   "headcount_actual": 12
+  },
+  {
+   "period": "2026-01",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-REG",
+   "budget_usd": 130000,
+   "actual_usd": 133854,
+   "headcount_budget": 6,
+   "headcount_actual": 7
+  },
+  {
+   "period": "2026-01",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-QA",
+   "budget_usd": 150000,
+   "actual_usd": 150472,
+   "headcount_budget": 8,
+   "headcount_actual": 8
+  },
+  {
+   "period": "2026-01",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-EXT",
+   "budget_usd": 70000,
+   "actual_usd": 109902,
+   "headcount_budget": 0,
+   "headcount_actual": 0
+  },
+  {
+   "period": "2026-01",
+   "function": "Manufacturing",
+   "cost_center": "MF-OPS",
+   "budget_usd": 320000,
+   "actual_usd": 317947,
+   "headcount_budget": 22,
+   "headcount_actual": 22
+  },
+  {
+   "period": "2026-01",
+   "function": "Manufacturing",
+   "cost_center": "MF-SUP",
+   "budget_usd": 180000,
+   "actual_usd": 181839,
+   "headcount_budget": 8,
+   "headcount_actual": 7
+  },
+  {
+   "period": "2026-01",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-NA",
+   "budget_usd": 420000,
+   "actual_usd": 370505,
+   "headcount_budget": 20,
+   "headcount_actual": 19
+  },
+  {
+   "period": "2026-01",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-INTL",
+   "budget_usd": 280000,
+   "actual_usd": 247877,
+   "headcount_budget": 12,
+   "headcount_actual": 11
+  },
+  {
+   "period": "2026-01",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-MKT",
+   "budget_usd": 200000,
+   "actual_usd": 193375,
+   "headcount_budget": 7,
+   "headcount_actual": 7
+  },
+  {
+   "period": "2026-01",
+   "function": "G&A",
+   "cost_center": "GA-FIN",
+   "budget_usd": 250000,
+   "actual_usd": 253402,
+   "headcount_budget": 9,
+   "headcount_actual": 8
+  },
+  {
+   "period": "2026-01",
+   "function": "G&A",
+   "cost_center": "GA-IT",
+   "budget_usd": 200000,
+   "actual_usd": 204091,
+   "headcount_budget": 7,
+   "headcount_actual": 7
+  },
+  {
+   "period": "2026-01",
+   "function": "Service",
+   "cost_center": "SV-FIELD",
+   "budget_usd": 220000,
+   "actual_usd": 226178,
+   "headcount_budget": 14,
+   "headcount_actual": 14
+  },
+  {
+   "period": "2026-01",
+   "function": "Service",
+   "cost_center": "SV-DEPOT",
+   "budget_usd": 130000,
+   "actual_usd": 131422,
+   "headcount_budget": 7,
+   "headcount_actual": 7
+  },
+  {
+   "period": "2026-02",
+   "function": "R&D",
+   "cost_center": "RD-FW",
+   "budget_usd": 380000,
+   "actual_usd": 394689,
+   "headcount_budget": 18,
+   "headcount_actual": 18
+  },
+  {
+   "period": "2026-02",
+   "function": "R&D",
+   "cost_center": "RD-SW",
+   "budget_usd": 320000,
+   "actual_usd": 327446,
+   "headcount_budget": 15,
+   "headcount_actual": 14
+  },
+  {
+   "period": "2026-02",
+   "function": "R&D",
+   "cost_center": "RD-HW",
+   "budget_usd": 300000,
+   "actual_usd": 292588,
+   "headcount_budget": 12,
+   "headcount_actual": 12
+  },
+  {
+   "period": "2026-02",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-REG",
+   "budget_usd": 130000,
+   "actual_usd": 134443,
+   "headcount_budget": 6,
+   "headcount_actual": 7
+  },
+  {
+   "period": "2026-02",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-QA",
+   "budget_usd": 150000,
+   "actual_usd": 151559,
+   "headcount_budget": 8,
+   "headcount_actual": 7
+  },
+  {
+   "period": "2026-02",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-EXT",
+   "budget_usd": 70000,
+   "actual_usd": 116561,
+   "headcount_budget": 0,
+   "headcount_actual": 0
+  },
+  {
+   "period": "2026-02",
+   "function": "Manufacturing",
+   "cost_center": "MF-OPS",
+   "budget_usd": 320000,
+   "actual_usd": 323668,
+   "headcount_budget": 22,
+   "headcount_actual": 22
+  },
+  {
+   "period": "2026-02",
+   "function": "Manufacturing",
+   "cost_center": "MF-SUP",
+   "budget_usd": 180000,
+   "actual_usd": 178737,
+   "headcount_budget": 8,
+   "headcount_actual": 8
+  },
+  {
+   "period": "2026-02",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-NA",
+   "budget_usd": 420000,
+   "actual_usd": 374470,
+   "headcount_budget": 21,
+   "headcount_actual": 19
+  },
+  {
+   "period": "2026-02",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-INTL",
+   "budget_usd": 280000,
+   "actual_usd": 250199,
+   "headcount_budget": 13,
+   "headcount_actual": 11
+  },
+  {
+   "period": "2026-02",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-MKT",
+   "budget_usd": 200000,
+   "actual_usd": 194600,
+   "headcount_budget": 7,
+   "headcount_actual": 6
+  },
+  {
+   "period": "2026-02",
+   "function": "G&A",
+   "cost_center": "GA-FIN",
+   "budget_usd": 250000,
+   "actual_usd": 247913,
+   "headcount_budget": 9,
+   "headcount_actual": 9
+  },
+  {
+   "period": "2026-02",
+   "function": "G&A",
+   "cost_center": "GA-IT",
+   "budget_usd": 200000,
+   "actual_usd": 204206,
+   "headcount_budget": 7,
+   "headcount_actual": 6
+  },
+  {
+   "period": "2026-02",
+   "function": "Service",
+   "cost_center": "SV-FIELD",
+   "budget_usd": 220000,
+   "actual_usd": 227589,
+   "headcount_budget": 14,
+   "headcount_actual": 13
+  },
+  {
+   "period": "2026-02",
+   "function": "Service",
+   "cost_center": "SV-DEPOT",
+   "budget_usd": 130000,
+   "actual_usd": 131964,
+   "headcount_budget": 7,
+   "headcount_actual": 7
+  },
+  {
+   "period": "2026-03",
+   "function": "R&D",
+   "cost_center": "RD-FW",
+   "budget_usd": 380000,
+   "actual_usd": 450834,
+   "headcount_budget": 18,
+   "headcount_actual": 21
+  },
+  {
+   "period": "2026-03",
+   "function": "R&D",
+   "cost_center": "RD-SW",
+   "budget_usd": 320000,
+   "actual_usd": 327818,
+   "headcount_budget": 15,
+   "headcount_actual": 15
+  },
+  {
+   "period": "2026-03",
+   "function": "R&D",
+   "cost_center": "RD-HW",
+   "budget_usd": 300000,
+   "actual_usd": 292298,
+   "headcount_budget": 12,
+   "headcount_actual": 12
+  },
+  {
+   "period": "2026-03",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-REG",
+   "budget_usd": 130000,
+   "actual_usd": 133670,
+   "headcount_budget": 6,
+   "headcount_actual": 5
+  },
+  {
+   "period": "2026-03",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-QA",
+   "budget_usd": 150000,
+   "actual_usd": 153668,
+   "headcount_budget": 8,
+   "headcount_actual": 8
+  },
+  {
+   "period": "2026-03",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-EXT",
+   "budget_usd": 70000,
+   "actual_usd": 119163,
+   "headcount_budget": 0,
+   "headcount_actual": 0
+  },
+  {
+   "period": "2026-03",
+   "function": "Manufacturing",
+   "cost_center": "MF-OPS",
+   "budget_usd": 320000,
+   "actual_usd": 319901,
+   "headcount_budget": 22,
+   "headcount_actual": 22
+  },
+  {
+   "period": "2026-03",
+   "function": "Manufacturing",
+   "cost_center": "MF-SUP",
+   "budget_usd": 180000,
+   "actual_usd": 180923,
+   "headcount_budget": 8,
+   "headcount_actual": 9
+  },
+  {
+   "period": "2026-03",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-NA",
+   "budget_usd": 420000,
+   "actual_usd": 365455,
+   "headcount_budget": 22,
+   "headcount_actual": 19
+  },
+  {
+   "period": "2026-03",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-INTL",
+   "budget_usd": 280000,
+   "actual_usd": 249779,
+   "headcount_budget": 14,
+   "headcount_actual": 11
+  },
+  {
+   "period": "2026-03",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-MKT",
+   "budget_usd": 200000,
+   "actual_usd": 191897,
+   "headcount_budget": 7,
+   "headcount_actual": 6
+  },
+  {
+   "period": "2026-03",
+   "function": "G&A",
+   "cost_center": "GA-FIN",
+   "budget_usd": 250000,
+   "actual_usd": 255581,
+   "headcount_budget": 9,
+   "headcount_actual": 9
+  },
+  {
+   "period": "2026-03",
+   "function": "G&A",
+   "cost_center": "GA-IT",
+   "budget_usd": 200000,
+   "actual_usd": 200123,
+   "headcount_budget": 7,
+   "headcount_actual": 7
+  },
+  {
+   "period": "2026-03",
+   "function": "Service",
+   "cost_center": "SV-FIELD",
+   "budget_usd": 220000,
+   "actual_usd": 228108,
+   "headcount_budget": 14,
+   "headcount_actual": 15
+  },
+  {
+   "period": "2026-03",
+   "function": "Service",
+   "cost_center": "SV-DEPOT",
+   "budget_usd": 130000,
+   "actual_usd": 134596,
+   "headcount_budget": 7,
+   "headcount_actual": 7
+  },
+  {
+   "period": "2026-04",
+   "function": "R&D",
+   "cost_center": "RD-FW",
+   "budget_usd": 380000,
+   "actual_usd": 448880,
+   "headcount_budget": 18,
+   "headcount_actual": 21
+  },
+  {
+   "period": "2026-04",
+   "function": "R&D",
+   "cost_center": "RD-SW",
+   "budget_usd": 320000,
+   "actual_usd": 329590,
+   "headcount_budget": 15,
+   "headcount_actual": 15
+  },
+  {
+   "period": "2026-04",
+   "function": "R&D",
+   "cost_center": "RD-HW",
+   "budget_usd": 300000,
+   "actual_usd": 289800,
+   "headcount_budget": 12,
+   "headcount_actual": 12
+  },
+  {
+   "period": "2026-04",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-REG",
+   "budget_usd": 130000,
+   "actual_usd": 131256,
+   "headcount_budget": 6,
+   "headcount_actual": 7
+  },
+  {
+   "period": "2026-04",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-QA",
+   "budget_usd": 150000,
+   "actual_usd": 153239,
+   "headcount_budget": 8,
+   "headcount_actual": 9
+  },
+  {
+   "period": "2026-04",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-EXT",
+   "budget_usd": 70000,
+   "actual_usd": 122149,
+   "headcount_budget": 0,
+   "headcount_actual": 0
+  },
+  {
+   "period": "2026-04",
+   "function": "Manufacturing",
+   "cost_center": "MF-OPS",
+   "budget_usd": 320000,
+   "actual_usd": 324280,
+   "headcount_budget": 22,
+   "headcount_actual": 22
+  },
+  {
+   "period": "2026-04",
+   "function": "Manufacturing",
+   "cost_center": "MF-SUP",
+   "budget_usd": 180000,
+   "actual_usd": 179759,
+   "headcount_budget": 8,
+   "headcount_actual": 8
+  },
+  {
+   "period": "2026-04",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-NA",
+   "budget_usd": 420000,
+   "actual_usd": 369741,
+   "headcount_budget": 23,
+   "headcount_actual": 20
+  },
+  {
+   "period": "2026-04",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-INTL",
+   "budget_usd": 280000,
+   "actual_usd": 248921,
+   "headcount_budget": 15,
+   "headcount_actual": 12
+  },
+  {
+   "period": "2026-04",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-MKT",
+   "budget_usd": 200000,
+   "actual_usd": 191306,
+   "headcount_budget": 7,
+   "headcount_actual": 7
+  },
+  {
+   "period": "2026-04",
+   "function": "G&A",
+   "cost_center": "GA-FIN",
+   "budget_usd": 250000,
+   "actual_usd": 255450,
+   "headcount_budget": 9,
+   "headcount_actual": 9
+  },
+  {
+   "period": "2026-04",
+   "function": "G&A",
+   "cost_center": "GA-IT",
+   "budget_usd": 200000,
+   "actual_usd": 202779,
+   "headcount_budget": 7,
+   "headcount_actual": 7
+  },
+  {
+   "period": "2026-04",
+   "function": "Service",
+   "cost_center": "SV-FIELD",
+   "budget_usd": 220000,
+   "actual_usd": 223337,
+   "headcount_budget": 14,
+   "headcount_actual": 14
+  },
+  {
+   "period": "2026-04",
+   "function": "Service",
+   "cost_center": "SV-DEPOT",
+   "budget_usd": 130000,
+   "actual_usd": 132754,
+   "headcount_budget": 7,
+   "headcount_actual": 8
+  },
+  {
+   "period": "2026-05",
+   "function": "R&D",
+   "cost_center": "RD-FW",
+   "budget_usd": 380000,
+   "actual_usd": 466435,
+   "headcount_budget": 18,
+   "headcount_actual": 21
+  },
+  {
+   "period": "2026-05",
+   "function": "R&D",
+   "cost_center": "RD-SW",
+   "budget_usd": 320000,
+   "actual_usd": 323159,
+   "headcount_budget": 15,
+   "headcount_actual": 14
+  },
+  {
+   "period": "2026-05",
+   "function": "R&D",
+   "cost_center": "RD-HW",
+   "budget_usd": 300000,
+   "actual_usd": 296137,
+   "headcount_budget": 12,
+   "headcount_actual": 13
+  },
+  {
+   "period": "2026-05",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-REG",
+   "budget_usd": 130000,
+   "actual_usd": 133931,
+   "headcount_budget": 6,
+   "headcount_actual": 6
+  },
+  {
+   "period": "2026-05",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-QA",
+   "budget_usd": 150000,
+   "actual_usd": 150623,
+   "headcount_budget": 8,
+   "headcount_actual": 8
+  },
+  {
+   "period": "2026-05",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-EXT",
+   "budget_usd": 70000,
+   "actual_usd": 124277,
+   "headcount_budget": 0,
+   "headcount_actual": 0
+  },
+  {
+   "period": "2026-05",
+   "function": "Manufacturing",
+   "cost_center": "MF-OPS",
+   "budget_usd": 320000,
+   "actual_usd": 316778,
+   "headcount_budget": 22,
+   "headcount_actual": 22
+  },
+  {
+   "period": "2026-05",
+   "function": "Manufacturing",
+   "cost_center": "MF-SUP",
+   "budget_usd": 180000,
+   "actual_usd": 185232,
+   "headcount_budget": 8,
+   "headcount_actual": 8
+  },
+  {
+   "period": "2026-05",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-NA",
+   "budget_usd": 420000,
+   "actual_usd": 369714,
+   "headcount_budget": 24,
+   "headcount_actual": 21
+  },
+  {
+   "period": "2026-05",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-INTL",
+   "budget_usd": 280000,
+   "actual_usd": 250052,
+   "headcount_budget": 16,
+   "headcount_actual": 12
+  },
+  {
+   "period": "2026-05",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-MKT",
+   "budget_usd": 200000,
+   "actual_usd": 196651,
+   "headcount_budget": 7,
+   "headcount_actual": 8
+  },
+  {
+   "period": "2026-05",
+   "function": "G&A",
+   "cost_center": "GA-FIN",
+   "budget_usd": 250000,
+   "actual_usd": 253601,
+   "headcount_budget": 9,
+   "headcount_actual": 9
+  },
+  {
+   "period": "2026-05",
+   "function": "G&A",
+   "cost_center": "GA-IT",
+   "budget_usd": 200000,
+   "actual_usd": 200981,
+   "headcount_budget": 7,
+   "headcount_actual": 7
+  },
+  {
+   "period": "2026-05",
+   "function": "Service",
+   "cost_center": "SV-FIELD",
+   "budget_usd": 220000,
+   "actual_usd": 224753,
+   "headcount_budget": 14,
+   "headcount_actual": 15
+  },
+  {
+   "period": "2026-05",
+   "function": "Service",
+   "cost_center": "SV-DEPOT",
+   "budget_usd": 130000,
+   "actual_usd": 134820,
+   "headcount_budget": 7,
+   "headcount_actual": 8
+  },
+  {
+   "period": "2026-06",
+   "function": "R&D",
+   "cost_center": "RD-FW",
+   "budget_usd": 380000,
+   "actual_usd": 462226,
+   "headcount_budget": 18,
+   "headcount_actual": 21
+  },
+  {
+   "period": "2026-06",
+   "function": "R&D",
+   "cost_center": "RD-SW",
+   "budget_usd": 320000,
+   "actual_usd": 323265,
+   "headcount_budget": 15,
+   "headcount_actual": 15
+  },
+  {
+   "period": "2026-06",
+   "function": "R&D",
+   "cost_center": "RD-HW",
+   "budget_usd": 300000,
+   "actual_usd": 298454,
+   "headcount_budget": 12,
+   "headcount_actual": 12
+  },
+  {
+   "period": "2026-06",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-REG",
+   "budget_usd": 130000,
+   "actual_usd": 131218,
+   "headcount_budget": 6,
+   "headcount_actual": 6
+  },
+  {
+   "period": "2026-06",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-QA",
+   "budget_usd": 150000,
+   "actual_usd": 155313,
+   "headcount_budget": 8,
+   "headcount_actual": 7
+  },
+  {
+   "period": "2026-06",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-EXT",
+   "budget_usd": 70000,
+   "actual_usd": 127354,
+   "headcount_budget": 0,
+   "headcount_actual": 0
+  },
+  {
+   "period": "2026-06",
+   "function": "Manufacturing",
+   "cost_center": "MF-OPS",
+   "budget_usd": 320000,
+   "actual_usd": 323019,
+   "headcount_budget": 22,
+   "headcount_actual": 21
+  },
+  {
+   "period": "2026-06",
+   "function": "Manufacturing",
+   "cost_center": "MF-SUP",
+   "budget_usd": 180000,
+   "actual_usd": 185276,
+   "headcount_budget": 8,
+   "headcount_actual": 9
+  },
+  {
+   "period": "2026-06",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-NA",
+   "budget_usd": 420000,
+   "actual_usd": 373530,
+   "headcount_budget": 25,
+   "headcount_actual": 22
+  },
+  {
+   "period": "2026-06",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-INTL",
+   "budget_usd": 280000,
+   "actual_usd": 247975,
+   "headcount_budget": 17,
+   "headcount_actual": 12
+  },
+  {
+   "period": "2026-06",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-MKT",
+   "budget_usd": 200000,
+   "actual_usd": 191401,
+   "headcount_budget": 7,
+   "headcount_actual": 8
+  },
+  {
+   "period": "2026-06",
+   "function": "G&A",
+   "cost_center": "GA-FIN",
+   "budget_usd": 250000,
+   "actual_usd": 256262,
+   "headcount_budget": 9,
+   "headcount_actual": 9
+  },
+  {
+   "period": "2026-06",
+   "function": "G&A",
+   "cost_center": "GA-IT",
+   "budget_usd": 200000,
+   "actual_usd": 205752,
+   "headcount_budget": 7,
+   "headcount_actual": 8
+  },
+  {
+   "period": "2026-06",
+   "function": "Service",
+   "cost_center": "SV-FIELD",
+   "budget_usd": 220000,
+   "actual_usd": 226691,
+   "headcount_budget": 14,
+   "headcount_actual": 14
+  },
+  {
+   "period": "2026-06",
+   "function": "Service",
+   "cost_center": "SV-DEPOT",
+   "budget_usd": 130000,
+   "actual_usd": 133729,
+   "headcount_budget": 7,
+   "headcount_actual": 7
+  },
+  {
+   "period": "2026-07",
+   "function": "R&D",
+   "cost_center": "RD-FW",
+   "budget_usd": 380000,
+   "actual_usd": 480533,
+   "headcount_budget": 18,
+   "headcount_actual": 21
+  },
+  {
+   "period": "2026-07",
+   "function": "R&D",
+   "cost_center": "RD-SW",
+   "budget_usd": 320000,
+   "actual_usd": 331576,
+   "headcount_budget": 15,
+   "headcount_actual": 15
+  },
+  {
+   "period": "2026-07",
+   "function": "R&D",
+   "cost_center": "RD-HW",
+   "budget_usd": 300000,
+   "actual_usd": 298699,
+   "headcount_budget": 12,
+   "headcount_actual": 12
+  },
+  {
+   "period": "2026-07",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-REG",
+   "budget_usd": 130000,
+   "actual_usd": 130590,
+   "headcount_budget": 6,
+   "headcount_actual": 6
+  },
+  {
+   "period": "2026-07",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-QA",
+   "budget_usd": 150000,
+   "actual_usd": 150332,
+   "headcount_budget": 8,
+   "headcount_actual": 7
+  },
+  {
+   "period": "2026-07",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-EXT",
+   "budget_usd": 70000,
+   "actual_usd": 133470,
+   "headcount_budget": 0,
+   "headcount_actual": 0
+  },
+  {
+   "period": "2026-07",
+   "function": "Manufacturing",
+   "cost_center": "MF-OPS",
+   "budget_usd": 320000,
+   "actual_usd": 319711,
+   "headcount_budget": 22,
+   "headcount_actual": 22
+  },
+  {
+   "period": "2026-07",
+   "function": "Manufacturing",
+   "cost_center": "MF-SUP",
+   "budget_usd": 180000,
+   "actual_usd": 178216,
+   "headcount_budget": 8,
+   "headcount_actual": 7
+  },
+  {
+   "period": "2026-07",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-NA",
+   "budget_usd": 420000,
+   "actual_usd": 365593,
+   "headcount_budget": 26,
+   "headcount_actual": 23
+  },
+  {
+   "period": "2026-07",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-INTL",
+   "budget_usd": 280000,
+   "actual_usd": 249945,
+   "headcount_budget": 18,
+   "headcount_actual": 15
+  },
+  {
+   "period": "2026-07",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-MKT",
+   "budget_usd": 200000,
+   "actual_usd": 194110,
+   "headcount_budget": 7,
+   "headcount_actual": 7
+  },
+  {
+   "period": "2026-07",
+   "function": "G&A",
+   "cost_center": "GA-FIN",
+   "budget_usd": 250000,
+   "actual_usd": 254207,
+   "headcount_budget": 9,
+   "headcount_actual": 9
+  },
+  {
+   "period": "2026-07",
+   "function": "G&A",
+   "cost_center": "GA-IT",
+   "budget_usd": 200000,
+   "actual_usd": 202317,
+   "headcount_budget": 7,
+   "headcount_actual": 8
+  },
+  {
+   "period": "2026-07",
+   "function": "Service",
+   "cost_center": "SV-FIELD",
+   "budget_usd": 220000,
+   "actual_usd": 225084,
+   "headcount_budget": 14,
+   "headcount_actual": 14
+  },
+  {
+   "period": "2026-07",
+   "function": "Service",
+   "cost_center": "SV-DEPOT",
+   "budget_usd": 130000,
+   "actual_usd": 134110,
+   "headcount_budget": 7,
+   "headcount_actual": 7
+  },
+  {
+   "period": "2026-08",
+   "function": "R&D",
+   "cost_center": "RD-FW",
+   "budget_usd": 380000,
+   "actual_usd": 470994,
+   "headcount_budget": 18,
+   "headcount_actual": 21
+  },
+  {
+   "period": "2026-08",
+   "function": "R&D",
+   "cost_center": "RD-SW",
+   "budget_usd": 320000,
+   "actual_usd": 324286,
+   "headcount_budget": 15,
+   "headcount_actual": 15
+  },
+  {
+   "period": "2026-08",
+   "function": "R&D",
+   "cost_center": "RD-HW",
+   "budget_usd": 300000,
+   "actual_usd": 292287,
+   "headcount_budget": 12,
+   "headcount_actual": 12
+  },
+  {
+   "period": "2026-08",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-REG",
+   "budget_usd": 130000,
+   "actual_usd": 132425,
+   "headcount_budget": 6,
+   "headcount_actual": 5
+  },
+  {
+   "period": "2026-08",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-QA",
+   "budget_usd": 150000,
+   "actual_usd": 154061,
+   "headcount_budget": 8,
+   "headcount_actual": 7
+  },
+  {
+   "period": "2026-08",
+   "function": "Regulatory/Quality",
+   "cost_center": "RQ-EXT",
+   "budget_usd": 70000,
+   "actual_usd": 134101,
+   "headcount_budget": 0,
+   "headcount_actual": 0
+  },
+  {
+   "period": "2026-08",
+   "function": "Manufacturing",
+   "cost_center": "MF-OPS",
+   "budget_usd": 320000,
+   "actual_usd": 326150,
+   "headcount_budget": 22,
+   "headcount_actual": 21
+  },
+  {
+   "period": "2026-08",
+   "function": "Manufacturing",
+   "cost_center": "MF-SUP",
+   "budget_usd": 180000,
+   "actual_usd": 179972,
+   "headcount_budget": 8,
+   "headcount_actual": 8
+  },
+  {
+   "period": "2026-08",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-NA",
+   "budget_usd": 420000,
+   "actual_usd": 370136,
+   "headcount_budget": 27,
+   "headcount_actual": 24
+  },
+  {
+   "period": "2026-08",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-INTL",
+   "budget_usd": 280000,
+   "actual_usd": 245630,
+   "headcount_budget": 19,
+   "headcount_actual": 15
+  },
+  {
+   "period": "2026-08",
+   "function": "Sales & Marketing",
+   "cost_center": "SM-MKT",
+   "budget_usd": 200000,
+   "actual_usd": 193710,
+   "headcount_budget": 7,
+   "headcount_actual": 6
+  },
+  {
+   "period": "2026-08",
+   "function": "G&A",
+   "cost_center": "GA-FIN",
+   "budget_usd": 250000,
+   "actual_usd": 251926,
+   "headcount_budget": 9,
+   "headcount_actual": 10
+  },
+  {
+   "period": "2026-08",
+   "function": "G&A",
+   "cost_center": "GA-IT",
+   "budget_usd": 200000,
+   "actual_usd": 198751,
+   "headcount_budget": 7,
+   "headcount_actual": 8
+  },
+  {
+   "period": "2026-08",
+   "function": "Service",
+   "cost_center": "SV-FIELD",
+   "budget_usd": 220000,
+   "actual_usd": 227416,
+   "headcount_budget": 14,
+   "headcount_actual": 13
+  },
+  {
+   "period": "2026-08",
+   "function": "Service",
+   "cost_center": "SV-DEPOT",
+   "budget_usd": 130000,
+   "actual_usd": 134861,
+   "headcount_budget": 7,
+   "headcount_actual": 7
+  }
+ ]
+}

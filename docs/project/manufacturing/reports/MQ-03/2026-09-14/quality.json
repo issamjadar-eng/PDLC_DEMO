@@ -1,0 +1,368 @@
+{
+ "bq": "MQ-03",
+ "edition": "2026-09-14",
+ "generated_at": "2026-09-14T10:31:58+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "manufacturing.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "capa-open-by-severity",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "capa-pastdue-trend",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "capa-stat",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "effectiveness-by-quarter",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "ncr-open-by-severity",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "ncr-trend",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "supplier-ncr-concentration",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "manufacturing/internal-ncr-capa@2026-09-14",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "manufacturing/internal-ncr-capa",
+   "snapshot": "2026-09-14",
+   "age_days": 0,
+   "max_age_days": 30,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "CAPA posture",
+    "series": "capa-stat",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-ncr-capa@2026-09-14",
+    "derivation": {
+     "method": "open = no closure date at as_of; past due = open and due < as_of; verified = effectiveness_verified true among closed",
+     "inputs": [
+      "src: manufacturing/internal-ncr-capa@2026-09-14",
+      "config: manufacturing.yml"
+     ]
+    }
+   },
+   {
+    "what": "Open and past-due CAPAs at month-end",
+    "series": "capa-pastdue-trend",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-ncr-capa@2026-09-14",
+    "derivation": {
+     "method": "at each month-end: CAPAs opened on/before, not closed by, and (past due) due before that date",
+     "inputs": [
+      "src: manufacturing/internal-ncr-capa@2026-09-14"
+     ]
+    }
+   },
+   {
+    "what": "NCRs opened per month",
+    "series": "ncr-trend",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-ncr-capa@2026-09-14",
+    "derivation": {
+     "method": "count of NCRs by opened month, all sources and supplier-sourced",
+     "inputs": [
+      "src: manufacturing/internal-ncr-capa@2026-09-14"
+     ]
+    }
+   },
+   {
+    "what": "Open vs past-due CAPAs by source",
+    "series": "capa-open-by-source",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-ncr-capa@2026-09-14",
+    "derivation": {
+     "method": "open / past-due CAPA counts per source at as_of",
+     "inputs": [
+      "src: manufacturing/internal-ncr-capa@2026-09-14"
+     ]
+    }
+   },
+   {
+    "what": "Open vs past-due CAPAs by severity",
+    "series": "capa-open-by-severity",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-ncr-capa@2026-09-14",
+    "derivation": {
+     "method": "open / past-due CAPA counts per severity at as_of",
+     "inputs": [
+      "src: manufacturing/internal-ncr-capa@2026-09-14"
+     ]
+    }
+   },
+   {
+    "what": "Open NCRs by severity (mean age)",
+    "series": "ncr-open-by-severity",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-ncr-capa@2026-09-14",
+    "derivation": {
+     "method": "open NCR count per severity; mean age = days from opened to as_of",
+     "inputs": [
+      "src: manufacturing/internal-ncr-capa@2026-09-14"
+     ]
+    }
+   },
+   {
+    "what": "NCRs opened by source, 2026-06..2026-08",
+    "series": "ncr-by-source",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-ncr-capa@2026-09-14",
+    "derivation": {
+     "method": "NCRs opened in the trailing three months per source",
+     "inputs": [
+      "src: manufacturing/internal-ncr-capa@2026-09-14"
+     ]
+    }
+   },
+   {
+    "what": "Closed CAPAs: effectiveness verified vs not, by closure quarter",
+    "series": "effectiveness-by-quarter",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-ncr-capa@2026-09-14",
+    "derivation": {
+     "method": "closed CAPAs grouped by closure quarter, split on effectiveness_verified",
+     "inputs": [
+      "src: manufacturing/internal-ncr-capa@2026-09-14"
+     ]
+    }
+   },
+   {
+    "what": "Supplier-sourced NCRs by supplier",
+    "series": "supplier-ncr-concentration",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-ncr-capa@2026-09-14",
+    "derivation": {
+     "method": "count of supplier-sourced NCRs per supplier_id over the whole register",
+     "inputs": [
+      "src: manufacturing/internal-ncr-capa@2026-09-14"
+     ]
+    }
+   }
+  ],
+  "assumed": [],
+  "missing": []
+ },
+ "plan": {
+  "path": "plans/MQ-03.md",
+  "status": "in-sync",
+  "pinned": "db5946caae54aa4dec07ff8c49f0336c1b86a730414835d5cb756deb6d6edf54",
+  "current": "db5946caae54aa4dec07ff8c49f0336c1b86a730414835d5cb756deb6d6edf54"
+ },
+ "verifications": [],
+ "code": {
+  "status": "unreviewed",
+  "artifacts": [
+   {
+    "path": "bq_modules/mq_03.py",
+    "sha256_12": "96ffacfc9356",
+    "role": "module",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for MQ-03"
+    },
+    "review": null,
+    "review_history": []
+   },
+   {
+    "path": "computations.py",
+    "sha256_12": "9239326ab952",
+    "role": "shared",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": null,
+    "review": null,
+    "review_history": []
+   },
+   {
+    "path": "corpus:manufacturing/internal-ncr-capa/gen.py",
+    "sha256_12": "3340a0fc6786",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": null,
+    "review_history": []
+   }
+  ]
+ },
+ "verification_plan": [
+  {
+   "gate": "claim-lint",
+   "kind": "machine",
+   "note": "every numeric claim marker-cited; zero lint errors (every edition)",
+   "done": true,
+   "evidence": "0 error(s) / 0 warning(s)"
+  },
+  {
+   "gate": "pin-freshness",
+   "kind": "machine",
+   "note": "all pinned snapshots within max_age_days, or a cited active waiver (every edition)",
+   "done": true,
+   "evidence": "1 pin(s) fresh"
+  },
+  {
+   "gate": "plan-currency",
+   "kind": "machine",
+   "note": "the edition was computed under the current version of this plan (every edition)",
+   "done": true,
+   "evidence": "plan in-sync"
+  },
+  {
+   "gate": "code-audit",
+   "kind": "machine",
+   "note": "deterministic code checks green and the computation reviewed at its pinned bytes (each code change)",
+   "done": false,
+   "evidence": "code unreviewed"
+  },
+  {
+   "gate": "adversarial-verify",
+   "kind": "agent",
+   "note": "independent pins-only re-derivation of the headline claims, incl. the month-end reconstruction (each substantive re-answer)",
+   "done": false,
+   "evidence": "no adversarial-verify record filed on this edition"
+  },
+  {
+   "gate": "red-team",
+   "kind": "agent",
+   "note": "framing attack on the answer's presentation and emphasis (each substantive re-answer)",
+   "done": false,
+   "evidence": "no red-team record filed on this edition"
+  }
+ ]
+}

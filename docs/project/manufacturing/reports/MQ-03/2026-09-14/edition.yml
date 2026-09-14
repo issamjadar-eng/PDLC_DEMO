@@ -1,0 +1,16 @@
+bq: MQ-03
+edition: '2026-09-14'
+status: draft
+created_at: '2026-09-14T10:31:58+00:00'
+pins:
+  manufacturing/internal-ncr-capa: '2026-09-14'
+plan:
+  path: plans/MQ-03.md
+  sha256: db5946caae54aa4dec07ff8c49f0336c1b86a730414835d5cb756deb6d6edf54
+code_artifacts:
+- path: bq_modules/mq_03.py
+  sha256: 96ffacfc9356ecdb1facaab8ef5cc4bc7973f4fdfcb85a2cf660a7a2852cb1f1
+- path: computations.py
+  sha256: 9239326ab95251f69f616354f94f4d51c498877ceb8b0c13b542f576252c6c05
+- path: corpus:manufacturing/internal-ncr-capa/gen.py
+  sha256: 3340a0fc6786a8ae4b1e8f810d3c74c551cd1083c8bbc507921f620691560348

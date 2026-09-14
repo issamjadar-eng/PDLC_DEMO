@@ -1,0 +1,759 @@
+{
+ "bq": "BQ-30",
+ "series": [
+  {
+   "id": "cost-per-update",
+   "label": "Cost per completed update",
+   "unit": "USD",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "remote = flat session rate; on-site floor = mean completed on-site duration_min \u00f7 fse_day_minutes \u00d7 fse_day_rate_usd",
+    "inputs": [
+     "src: commercial/internal-upgrade-campaign@2026-09-14",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-09-14"
+   },
+   "points": [
+    {
+     "label": "per remote update (session rate)",
+     "value": 120.0
+    },
+    {
+     "label": "per on-site update (labor-time floor)",
+     "value": 193.17,
+     "sub": "full-day ceiling $950"
+    }
+   ]
+  },
+  {
+   "id": "weekly-by-method",
+   "label": "Completed updates per week by method",
+   "unit": "devices/week",
+   "kind": "timeseries",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-09-14"
+   },
+   "lines": [
+    {
+     "label": "remote",
+     "points": [
+      {
+       "x": "2026-03-02",
+       "y": 12
+      },
+      {
+       "x": "2026-03-09",
+       "y": 11
+      },
+      {
+       "x": "2026-03-16",
+       "y": 8
+      },
+      {
+       "x": "2026-03-23",
+       "y": 5
+      },
+      {
+       "x": "2026-03-30",
+       "y": 14
+      },
+      {
+       "x": "2026-04-06",
+       "y": 7
+      },
+      {
+       "x": "2026-04-13",
+       "y": 11
+      },
+      {
+       "x": "2026-04-20",
+       "y": 13
+      },
+      {
+       "x": "2026-04-27",
+       "y": 10
+      },
+      {
+       "x": "2026-05-04",
+       "y": 15
+      },
+      {
+       "x": "2026-05-11",
+       "y": 4
+      },
+      {
+       "x": "2026-05-18",
+       "y": 7
+      },
+      {
+       "x": "2026-05-25",
+       "y": 4
+      },
+      {
+       "x": "2026-06-01",
+       "y": 6
+      },
+      {
+       "x": "2026-06-08",
+       "y": 5
+      },
+      {
+       "x": "2026-06-15",
+       "y": 4
+      },
+      {
+       "x": "2026-06-22",
+       "y": 1
+      },
+      {
+       "x": "2026-06-29",
+       "y": 1
+      },
+      {
+       "x": "2026-07-06",
+       "y": 4
+      },
+      {
+       "x": "2026-07-13",
+       "y": 1
+      }
+     ]
+    },
+    {
+     "label": "onsite",
+     "points": [
+      {
+       "x": "2026-03-02",
+       "y": 8
+      },
+      {
+       "x": "2026-03-09",
+       "y": 3
+      },
+      {
+       "x": "2026-03-16",
+       "y": 2
+      },
+      {
+       "x": "2026-03-23",
+       "y": 5
+      },
+      {
+       "x": "2026-03-30",
+       "y": 4
+      },
+      {
+       "x": "2026-04-06",
+       "y": 5
+      },
+      {
+       "x": "2026-04-13",
+       "y": 9
+      },
+      {
+       "x": "2026-04-20",
+       "y": 8
+      },
+      {
+       "x": "2026-04-27",
+       "y": 7
+      },
+      {
+       "x": "2026-05-04",
+       "y": 11
+      },
+      {
+       "x": "2026-05-11",
+       "y": 2
+      },
+      {
+       "x": "2026-05-18",
+       "y": 3
+      },
+      {
+       "x": "2026-05-25",
+       "y": 1
+      },
+      {
+       "x": "2026-06-01",
+       "y": 6
+      },
+      {
+       "x": "2026-06-08",
+       "y": 6
+      },
+      {
+       "x": "2026-06-15",
+       "y": 9
+      },
+      {
+       "x": "2026-06-22",
+       "y": 1
+      },
+      {
+       "x": "2026-06-29",
+       "y": 6
+      },
+      {
+       "x": "2026-07-06",
+       "y": 0
+      },
+      {
+       "x": "2026-07-13",
+       "y": 5
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "onsite-cost-bounds",
+   "label": "On-site cost per update \u2014 bound envelope",
+   "unit": "USD",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "floor = labor time only (mean duration \u00f7 fse_day_minutes \u00d7 day rate); ceiling = one full FSE day per visit; travel/overhead unmeasured",
+    "inputs": [
+     "src: commercial/internal-upgrade-campaign@2026-09-14",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-09-14"
+   },
+   "points": [
+    {
+     "label": "labor-time floor",
+     "value": 193.17
+    },
+    {
+     "label": "full-day ceiling",
+     "value": 950.0
+    }
+   ]
+  },
+  {
+   "id": "method-connectivity",
+   "label": "Method \u2194 connectivity alignment (completions)",
+   "unit": "devices",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "completed campaign rows joined to fleet connectivity by device_serial; counts where method matches connectivity (remote\u2194connected, onsite\u2194unconnected)",
+    "inputs": [
+     "src: commercial/internal-upgrade-campaign@2026-09-14",
+     "src: commercial/internal-fleet@2026-09-14"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-09-14"
+   },
+   "points": [
+    {
+     "label": "remote on connected",
+     "value": 143,
+     "of": 143
+    },
+    {
+     "label": "on-site on unconnected",
+     "value": 101,
+     "of": 101
+    }
+   ]
+  },
+  {
+   "id": "adapter-case",
+   "label": "Adapter capex vs per-campaign on-site cost (top accounts)",
+   "unit": "USD",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "per site: non-connected PP3500 count \u00d7 adapter_unit_cost_usd vs the same count \u00d7 on-site cost bounds; totals over the ranked top accounts",
+    "inputs": [
+     "src: commercial/internal-fleet@2026-09-14",
+     "derived: onsite-cost-bounds",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-fleet",
+    "snapshot": "2026-09-14"
+   },
+   "points": [
+    {
+     "label": "S-APAC-06",
+     "value": 10640,
+     "devices": 28,
+     "onsite_floor": 5409,
+     "onsite_ceiling": 26600
+    },
+    {
+     "label": "S-APAC-02",
+     "value": 9500,
+     "devices": 25,
+     "onsite_floor": 4829,
+     "onsite_ceiling": 23750
+    },
+    {
+     "label": "S-NA-17",
+     "value": 7220,
+     "devices": 19,
+     "onsite_floor": 3670,
+     "onsite_ceiling": 18050
+    },
+    {
+     "label": "S-APAC-08",
+     "value": 6460,
+     "devices": 17,
+     "onsite_floor": 3284,
+     "onsite_ceiling": 16150
+    },
+    {
+     "label": "S-EMEA-02",
+     "value": 6460,
+     "devices": 17,
+     "onsite_floor": 3284,
+     "onsite_ceiling": 16150
+    },
+    {
+     "label": "S-APAC-05",
+     "value": 5700,
+     "devices": 15,
+     "onsite_floor": 2898,
+     "onsite_ceiling": 14250
+    },
+    {
+     "label": "S-EMEA-01",
+     "value": 5320,
+     "devices": 14,
+     "onsite_floor": 2704,
+     "onsite_ceiling": 13300
+    },
+    {
+     "label": "S-EMEA-06",
+     "value": 5320,
+     "devices": 14,
+     "onsite_floor": 2704,
+     "onsite_ceiling": 13300
+    },
+    {
+     "label": "S-EMEA-14",
+     "value": 4940,
+     "devices": 13,
+     "onsite_floor": 2511,
+     "onsite_ceiling": 12350
+    },
+    {
+     "label": "S-APAC-01",
+     "value": 4560,
+     "devices": 12,
+     "onsite_floor": 2318,
+     "onsite_ceiling": 11400
+    },
+    {
+     "label": "S-NA-10",
+     "value": 4560,
+     "devices": 12,
+     "onsite_floor": 2318,
+     "onsite_ceiling": 11400
+    },
+    {
+     "label": "S-NA-22",
+     "value": 4560,
+     "devices": 12,
+     "onsite_floor": 2318,
+     "onsite_ceiling": 11400
+    },
+    {
+     "label": "S-EMEA-08",
+     "value": 3800,
+     "devices": 10,
+     "onsite_floor": 1932,
+     "onsite_ceiling": 9500
+    },
+    {
+     "label": "S-NA-18",
+     "value": 3800,
+     "devices": 10,
+     "onsite_floor": 1932,
+     "onsite_ceiling": 9500
+    },
+    {
+     "label": "S-NA-08",
+     "value": 3420,
+     "devices": 9,
+     "onsite_floor": 1739,
+     "onsite_ceiling": 8550
+    },
+    {
+     "label": "S-NA-20",
+     "value": 3420,
+     "devices": 9,
+     "onsite_floor": 1739,
+     "onsite_ceiling": 8550
+    },
+    {
+     "label": "S-APAC-03",
+     "value": 3040,
+     "devices": 8,
+     "onsite_floor": 1545,
+     "onsite_ceiling": 7600
+    },
+    {
+     "label": "S-EMEA-11",
+     "value": 3040,
+     "devices": 8,
+     "onsite_floor": 1545,
+     "onsite_ceiling": 7600
+    },
+    {
+     "label": "S-NA-23",
+     "value": 3040,
+     "devices": 8,
+     "onsite_floor": 1545,
+     "onsite_ceiling": 7600
+    },
+    {
+     "label": "S-EMEA-03",
+     "value": 2660,
+     "devices": 7,
+     "onsite_floor": 1352,
+     "onsite_ceiling": 6650
+    },
+    {
+     "label": "S-EMEA-16",
+     "value": 2660,
+     "devices": 7,
+     "onsite_floor": 1352,
+     "onsite_ceiling": 6650
+    },
+    {
+     "label": "S-NA-11",
+     "value": 2660,
+     "devices": 7,
+     "onsite_floor": 1352,
+     "onsite_ceiling": 6650
+    },
+    {
+     "label": "S-EMEA-07",
+     "value": 2280,
+     "devices": 6,
+     "onsite_floor": 1159,
+     "onsite_ceiling": 5700
+    },
+    {
+     "label": "S-APAC-04",
+     "value": 1900,
+     "devices": 5,
+     "onsite_floor": 966,
+     "onsite_ceiling": 4750
+    },
+    {
+     "label": "S-EMEA-04",
+     "value": 1900,
+     "devices": 5,
+     "onsite_floor": 966,
+     "onsite_ceiling": 4750
+    },
+    {
+     "label": "S-NA-03",
+     "value": 1900,
+     "devices": 5,
+     "onsite_floor": 966,
+     "onsite_ceiling": 4750
+    },
+    {
+     "label": "S-NA-04",
+     "value": 1900,
+     "devices": 5,
+     "onsite_floor": 966,
+     "onsite_ceiling": 4750
+    },
+    {
+     "label": "S-EMEA-09",
+     "value": 1520,
+     "devices": 4,
+     "onsite_floor": 773,
+     "onsite_ceiling": 3800
+    },
+    {
+     "label": "S-EMEA-10",
+     "value": 1520,
+     "devices": 4,
+     "onsite_floor": 773,
+     "onsite_ceiling": 3800
+    },
+    {
+     "label": "S-NA-06",
+     "value": 1520,
+     "devices": 4,
+     "onsite_floor": 773,
+     "onsite_ceiling": 3800
+    },
+    {
+     "label": "S-APAC-07",
+     "value": 1140,
+     "devices": 3,
+     "onsite_floor": 580,
+     "onsite_ceiling": 2850
+    },
+    {
+     "label": "S-EMEA-12",
+     "value": 1140,
+     "devices": 3,
+     "onsite_floor": 580,
+     "onsite_ceiling": 2850
+    },
+    {
+     "label": "S-NA-02",
+     "value": 1140,
+     "devices": 3,
+     "onsite_floor": 580,
+     "onsite_ceiling": 2850
+    },
+    {
+     "label": "S-NA-09",
+     "value": 1140,
+     "devices": 3,
+     "onsite_floor": 580,
+     "onsite_ceiling": 2850
+    },
+    {
+     "label": "S-NA-15",
+     "value": 1140,
+     "devices": 3,
+     "onsite_floor": 580,
+     "onsite_ceiling": 2850
+    },
+    {
+     "label": "S-NA-16",
+     "value": 1140,
+     "devices": 3,
+     "onsite_floor": 580,
+     "onsite_ceiling": 2850
+    },
+    {
+     "label": "S-NA-21",
+     "value": 1140,
+     "devices": 3,
+     "onsite_floor": 580,
+     "onsite_ceiling": 2850
+    },
+    {
+     "label": "S-NA-24",
+     "value": 1140,
+     "devices": 3,
+     "onsite_floor": 580,
+     "onsite_ceiling": 2850
+    },
+    {
+     "label": "S-EMEA-05",
+     "value": 760,
+     "devices": 2,
+     "onsite_floor": 386,
+     "onsite_ceiling": 1900
+    },
+    {
+     "label": "S-NA-01",
+     "value": 760,
+     "devices": 2,
+     "onsite_floor": 386,
+     "onsite_ceiling": 1900
+    },
+    {
+     "label": "S-NA-12",
+     "value": 760,
+     "devices": 2,
+     "onsite_floor": 386,
+     "onsite_ceiling": 1900
+    },
+    {
+     "label": "S-EMEA-13",
+     "value": 380,
+     "devices": 1,
+     "onsite_floor": 193,
+     "onsite_ceiling": 950
+    },
+    {
+     "label": "S-EMEA-15",
+     "value": 380,
+     "devices": 1,
+     "onsite_floor": 193,
+     "onsite_ceiling": 950
+    },
+    {
+     "label": "S-NA-05",
+     "value": 380,
+     "devices": 1,
+     "onsite_floor": 193,
+     "onsite_ceiling": 950
+    },
+    {
+     "label": "S-NA-13",
+     "value": 380,
+     "devices": 1,
+     "onsite_floor": 193,
+     "onsite_ceiling": 950
+    },
+    {
+     "label": "S-NA-14",
+     "value": 380,
+     "devices": 1,
+     "onsite_floor": 193,
+     "onsite_ceiling": 950
+    },
+    {
+     "label": "S-NA-19",
+     "value": 380,
+     "devices": 1,
+     "onsite_floor": 193,
+     "onsite_ceiling": 950
+    }
+   ]
+  },
+  {
+   "id": "adapter-payback",
+   "label": "Adapter payback in update campaigns",
+   "unit": "campaigns",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "adapter_unit_cost_usd \u00f7 (on-site cost per update \u2212 remote cost per update), at each on-site bound; no campaign-frequency figure exists, so payback is per campaign",
+    "inputs": [
+     "derived: onsite-cost-bounds",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-09-14"
+   },
+   "points": [
+    {
+     "label": "at on-site labor floor",
+     "value": 5.2
+    },
+    {
+     "label": "at full-day ceiling",
+     "value": 0.5
+    }
+   ]
+  },
+  {
+   "id": "finish-current-campaign",
+   "label": "Cost to finish the current on-site backlog",
+   "unit": "USD",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "on-site-remaining devices \u00d7 on-site cost bounds, vs the same devices \u00d7 (adapter + remote session); breakeven on-site cost = adapter + remote session per update, with its position in the floor\u2013ceiling bound",
+    "inputs": [
+     "src: commercial/internal-upgrade-campaign@2026-09-14",
+     "derived: onsite-cost-bounds",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-upgrade-campaign",
+    "snapshot": "2026-09-14"
+   },
+   "points": [
+    {
+     "label": "on-site (labor floor)",
+     "value": 18737
+    },
+    {
+     "label": "on-site (full-day ceiling)",
+     "value": 92150
+    },
+    {
+     "label": "adapter-convert + remote",
+     "value": 48500
+    },
+    {
+     "label": "breakeven on-site cost per update (adapter + remote)",
+     "value": 500,
+     "position_in_bound_pct": 40.5
+    }
+   ]
+  },
+  {
+   "id": "fully-loaded-onsite",
+   "label": "True fully-loaded on-site cost per update",
+   "unit": "USD",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "note": "travel + overhead per visit and FSE roster/day structure are not in any corpus dataset; the floor\u2013ceiling bound is the honest envelope until the FSE dataset (also needed by BQ-26) is acquired"
+   },
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "A remote update costs $120 vs an on-site update between $193 (labor-time floor) and $950 (full-day ceiling) \u2014 remote is 12.6\u201362.1% of on-site depending on unmeasured travel; a $380 adapter pays back in 0.5\u20135.2 update campaigns at the top non-connected accounts",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "high",
+    "statement": "The fully-loaded on-site cost is unresolvable from campaign data \u2014 the $193\u2013$950 bound spans 12.6% to 62.1% on the remote-vs-onsite ratio, and the adapter payback spans 0.5 to 5.2 campaigns \u2014 the remote-first decision flips inside that band",
+    "mitigation": "Acquire FSE travel/visit data (the same roster dataset BQ-26 needs) to collapse the bound before committing adapter capex",
+    "evidence": [
+     "derived: onsite-cost-bounds",
+     "derived: adapter-payback",
+     "derived: fully-loaded-onsite"
+    ]
+   },
+   {
+    "id": "R2",
+    "severity": "medium",
+    "statement": "All three cost rates are demo stand-ins, not finance-validated (FSE day $950, remote session $120, adapter $380) \u2014 and the remote figure is a floor: 10 remote and 7 on-site completions needed a retry whose extra sessions the data does not count",
+    "mitigation": "Have finance validate the rates and add per-attempt session counts to the campaign export; mark E-30.1 validated when done",
+    "evidence": [
+     "config: commercial.yml",
+     "src: commercial/internal-upgrade-campaign@2026-09-14"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "Finishing the current campaign's 97 on-site-remaining devices costs $18,737\u2013$92,150 on-site vs $48,500 to adapter-convert and run remote \u2014 within this campaign conversion breaks even where on-site cost exceeds $500/update (adapter + remote session), a point 40.5% of the way up the $193\u2013$950 bound, so conversion wins across the upper 59.5% of it \u2014 and the adapters persist for every future campaign (zero of the 97 on-site-remaining device(s) are remote-convertible today per this pin \u2014 see BQ-26)",
+    "evidence": [
+     "derived: finish-current-campaign",
+     "derived: onsite-cost-bounds",
+     "src: commercial/internal-upgrade-campaign@2026-09-14",
+     "src: commercial/internal-fleet@2026-09-14",
+     "config: commercial.yml"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-30.1",
+   "statement": "A remote update costs a fraction of an on-site visit",
+   "expected": "remote cost per completed update <= 25% of on-site",
+   "basis": "business-case stand-in; not yet validated by finance",
+   "set_by": "vp-field-service (demo)",
+   "validated": false,
+   "actual": "remote $120 = 62.1% of the on-site labor floor ($193) but 12.6% of the full-day ceiling ($950) \u2014 the \u226425% test depends on the unmeasured travel component",
+   "verdict": "at-risk",
+   "evidence": [
+    "derived: cost-per-update",
+    "derived: onsite-cost-bounds"
+   ]
+  }
+ ]
+}

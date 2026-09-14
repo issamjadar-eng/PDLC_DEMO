@@ -1,0 +1,351 @@
+{
+ "bq": "MQ-01",
+ "edition": "2026-09-14",
+ "generated_at": "2026-09-14T10:31:59+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "manufacturing.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "erosion-cells",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "fpy-by-line",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "fpy-by-site",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "fpy-stat",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "fpy-trend",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "pp3500-rev-by-station",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "manufacturing/internal-production-lots@2026-09-14",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "manufacturing/internal-production-lots",
+   "snapshot": "2026-09-14",
+   "age_days": 0,
+   "max_age_days": 30,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "First-pass yield, scrap, rework",
+    "series": "fpy-stat",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-production-lots@2026-09-14",
+    "derivation": {
+     "method": "units passed first time \u00f7 units started (scrap, rework: same denominator) over the trailing window",
+     "inputs": [
+      "src: manufacturing/internal-production-lots@2026-09-14",
+      "config: manufacturing.yml"
+     ]
+    }
+   },
+   {
+    "what": "First-pass yield by product line",
+    "series": "fpy-by-line",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-production-lots@2026-09-14",
+    "derivation": {
+     "method": "FPY per product line over the trailing window",
+     "inputs": [
+      "src: manufacturing/internal-production-lots@2026-09-14"
+     ]
+    }
+   },
+   {
+    "what": "First-pass yield by station",
+    "series": "fpy-by-station",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-production-lots@2026-09-14",
+    "derivation": {
+     "method": "FPY per line station over the trailing window",
+     "inputs": [
+      "src: manufacturing/internal-production-lots@2026-09-14"
+     ]
+    }
+   },
+   {
+    "what": "First-pass yield by site",
+    "series": "fpy-by-site",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-production-lots@2026-09-14",
+    "derivation": {
+     "method": "FPY per plant over the trailing window",
+     "inputs": [
+      "src: manufacturing/internal-production-lots@2026-09-14"
+     ]
+    }
+   },
+   {
+    "what": "Scrap vs rework rate by product line",
+    "series": "scrap-rework-by-line",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-production-lots@2026-09-14",
+    "derivation": {
+     "method": "units scrapped \u00f7 units started and units reworked \u00f7 units started per line",
+     "inputs": [
+      "src: manufacturing/internal-production-lots@2026-09-14"
+     ]
+    }
+   },
+   {
+    "what": "Line \u00d7 station cells below the floor (and since when)",
+    "series": "erosion-cells",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-production-lots@2026-09-14",
+    "derivation": {
+     "method": "cells with window FPY < floor; onset = first month of the trailing run of months whose rolling window FPY is below the floor",
+     "inputs": [
+      "src: manufacturing/internal-production-lots@2026-09-14",
+      "config: manufacturing.yml"
+     ]
+    }
+   },
+   {
+    "what": "PP3500 first-pass yield by hw rev and station",
+    "series": "pp3500-rev-by-station",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-production-lots@2026-09-14",
+    "derivation": {
+     "method": "FPY per (hw_rev, station) for PP3500 lots in the trailing window",
+     "inputs": [
+      "src: manufacturing/internal-production-lots@2026-09-14"
+     ]
+    }
+   },
+   {
+    "what": "Monthly first-pass yield",
+    "series": "fpy-trend",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-production-lots@2026-09-14",
+    "derivation": {
+     "method": "monthly FPY for the portfolio and for the PP3500 rev/station cell with the widest gap (plus its peers)",
+     "inputs": [
+      "src: manufacturing/internal-production-lots@2026-09-14"
+     ]
+    }
+   }
+  ],
+  "assumed": [],
+  "missing": []
+ },
+ "plan": {
+  "path": "plans/MQ-01.md",
+  "status": "in-sync",
+  "pinned": "28bc296cf5b567ad2c05547a1af7851371daea9bf9ee62800977611dd70c2d1c",
+  "current": "28bc296cf5b567ad2c05547a1af7851371daea9bf9ee62800977611dd70c2d1c"
+ },
+ "verifications": [],
+ "code": {
+  "status": "unreviewed",
+  "artifacts": [
+   {
+    "path": "bq_modules/mq_01.py",
+    "sha256_12": "d4cc628afc03",
+    "role": "module",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for MQ-01"
+    },
+    "review": null,
+    "review_history": []
+   },
+   {
+    "path": "computations.py",
+    "sha256_12": "9239326ab952",
+    "role": "shared",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": null,
+    "review": null,
+    "review_history": []
+   },
+   {
+    "path": "corpus:manufacturing/internal-production-lots/gen.py",
+    "sha256_12": "1166f0f83c96",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": null,
+    "review_history": []
+   }
+  ]
+ },
+ "verification_plan": [
+  {
+   "gate": "claim-lint",
+   "kind": "machine",
+   "note": "every numeric claim marker-cited; zero lint errors (every edition)",
+   "done": true,
+   "evidence": "0 error(s) / 0 warning(s)"
+  },
+  {
+   "gate": "pin-freshness",
+   "kind": "machine",
+   "note": "all pinned snapshots within max_age_days, or a cited active waiver (every edition)",
+   "done": true,
+   "evidence": "1 pin(s) fresh"
+  },
+  {
+   "gate": "plan-currency",
+   "kind": "machine",
+   "note": "the edition was computed under the current version of this plan (every edition)",
+   "done": true,
+   "evidence": "plan in-sync"
+  },
+  {
+   "gate": "code-audit",
+   "kind": "machine",
+   "note": "deterministic code checks green and the computation reviewed at its pinned bytes (each code change)",
+   "done": false,
+   "evidence": "code unreviewed"
+  },
+  {
+   "gate": "adversarial-verify",
+   "kind": "agent",
+   "note": "independent pins-only re-derivation of the headline claims (each substantive re-answer)",
+   "done": false,
+   "evidence": "no adversarial-verify record filed on this edition"
+  },
+  {
+   "gate": "red-team",
+   "kind": "agent",
+   "note": "framing attack on the answer's presentation and emphasis, incl. the rollup-survival rule (each substantive re-answer)",
+   "done": false,
+   "evidence": "no red-team record filed on this edition"
+  }
+ ]
+}

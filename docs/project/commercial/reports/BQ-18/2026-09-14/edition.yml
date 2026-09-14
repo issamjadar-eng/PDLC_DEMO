@@ -1,0 +1,17 @@
+bq: BQ-18
+edition: '2026-09-14'
+status: draft
+created_at: '2026-09-14T10:30:59+00:00'
+pins:
+  commercial/internal-complaints: '2026-09-14'
+  commercial/internal-fleet: '2026-09-14'
+plan:
+  path: plans/BQ-18.md
+  sha256: 0a6fdded793f60f2764b9146f07331305ab76dbba6a2fdf85d1e4f0184fea361
+code_artifacts:
+- path: computations.py
+  sha256: 2140820494890c4c1712050248355fde06bba2331386103270bdfe48f88b3b78
+- path: corpus:commercial/internal-complaints/gen.py
+  sha256: 557b73673e877da905cb61f6a69005cbbec546b4cfb1d7907ebe765cd0f90a3b
+- path: corpus:commercial/internal-fleet/gen.py
+  sha256: 165e3ad1d98586ff1b211fb4493999879f957890664e07b069bf3fcaa4ba8961

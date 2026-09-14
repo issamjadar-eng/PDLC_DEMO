@@ -1,0 +1,556 @@
+{
+ "bq": "BQ-20",
+ "series": [
+  {
+   "id": "watch-stat",
+   "label": "Watch-category field events (internal log)",
+   "unit": "events",
+   "kind": "stat",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-complaints",
+    "snapshot": "2026-09-14"
+   },
+   "points": [
+    {
+     "label": "over-delivery complaints on the log",
+     "value": 3
+    },
+    {
+     "label": "PCA-by-proxy-suspected complaints",
+     "value": 2
+    }
+   ]
+  },
+  {
+   "id": "watch-events",
+   "label": "Watch-category events by category",
+   "unit": "events",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-complaints",
+    "snapshot": "2026-09-14"
+   },
+   "points": [
+    {
+     "label": "over-delivery",
+     "value": 3
+    },
+    {
+     "label": "pca-by-proxy-suspected",
+     "value": 2
+    }
+   ]
+  },
+  {
+   "id": "watch-monthly",
+   "label": "Internal watch-category events per month (demo)",
+   "unit": "events/month",
+   "kind": "timeseries",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-complaints",
+    "snapshot": "2026-09-14"
+   },
+   "lines": [
+    {
+     "label": "over-delivery",
+     "points": [
+      {
+       "x": "2025-02-01",
+       "y": 0
+      },
+      {
+       "x": "2025-03-01",
+       "y": 0
+      },
+      {
+       "x": "2025-04-01",
+       "y": 0
+      },
+      {
+       "x": "2025-05-01",
+       "y": 0
+      },
+      {
+       "x": "2025-06-01",
+       "y": 0
+      },
+      {
+       "x": "2025-07-01",
+       "y": 0
+      },
+      {
+       "x": "2025-08-01",
+       "y": 1
+      },
+      {
+       "x": "2025-09-01",
+       "y": 0
+      },
+      {
+       "x": "2025-10-01",
+       "y": 0
+      },
+      {
+       "x": "2025-11-01",
+       "y": 0
+      },
+      {
+       "x": "2025-12-01",
+       "y": 0
+      },
+      {
+       "x": "2026-01-01",
+       "y": 0
+      },
+      {
+       "x": "2026-02-01",
+       "y": 0
+      },
+      {
+       "x": "2026-03-01",
+       "y": 1
+      },
+      {
+       "x": "2026-04-01",
+       "y": 0
+      },
+      {
+       "x": "2026-05-01",
+       "y": 0
+      },
+      {
+       "x": "2026-06-01",
+       "y": 1
+      },
+      {
+       "x": "2026-07-01",
+       "y": 0
+      }
+     ]
+    },
+    {
+     "label": "pca-by-proxy-suspected",
+     "points": [
+      {
+       "x": "2025-02-01",
+       "y": 0
+      },
+      {
+       "x": "2025-03-01",
+       "y": 0
+      },
+      {
+       "x": "2025-04-01",
+       "y": 0
+      },
+      {
+       "x": "2025-05-01",
+       "y": 0
+      },
+      {
+       "x": "2025-06-01",
+       "y": 0
+      },
+      {
+       "x": "2025-07-01",
+       "y": 0
+      },
+      {
+       "x": "2025-08-01",
+       "y": 0
+      },
+      {
+       "x": "2025-09-01",
+       "y": 0
+      },
+      {
+       "x": "2025-10-01",
+       "y": 0
+      },
+      {
+       "x": "2025-11-01",
+       "y": 1
+      },
+      {
+       "x": "2025-12-01",
+       "y": 0
+      },
+      {
+       "x": "2026-01-01",
+       "y": 0
+      },
+      {
+       "x": "2026-02-01",
+       "y": 0
+      },
+      {
+       "x": "2026-03-01",
+       "y": 0
+      },
+      {
+       "x": "2026-04-01",
+       "y": 0
+      },
+      {
+       "x": "2026-05-01",
+       "y": 1
+      },
+      {
+       "x": "2026-06-01",
+       "y": 0
+      },
+      {
+       "x": "2026-07-01",
+       "y": 0
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "watch-signals",
+   "label": "Watch-category signals and dispositions",
+   "unit": "",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-signal-register",
+    "snapshot": "2026-09-14"
+   },
+   "points": [
+    {
+     "label": "SIG-2025-028",
+     "value": "over-delivery \u2192 upgrade-item (UPG-0101)"
+    },
+    {
+     "label": "SIG-2026-005",
+     "value": "over-delivery \u2192 upgrade-item (UPG-0102)"
+    }
+   ]
+  },
+  {
+   "id": "docket-watch",
+   "label": "Open docket MDR items in watch categories",
+   "unit": "items",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "open MDR-type docket records whose category is on the declared watch list; joined to complaints by category only (no shared key between the two logs)",
+    "inputs": [
+     "src: commercial/internal-regulatory-docket@2026-09-14",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-regulatory-docket",
+    "snapshot": "2026-09-14"
+   },
+   "points": [
+    {
+     "label": "MDR-2026-0005",
+     "value": "over-delivery \u2014 opened 2026-06-29, deadline 2026-07-29"
+    }
+   ]
+  },
+  {
+   "id": "class-monthly-events",
+   "label": "Class-wide PCA MAUDE events per month (REAL)",
+   "unit": "events",
+   "kind": "timeseries",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/openfda-maude-pca-monthly",
+    "snapshot": "2026-09-14"
+   },
+   "lines": [
+    {
+     "label": "MEA class (lag-trimmed)",
+     "points": [
+      {
+       "x": "2023-01-01",
+       "y": 216
+      },
+      {
+       "x": "2023-02-01",
+       "y": 343
+      },
+      {
+       "x": "2023-03-01",
+       "y": 567
+      },
+      {
+       "x": "2023-04-01",
+       "y": 388
+      },
+      {
+       "x": "2023-05-01",
+       "y": 326
+      },
+      {
+       "x": "2023-06-01",
+       "y": 417
+      },
+      {
+       "x": "2023-07-01",
+       "y": 380
+      },
+      {
+       "x": "2023-08-01",
+       "y": 456
+      },
+      {
+       "x": "2023-09-01",
+       "y": 323
+      },
+      {
+       "x": "2023-10-01",
+       "y": 166
+      },
+      {
+       "x": "2023-11-01",
+       "y": 208
+      },
+      {
+       "x": "2023-12-01",
+       "y": 194
+      },
+      {
+       "x": "2024-01-01",
+       "y": 192
+      },
+      {
+       "x": "2024-02-01",
+       "y": 241
+      },
+      {
+       "x": "2024-03-01",
+       "y": 307
+      },
+      {
+       "x": "2024-04-01",
+       "y": 354
+      },
+      {
+       "x": "2024-05-01",
+       "y": 392
+      },
+      {
+       "x": "2024-06-01",
+       "y": 353
+      },
+      {
+       "x": "2024-07-01",
+       "y": 369
+      },
+      {
+       "x": "2024-08-01",
+       "y": 424
+      },
+      {
+       "x": "2024-09-01",
+       "y": 444
+      },
+      {
+       "x": "2024-10-01",
+       "y": 604
+      },
+      {
+       "x": "2024-11-01",
+       "y": 519
+      },
+      {
+       "x": "2024-12-01",
+       "y": 361
+      },
+      {
+       "x": "2025-01-01",
+       "y": 351
+      },
+      {
+       "x": "2025-02-01",
+       "y": 259
+      },
+      {
+       "x": "2025-03-01",
+       "y": 324
+      },
+      {
+       "x": "2025-04-01",
+       "y": 348
+      },
+      {
+       "x": "2025-05-01",
+       "y": 322
+      },
+      {
+       "x": "2025-06-01",
+       "y": 301
+      },
+      {
+       "x": "2025-07-01",
+       "y": 310
+      },
+      {
+       "x": "2025-08-01",
+       "y": 255
+      },
+      {
+       "x": "2025-09-01",
+       "y": 243
+      },
+      {
+       "x": "2025-10-01",
+       "y": 206
+      },
+      {
+       "x": "2025-11-01",
+       "y": 189
+      },
+      {
+       "x": "2025-12-01",
+       "y": 222
+      },
+      {
+       "x": "2026-01-01",
+       "y": 169
+      },
+      {
+       "x": "2026-02-01",
+       "y": 265
+      },
+      {
+       "x": "2026-03-01",
+       "y": 309
+      },
+      {
+       "x": "2026-04-01",
+       "y": 277
+      },
+      {
+       "x": "2026-05-01",
+       "y": 237
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "total-class-events",
+   "label": "Class-wide PCA MAUDE events (charted window)",
+   "unit": "events",
+   "kind": "stat",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/openfda-maude-pca-monthly",
+    "snapshot": "2026-09-14"
+   },
+   "points": [
+    {
+     "label": "MEA events since 2023, lag tail excluded",
+     "value": 13131
+    }
+   ]
+  },
+  {
+   "id": "class-event-rate",
+   "label": "PCA-class event rate per installed device",
+   "unit": "events/device",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "assumption": "A-001",
+    "note": "MAUDE has no denominator; blocked until A-001 quantifies installed bases \u2014 never published as a rate"
+   },
+   "points": []
+  },
+  {
+   "id": "alarm-data-gap",
+   "label": "Alarm-analytics event-level data",
+   "unit": "events",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "note": "raw alarm telemetry is not a corpus dataset \u2014 only signals sourced from alarm analytics are visible in the register"
+   },
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "WATCH TRIGGERED on our internal log (demo-fabricated): 3 over-delivery and 2 PCA-by-proxy-suspected complaint records (2 MDR-filed, 1 under investigation) \u2014 E-20.1 zero-tolerance NOT met; the signal\u2192upgrade loop closed for 2 watch-category signals; real class-wide MAUDE context is counts-only (no denominator)",
+   "evidence_class": "measured"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "high",
+    "statement": "3 over-delivery complaint records on the internal log \u2014 the franchise-killer category; newest is C-2026-0433 (2026-06-27, under-investigation, MDR filed: yes); the docket carries open over-delivery MDR item(s) MDR-2026-0005 \u2014 a category-level join, no shared key (see BQ-21)",
+    "action": "CMO review of each event this cycle; confirm the open investigation's MDR stays on deadline; assess whether the risk file's over-delivery controls need re-evaluation",
+    "evidence": [
+     "derived: watch-events",
+     "derived: docket-watch",
+     "src: commercial/internal-complaints@2026-09-14",
+     "src: commercial/internal-regulatory-docket@2026-09-14"
+    ]
+   },
+   {
+    "id": "I2",
+    "severity": "high",
+    "statement": "2 PCA-by-proxy-suspected records (unauthorized bolus by family/visitor suspected); 1 still open \u2014 a use-environment hazard the pump's lockout design must answer",
+    "action": "Route to human-factors / risk-management review; check labeling and in-service training coverage of proxy dosing at the affected sites",
+    "evidence": [
+     "derived: watch-events",
+     "src: commercial/internal-complaints@2026-09-14"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "medium",
+    "statement": "The question asks for alarm data, but raw alarm telemetry is not a corpus dataset \u2014 only signals sourced from alarm analytics are visible, so an alarm-signature precursor of over-delivery could be missed",
+    "mitigation": "Acquire an alarm-analytics event-level dataset; until then this watch is complaints + register only (stated in the plan)",
+    "evidence": [
+     "derived: alarm-data-gap"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "Loop-closing counter-beat: 2 watch-category signals reached the corrective pipeline (SIG-2025-028 \u2192 UPG-0101, SIG-2026-005 \u2192 UPG-0102) \u2014 the signal\u2192corrective loop is demonstrably closing for this category (see BQ-22)",
+    "evidence": [
+     "derived: watch-signals",
+     "src: commercial/internal-signal-register@2026-09-14"
+    ]
+   },
+   {
+    "id": "W2",
+    "statement": "Real class-wide PCA MAUDE events run 13,131 since 2023 in the lag-trimmed window \u2014 context only: counts, never rates, and never compared numerically to our internal log",
+    "evidence": [
+     "derived: total-class-events",
+     "src: commercial/openfda-maude-pca-monthly@2026-09-14"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-20.1",
+   "statement": "Zero confirmed over-delivery events in the field",
+   "expected": "0 confirmed over-delivery complaints",
+   "basis": "franchise-killer tolerance \u2014 any occurrence escalates to CMO; threshold not yet ratified in the risk file [VERIFY]",
+   "set_by": "cmo (demo)",
+   "validated": false,
+   "actual": "3 over-delivery complaint records on the log (2 MDR-filed, 1 under investigation) \u2014 zero-tolerance breached per the plan's 'confirmed' definition",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: watch-events",
+    "src: commercial/internal-complaints@2026-09-14"
+   ]
+  }
+ ]
+}

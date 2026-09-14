@@ -1,0 +1,27 @@
+dataset: commercial/internal-financials
+snapshot: '2026-09-14'
+created_at: '2026-09-14T10:30:25+00:00'
+sources:
+- type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for ERP / financial-reporting export)
+  retrieved_at: '2026-09-14T10:30:25+00:00'
+  usage_rights: internal
+  files:
+  - path: raw/export.json
+    sha256: f091811adb50a83c1bf51519b5f2446f4c82bfe5e329f8c31e9712309ba19883
+transforms:
+- step: normalize
+  spec:
+    command: python3 gen.py normalize {raw_dir} {normalized_dir}
+  outputs:
+  - path: normalized/records.csv
+    sha256: f861ea461727234937841d466f1aa4a706bcf82091b9cf0d5698839cddc78808
+    parents:
+    - f091811adb50a83c1bf51519b5f2446f4c82bfe5e329f8c31e9712309ba19883
+  script_sha256: 9eff72abc58203aeab19bb98be97e93af263dfa6dcf8552c101e35f9df8f1ed6
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 480

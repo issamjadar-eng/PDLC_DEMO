@@ -1,0 +1,40 @@
+dataset: commercial/openfda-recalls-infusion
+snapshot: '2026-09-14'
+created_at: '2026-09-14T10:30:39+00:00'
+sources:
+- type: openfda
+  url: https://api.fda.gov/device/recall.json?search=product_code%3AFRN+AND+event_date_posted%3A%5B2021-01-01+TO+2030-01-01%5D&limit=100&skip=0
+  pages: 2
+  retrieved_at: '2026-09-14T10:30:35+00:00'
+  usage_rights: public-domain (openFDA — https://open.fda.gov/license/)
+  files:
+  - path: raw/page-001.json
+    sha256: 9ad87d2d67307a1a556b7c637cf8ae1b1b6f75afc6de0d1ab295778113216a46
+  - path: raw/page-002.json
+    sha256: c8c57d230acc2bed5b1acd328627485a5e505039a87c4b90ee72d28386b00492
+transforms:
+- step: normalize
+  spec:
+    type: openfda-flatten
+    output: records.csv
+    fields:
+    - cfres_id
+    - recalling_firm
+    - product_description
+    - reason_for_recall
+    - recall_status
+    - event_date_initiated
+    - event_date_posted
+    - product_code
+    - res_event_number
+  outputs:
+  - path: normalized/records.csv
+    sha256: 6da7b756bae35b85d134530c88748e9c03d0ed80a0bed74172b9142991caca16
+    parents:
+    - 9ad87d2d67307a1a556b7c637cf8ae1b1b6f75afc6de0d1ab295778113216a46
+    - c8c57d230acc2bed5b1acd328627485a5e505039a87c4b90ee72d28386b00492
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 138

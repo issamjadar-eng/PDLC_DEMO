@@ -1,0 +1,310 @@
+{
+ "bq": "BQ-03",
+ "series": [
+  {
+   "id": "recurring-stat",
+   "label": "Recurring share \u2014 today vs Y5 plan",
+   "unit": "%",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "subscription revenue \u00f7 total revenue (actuals); cloud-suite proxy \u00f7 plan total (plan)",
+    "inputs": [
+     "src: commercial/internal-financials@2026-09-14",
+     "src: commercial/internal-revenue-plan@2026-09-14",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-financials",
+    "snapshot": "2026-09-14"
+   },
+   "points": [
+    {
+     "label": "recurring share, FY2026H1 actuals",
+     "value": 10.8
+    },
+    {
+     "label": "planned recurring-proxy share, FY2030",
+     "value": 68.6
+    },
+    {
+     "label": "share of FY2030 target behind FDA decisions not yet received",
+     "value": 60.0
+    }
+   ]
+  },
+  {
+   "id": "recurring-share-trend",
+   "label": "Recurring share \u2014 actuals vs plan trajectory",
+   "unit": "%",
+   "kind": "timeseries",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "actual: subscription \u00f7 total per fiscal year; plan: cloud-suite proxy \u00f7 plan total per plan year",
+    "inputs": [
+     "src: commercial/internal-financials@2026-09-14",
+     "src: commercial/internal-revenue-plan@2026-09-14",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-financials",
+    "snapshot": "2026-09-14"
+   },
+   "lines": [
+    {
+     "label": "actual (current FY = H1)",
+     "points": [
+      {
+       "x": "2024-01-01",
+       "y": 5.0
+      },
+      {
+       "x": "2025-01-01",
+       "y": 7.9
+      },
+      {
+       "x": "2026-01-01",
+       "y": 10.8
+      }
+     ]
+    },
+    {
+     "label": "plan (cloud-suite proxy)",
+     "points": [
+      {
+       "x": "2026-01-01",
+       "y": 12.4
+      },
+      {
+       "x": "2027-01-01",
+       "y": 19.2
+      },
+      {
+       "x": "2028-01-01",
+       "y": 35.3
+      },
+      {
+       "x": "2029-01-01",
+       "y": 53.1
+      },
+      {
+       "x": "2030-01-01",
+       "y": 68.6
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "plan-by-bucket",
+   "label": "Plan revenue by bucket per plan year ($M)",
+   "unit": "$M",
+   "kind": "timeseries",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "per plan year: contracted = cleared; modeled = letter-to-file; aspiration = pccp-enabled + new-submission",
+    "inputs": [
+     "src: commercial/internal-revenue-plan@2026-09-14",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-revenue-plan",
+    "snapshot": "2026-09-14"
+   },
+   "lines": [
+    {
+     "label": "contracted (cleared)",
+     "points": [
+      {
+       "x": "2026-01-01",
+       "y": 103.0
+      },
+      {
+       "x": "2027-01-01",
+       "y": 115.0
+      },
+      {
+       "x": "2028-01-01",
+       "y": 122.0
+      },
+      {
+       "x": "2029-01-01",
+       "y": 130.0
+      },
+      {
+       "x": "2030-01-01",
+       "y": 128.0
+      }
+     ]
+    },
+    {
+     "label": "modeled (letter-to-file)",
+     "points": [
+      {
+       "x": "2026-01-01",
+       "y": 2.0
+      },
+      {
+       "x": "2027-01-01",
+       "y": 4.0
+      },
+      {
+       "x": "2028-01-01",
+       "y": 8.0
+      },
+      {
+       "x": "2029-01-01",
+       "y": 10.0
+      },
+      {
+       "x": "2030-01-01",
+       "y": 12.0
+      }
+     ]
+    },
+    {
+     "label": "aspiration (pccp + new-submission)",
+     "points": [
+      {
+       "x": "2026-01-01",
+       "y": 0.0
+      },
+      {
+       "x": "2027-01-01",
+       "y": 11.0
+      },
+      {
+       "x": "2028-01-01",
+       "y": 40.0
+      },
+      {
+       "x": "2029-01-01",
+       "y": 105.0
+      },
+      {
+       "x": "2030-01-01",
+       "y": 210.0
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "y5-decomposition",
+   "label": "FY2030 target by bucket ($M)",
+   "unit": "$M",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "FY2030 plan revenue summed by regulatory_dependency, grouped into the three plan-defined buckets",
+    "inputs": [
+     "src: commercial/internal-revenue-plan@2026-09-14",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-revenue-plan",
+    "snapshot": "2026-09-14"
+   },
+   "points": [
+    {
+     "label": "contracted (cleared)",
+     "value": 128.0
+    },
+    {
+     "label": "modeled (letter-to-file)",
+     "value": 12.0
+    },
+    {
+     "label": "aspiration (pccp + new-submission)",
+     "value": 210.0
+    }
+   ]
+  },
+  {
+   "id": "y5-recurring-decomposition",
+   "label": "FY2030 recurring proxy (cloud-suite) by bucket ($M)",
+   "unit": "$M",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "FY2030 plan revenue of the cloud-suite line (the recurring proxy) summed by regulatory_dependency, grouped into the three plan-defined buckets; dependent share = (pccp-enabled + new-submission) \u00f7 proxy-line total",
+    "inputs": [
+     "src: commercial/internal-revenue-plan@2026-09-14",
+     "config: commercial.yml",
+     "derived: y5-decomposition"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-revenue-plan",
+    "snapshot": "2026-09-14"
+   },
+   "points": [
+    {
+     "label": "contracted (cleared)",
+     "value": 30.0
+    },
+    {
+     "label": "modeled (letter-to-file)",
+     "value": 0.0
+    },
+    {
+     "label": "aspiration (pccp + new-submission)",
+     "value": 210.0,
+     "share_pct": 87.5
+    }
+   ]
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "Recurring revenue is 10.8% of revenue today (FY2026H1) vs 68.6% planned for FY2030; of the $350.0M target, $128.0M rides on already-cleared products, $12.0M on letter-to-file changes, and $210.0M (60.0%) sits behind FDA decisions not yet received \u2014 and within the $240.0M recurring proxy itself, $210.0M (87.5%) is behind those decisions",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "high",
+    "statement": "60.0% of the FY2030 target ($210.0M) is aspiration \u2014 revenue behind pccp-enabled and new-submission FDA decisions not yet received \u2014 and the blended figure understates the recurring-specific bet: within the cloud-suite recurring proxy alone, 87.5% ($210.0M of $240.0M) sits behind those decisions; the regulatory-exposure and slip arithmetic is BQ-05's answer",
+    "mitigation": "Hold the aspiration bucket against BQ-05's exposure threshold and slip scenarios; require a contingency line in the plan narrative",
+    "evidence": [
+     "derived: y5-decomposition",
+     "derived: y5-recurring-decomposition",
+     "src: commercial/internal-revenue-plan@2026-09-14"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "Plan-side recurring uses the cloud-suite proxy (the plan carries no revenue type) \u2014 device-line service contracts that recur are not counted, and any non-recurring cloud-suite revenue is; both directions stated",
+    "evidence": [
+     "config: commercial.yml",
+     "src: commercial/internal-revenue-plan@2026-09-14"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-03.1",
+   "statement": "Recurring (subscription) revenue share grows every fiscal year toward the Y5 model",
+   "expected": "recurring share strictly increasing FY2024 -> FY2026",
+   "basis": "implied by the razor+recurring strategy (D-COMM); no numeric milestone set",
+   "set_by": "cfo (demo)",
+   "validated": false,
+   "actual": "FY2024: 5.0%; FY2025: 7.9%; FY2026H1: 10.8% \u2014 strictly increasing",
+   "verdict": "met",
+   "evidence": [
+    "derived: recurring-share-trend"
+   ]
+  }
+ ]
+}

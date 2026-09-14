@@ -1,0 +1,925 @@
+{
+ "bq": "FQ-03",
+ "series": [
+  {
+   "id": "warranty-spend-stat",
+   "label": "Warranty spend YTD",
+   "unit": "USD K",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "\u03a3 cost_usd over claims dated in the fiscal-year months present in the pin; prior = same months one year earlier",
+    "inputs": [
+     "src: finance/internal-warranty-claims@2026-09-14",
+     "config: finance.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "finance/internal-warranty-claims",
+    "snapshot": "2026-09-14"
+   },
+   "points": [
+    {
+     "label": "YTD 2026 (2026-01..2026-08) spend",
+     "value": 340,
+     "sub": "same months 2025 $276K (+23.1%); 267 claims"
+    }
+   ]
+  },
+  {
+   "id": "cost-per-unit-by-rev",
+   "label": "Warranty cost per installed unit YTD",
+   "unit": "USD",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "\u03a3 claim cost (window) \u00f7 fleet-registry device count per model / hw_rev",
+    "inputs": [
+     "src: finance/internal-warranty-claims@2026-09-14",
+     "src: commercial/internal-fleet@2026-09-14"
+    ]
+   },
+   "provenance": {
+    "datasets": [
+     {
+      "dataset": "finance/internal-warranty-claims",
+      "snapshot": "2026-09-14"
+     },
+     {
+      "dataset": "commercial/internal-fleet",
+      "snapshot": "2026-09-14"
+     }
+    ]
+   },
+   "points": [
+    {
+     "label": "PP3000",
+     "value": 801.0,
+     "units": 198,
+     "claims": 105
+    },
+    {
+     "label": "PP3500",
+     "value": 149.0,
+     "units": 686,
+     "claims": 77
+    },
+    {
+     "label": "PP3500 rev A",
+     "value": 94.0,
+     "units": 434,
+     "claims": 40
+    },
+    {
+     "label": "PP3500 rev B",
+     "value": 242.0,
+     "units": 252,
+     "claims": 37
+    }
+   ]
+  },
+  {
+   "id": "cost-per-unit-yoy",
+   "label": "Per-unit warranty cost: YTD vs prior year",
+   "unit": "USD",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "YTD 2026 (2026-01..2026-08)",
+    "b_label": "same months 2025"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "per-unit cost (as above) for the window and the prior-year months, same denominator",
+    "inputs": [
+     "src: finance/internal-warranty-claims@2026-09-14",
+     "src: commercial/internal-fleet@2026-09-14"
+    ]
+   },
+   "provenance": {
+    "datasets": [
+     {
+      "dataset": "finance/internal-warranty-claims",
+      "snapshot": "2026-09-14"
+     },
+     {
+      "dataset": "commercial/internal-fleet",
+      "snapshot": "2026-09-14"
+     }
+    ]
+   },
+   "points": [
+    {
+     "label": "PP3000",
+     "a": 801.0,
+     "b": 397.0,
+     "yoy_pct": 101.6
+    },
+    {
+     "label": "PP3500",
+     "a": 149.0,
+     "b": 177.0,
+     "yoy_pct": -16.2
+    },
+    {
+     "label": "PP3500 rev A",
+     "a": 94.0,
+     "b": 185.0,
+     "yoy_pct": -48.9
+    },
+    {
+     "label": "PP3500 rev B",
+     "a": 242.0,
+     "b": 164.0,
+     "yoy_pct": 47.0
+    }
+   ]
+  },
+  {
+   "id": "monthly-cost-trend",
+   "label": "Monthly warranty cost by line",
+   "unit": "USD K",
+   "kind": "timeseries",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "\u03a3 cost_usd per claim month per product line over the full log; smaller lines aggregated",
+    "inputs": [
+     "src: finance/internal-warranty-claims@2026-09-14"
+    ]
+   },
+   "provenance": {
+    "dataset": "finance/internal-warranty-claims",
+    "snapshot": "2026-09-14"
+   },
+   "lines": [
+    {
+     "label": "PP3000",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 5
+      },
+      {
+       "x": "2025-02-01",
+       "y": 9
+      },
+      {
+       "x": "2025-03-01",
+       "y": 17
+      },
+      {
+       "x": "2025-04-01",
+       "y": 9
+      },
+      {
+       "x": "2025-05-01",
+       "y": 7
+      },
+      {
+       "x": "2025-06-01",
+       "y": 5
+      },
+      {
+       "x": "2025-07-01",
+       "y": 18
+      },
+      {
+       "x": "2025-08-01",
+       "y": 8
+      },
+      {
+       "x": "2025-09-01",
+       "y": 18
+      },
+      {
+       "x": "2025-10-01",
+       "y": 31
+      },
+      {
+       "x": "2025-11-01",
+       "y": 25
+      },
+      {
+       "x": "2025-12-01",
+       "y": 13
+      },
+      {
+       "x": "2026-01-01",
+       "y": 17
+      },
+      {
+       "x": "2026-02-01",
+       "y": 21
+      },
+      {
+       "x": "2026-03-01",
+       "y": 15
+      },
+      {
+       "x": "2026-04-01",
+       "y": 14
+      },
+      {
+       "x": "2026-05-01",
+       "y": 18
+      },
+      {
+       "x": "2026-06-01",
+       "y": 21
+      },
+      {
+       "x": "2026-07-01",
+       "y": 25
+      },
+      {
+       "x": "2026-08-01",
+       "y": 26
+      }
+     ]
+    },
+    {
+     "label": "PP3500",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 16
+      },
+      {
+       "x": "2025-02-01",
+       "y": 9
+      },
+      {
+       "x": "2025-03-01",
+       "y": 6
+      },
+      {
+       "x": "2025-04-01",
+       "y": 22
+      },
+      {
+       "x": "2025-05-01",
+       "y": 15
+      },
+      {
+       "x": "2025-06-01",
+       "y": 21
+      },
+      {
+       "x": "2025-07-01",
+       "y": 14
+      },
+      {
+       "x": "2025-08-01",
+       "y": 19
+      },
+      {
+       "x": "2025-09-01",
+       "y": 21
+      },
+      {
+       "x": "2025-10-01",
+       "y": 9
+      },
+      {
+       "x": "2025-11-01",
+       "y": 11
+      },
+      {
+       "x": "2025-12-01",
+       "y": 8
+      },
+      {
+       "x": "2026-01-01",
+       "y": 16
+      },
+      {
+       "x": "2026-02-01",
+       "y": 10
+      },
+      {
+       "x": "2026-03-01",
+       "y": 11
+      },
+      {
+       "x": "2026-04-01",
+       "y": 10
+      },
+      {
+       "x": "2026-05-01",
+       "y": 12
+      },
+      {
+       "x": "2026-06-01",
+       "y": 11
+      },
+      {
+       "x": "2026-07-01",
+       "y": 14
+      },
+      {
+       "x": "2026-08-01",
+       "y": 17
+      }
+     ]
+    },
+    {
+     "label": "IP5000",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 2
+      },
+      {
+       "x": "2025-02-01",
+       "y": 1
+      },
+      {
+       "x": "2025-03-01",
+       "y": 7
+      },
+      {
+       "x": "2025-04-01",
+       "y": 2
+      },
+      {
+       "x": "2025-05-01",
+       "y": 5
+      },
+      {
+       "x": "2025-06-01",
+       "y": 9
+      },
+      {
+       "x": "2025-07-01",
+       "y": 9
+      },
+      {
+       "x": "2025-08-01",
+       "y": 4
+      },
+      {
+       "x": "2025-09-01",
+       "y": 12
+      },
+      {
+       "x": "2025-10-01",
+       "y": 4
+      },
+      {
+       "x": "2025-11-01",
+       "y": 4
+      },
+      {
+       "x": "2025-12-01",
+       "y": 4
+      },
+      {
+       "x": "2026-01-01",
+       "y": 8
+      },
+      {
+       "x": "2026-02-01",
+       "y": 1
+      },
+      {
+       "x": "2026-03-01",
+       "y": 9
+      },
+      {
+       "x": "2026-04-01",
+       "y": 4
+      },
+      {
+       "x": "2026-05-01",
+       "y": 7
+      },
+      {
+       "x": "2026-06-01",
+       "y": 4
+      },
+      {
+       "x": "2026-07-01",
+       "y": 6
+      },
+      {
+       "x": "2026-08-01",
+       "y": 9
+      }
+     ]
+    },
+    {
+     "label": "other lines (SP6000+SP6500)",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 4
+      },
+      {
+       "x": "2025-02-01",
+       "y": 4
+      },
+      {
+       "x": "2025-03-01",
+       "y": 3
+      },
+      {
+       "x": "2025-04-01",
+       "y": 4
+      },
+      {
+       "x": "2025-05-01",
+       "y": 8
+      },
+      {
+       "x": "2025-06-01",
+       "y": 3
+      },
+      {
+       "x": "2025-07-01",
+       "y": 8
+      },
+      {
+       "x": "2025-08-01",
+       "y": 4
+      },
+      {
+       "x": "2025-09-01",
+       "y": 5
+      },
+      {
+       "x": "2025-10-01",
+       "y": 6
+      },
+      {
+       "x": "2025-11-01",
+       "y": 5
+      },
+      {
+       "x": "2025-12-01",
+       "y": 4
+      },
+      {
+       "x": "2026-01-01",
+       "y": 3
+      },
+      {
+       "x": "2026-02-01",
+       "y": 4
+      },
+      {
+       "x": "2026-03-01",
+       "y": 1
+      },
+      {
+       "x": "2026-04-01",
+       "y": 5
+      },
+      {
+       "x": "2026-05-01",
+       "y": 1
+      },
+      {
+       "x": "2026-06-01",
+       "y": 7
+      },
+      {
+       "x": "2026-07-01",
+       "y": 5
+      },
+      {
+       "x": "2026-08-01",
+       "y": 5
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "disposition-mix",
+   "label": "Warranty spend by disposition (YTD)",
+   "unit": "USD K",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "\u03a3 cost_usd per disposition over the window",
+    "inputs": [
+     "src: finance/internal-warranty-claims@2026-09-14"
+    ]
+   },
+   "provenance": {
+    "dataset": "finance/internal-warranty-claims",
+    "snapshot": "2026-09-14"
+   },
+   "points": [
+    {
+     "label": "repair",
+     "value": 65,
+     "claims": 130
+    },
+    {
+     "label": "replace",
+     "value": 264,
+     "claims": 83
+    },
+    {
+     "label": "goodwill",
+     "value": 11,
+     "claims": 30
+    },
+    {
+     "label": "denied",
+     "value": 0,
+     "claims": 24
+    }
+   ]
+  },
+  {
+   "id": "revision-concentration",
+   "label": "Claim share vs installed share by revision (YTD)",
+   "unit": "%",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "share of line claims",
+    "b_label": "share of installed fleet"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "per line with >1 revision: claims on the revision \u00f7 line claims, vs registry devices on the revision \u00f7 registry devices of the line (null where the registry carries no split)",
+    "inputs": [
+     "src: finance/internal-warranty-claims@2026-09-14",
+     "src: commercial/internal-fleet@2026-09-14",
+     "config: finance.yml"
+    ]
+   },
+   "provenance": {
+    "datasets": [
+     {
+      "dataset": "finance/internal-warranty-claims",
+      "snapshot": "2026-09-14"
+     },
+     {
+      "dataset": "commercial/internal-fleet",
+      "snapshot": "2026-09-14"
+     }
+    ]
+   },
+   "points": [
+    {
+     "label": "IP5000 rev A",
+     "a": 47.5,
+     "b": null,
+     "over_index": null
+    },
+    {
+     "label": "IP5000 rev B",
+     "a": 52.5,
+     "b": null,
+     "over_index": null
+    },
+    {
+     "label": "PP3000 rev A",
+     "a": 36.2,
+     "b": null,
+     "over_index": null
+    },
+    {
+     "label": "PP3000 rev B",
+     "a": 63.8,
+     "b": null,
+     "over_index": null
+    },
+    {
+     "label": "PP3500 rev A",
+     "a": 51.9,
+     "b": 63.3,
+     "over_index": 0.82
+    },
+    {
+     "label": "PP3500 rev B",
+     "a": 48.1,
+     "b": 36.7,
+     "over_index": 1.31
+    },
+    {
+     "label": "SP6000 rev A",
+     "a": 87.5,
+     "b": null,
+     "over_index": null
+    },
+    {
+     "label": "SP6000 rev B",
+     "a": 12.5,
+     "b": null,
+     "over_index": null
+    }
+   ]
+  },
+  {
+   "id": "revision-failure-categories",
+   "label": "Failure categories \u2014 PP3500 rev B (YTD)",
+   "unit": "claims",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "claim count per failure_category for the most over-indexed revision (or the largest not-normalizable concentration)",
+    "inputs": [
+     "src: finance/internal-warranty-claims@2026-09-14",
+     "src: commercial/internal-fleet@2026-09-14",
+     "config: finance.yml"
+    ]
+   },
+   "provenance": {
+    "datasets": [
+     {
+      "dataset": "finance/internal-warranty-claims",
+      "snapshot": "2026-09-14"
+     },
+     {
+      "dataset": "commercial/internal-fleet",
+      "snapshot": "2026-09-14"
+     }
+    ]
+   },
+   "points": [
+    {
+     "label": "pump-mechanism",
+     "value": 9
+    },
+    {
+     "label": "occlusion-sensor",
+     "value": 6
+    },
+    {
+     "label": "power-supply",
+     "value": 6
+    },
+    {
+     "label": "screen-display",
+     "value": 5
+    },
+    {
+     "label": "battery",
+     "value": 4
+    },
+    {
+     "label": "keypad",
+     "value": 4
+    },
+    {
+     "label": "other",
+     "value": 2
+    },
+    {
+     "label": "connectivity",
+     "value": 1
+    }
+   ]
+  },
+  {
+   "id": "complaint-linkage",
+   "label": "Share of claims linked to a complaint (YTD)",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "claims with linked_complaint = yes \u00f7 claims, per product line, over the window",
+    "inputs": [
+     "src: finance/internal-warranty-claims@2026-09-14"
+    ]
+   },
+   "provenance": {
+    "dataset": "finance/internal-warranty-claims",
+    "snapshot": "2026-09-14"
+   },
+   "points": [
+    {
+     "label": "IP5000",
+     "value": 25.0,
+     "linked": 10,
+     "claims": 40
+    },
+    {
+     "label": "PP3000",
+     "value": 51.4,
+     "linked": 54,
+     "claims": 105
+    },
+    {
+     "label": "PP3500",
+     "value": 27.3,
+     "linked": 21,
+     "claims": 77
+    },
+    {
+     "label": "SP6000",
+     "value": 25.0,
+     "linked": 6,
+     "claims": 24
+    },
+    {
+     "label": "SP6500",
+     "value": 38.1,
+     "linked": 8,
+     "claims": 21
+    }
+   ]
+  },
+  {
+   "id": "complaints-context",
+   "label": "Linked claims vs complaints logged (YTD)",
+   "unit": "records",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "warranty claims linked to a complaint",
+    "b_label": "complaints logged"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "per fleet model: linked claims in the window vs complaints opened in the same months",
+    "inputs": [
+     "src: finance/internal-warranty-claims@2026-09-14",
+     "src: commercial/internal-complaints@2026-09-14"
+    ]
+   },
+   "provenance": {
+    "datasets": [
+     {
+      "dataset": "finance/internal-warranty-claims",
+      "snapshot": "2026-09-14"
+     },
+     {
+      "dataset": "commercial/internal-complaints",
+      "snapshot": "2026-09-14"
+     }
+    ]
+   },
+   "points": [
+    {
+     "label": "PP3000",
+     "a": 54,
+     "b": 56
+    },
+    {
+     "label": "PP3500",
+     "a": 21,
+     "b": 137
+    }
+   ]
+  },
+  {
+   "id": "per-unit-unavailable",
+   "label": "Per-unit cost \u2014 lines / revisions without a fleet denominator",
+   "unit": "USD",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "note": "the fleet registry (internal-fleet) carries no IP5000, SP6000, SP6500 devices and records PP3000 hw_rev as unknown; per-unit figures need those populations in the registry export."
+   },
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "YTD 2026 (2026-01..2026-08) warranty spend $340K vs $276K same months 2025 (+23.1%); per installed unit: PP3000 $801 (+101.6% YoY), PP3500 $149 (-16.2% YoY; rev A $94 (-48.9%), rev B $242 (+47.0%)); over-indexing revisions: PP3500 rev B 48% of claims vs 37% of fleet (1.31\u00d7); not normalizable (registry carries no revision split): SP6000 rev A 88% of claims (21 of 24), PP3000 rev B 64% of claims (67 of 105), IP5000 rev B 52% of claims (21 of 40); 37% of claims link to a complaint (99 of 267); per-unit unavailable for IP5000, SP6000, SP6500 (no fleet denominator)",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "medium",
+    "statement": "PP3500 hardware rev B over-indexes on warranty: 48% of the line's YTD 2026 (2026-01..2026-08) claims (37 of 77) vs 37% of the installed fleet (1.31\u00d7); $242 per installed unit YTD 2026 (2026-01..2026-08); top failure category pump-mechanism (9 claims)",
+    "action": "Open a design-signal review on the revision; decide field action vs revision-specific service bulletin with quality and regulatory",
+    "evidence": [
+     "derived: revision-concentration",
+     "derived: revision-failure-categories",
+     "derived: cost-per-unit-by-rev",
+     "src: finance/internal-warranty-claims@2026-09-14",
+     "src: commercial/internal-fleet@2026-09-14",
+     "config: finance.yml"
+    ]
+   },
+   {
+    "id": "I2",
+    "severity": "medium",
+    "statement": "SP6000 hardware rev A carries 88% of the line's YTD 2026 (2026-01..2026-08) claims (21 of 24); top failure category screen-display (6 claims) \u2014 the registry records no SP6000 revision, so this cannot be normalized to the installed mix",
+    "action": "Add the hardware revision to the fleet registry export for the line, then re-test the over-index; meanwhile treat the cluster as a design-signal review candidate",
+    "evidence": [
+     "derived: revision-concentration",
+     "derived: revision-failure-categories",
+     "derived: per-unit-unavailable",
+     "src: finance/internal-warranty-claims@2026-09-14",
+     "src: commercial/internal-fleet@2026-09-14",
+     "config: finance.yml"
+    ]
+   },
+   {
+    "id": "I3",
+    "severity": "medium",
+    "statement": "PP3000 hardware rev B carries 64% of the line's YTD 2026 (2026-01..2026-08) claims (67 of 105); top failure category pump-mechanism (22 claims) \u2014 the registry records no PP3000 revision, so this cannot be normalized to the installed mix",
+    "action": "Add the hardware revision to the fleet registry export for the line, then re-test the over-index; meanwhile treat the cluster as a design-signal review candidate",
+    "evidence": [
+     "derived: revision-concentration",
+     "derived: revision-failure-categories",
+     "derived: per-unit-unavailable",
+     "src: finance/internal-warranty-claims@2026-09-14",
+     "src: commercial/internal-fleet@2026-09-14",
+     "config: finance.yml"
+    ]
+   },
+   {
+    "id": "I4",
+    "severity": "medium",
+    "statement": "IP5000 hardware rev B carries 52% of the line's YTD 2026 (2026-01..2026-08) claims (21 of 40); top failure category occlusion-sensor (6 claims) \u2014 the registry records no IP5000 revision, so this cannot be normalized to the installed mix",
+    "action": "Add the hardware revision to the fleet registry export for the line, then re-test the over-index; meanwhile treat the cluster as a design-signal review candidate",
+    "evidence": [
+     "derived: revision-concentration",
+     "derived: revision-failure-categories",
+     "derived: per-unit-unavailable",
+     "src: finance/internal-warranty-claims@2026-09-14",
+     "src: commercial/internal-fleet@2026-09-14",
+     "config: finance.yml"
+    ]
+   },
+   {
+    "id": "I5",
+    "severity": "medium",
+    "statement": "PP3000 warranty cost per installed unit $801 YTD 2026 (2026-01..2026-08) vs $397 same months 2025 (+101.6%) \u2014 beyond the 10% tolerance",
+    "action": "Re-test the warranty reserve for the line against the observed per-unit trend (FQ-04) and review end-of-life timing",
+    "evidence": [
+     "derived: cost-per-unit-yoy",
+     "src: finance/internal-warranty-claims@2026-09-14",
+     "src: commercial/internal-fleet@2026-09-14",
+     "config: finance.yml"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "medium",
+    "statement": "Per-unit figures use the fleet registry as a point-in-time denominator for both windows \u2014 a fleet that grew over the year makes prior-year per-unit costs look lower than they were",
+    "mitigation": "Pin a fleet snapshot per window once recurring fleet snapshots exist; until then read per-unit YoY as directional",
+    "evidence": [
+     "src: commercial/internal-fleet@2026-09-14",
+     "derived: cost-per-unit-yoy"
+    ]
+   },
+   {
+    "id": "R2",
+    "severity": "medium",
+    "statement": "Replacements ($264K) outspend repairs ($65K) YTD 2026 (2026-01..2026-08) \u2014 cost per claim is being driven by the replace share",
+    "mitigation": "Depot-repair capacity review for the lines driving replacements",
+    "evidence": [
+     "derived: disposition-mix",
+     "src: finance/internal-warranty-claims@2026-09-14"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "63% of warranty claims (168 of 267) have no linked complaint \u2014 warranty activity the complaint-handling system is not trending",
+    "evidence": [
+     "derived: complaint-linkage",
+     "src: finance/internal-warranty-claims@2026-09-14",
+     "src: commercial/internal-complaints@2026-09-14"
+    ]
+   },
+   {
+    "id": "W2",
+    "statement": "Per-unit gaps: IP5000, SP6000, SP6500 have no fleet registry rows; PP3000 revision recorded as unknown in the registry",
+    "evidence": [
+     "derived: per-unit-unavailable",
+     "src: commercial/internal-fleet@2026-09-14"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-03.1",
+   "statement": "Warranty cost per installed PP3500 unit does not rise year over year beyond tolerance",
+   "expected": "PP3500 per-unit cost YTD <= prior-year same months + 10%",
+   "basis": "quality-plan reliability target carried forward; no approved KPI threshold on file [VERIFY]",
+   "set_by": "vp-quality (demo)",
+   "validated": false,
+   "actual": "PP3500 $149/unit YTD 2026 (2026-01..2026-08) vs $177 same months 2025 (-16.2%)",
+   "verdict": "met",
+   "evidence": [
+    "derived: cost-per-unit-yoy"
+   ]
+  },
+  {
+   "id": "E-03.2",
+   "statement": "No hardware revision over-indexes on warranty claims relative to its installed share",
+   "expected": "claim share / installed share <= 1.25x per revision (lines with a revision split in the fleet registry)",
+   "basis": "design-signal over-index guardrail; not a risk-file threshold [VERIFY]",
+   "set_by": "vp-quality (demo)",
+   "validated": false,
+   "actual": "1 revision(s) over 1.25\u00d7 on 1 normalizable line(s): PP3500 rev B 48% of claims vs 37% of fleet (1.31\u00d7); not normalizable (no registry revision split): SP6000 rev A 88% of claims (21 of 24), PP3000 rev B 64% of claims (67 of 105), IP5000 rev B 52% of claims (21 of 40)",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: revision-concentration",
+    "derived: cost-per-unit-by-rev"
+   ]
+  }
+ ]
+}

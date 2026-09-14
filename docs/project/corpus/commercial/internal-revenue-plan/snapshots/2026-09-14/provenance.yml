@@ -1,0 +1,27 @@
+dataset: commercial/internal-revenue-plan
+snapshot: '2026-09-14'
+created_at: '2026-09-14T10:30:26+00:00'
+sources:
+- type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for FP&A long-range-plan export)
+  retrieved_at: '2026-09-14T10:30:26+00:00'
+  usage_rights: internal
+  files:
+  - path: raw/export.json
+    sha256: 72063420cc77870e2b66708794f72f9562c90b20171f8fa1bea8adf6dc51156e
+transforms:
+- step: normalize
+  spec:
+    command: python3 gen.py normalize {raw_dir} {normalized_dir}
+  outputs:
+  - path: normalized/records.csv
+    sha256: d584b9cb4c3fca599b8191122f3ad5cc326a869e674a078b4281c38f7ddda98e
+    parents:
+    - 72063420cc77870e2b66708794f72f9562c90b20171f8fa1bea8adf6dc51156e
+  script_sha256: e9ee93796a07dbdf82a387f24b1e1f77f45b3831fcd6dff18e3e6ba32638c9e4
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 120

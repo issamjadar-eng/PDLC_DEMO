@@ -1,0 +1,375 @@
+{
+ "bq": "MQ-08",
+ "edition": "2026-09-14",
+ "generated_at": "2026-09-14T10:31:59+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "manufacturing.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "overdue-calibrations",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "posture-by-site",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "posture-history",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "posture-stat",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "revc-blockers",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "revc-lots",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "manufacturing/internal-process-validation@2026-09-14",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "manufacturing/internal-production-lots@2026-09-14",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "manufacturing/internal-process-validation",
+   "snapshot": "2026-09-14",
+   "age_days": 0,
+   "max_age_days": 30,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "manufacturing/internal-production-lots",
+   "snapshot": "2026-09-14",
+   "age_days": 0,
+   "max_age_days": 30,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Validation & calibration posture",
+    "series": "posture-stat",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-process-validation@2026-09-14 + manufacturing/internal-production-lots@2026-09-14",
+    "derivation": {
+     "method": "counts of register entries by status at as_of; rev C blockers = open rev C validation items + DHR-incomplete rev C lots",
+     "inputs": [
+      "src: manufacturing/internal-process-validation@2026-09-14",
+      "src: manufacturing/internal-production-lots@2026-09-14",
+      "config: manufacturing.yml"
+     ]
+    }
+   },
+   {
+    "what": "Overdue vs due-soon items by site",
+    "series": "posture-by-site",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-process-validation@2026-09-14",
+    "derivation": {
+     "method": "register entries with status overdue / due per site",
+     "inputs": [
+      "src: manufacturing/internal-process-validation@2026-09-14"
+     ]
+    }
+   },
+   {
+    "what": "Overdue vs due-soon items by record type",
+    "series": "posture-by-type",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-process-validation@2026-09-14",
+    "derivation": {
+     "method": "register entries with status overdue / due per type",
+     "inputs": [
+      "src: manufacturing/internal-process-validation@2026-09-14"
+     ]
+    }
+   },
+   {
+    "what": "Overdue vs due-soon items by product line",
+    "series": "posture-by-line",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-process-validation@2026-09-14",
+    "derivation": {
+     "method": "register entries with status overdue / due per product line (empty = shared)",
+     "inputs": [
+      "src: manufacturing/internal-process-validation@2026-09-14"
+     ]
+    }
+   },
+   {
+    "what": "Overdue calibrations \u2014 days past due",
+    "series": "overdue-calibrations",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-process-validation@2026-09-14",
+    "derivation": {
+     "method": "as_of \u2212 due_date for calibration entries with status overdue",
+     "inputs": [
+      "src: manufacturing/internal-process-validation@2026-09-14"
+     ]
+    }
+   },
+   {
+    "what": "PP3500 rev C \u2014 validation items not yet validated",
+    "series": "revc-blockers",
+    "evidence_class": "measured",
+    "source": "manufacturing/internal-process-validation@2026-09-14"
+   },
+   {
+    "what": "PP3500 rev C lots by release state",
+    "series": "revc-lots",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-production-lots@2026-09-14",
+    "derivation": {
+     "method": "rev C lots: released = release_date set; in process = unreleased with DHR complete; blocked = unreleased with DHR incomplete",
+     "inputs": [
+      "src: manufacturing/internal-production-lots@2026-09-14"
+     ]
+    }
+   }
+  ],
+  "assumed": [],
+  "missing": [
+   {
+    "what": "Overdue / due items over time",
+    "series": "posture-history",
+    "evidence_class": "unavailable",
+    "source": "a status register captures posture at one as-of date; a trend needs recurring corpus snapshots of manufacturing/internal-process-validation (refresh on the dataset's 30-day cadence) \u2014 nothing is reconstructed or approximated here",
+    "note": "a status register captures posture at one as-of date; a trend needs recurring corpus snapshots of manufacturing/internal-process-validation (refresh on the dataset's 30-day cadence) \u2014 nothing is reconstructed or approximated here"
+   }
+  ]
+ },
+ "plan": {
+  "path": "plans/MQ-08.md",
+  "status": "in-sync",
+  "pinned": "6fd260c245ca5539045d13502071efb7ed742c4088475f45d4bba9f6e03ccf05",
+  "current": "6fd260c245ca5539045d13502071efb7ed742c4088475f45d4bba9f6e03ccf05"
+ },
+ "verifications": [],
+ "code": {
+  "status": "unreviewed",
+  "artifacts": [
+   {
+    "path": "bq_modules/mq_08.py",
+    "sha256_12": "c1897c4d21b2",
+    "role": "module",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for MQ-08"
+    },
+    "review": null,
+    "review_history": []
+   },
+   {
+    "path": "computations.py",
+    "sha256_12": "9239326ab952",
+    "role": "shared",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": null,
+    "review": null,
+    "review_history": []
+   },
+   {
+    "path": "corpus:manufacturing/internal-process-validation/gen.py",
+    "sha256_12": "4c4a547b1359",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": null,
+    "review_history": []
+   },
+   {
+    "path": "corpus:manufacturing/internal-production-lots/gen.py",
+    "sha256_12": "1166f0f83c96",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": null,
+    "review_history": []
+   }
+  ]
+ },
+ "verification_plan": [
+  {
+   "gate": "claim-lint",
+   "kind": "machine",
+   "note": "every numeric claim marker-cited; zero lint errors (every edition)",
+   "done": true,
+   "evidence": "0 error(s) / 0 warning(s)"
+  },
+  {
+   "gate": "pin-freshness",
+   "kind": "machine",
+   "note": "all pinned snapshots within max_age_days, or a cited active waiver (every edition)",
+   "done": true,
+   "evidence": "2 pin(s) fresh"
+  },
+  {
+   "gate": "plan-currency",
+   "kind": "machine",
+   "note": "the edition was computed under the current version of this plan (every edition)",
+   "done": true,
+   "evidence": "plan in-sync"
+  },
+  {
+   "gate": "code-audit",
+   "kind": "machine",
+   "note": "deterministic code checks green and the computation reviewed at its pinned bytes (each code change)",
+   "done": false,
+   "evidence": "code unreviewed"
+  },
+  {
+   "gate": "adversarial-verify",
+   "kind": "agent",
+   "note": "independent pins-only re-derivation of the headline claims, incl. the two-pin rev C join (each substantive re-answer)",
+   "done": false,
+   "evidence": "no adversarial-verify record filed on this edition"
+  },
+  {
+   "gate": "red-team",
+   "kind": "agent",
+   "note": "framing attack on the answer's presentation and emphasis, esp. the released-while-open caveat (each substantive re-answer)",
+   "done": false,
+   "evidence": "no red-team record filed on this edition"
+  }
+ ]
+}

@@ -1,0 +1,625 @@
+{
+ "bq": "BQ-20",
+ "edition": "2026-09-14",
+ "generated_at": "2026-09-14T10:31:45+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "assume",
+   "value": "A-001",
+   "resolved": true,
+   "note": "active assumption (low confidence)"
+  },
+  {
+   "kind": "config",
+   "value": "commercial.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "alarm-data-gap",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "class-monthly-events",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "docket-watch",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "total-class-events",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "watch-events",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "watch-signals",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-complaints@2026-09-14",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-regulatory-docket@2026-09-14",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-signal-register@2026-09-14",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/openfda-maude-pca-monthly@2026-09-14",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/internal-complaints",
+   "snapshot": "2026-09-14",
+   "age_days": 0,
+   "max_age_days": 7,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/internal-signal-register",
+   "snapshot": "2026-09-14",
+   "age_days": 0,
+   "max_age_days": 90,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/openfda-maude-pca-monthly",
+   "snapshot": "2026-09-14",
+   "age_days": 0,
+   "max_age_days": 30,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/internal-regulatory-docket",
+   "snapshot": "2026-09-14",
+   "age_days": 0,
+   "max_age_days": 30,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Watch-category field events (internal log)",
+    "series": "watch-stat",
+    "evidence_class": "measured",
+    "source": "commercial/internal-complaints@2026-09-14"
+   },
+   {
+    "what": "Watch-category events by category",
+    "series": "watch-events",
+    "evidence_class": "measured",
+    "source": "commercial/internal-complaints@2026-09-14"
+   },
+   {
+    "what": "Internal watch-category events per month (demo)",
+    "series": "watch-monthly",
+    "evidence_class": "measured",
+    "source": "commercial/internal-complaints@2026-09-14"
+   },
+   {
+    "what": "Watch-category signals and dispositions",
+    "series": "watch-signals",
+    "evidence_class": "measured",
+    "source": "commercial/internal-signal-register@2026-09-14"
+   },
+   {
+    "what": "Open docket MDR items in watch categories",
+    "series": "docket-watch",
+    "evidence_class": "derived",
+    "source": "commercial/internal-regulatory-docket@2026-09-14",
+    "derivation": {
+     "method": "open MDR-type docket records whose category is on the declared watch list; joined to complaints by category only (no shared key between the two logs)",
+     "inputs": [
+      "src: commercial/internal-regulatory-docket@2026-09-14",
+      "config: commercial.yml"
+     ]
+    }
+   },
+   {
+    "what": "Class-wide PCA MAUDE events per month (REAL)",
+    "series": "class-monthly-events",
+    "evidence_class": "measured",
+    "source": "commercial/openfda-maude-pca-monthly@2026-09-14"
+   },
+   {
+    "what": "Class-wide PCA MAUDE events (charted window)",
+    "series": "total-class-events",
+    "evidence_class": "measured",
+    "source": "commercial/openfda-maude-pca-monthly@2026-09-14"
+   }
+  ],
+  "assumed": [
+   {
+    "what": "figure(s) citing A-001",
+    "series": null,
+    "evidence_class": "assumed",
+    "source": "A-001"
+   }
+  ],
+  "missing": [
+   {
+    "what": "PCA-class event rate per installed device",
+    "series": "class-event-rate",
+    "evidence_class": "unavailable",
+    "source": "A-001",
+    "note": "MAUDE has no denominator; blocked until A-001 quantifies installed bases \u2014 never published as a rate"
+   },
+   {
+    "what": "Alarm-analytics event-level data",
+    "series": "alarm-data-gap",
+    "evidence_class": "unavailable",
+    "source": "raw alarm telemetry is not a corpus dataset \u2014 only signals sourced from alarm analytics are visible in the register",
+    "note": "raw alarm telemetry is not a corpus dataset \u2014 only signals sourced from alarm analytics are visible in the register"
+   }
+  ]
+ },
+ "plan": {
+  "path": "plans/BQ-20.md",
+  "status": "in-sync",
+  "pinned": "77784151b48ebcf2167774c0643b910811036d0c5a7c2f3eb44fcc4b4b0d3adc",
+  "current": "77784151b48ebcf2167774c0643b910811036d0c5a7c2f3eb44fcc4b4b0d3adc"
+ },
+ "verifications": [],
+ "code": {
+  "status": "reviewed-current",
+  "artifacts": [
+   {
+    "path": "bq_modules/bq_20.py",
+    "sha256_12": "f93cdd0f18f7",
+    "role": "module",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-20"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-safety-econ-2026-07-27.md"
+    },
+    "review_history": [
+     {
+      "sha256_12": "2a5b45cf34fc",
+      "date": "2026-07-27",
+      "verdict": "changes-requested",
+      "by": "AI code reviewer",
+      "summary": "All prior fixes landed (derived docket join, 3-month lag trim + caveat); but the headline hardcodes WATCH TRIGGERED / E-20.1 NOT met, so the zero-event steady state renders a false triggered watch contradicting the computed verdict.",
+      "findings": [
+       {
+        "id": "F-1",
+        "severity": "high",
+        "summary": "Headline hardcodes 'WATCH TRIGGERED' + 'E-20.1 NOT met'; zero watch events still renders a triggered watch",
+        "disposition": "fix: branch headline on events; derive met/NOT-met from computed verdict"
+       },
+       {
+        "id": "F-2",
+        "severity": "medium",
+        "summary": "Report body literal '(both over-delivery signals landed as upgrade-items)' beside a computed count",
+        "disposition": "fix: derive from watch-signal rows or drop; table already shows the facts"
+       },
+       {
+        "id": "F-3",
+        "severity": "low",
+        "summary": "W1 'loop is demonstrably closing' unconditional even when closed_loop == 0",
+        "disposition": "fix: gate the clause on closed_loop"
+       },
+       {
+        "id": "F-4",
+        "severity": "low",
+        "summary": "Lag trim degrades to no trim when MAUDE series has <= LAG_TRIM_MONTHS months",
+        "disposition": "accept: unreachable on the 40-month pin; note for reuse"
+       }
+      ],
+      "detail_ref": "tasks/ben/_work/108-code-review-safety-econ-2026-07-27.md",
+      "superseded": true
+     }
+    ]
+   },
+   {
+    "path": "computations.py",
+    "sha256_12": "214082049489",
+    "role": "shared",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-06, BQ-12, BQ-18, BQ-19, BQ-23, BQ-24, BQ-25, BQ-26, BQ-27"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-shared-inline-2026-07-27.md"
+    },
+    "review_history": [
+     {
+      "sha256_12": "bf7fb8fa4263",
+      "date": "2026-07-27",
+      "verdict": "approved-with-findings",
+      "by": "AI code reviewer",
+      "summary": "Shared helpers sound (median/dedupe/windows/determinism verified; loud pin errors); BQ-26 refit commitments all implemented; findings are latent hazards and literal-fact rot risks, none invalidates a current published number.",
+      "findings": [
+       {
+        "id": "F-1",
+        "severity": "medium",
+        "summary": "helper/pct: thresholds compared on rounded rates (bq24 pause, bq18 breach, bq26 verdicts) \u2014 knife-edge risk",
+        "disposition": "fix: compare unrounded, round only at render"
+       },
+       {
+        "id": "F-2",
+        "severity": "medium",
+        "summary": "helper/module_dispatch: ModuleNotFoundError inside an existing bq module swallowed as 'no computation'",
+        "disposition": "fix: re-raise unless e.name is the dispatched module"
+       },
+       {
+        "id": "F-3",
+        "severity": "low",
+        "summary": "helper/evaluate_expectations: computed results with unknown E-ids silently dropped",
+        "disposition": "fix: loud check on unknown result ids"
+       },
+       {
+        "id": "F-4",
+        "severity": "low",
+        "summary": "helper/pct: zero denominator renders 0.0 not n/a",
+        "disposition": "accept: no caller stratum currently empties; revisit if one can"
+       },
+       {
+        "id": "F-5",
+        "severity": "low",
+        "summary": "helper/expectations_section: unescaped pipes in catalog text break markdown tables",
+        "disposition": "accept: catalog-controlled input"
+       },
+       {
+        "id": "F-6",
+        "severity": "medium",
+        "summary": "bq06: 'fastest frequent filer' computed from top_n-truncated set; exact today by coincidence (6 of 15 >=2)",
+        "disposition": "fix: filter >=2 clearances before top_n"
+       },
+       {
+        "id": "F-7",
+        "severity": "low",
+        "summary": "bq06: 'since 2021' scope literal rides on dataset acquisition scope (true vs pin)",
+        "disposition": "accept: plan-stated dataset scope"
+       },
+       {
+        "id": "F-8",
+        "severity": "low",
+        "summary": "bq18: current window 91d inclusive vs prior 90d \u2014 slight upward bias on 130% rising test; bq12 label same +1d",
+        "disposition": "fix: half-open windows"
+       },
+       {
+        "id": "F-9",
+        "severity": "low",
+        "summary": "bq18: window-trend derivation string hardcodes '90-day' instead of window param",
+        "disposition": "fix: interpolate the param"
+       },
+       {
+        "id": "F-10",
+        "severity": "medium",
+        "summary": "bq19: BLOCKED/'not yet quantified' headline is a literal; rate_ready computed but unused - rots if A-001 quantifies",
+        "disposition": "fix: branch headline on rate_ready; fail loud when True"
+       },
+       {
+        "id": "F-11",
+        "severity": "low",
+        "summary": "bq19: unmatched manufacturer names .title()-cased; plan says 'stay raw'",
+        "disposition": "accept: cosmetic, note for plan/code sync"
+       },
+       {
+        "id": "F-12",
+        "severity": "low",
+        "summary": "bq23: E-23.1 95% target judged by 100%-completion projection; target_pct unused in math (conservative)",
+        "disposition": "accept: plan defines projection as remaining/rate"
+       },
+       {
+        "id": "F-13",
+        "severity": "medium",
+        "summary": "bq24/25/26: complement status sets (!= scheduled / not in COMPLETED) absorb vocabulary drift, diluting the pause trigger",
+        "disposition": "fix: assert observed statuses subset of known vocabulary"
+       },
+       {
+        "id": "F-14",
+        "severity": "low",
+        "summary": "bq26: F26-2 residual \u2014 R1 mitigation lacks remote-path-rollback caveat (moot while convertible=0)",
+        "disposition": "fix: one clause at next re-answer"
+       },
+       {
+        "id": "F-15",
+        "severity": "medium",
+        "summary": "bq27: '(all on 2.9.x line)' narrated string-literal fact \u2014 true vs both pins, rots on refresh",
+        "disposition": "fix: compute the qualifier from the data"
+       },
+       {
+        "id": "F-16",
+        "severity": "medium",
+        "summary": "bq27: behind_map.get(fw,0) counts unmapped firmware as current \u2014 optimistic default on safety-framed metric",
+        "disposition": "fix: surface or fail on unmapped versions"
+       },
+       {
+        "id": "F-17",
+        "severity": "low",
+        "summary": "bq24/06/27/25: fragile lines.insert(-N) tail arithmetic + unused assume_path var \u2014 cosmetic",
+        "disposition": "accept: fold into next touch"
+       }
+      ],
+      "detail_ref": "tasks/ben/_work/108-code-review-shared-inline-2026-07-27.md",
+      "superseded": true
+     }
+    ]
+   },
+   {
+    "path": "corpus:commercial/internal-complaints/gen.py",
+    "sha256_12": "557b73673e87",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-generators-2026-07-27.md"
+    },
+    "review_history": []
+   },
+   {
+    "path": "corpus:commercial/internal-signal-register/gen.py",
+    "sha256_12": "7e77638cf3c4",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-generators-2026-07-27.md"
+    },
+    "review_history": [
+     {
+      "sha256_12": "9f26045d0ddf",
+      "date": "2026-07-27",
+      "verdict": "APPROVED-WITH-FINDINGS",
+      "by": "AI code reviewer",
+      "summary": "Deterministic; literal planted rows consume no rng (sound append hygiene); 16/40 died-in-spreadsheet knob verified; but planted UPG refs collide with generated ones.",
+      "findings": [
+       {
+        "id": "F-1",
+        "severity": "medium",
+        "summary": "UPG-0051/0052 each assigned to two signals: planted literals collide with counter-generated refs UPG-0050..0053",
+        "disposition": "fix: renumber planted refs outside generated range (e.g. UPG-0061/0062) or start refno above 53; land via refresh"
+       }
+      ],
+      "detail_ref": "tasks/ben/_work/108-code-review-generators-2026-07-27.md",
+      "superseded": true
+     }
+    ]
+   },
+   {
+    "path": "corpus:commercial/internal-regulatory-docket/gen.py",
+    "sha256_12": "2e32cc4e73c7",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [
+      {
+       "id": "F-1",
+       "severity": "low",
+       "summary": "Knob record ids (MDR-2025-0007/0018, MDR-2026-0005) are emergent from seed-42 draws, not pinned; re-knobbing renumbers them",
+       "disposition": "accept: verified at locked seed; re-verify README + complaints tie on any regeneration"
+      }
+     ],
+     "detail_ref": "tasks/ben/_work/108-code-review-generators-2026-07-27.md"
+    },
+    "review_history": []
+   }
+  ]
+ },
+ "verification_plan": [
+  {
+   "gate": "claim-lint",
+   "kind": "machine",
+   "note": "every figure marker-resolvable; zero errors before approval",
+   "done": true,
+   "evidence": "0 error(s) / 0 warning(s)"
+  },
+  {
+   "gate": "pin-freshness",
+   "kind": "machine",
+   "note": "all pinned snapshots within max_age_days (or visibly waived)",
+   "done": true,
+   "evidence": "4 pin(s) fresh"
+  },
+  {
+   "gate": "plan-currency",
+   "kind": "machine",
+   "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+   "done": true,
+   "evidence": "plan in-sync"
+  },
+  {
+   "gate": "code-audit",
+   "kind": "machine",
+   "note": "computation code hash pinned; deterministic checks green; AI review current",
+   "done": true,
+   "evidence": "code reviewed-current"
+  },
+  {
+   "gate": "adversarial-verify",
+   "kind": "agent",
+   "note": "independent pins-only re-derivation of the headline figures",
+   "done": false,
+   "evidence": "no adversarial-verify record filed on this edition"
+  },
+  {
+   "gate": "red-team",
+   "kind": "agent",
+   "note": "framing attack on basis choices, buried caveats, and verdict overclaim \u2014 incl. the three-month MAUDE lag trim staying visible",
+   "done": false,
+   "evidence": "no red-team record filed on this edition"
+  }
+ ]
+}
