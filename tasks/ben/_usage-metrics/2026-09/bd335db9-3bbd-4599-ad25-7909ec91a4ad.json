@@ -1,24 +1,33 @@
 {
   "by_day": {
     "2026-09-08": {
-      "cache_creation": 6986493,
-      "cache_read": 202415490,
-      "cache_write_1h": 2391283,
-      "cache_write_5m": 4595210,
-      "input": 18594,
-      "messages": 696,
-      "output": 506108
+      "cache_creation": 8984199,
+      "cache_read": 228596817,
+      "cache_write_1h": 2433088,
+      "cache_write_5m": 6551111,
+      "input": 23610,
+      "messages": 922,
+      "output": 609460
+    },
+    "2026-09-09": {
+      "cache_creation": 1099142,
+      "cache_read": 83375834,
+      "cache_write_1h": 1047255,
+      "cache_write_5m": 51887,
+      "input": 2596,
+      "messages": 94,
+      "output": 97857
     }
   },
   "by_model": {
     "claude-fable-5-1": {
-      "cache_creation": 6986493,
-      "cache_read": 202415490,
-      "cache_write_1h": 2391283,
-      "cache_write_5m": 4595210,
-      "input": 18594,
-      "messages": 696,
-      "output": 506108
+      "cache_creation": 10083341,
+      "cache_read": 311972651,
+      "cache_write_1h": 3480343,
+      "cache_write_5m": 6602998,
+      "input": 26206,
+      "messages": 1016,
+      "output": 707317
     }
   },
   "by_task": {
@@ -68,13 +77,24 @@
     },
     "ben/123": {
       "claude-fable-5-1": {
-        "cache_creation": 5161348,
-        "cache_read": 113412178,
-        "cache_write_1h": 945656,
-        "cache_write_5m": 4215692,
-        "input": 11200,
-        "messages": 442,
-        "output": 197810
+        "cache_creation": 8065720,
+        "cache_read": 163703742,
+        "cache_write_1h": 1894127,
+        "cache_write_5m": 6171593,
+        "input": 17054,
+        "messages": 697,
+        "output": 338993
+      }
+    },
+    "ben/124": {
+      "claude-fable-5-1": {
+        "cache_creation": 192476,
+        "cache_read": 59265597,
+        "cache_write_1h": 140589,
+        "cache_write_5m": 51887,
+        "input": 1758,
+        "messages": 65,
+        "output": 60026
       }
     }
   },
@@ -83,25 +103,27 @@
   "source": "transcript",
   "task_folder": "ben",
   "totals": {
-    "cache_creation": 6986493,
-    "cache_read": 202415490,
-    "cache_write_1h": 2391283,
-    "cache_write_5m": 4595210,
-    "input": 18594,
-    "messages": 696,
-    "output": 506108
+    "cache_creation": 10083341,
+    "cache_read": 311972651,
+    "cache_write_1h": 3480343,
+    "cache_write_5m": 6602998,
+    "input": 26206,
+    "messages": 1016,
+    "output": 707317
   },
   "user_turns": {
     "by_day": {
-      "2026-09-08": 24
+      "2026-09-08": 27,
+      "2026-09-09": 13
     },
     "by_task": {
       "_unattributed": 1,
       "ben/119": 5,
       "ben/120": 4,
       "ben/121": 1,
-      "ben/123": 13
+      "ben/123": 20,
+      "ben/124": 9
     },
-    "total": 24
+    "total": 40
   }
 }

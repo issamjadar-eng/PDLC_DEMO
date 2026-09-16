@@ -8,29 +8,56 @@
       "input": 189586,
       "messages": 528,
       "output": 359050
+    },
+    "2026-09-09": {
+      "cache_creation": 1365206,
+      "cache_read": 82757515,
+      "cache_write_1h": 1365206,
+      "cache_write_5m": 0,
+      "input": 3362,
+      "messages": 125,
+      "output": 177501
     }
   },
   "by_model": {
     "claude-fable-5-1": {
-      "cache_creation": 5271718,
-      "cache_read": 74405843,
-      "cache_write_1h": 923251,
+      "cache_creation": 5889476,
+      "cache_read": 90844078,
+      "cache_write_1h": 1541009,
       "cache_write_5m": 4348467,
-      "input": 189586,
-      "messages": 528,
-      "output": 359050
+      "input": 192756,
+      "messages": 557,
+      "output": 426946
+    },
+    "claude-opus-5": {
+      "cache_creation": 747448,
+      "cache_read": 66319280,
+      "cache_write_1h": 747448,
+      "cache_write_5m": 0,
+      "input": 192,
+      "messages": 96,
+      "output": 109605
     }
   },
   "by_task": {
     "118": {
       "claude-fable-5-1": {
-        "cache_creation": 5163290,
-        "cache_read": 72863358,
-        "cache_write_1h": 814823,
+        "cache_creation": 5781048,
+        "cache_read": 89301593,
+        "cache_write_1h": 1432581,
         "cache_write_5m": 4348467,
-        "input": 188186,
-        "messages": 512,
-        "output": 343579
+        "input": 191356,
+        "messages": 541,
+        "output": 411475
+      },
+      "claude-opus-5": {
+        "cache_creation": 747448,
+        "cache_read": 66319280,
+        "cache_write_1h": 747448,
+        "cache_write_5m": 0,
+        "input": 192,
+        "messages": 96,
+        "output": 109605
       }
     },
     "_unattributed": {
@@ -50,22 +77,23 @@
   "source": "transcript",
   "task_folder": "ben",
   "totals": {
-    "cache_creation": 5271718,
-    "cache_read": 74405843,
-    "cache_write_1h": 923251,
+    "cache_creation": 6636924,
+    "cache_read": 157163358,
+    "cache_write_1h": 2288457,
     "cache_write_5m": 4348467,
-    "input": 189586,
-    "messages": 528,
-    "output": 359050
+    "input": 192948,
+    "messages": 653,
+    "output": 536551
   },
   "user_turns": {
     "by_day": {
-      "2026-09-08": 19
+      "2026-09-08": 19,
+      "2026-09-09": 12
     },
     "by_task": {
-      "118": 15,
+      "118": 27,
       "_unattributed": 4
     },
-    "total": 19
+    "total": 31
   }
 }

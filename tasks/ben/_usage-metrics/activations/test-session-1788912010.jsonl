@@ -1,0 +1,10 @@
+{"ts":"2026-09-09T00:00:10Z","session_id":"test-session-1788912010","task_id":"024","event":"add"}
+{"ts":"2026-09-09T00:00:10Z","session_id":"test-session-1788912010","task_id":"025","event":"add"}
+{"ts":"2026-09-09T00:00:10Z","session_id":"test-session-1788912010","task_id":"024","event":"add"}
+{"ts":"2026-09-09T00:00:10Z","session_id":"test-session-1788912010","task_id":"025","event":"remove"}
+{"ts":"2026-09-09T00:00:10Z","session_id":"test-session-1788912010","task_id":"099","event":"add"}
+{"ts":"2026-09-09T00:00:10Z","session_id":"test-session-1788912010","task_id":"024","event":"add"}
+{"ts":"2026-09-09T00:00:11Z","session_id":"test-session-1788912010","task_id":"025","event":"add"}
+{"ts":"2026-09-09T00:00:11Z","session_id":"test-session-1788912010","task_id":"025","event":"remove"}
+{"ts":"2026-09-09T00:00:11Z","session_id":"test-session-1788912010","task_id":"024","event":"remove"}
+{"ts":"2026-09-09T00:00:11Z","session_id":"test-session-1788912010","task_id":"099","event":"add"}
