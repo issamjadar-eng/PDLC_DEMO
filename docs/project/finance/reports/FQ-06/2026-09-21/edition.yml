@@ -1,0 +1,16 @@
+bq: FQ-06
+edition: '2026-09-21'
+status: draft
+created_at: '2026-09-21T10:36:57+00:00'
+pins:
+  finance/internal-ar-inventory: '2026-09-21'
+plan:
+  path: plans/FQ-06.md
+  sha256: c61f1ad8f61ca948b0c5989bf0447796eddbd942235a98b373295608be59830b
+code_artifacts:
+- path: bq_modules/fq_06.py
+  sha256: 6bbb1a2b6d3c212d3953f3814531c9a4fe8695cae06fcd8ae5f4f65e79ed0d5a
+- path: computations.py
+  sha256: b4f491aaa38e3be4d1246b6e045ad3c8c067406d9e85120852ec20de5ee0d6be
+- path: corpus:finance/internal-ar-inventory/gen.py
+  sha256: 41a50050f7f4efeca006c8ae17ae3277d7da37a48e4520918bf70198a8917d7c

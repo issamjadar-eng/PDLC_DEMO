@@ -1,0 +1,27 @@
+dataset: commercial/internal-kol-register
+snapshot: '2026-09-21'
+created_at: '2026-09-21T10:35:32+00:00'
+sources:
+- type: file
+  path: /home/runner/work/PDLC_DEMO/PDLC_DEMO/docs/project/corpus/commercial/internal-kol-register/curated.csv
+  system_of_record: hand-distilled register — project KOL documents (docs/project/input-analysis/kol-feedback/,
+    docs/_analysis/pca-device/commercial-roadmap-kol-review/); source_doc cited per row
+  retrieved_at: '2026-09-21T10:35:32+00:00'
+  usage_rights: internal
+  files:
+  - path: raw/curated.csv
+    sha256: ae8dcc552006e3cdfc6b9877fbbc18fd73f84a43ddaa44579e6144dfb2e138a6
+transforms:
+- step: normalize
+  spec:
+    command: cp {raw_dir}/curated.csv {normalized_dir}/records.csv
+  outputs:
+  - path: normalized/records.csv
+    sha256: ae8dcc552006e3cdfc6b9877fbbc18fd73f84a43ddaa44579e6144dfb2e138a6
+    parents:
+    - ae8dcc552006e3cdfc6b9877fbbc18fd73f84a43ddaa44579e6144dfb2e138a6
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 38

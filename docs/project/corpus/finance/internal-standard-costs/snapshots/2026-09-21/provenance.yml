@@ -1,0 +1,28 @@
+dataset: finance/internal-standard-costs
+snapshot: '2026-09-21'
+created_at: '2026-09-21T10:35:43+00:00'
+as_of: '2026-08-31'
+sources:
+- type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for ERP standard-cost roll-up export)
+  retrieved_at: '2026-09-21T10:35:43+00:00'
+  usage_rights: internal
+  files:
+  - path: raw/export.json
+    sha256: fa8d633c0b76e30bb578375a32709dfa0ffc193265f88df915f922efd37fad5a
+transforms:
+- step: normalize
+  spec:
+    command: python3 gen.py normalize {raw_dir} {normalized_dir}
+  outputs:
+  - path: normalized/records.csv
+    sha256: f629209fafa02719ee3e41b85a2c538b0ae0448459d7f47f1e0cc7f14414a080
+    parents:
+    - fa8d633c0b76e30bb578375a32709dfa0ffc193265f88df915f922efd37fad5a
+  script_sha256: 062d1eb5e6d1cf7e5d4eba64251322ab87cd1150ab90f9f2b877ca96bbe036f0
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 160

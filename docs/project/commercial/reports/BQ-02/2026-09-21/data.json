@@ -1,0 +1,395 @@
+{
+ "bq": "BQ-02",
+ "series": [
+  {
+   "id": "concentration-stat",
+   "label": "Concentration headline",
+   "unit": "%",
+   "kind": "stat",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-sales-accounts",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "Meridian Health Alliance share of FY2025 direct-book revenue",
+     "value": 38.4
+    },
+    {
+     "label": "top-3 accounts share",
+     "value": 25.5
+    },
+    {
+     "label": "PCA-franchise share (incl. Cloud Suite)",
+     "value": 74.5
+    }
+   ]
+  },
+  {
+   "id": "share-by-gpo",
+   "label": "FY2025 direct-book revenue share by GPO",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "GPO revenue \u00f7 total direct-book revenue in the basis year",
+    "inputs": [
+     "src: commercial/internal-sales-accounts@2026-09-21"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-sales-accounts",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "independent",
+     "value": 48.9
+    },
+    {
+     "label": "Meridian Health Alliance",
+     "value": 38.4
+    },
+    {
+     "label": "Cascadia Health Partners",
+     "value": 6.9
+    },
+    {
+     "label": "AtlasPoint Purchasing",
+     "value": 3.3
+    },
+    {
+     "label": "NovaBridge Alliance",
+     "value": 2.4
+    }
+   ]
+  },
+  {
+   "id": "top-accounts",
+   "label": "Top-3 accounts, FY2025 direct book ($M)",
+   "unit": "$M",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-sales-accounts",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "Northgate Health System",
+     "value": 4.47,
+     "share_pct": 11.0
+    },
+    {
+     "label": "Clearwater Health Alliance",
+     "value": 3.26,
+     "share_pct": 8.0
+    },
+    {
+     "label": "Redwing Health System",
+     "value": 2.64,
+     "share_pct": 6.5
+    }
+   ]
+  },
+  {
+   "id": "franchise-share",
+   "label": "FY2025 direct-book share by franchise cut",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "revenue of the configured franchise lines \u00f7 total direct-book revenue in the basis year",
+    "inputs": [
+     "src: commercial/internal-sales-accounts@2026-09-21",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-sales-accounts",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "PCA franchise incl. Cloud Suite",
+     "value": 74.5
+    },
+    {
+     "label": "PCA pumps only",
+     "value": 58.8
+    }
+   ]
+  },
+  {
+   "id": "basis-sensitivity",
+   "label": "E-02.1 basis sensitivity \u2014 direct book vs total FY2025 revenue",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "direct-book coverage = direct-book total \u00f7 total calendar-year revenue from the financial ledger; anchor floor-of-total = anchor GPO direct-book revenue \u00f7 total revenue (lower bound \u2014 distributor-routed book unattributed)",
+    "inputs": [
+     "src: commercial/internal-sales-accounts@2026-09-21",
+     "src: commercial/internal-financials@2026-09-21",
+     "derived: share-by-gpo"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-financials",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "direct-book coverage of total FY2025 revenue",
+     "value": 50.6
+    },
+    {
+     "label": "Meridian Health Alliance share of direct book (tested basis)",
+     "value": 38.4
+    },
+    {
+     "label": "Meridian Health Alliance floor share of total revenue (alternative basis)",
+     "value": 19.4
+    }
+   ]
+  },
+  {
+   "id": "gpo-share-trend",
+   "label": "GPO share of direct-book revenue by FY",
+   "unit": "%",
+   "kind": "timeseries",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "per fiscal year on file: GPO revenue \u00f7 that year's total direct-book revenue",
+    "inputs": [
+     "src: commercial/internal-sales-accounts@2026-09-21"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-sales-accounts",
+    "snapshot": "2026-09-21"
+   },
+   "lines": [
+    {
+     "label": "AtlasPoint Purchasing",
+     "points": [
+      {
+       "x": "2024-01-01",
+       "y": 3.0
+      },
+      {
+       "x": "2025-01-01",
+       "y": 3.3
+      },
+      {
+       "x": "2026H1-01-01",
+       "y": 3.3
+      }
+     ]
+    },
+    {
+     "label": "Cascadia Health Partners",
+     "points": [
+      {
+       "x": "2024-01-01",
+       "y": 6.2
+      },
+      {
+       "x": "2025-01-01",
+       "y": 6.9
+      },
+      {
+       "x": "2026H1-01-01",
+       "y": 7.0
+      }
+     ]
+    },
+    {
+     "label": "Meridian Health Alliance",
+     "points": [
+      {
+       "x": "2024-01-01",
+       "y": 36.9
+      },
+      {
+       "x": "2025-01-01",
+       "y": 38.4
+      },
+      {
+       "x": "2026H1-01-01",
+       "y": 36.4
+      }
+     ]
+    },
+    {
+     "label": "NovaBridge Alliance",
+     "points": [
+      {
+       "x": "2024-01-01",
+       "y": 2.6
+      },
+      {
+       "x": "2025-01-01",
+       "y": 2.4
+      },
+      {
+       "x": "2026H1-01-01",
+       "y": 3.1
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "plan-loss-scenario",
+   "label": "Plan of record vs minus-anchor-GPO scenario ($M)",
+   "unit": "$M",
+   "kind": "timeseries",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "plan-year total minus the anchor GPO's FY2025 direct-book revenue held constant (stated floor scenario)",
+    "inputs": [
+     "src: commercial/internal-revenue-plan@2026-09-21",
+     "src: commercial/internal-sales-accounts@2026-09-21",
+     "derived: share-by-gpo"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-revenue-plan",
+    "snapshot": "2026-09-21"
+   },
+   "lines": [
+    {
+     "label": "plan of record",
+     "points": [
+      {
+       "x": "2026-01-01",
+       "y": 105.0
+      },
+      {
+       "x": "2027-01-01",
+       "y": 130.0
+      },
+      {
+       "x": "2028-01-01",
+       "y": 170.0
+      },
+      {
+       "x": "2029-01-01",
+       "y": 245.0
+      },
+      {
+       "x": "2030-01-01",
+       "y": 350.0
+      }
+     ]
+    },
+    {
+     "label": "minus anchor GPO",
+     "points": [
+      {
+       "x": "2026-01-01",
+       "y": 89.4
+      },
+      {
+       "x": "2027-01-01",
+       "y": 114.4
+      },
+      {
+       "x": "2028-01-01",
+       "y": 154.4
+      },
+      {
+       "x": "2029-01-01",
+       "y": 229.4
+      },
+      {
+       "x": "2030-01-01",
+       "y": 334.4
+      }
+     ]
+    }
+   ],
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "Meridian Health Alliance carries 38.4% of FY2025 direct-book revenue \u2014 above the 30% guardrail on the direct-book basis, and basis-sensitive: the direct book covers 50.6% of total FY2025 revenue, and Meridian Health Alliance's floor share of TOTAL revenue is 19.4% (under the guardrail); top-3 accounts 25.5%, PCA franchise 74.5%; losing the anchor GPO dents every plan year by $15.6M (14.9% of the FY2026 plan) under the stated constant-dent scenario",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "high",
+    "statement": "Meridian Health Alliance holds 38.4% of FY2025 direct-book revenue \u2014 over the 30% concentration guardrail",
+    "action": "Bring contract-renewal timeline and diversification options to the board; acquire GPO contract terms as a corpus dataset so exposure gets a date",
+    "evidence": [
+     "derived: share-by-gpo",
+     "src: commercial/internal-sales-accounts@2026-09-21",
+     "config: commercial.yml"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "medium",
+    "statement": "Top-3 accounts hold 25.5% of FY2025 direct-book revenue \u2014 account-level concentration compounds the GPO concentration (largest: Northgate Health System at 11.0%)",
+    "mitigation": "Named-account retention plans for the top accounts; monitor share annually alongside the GPO read",
+    "evidence": [
+     "derived: top-accounts",
+     "src: commercial/internal-sales-accounts@2026-09-21"
+    ]
+   },
+   {
+    "id": "R2",
+    "severity": "medium",
+    "statement": "The loss scenario is a floor, not a forecast: the dent is held constant at the FY2025 anchor book ($15.6M) while the plan grows, and it covers the direct book only \u2014 the true dent of losing Meridian Health Alliance grows with the plan",
+    "mitigation": "Re-run with anchor-share-of-plan scaling once GPO-level plan attribution exists; treat the charted scenario as the minimum impact",
+    "evidence": [
+     "derived: plan-loss-scenario",
+     "src: commercial/internal-revenue-plan@2026-09-21"
+    ]
+   },
+   {
+    "id": "R3",
+    "severity": "medium",
+    "statement": "The E-02.1 verdict is basis-sensitive: the guardrail is worded against annual revenue but tested on the direct book, which covers 50.6% of total FY2025 revenue \u2014 Meridian Health Alliance breaches on the direct book (38.4%) while its floor share of total revenue (19.4%) does not breach",
+    "mitigation": "Acquire account-attributed consumables/service revenue (or GPO attribution on the distributor book) to close the denominator gap; until then read the verdict on both bases, not one",
+    "evidence": [
+     "derived: basis-sensitivity",
+     "src: commercial/internal-sales-accounts@2026-09-21",
+     "src: commercial/internal-financials@2026-09-21"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "PCA-franchise dependence (74.5% of FY2025 direct book incl. Cloud Suite; pumps alone 58.8%) \u2014 single-franchise exposure rides on top of the customer concentration",
+    "evidence": [
+     "derived: franchise-share",
+     "src: commercial/internal-sales-accounts@2026-09-21"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-02.1",
+   "statement": "No single GPO carries more than 30% of annual revenue",
+   "expected": "<= 30% of FY revenue per GPO",
+   "basis": "generic concentration guardrail; no board-adopted limit",
+   "set_by": "lead-independent-director (demo)",
+   "validated": false,
+   "actual": "Meridian Health Alliance at 38.4% of FY2025 direct-book revenue; all other GPOs within the guardrail \u2014 BASIS-SENSITIVE: the expectation says annual revenue, but the test denominator is the direct book (50.6% of total FY2025 revenue); Meridian Health Alliance's floor share of total revenue is 19.4%, which does NOT breach the guardrail (distributor-routed revenue unattributed)",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: share-by-gpo",
+    "derived: basis-sensitivity"
+   ]
+  }
+ ]
+}

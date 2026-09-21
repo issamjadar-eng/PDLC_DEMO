@@ -1,0 +1,28 @@
+dataset: manufacturing/internal-production-lots
+snapshot: '2026-09-21'
+created_at: '2026-09-21T10:35:44+00:00'
+as_of: '2026-08-31'
+sources:
+- type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for MES / lot-traveler export)
+  retrieved_at: '2026-09-21T10:35:44+00:00'
+  usage_rights: internal
+  files:
+  - path: raw/export.json
+    sha256: b58f64f26aa2721c9dae47bc6e013e2edcc2f76071a89b2ba8bc5850bbccb67e
+transforms:
+- step: normalize
+  spec:
+    command: python3 gen.py normalize {raw_dir} {normalized_dir}
+  outputs:
+  - path: normalized/records.csv
+    sha256: b79743c4b00bc0de3093a0c58a21995c170b4f8af8c89cbb51190f707ff1d1e3
+    parents:
+    - b58f64f26aa2721c9dae47bc6e013e2edcc2f76071a89b2ba8bc5850bbccb67e
+  script_sha256: 1166f0f83c967e4a03f3447aaa5ae6b27263ebef7dae944b22c6cce511b0fc5a
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 672

@@ -1,0 +1,1065 @@
+{
+ "bq": "FQ-06",
+ "series": [
+  {
+   "id": "dso-stat",
+   "label": "Company DSO",
+   "unit": "days",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "\u03a3 AR \u00f7 \u03a3 (AR \u00f7 dso_days) over all rows of the latest period",
+    "inputs": [
+     "src: finance/internal-ar-inventory@2026-09-21",
+     "config: finance.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "finance/internal-ar-inventory",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "DSO at 2026-08",
+     "value": 55.2,
+     "sub": "target 50 days; over-90 share 13.6%"
+    }
+   ]
+  },
+  {
+   "id": "cash-trapped",
+   "label": "Cash trapped above target",
+   "unit": "USD M",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "over-90 AR + \u03a3 per line max(0, inventory \u2212 (inventory \u00f7 days) \u00d7 target days)",
+    "inputs": [
+     "src: finance/internal-ar-inventory@2026-09-21",
+     "config: finance.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "finance/internal-ar-inventory",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "over-90 receivables",
+     "value": 1.77
+    },
+    {
+     "label": "inventory above target cover",
+     "value": 1.59
+    }
+   ]
+  },
+  {
+   "id": "dso-by-channel",
+   "label": "DSO by channel (latest)",
+   "unit": "days",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "\u03a3 AR \u00f7 \u03a3 (AR \u00f7 dso_days) per channel, latest period",
+    "inputs": [
+     "src: finance/internal-ar-inventory@2026-09-21"
+    ]
+   },
+   "provenance": {
+    "dataset": "finance/internal-ar-inventory",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "Cascadia Supply Co-op",
+     "value": 54.1,
+     "ar_musd": 1.33
+    },
+    {
+     "label": "Meridian Health Alliance",
+     "value": 46.5,
+     "ar_musd": 2.22
+    },
+    {
+     "label": "Northgate Purchasing Group",
+     "value": 80.0,
+     "ar_musd": 3.68
+    },
+    {
+     "label": "direct",
+     "value": 49.2,
+     "ar_musd": 5.73
+    }
+   ]
+  },
+  {
+   "id": "dso-by-region",
+   "label": "DSO by region (latest)",
+   "unit": "days",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "\u03a3 AR \u00f7 \u03a3 (AR \u00f7 dso_days) per region, latest period",
+    "inputs": [
+     "src: finance/internal-ar-inventory@2026-09-21"
+    ]
+   },
+   "provenance": {
+    "dataset": "finance/internal-ar-inventory",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "APAC",
+     "value": 58.2,
+     "ar_musd": 2.05
+    },
+    {
+     "label": "EMEA",
+     "value": 56.4,
+     "ar_musd": 3.99
+    },
+    {
+     "label": "NA",
+     "value": 53.7,
+     "ar_musd": 6.93
+    }
+   ]
+  },
+  {
+   "id": "over90-by-channel",
+   "label": "Over-90 AR share by channel (latest)",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "\u03a3 ar_over_90 \u00f7 \u03a3 AR per channel, latest period",
+    "inputs": [
+     "src: finance/internal-ar-inventory@2026-09-21",
+     "config: finance.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "finance/internal-ar-inventory",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "Cascadia Supply Co-op",
+     "value": 8.5,
+     "over90_musd": 0.11
+    },
+    {
+     "label": "Meridian Health Alliance",
+     "value": 6.5,
+     "over90_musd": 0.14
+    },
+    {
+     "label": "Northgate Purchasing Group",
+     "value": 32.5,
+     "over90_musd": 1.2
+    },
+    {
+     "label": "direct",
+     "value": 5.5,
+     "over90_musd": 0.31
+    }
+   ]
+  },
+  {
+   "id": "over90-trend",
+   "label": "Over-90 AR share by channel, monthly",
+   "unit": "%",
+   "kind": "timeseries",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "\u03a3 ar_over_90 \u00f7 \u03a3 AR per channel per month over the full history",
+    "inputs": [
+     "src: finance/internal-ar-inventory@2026-09-21"
+    ]
+   },
+   "provenance": {
+    "dataset": "finance/internal-ar-inventory",
+    "snapshot": "2026-09-21"
+   },
+   "lines": [
+    {
+     "label": "Cascadia Supply Co-op",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 8.7
+      },
+      {
+       "x": "2025-02-01",
+       "y": 8.7
+      },
+      {
+       "x": "2025-03-01",
+       "y": 8.7
+      },
+      {
+       "x": "2025-04-01",
+       "y": 8.6
+      },
+      {
+       "x": "2025-05-01",
+       "y": 8.6
+      },
+      {
+       "x": "2025-06-01",
+       "y": 8.6
+      },
+      {
+       "x": "2025-07-01",
+       "y": 8.6
+      },
+      {
+       "x": "2025-08-01",
+       "y": 8.6
+      },
+      {
+       "x": "2025-09-01",
+       "y": 8.6
+      },
+      {
+       "x": "2025-10-01",
+       "y": 8.6
+      },
+      {
+       "x": "2025-11-01",
+       "y": 8.6
+      },
+      {
+       "x": "2025-12-01",
+       "y": 8.6
+      },
+      {
+       "x": "2026-01-01",
+       "y": 8.5
+      },
+      {
+       "x": "2026-02-01",
+       "y": 8.5
+      },
+      {
+       "x": "2026-03-01",
+       "y": 8.5
+      },
+      {
+       "x": "2026-04-01",
+       "y": 8.5
+      },
+      {
+       "x": "2026-05-01",
+       "y": 8.5
+      },
+      {
+       "x": "2026-06-01",
+       "y": 8.5
+      },
+      {
+       "x": "2026-07-01",
+       "y": 8.5
+      },
+      {
+       "x": "2026-08-01",
+       "y": 8.5
+      }
+     ]
+    },
+    {
+     "label": "Meridian Health Alliance",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 6.7
+      },
+      {
+       "x": "2025-02-01",
+       "y": 6.7
+      },
+      {
+       "x": "2025-03-01",
+       "y": 6.7
+      },
+      {
+       "x": "2025-04-01",
+       "y": 6.6
+      },
+      {
+       "x": "2025-05-01",
+       "y": 6.6
+      },
+      {
+       "x": "2025-06-01",
+       "y": 6.7
+      },
+      {
+       "x": "2025-07-01",
+       "y": 6.6
+      },
+      {
+       "x": "2025-08-01",
+       "y": 6.6
+      },
+      {
+       "x": "2025-09-01",
+       "y": 6.6
+      },
+      {
+       "x": "2025-10-01",
+       "y": 6.5
+      },
+      {
+       "x": "2025-11-01",
+       "y": 6.6
+      },
+      {
+       "x": "2025-12-01",
+       "y": 6.6
+      },
+      {
+       "x": "2026-01-01",
+       "y": 6.5
+      },
+      {
+       "x": "2026-02-01",
+       "y": 6.5
+      },
+      {
+       "x": "2026-03-01",
+       "y": 6.5
+      },
+      {
+       "x": "2026-04-01",
+       "y": 6.5
+      },
+      {
+       "x": "2026-05-01",
+       "y": 6.5
+      },
+      {
+       "x": "2026-06-01",
+       "y": 6.5
+      },
+      {
+       "x": "2026-07-01",
+       "y": 6.5
+      },
+      {
+       "x": "2026-08-01",
+       "y": 6.5
+      }
+     ]
+    },
+    {
+     "label": "Northgate Purchasing Group",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 8.7
+      },
+      {
+       "x": "2025-02-01",
+       "y": 8.7
+      },
+      {
+       "x": "2025-03-01",
+       "y": 8.7
+      },
+      {
+       "x": "2025-04-01",
+       "y": 8.7
+      },
+      {
+       "x": "2025-05-01",
+       "y": 8.6
+      },
+      {
+       "x": "2025-06-01",
+       "y": 8.6
+      },
+      {
+       "x": "2025-07-01",
+       "y": 8.6
+      },
+      {
+       "x": "2025-08-01",
+       "y": 8.6
+      },
+      {
+       "x": "2025-09-01",
+       "y": 8.6
+      },
+      {
+       "x": "2025-10-01",
+       "y": 8.6
+      },
+      {
+       "x": "2025-11-01",
+       "y": 8.6
+      },
+      {
+       "x": "2025-12-01",
+       "y": 8.6
+      },
+      {
+       "x": "2026-01-01",
+       "y": 8.5
+      },
+      {
+       "x": "2026-02-01",
+       "y": 12.0
+      },
+      {
+       "x": "2026-03-01",
+       "y": 15.4
+      },
+      {
+       "x": "2026-04-01",
+       "y": 18.8
+      },
+      {
+       "x": "2026-05-01",
+       "y": 22.2
+      },
+      {
+       "x": "2026-06-01",
+       "y": 25.6
+      },
+      {
+       "x": "2026-07-01",
+       "y": 29.0
+      },
+      {
+       "x": "2026-08-01",
+       "y": 32.5
+      }
+     ]
+    },
+    {
+     "label": "direct",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 5.7
+      },
+      {
+       "x": "2025-02-01",
+       "y": 5.7
+      },
+      {
+       "x": "2025-03-01",
+       "y": 5.7
+      },
+      {
+       "x": "2025-04-01",
+       "y": 5.6
+      },
+      {
+       "x": "2025-05-01",
+       "y": 5.6
+      },
+      {
+       "x": "2025-06-01",
+       "y": 5.6
+      },
+      {
+       "x": "2025-07-01",
+       "y": 5.6
+      },
+      {
+       "x": "2025-08-01",
+       "y": 5.6
+      },
+      {
+       "x": "2025-09-01",
+       "y": 5.6
+      },
+      {
+       "x": "2025-10-01",
+       "y": 5.6
+      },
+      {
+       "x": "2025-11-01",
+       "y": 5.6
+      },
+      {
+       "x": "2025-12-01",
+       "y": 5.6
+      },
+      {
+       "x": "2026-01-01",
+       "y": 5.5
+      },
+      {
+       "x": "2026-02-01",
+       "y": 5.5
+      },
+      {
+       "x": "2026-03-01",
+       "y": 5.5
+      },
+      {
+       "x": "2026-04-01",
+       "y": 5.5
+      },
+      {
+       "x": "2026-05-01",
+       "y": 5.5
+      },
+      {
+       "x": "2026-06-01",
+       "y": 5.5
+      },
+      {
+       "x": "2026-07-01",
+       "y": 5.5
+      },
+      {
+       "x": "2026-08-01",
+       "y": 5.5
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "inventory-days-by-line",
+   "label": "Inventory days of cover by line (latest)",
+   "unit": "days",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "\u03a3 inventory \u00f7 \u03a3 (inventory \u00f7 inventory_days) per line, latest period",
+    "inputs": [
+     "src: finance/internal-ar-inventory@2026-09-21",
+     "config: finance.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "finance/internal-ar-inventory",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "IP5000",
+     "value": 120.0,
+     "inventory_musd": 1.36,
+     "excess_musd": 0.51
+    },
+    {
+     "label": "PP3000",
+     "value": 134.1,
+     "inventory_musd": 2.45,
+     "excess_musd": 1.08
+    },
+    {
+     "label": "PP3500",
+     "value": 55.9,
+     "inventory_musd": 3.28,
+     "excess_musd": 0.0
+    },
+    {
+     "label": "SP6000",
+     "value": 63.1,
+     "inventory_musd": 0.89,
+     "excess_musd": 0.0
+    },
+    {
+     "label": "SP6500",
+     "value": 61.4,
+     "inventory_musd": 0.6,
+     "excess_musd": 0.0
+    }
+   ]
+  },
+  {
+   "id": "inventory-days-trend",
+   "label": "Inventory days by line, monthly",
+   "unit": "days",
+   "kind": "timeseries",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "\u03a3 inventory \u00f7 \u03a3 (inventory \u00f7 inventory_days) per line per month; smaller lines combined",
+    "inputs": [
+     "src: finance/internal-ar-inventory@2026-09-21"
+    ]
+   },
+   "provenance": {
+    "dataset": "finance/internal-ar-inventory",
+    "snapshot": "2026-09-21"
+   },
+   "lines": [
+    {
+     "label": "PP3500",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 54.7
+      },
+      {
+       "x": "2025-02-01",
+       "y": 55.0
+      },
+      {
+       "x": "2025-03-01",
+       "y": 55.0
+      },
+      {
+       "x": "2025-04-01",
+       "y": 55.3
+      },
+      {
+       "x": "2025-05-01",
+       "y": 55.8
+      },
+      {
+       "x": "2025-06-01",
+       "y": 56.3
+      },
+      {
+       "x": "2025-07-01",
+       "y": 54.9
+      },
+      {
+       "x": "2025-08-01",
+       "y": 55.0
+      },
+      {
+       "x": "2025-09-01",
+       "y": 55.3
+      },
+      {
+       "x": "2025-10-01",
+       "y": 55.3
+      },
+      {
+       "x": "2025-11-01",
+       "y": 55.9
+      },
+      {
+       "x": "2025-12-01",
+       "y": 55.5
+      },
+      {
+       "x": "2026-01-01",
+       "y": 55.9
+      },
+      {
+       "x": "2026-02-01",
+       "y": 54.8
+      },
+      {
+       "x": "2026-03-01",
+       "y": 55.1
+      },
+      {
+       "x": "2026-04-01",
+       "y": 55.7
+      },
+      {
+       "x": "2026-05-01",
+       "y": 55.9
+      },
+      {
+       "x": "2026-06-01",
+       "y": 56.4
+      },
+      {
+       "x": "2026-07-01",
+       "y": 56.5
+      },
+      {
+       "x": "2026-08-01",
+       "y": 55.9
+      }
+     ]
+    },
+    {
+     "label": "PP3000",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 71.9
+      },
+      {
+       "x": "2025-02-01",
+       "y": 75.4
+      },
+      {
+       "x": "2025-03-01",
+       "y": 78.2
+      },
+      {
+       "x": "2025-04-01",
+       "y": 82.7
+      },
+      {
+       "x": "2025-05-01",
+       "y": 85.0
+      },
+      {
+       "x": "2025-06-01",
+       "y": 88.5
+      },
+      {
+       "x": "2025-07-01",
+       "y": 92.1
+      },
+      {
+       "x": "2025-08-01",
+       "y": 95.2
+      },
+      {
+       "x": "2025-09-01",
+       "y": 98.8
+      },
+      {
+       "x": "2025-10-01",
+       "y": 101.7
+      },
+      {
+       "x": "2025-11-01",
+       "y": 105.7
+      },
+      {
+       "x": "2025-12-01",
+       "y": 109.4
+      },
+      {
+       "x": "2026-01-01",
+       "y": 111.5
+      },
+      {
+       "x": "2026-02-01",
+       "y": 114.7
+      },
+      {
+       "x": "2026-03-01",
+       "y": 118.8
+      },
+      {
+       "x": "2026-04-01",
+       "y": 121.1
+      },
+      {
+       "x": "2026-05-01",
+       "y": 124.5
+      },
+      {
+       "x": "2026-06-01",
+       "y": 128.7
+      },
+      {
+       "x": "2026-07-01",
+       "y": 132.1
+      },
+      {
+       "x": "2026-08-01",
+       "y": 134.1
+      }
+     ]
+    },
+    {
+     "label": "IP5000",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 68.2
+      },
+      {
+       "x": "2025-02-01",
+       "y": 70.2
+      },
+      {
+       "x": "2025-03-01",
+       "y": 74.3
+      },
+      {
+       "x": "2025-04-01",
+       "y": 75.6
+      },
+      {
+       "x": "2025-05-01",
+       "y": 79.1
+      },
+      {
+       "x": "2025-06-01",
+       "y": 81.1
+      },
+      {
+       "x": "2025-07-01",
+       "y": 84.7
+      },
+      {
+       "x": "2025-08-01",
+       "y": 86.7
+      },
+      {
+       "x": "2025-09-01",
+       "y": 89.8
+      },
+      {
+       "x": "2025-10-01",
+       "y": 93.0
+      },
+      {
+       "x": "2025-11-01",
+       "y": 95.0
+      },
+      {
+       "x": "2025-12-01",
+       "y": 98.8
+      },
+      {
+       "x": "2026-01-01",
+       "y": 100.7
+      },
+      {
+       "x": "2026-02-01",
+       "y": 103.3
+      },
+      {
+       "x": "2026-03-01",
+       "y": 106.2
+      },
+      {
+       "x": "2026-04-01",
+       "y": 108.3
+      },
+      {
+       "x": "2026-05-01",
+       "y": 112.1
+      },
+      {
+       "x": "2026-06-01",
+       "y": 114.0
+      },
+      {
+       "x": "2026-07-01",
+       "y": 116.6
+      },
+      {
+       "x": "2026-08-01",
+       "y": 120.0
+      }
+     ]
+    },
+    {
+     "label": "SP6000+SP6500",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 61.3
+      },
+      {
+       "x": "2025-02-01",
+       "y": 61.6
+      },
+      {
+       "x": "2025-03-01",
+       "y": 61.4
+      },
+      {
+       "x": "2025-04-01",
+       "y": 61.7
+      },
+      {
+       "x": "2025-05-01",
+       "y": 62.0
+      },
+      {
+       "x": "2025-06-01",
+       "y": 61.3
+      },
+      {
+       "x": "2025-07-01",
+       "y": 61.8
+      },
+      {
+       "x": "2025-08-01",
+       "y": 61.6
+      },
+      {
+       "x": "2025-09-01",
+       "y": 62.1
+      },
+      {
+       "x": "2025-10-01",
+       "y": 62.0
+      },
+      {
+       "x": "2025-11-01",
+       "y": 62.4
+      },
+      {
+       "x": "2025-12-01",
+       "y": 62.6
+      },
+      {
+       "x": "2026-01-01",
+       "y": 62.5
+      },
+      {
+       "x": "2026-02-01",
+       "y": 62.4
+      },
+      {
+       "x": "2026-03-01",
+       "y": 62.2
+      },
+      {
+       "x": "2026-04-01",
+       "y": 62.1
+      },
+      {
+       "x": "2026-05-01",
+       "y": 62.4
+      },
+      {
+       "x": "2026-06-01",
+       "y": 63.1
+      },
+      {
+       "x": "2026-07-01",
+       "y": 62.1
+      },
+      {
+       "x": "2026-08-01",
+       "y": 62.4
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "subscription-ar",
+   "label": "Subscription (cloud-suite) receivables",
+   "unit": "USD M",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "note": "the working-capital cube (internal-ar-inventory) carries the five device lines only; subscription billing needs its own AR-aging feed."
+   },
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "As of 2026-08: company DSO 55.2 days vs 50 target (OVER); Northgate Purchasing Group DSO 80.0 days with over-90 share 32.5% (1 of 4 channels over the 15% threshold); inventory days over the 75-day target on 2 of 5 lines (PP3000 134, IP5000 120); cash trapped $3.36M = $1.77M over-90 AR + $1.59M inventory above target cover",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "high",
+    "statement": "Northgate Purchasing Group: over-90 receivables $1.20M of $3.68M (32.5%) at 2026-08, DSO 80.0 days \u2014 over-90 share was 8.7% at 2025-01",
+    "action": "Collections escalation with the channel's contracting lead; hold new shipments against a payment plan; assess bad-debt provision",
+    "evidence": [
+     "derived: over90-by-channel",
+     "derived: over90-trend",
+     "src: finance/internal-ar-inventory@2026-09-21",
+     "config: finance.yml"
+    ]
+   },
+   {
+    "id": "I2",
+    "severity": "medium",
+    "statement": "PP3000 inventory 134.1 days of cover ($2.45M held, $1.08M above the 75-day target) at 2026-08",
+    "action": "Run-down plan: stop replenishment, redirect demand to the successor line, review obsolescence reserve",
+    "evidence": [
+     "derived: inventory-days-by-line",
+     "derived: inventory-days-trend",
+     "src: finance/internal-ar-inventory@2026-09-21",
+     "config: finance.yml"
+    ]
+   },
+   {
+    "id": "I3",
+    "severity": "medium",
+    "statement": "IP5000 inventory 120.0 days of cover ($1.36M held, $0.51M above the 75-day target) at 2026-08",
+    "action": "Run-down plan: stop replenishment, redirect demand to the successor line, review obsolescence reserve",
+    "evidence": [
+     "derived: inventory-days-by-line",
+     "derived: inventory-days-trend",
+     "src: finance/internal-ar-inventory@2026-09-21",
+     "config: finance.yml"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "medium",
+    "statement": "The DSO target (50 days), over-90 threshold (15%) and inventory target (75 days) are stand-ins \u2014 no treasury, credit, or S&OP policy on file names them",
+    "mitigation": "Ratify the three targets with treasury / credit / operations and mark E-06.1..E-06.3 validated",
+    "evidence": [
+     "config: finance.yml"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "Company over-90 share 13.6% of $12.97M receivables \u2014 the channel cut, not the total, is where the exposure sits",
+    "evidence": [
+     "derived: over90-by-channel",
+     "src: finance/internal-ar-inventory@2026-09-21"
+    ]
+   },
+   {
+    "id": "W2",
+    "statement": "Subscription (cloud-suite) receivables are not in the working-capital cube \u2014 company DSO covers device lines only",
+    "evidence": [
+     "derived: subscription-ar",
+     "src: finance/internal-ar-inventory@2026-09-21"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-06.1",
+   "statement": "Company DSO stays at or below target",
+   "expected": "DSO <= 50 days",
+   "basis": "treasury working-capital target carried forward; no board-adopted target on file [VERIFY]",
+   "set_by": "cfo (demo)",
+   "validated": false,
+   "actual": "55.2 days company DSO at 2026-08; worst channel Northgate Purchasing Group 80.0 days",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: dso-stat",
+    "derived: dso-by-channel"
+   ]
+  },
+  {
+   "id": "E-06.2",
+   "statement": "No channel's over-90 receivables exceed the escalation threshold",
+   "expected": "over-90 share <= 15% per channel",
+   "basis": "credit-policy escalation trigger; not confirmed against the credit policy on file [VERIFY]",
+   "set_by": "controller (demo)",
+   "validated": false,
+   "actual": "1 of 4 channels over 15%: Northgate Purchasing Group 32.5%",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: over90-by-channel"
+   ]
+  },
+  {
+   "id": "E-06.3",
+   "statement": "Inventory days per product line stay within target cover",
+   "expected": "inventory days <= 75 per line",
+   "basis": "operations planning target; no S&OP policy names a ceiling [VERIFY]",
+   "set_by": "coo (demo)",
+   "validated": false,
+   "actual": "2 of 5 lines over 75 days: PP3000 134.1, IP5000 120.0",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: inventory-days-by-line"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,15 @@
+bq: BQ-13
+edition: '2026-09-21'
+status: draft
+created_at: '2026-09-21T10:36:43+00:00'
+pins:
+  commercial/openfda-510k-infusion: '2026-09-21'
+  commercial/external-competitor-features: '2026-09-21'
+plan:
+  path: plans/BQ-13.md
+  sha256: 2371a1b6fafbd1901972bb411ed596cb6caf719c6a592fc3df45ce01ff755bd8
+code_artifacts:
+- path: bq_modules/bq_13.py
+  sha256: c02dde49c75ec9720cc8ad66520990ad6c4084f691384d77f2538436666d7bac
+- path: computations.py
+  sha256: 2140820494890c4c1712050248355fde06bba2331386103270bdfe48f88b3b78

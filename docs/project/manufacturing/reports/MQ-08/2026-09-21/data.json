@@ -1,0 +1,440 @@
+{
+ "bq": "MQ-08",
+ "series": [
+  {
+   "id": "posture-stat",
+   "label": "Validation & calibration posture",
+   "unit": "count",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "counts of register entries by status at as_of; rev C blockers = open rev C validation items + DHR-incomplete rev C lots",
+    "inputs": [
+     "src: manufacturing/internal-process-validation@2026-09-21",
+     "src: manufacturing/internal-production-lots@2026-09-21",
+     "config: manufacturing.yml"
+    ]
+   },
+   "provenance": {
+    "datasets": [
+     {
+      "dataset": "manufacturing/internal-process-validation",
+      "snapshot": "2026-09-21"
+     },
+     {
+      "dataset": "manufacturing/internal-production-lots",
+      "snapshot": "2026-09-21"
+     }
+    ]
+   },
+   "points": [
+    {
+     "label": "overdue items",
+     "value": 10,
+     "sub": "of 155 entries"
+    },
+    {
+     "label": "due within 30 d",
+     "value": 6,
+     "sub": "at 2026-08-31"
+    },
+    {
+     "label": "overdue calibrations",
+     "value": 10,
+     "sub": "Eastbrook 1, Westfield 9"
+    },
+    {
+     "label": "rev C blockers",
+     "value": 7,
+     "sub": "3 validation, 4 DHR"
+    }
+   ]
+  },
+  {
+   "id": "posture-by-site",
+   "label": "Overdue vs due-soon items by site",
+   "unit": "count",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "overdue",
+    "b_label": "due soon"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "register entries with status overdue / due per site",
+    "inputs": [
+     "src: manufacturing/internal-process-validation@2026-09-21"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-process-validation",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "Eastbrook",
+     "a": 1,
+     "b": 3,
+     "entries": 77
+    },
+    {
+     "label": "Westfield",
+     "a": 9,
+     "b": 3,
+     "entries": 78
+    }
+   ]
+  },
+  {
+   "id": "posture-by-type",
+   "label": "Overdue vs due-soon items by record type",
+   "unit": "count",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "overdue",
+    "b_label": "due soon"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "register entries with status overdue / due per type",
+    "inputs": [
+     "src: manufacturing/internal-process-validation@2026-09-21"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-process-validation",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "IQ",
+     "a": 0,
+     "b": 0,
+     "entries": 22
+    },
+    {
+     "label": "OQ",
+     "a": 0,
+     "b": 0,
+     "entries": 23
+    },
+    {
+     "label": "PQ",
+     "a": 0,
+     "b": 0,
+     "entries": 22
+    },
+    {
+     "label": "calibration",
+     "a": 10,
+     "b": 0,
+     "entries": 68
+    },
+    {
+     "label": "preventive-maintenance",
+     "a": 0,
+     "b": 6,
+     "entries": 20
+    }
+   ]
+  },
+  {
+   "id": "posture-by-line",
+   "label": "Overdue vs due-soon items by product line",
+   "unit": "count",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "overdue",
+    "b_label": "due soon"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "register entries with status overdue / due per product line (empty = shared)",
+    "inputs": [
+     "src: manufacturing/internal-process-validation@2026-09-21"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-process-validation",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "IP5000",
+     "a": 1,
+     "b": 0,
+     "entries": 6
+    },
+    {
+     "label": "PP3000",
+     "a": 0,
+     "b": 0,
+     "entries": 13
+    },
+    {
+     "label": "PP3500",
+     "a": 3,
+     "b": 0,
+     "entries": 47
+    },
+    {
+     "label": "SP6000",
+     "a": 1,
+     "b": 0,
+     "entries": 14
+    },
+    {
+     "label": "SP6500",
+     "a": 2,
+     "b": 0,
+     "entries": 13
+    },
+    {
+     "label": "shared",
+     "a": 3,
+     "b": 6,
+     "entries": 62
+    }
+   ]
+  },
+  {
+   "id": "overdue-calibrations",
+   "label": "Overdue calibrations \u2014 days past due",
+   "unit": "days",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "as_of \u2212 due_date for calibration entries with status overdue",
+    "inputs": [
+     "src: manufacturing/internal-process-validation@2026-09-21"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-process-validation",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "precision balance #04 \u00b7 Eastbrook",
+     "value": 50,
+     "product_line": "IP5000"
+    },
+    {
+     "label": "thermocouple set #06 \u00b7 Westfield",
+     "value": 121,
+     "product_line": "SP6500"
+    },
+    {
+     "label": "torque driver #01 \u00b7 Westfield",
+     "value": 110,
+     "product_line": "shared"
+    },
+    {
+     "label": "leak tester reference #05 \u00b7 Westfield",
+     "value": 99,
+     "product_line": "PP3500"
+    },
+    {
+     "label": "caliper #07 \u00b7 Westfield",
+     "value": 90,
+     "product_line": "shared"
+    },
+    {
+     "label": "electrical safety analyzer #08 \u00b7 Westfield",
+     "value": 89,
+     "product_line": "PP3500"
+    },
+    {
+     "label": "syringe pump reference #09 \u00b7 Westfield",
+     "value": 79,
+     "product_line": "PP3500"
+    },
+    {
+     "label": "precision balance #04 \u00b7 Westfield",
+     "value": 55,
+     "product_line": "SP6000"
+    },
+    {
+     "label": "flow meter reference #03 \u00b7 Westfield",
+     "value": 26,
+     "product_line": "shared"
+    },
+    {
+     "label": "digital pressure gauge #02 \u00b7 Westfield",
+     "value": 21,
+     "product_line": "SP6500"
+    }
+   ]
+  },
+  {
+   "id": "revc-blockers",
+   "label": "PP3500 rev C \u2014 validation items not yet validated",
+   "unit": "status",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "manufacturing/internal-process-validation",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "final functional test fixture rev C PQ \u00b7 Eastbrook",
+     "value": "in-progress",
+     "due": "2026-09-30",
+     "owner": "quality"
+    },
+    {
+     "label": "final functional test fixture rev C PQ \u00b7 Westfield",
+     "value": "in-progress",
+     "due": "2026-09-30",
+     "owner": "quality"
+    },
+    {
+     "label": "occlusion pressure test process rev C OQ \u00b7 Westfield",
+     "value": "not-started",
+     "due": "2026-10-15",
+     "owner": "manufacturing-engineering"
+    }
+   ]
+  },
+  {
+   "id": "revc-lots",
+   "label": "PP3500 rev C lots by release state",
+   "unit": "count",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "rev C lots: released = release_date set; in process = unreleased with DHR complete; blocked = unreleased with DHR incomplete",
+    "inputs": [
+     "src: manufacturing/internal-production-lots@2026-09-21"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-production-lots",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "released",
+     "value": 65,
+     "first_release": "2026-03-25"
+    },
+    {
+     "label": "in process",
+     "value": 9
+    },
+    {
+     "label": "blocked (DHR incomplete)",
+     "value": 4,
+     "lots": [
+      "LOT-2026-0188",
+      "LOT-2026-0223",
+      "LOT-2026-0231",
+      "LOT-2026-0236"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "posture-history",
+   "label": "Overdue / due items over time",
+   "unit": "count",
+   "kind": "timeseries",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "note": "a status register captures posture at one as-of date; a trend needs recurring corpus snapshots of manufacturing/internal-process-validation (refresh on the dataset's 30-day cadence) \u2014 nothing is reconstructed or approximated here"
+   },
+   "lines": [],
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "At 2026-08-31: 10 overdue and 6 due-within-30-day items across 155 register entries; overdue calibrations Eastbrook 1, Westfield 9 \u2014 the cluster is at Westfield; PP3500 rev C release blockers: 3 validation item(s) not validated (PQ in-progress due 2026-09-30, PQ in-progress due 2026-09-30, OQ not-started due 2026-10-15) and 4 DHR-incomplete lot(s); 65 rev C lots already released since 2026-03-25 while the fixture PQ is still in-progress",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "high",
+    "statement": "10 calibrations overdue (Eastbrook 1, Westfield 9); the oldest is 121 d past due \u2014 measurements taken with out-of-calibration equipment put the affected lot records in question",
+    "action": "Pull the overdue instruments from use, assess impact on lots measured since the due date, and re-baseline the metrology schedule at the affected site",
+    "evidence": [
+     "derived: overdue-calibrations",
+     "src: manufacturing/internal-process-validation@2026-09-21"
+    ]
+   },
+   {
+    "id": "I2",
+    "severity": "medium",
+    "statement": "4 PP3500 rev C lot(s) cannot be released because the device history record is incomplete: LOT-2026-0188 (Eastbrook, test, started 2026-06-21), LOT-2026-0223 (Eastbrook, test, started 2026-07-20), LOT-2026-0231 (Westfield, final-assembly, started 2026-07-10), LOT-2026-0236 (Westfield, pack, started 2026-07-23)",
+    "action": "Close the DHR gaps (missing records / signatures) and release, or disposition through an NCR",
+    "evidence": [
+     "derived: revc-lots",
+     "src: manufacturing/internal-production-lots@2026-09-21"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "high",
+    "statement": "65 PP3500 rev C lots have been released since 2026-03-25 while 3 rev C validation item(s) remain open: final functional test fixture rev C PQ (in-progress, due 2026-09-30, Eastbrook), final functional test fixture rev C PQ (in-progress, due 2026-09-30, Westfield), occlusion pressure test process rev C OQ (not-started, due 2026-10-15, Westfield) \u2014 the register does not record which fixture tested each lot, so whether those lots ran on the validated rev B fixture or the unvalidated rev C fixture is not determinable from these data",
+    "mitigation": "Confirm the test-fixture routing for released rev C lots from the DHRs; if any ran on the rev C fixture before PQ completion, open a CAPA and assess the released units",
+    "evidence": [
+     "derived: revc-blockers",
+     "derived: revc-lots",
+     "src: manufacturing/internal-process-validation@2026-09-21",
+     "src: manufacturing/internal-production-lots@2026-09-21"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "6 item(s) fall due within 30 days of 2026-08-31: HVAC cleanroom unit (preventive-maintenance, Eastbrook, due 2026-09-02), SMT pick-and-place (preventive-maintenance, Westfield, due 2026-09-08), compressed-air dryer (preventive-maintenance, Westfield, due 2026-09-10), ultrasonic welder (preventive-maintenance, Westfield, due 2026-09-10), conveyor (preventive-maintenance, Eastbrook, due 2026-09-21), pouch sealer (preventive-maintenance, Eastbrook, due 2026-09-25)",
+    "evidence": [
+     "derived: posture-by-site",
+     "src: manufacturing/internal-process-validation@2026-09-21",
+     "config: manufacturing.yml"
+    ]
+   },
+   {
+    "id": "W2",
+    "statement": "Posture history is not available: this is a single snapshot of a status register, so 'is overdue count rising' cannot be answered until recurring snapshots exist",
+    "evidence": [
+     "derived: posture-history"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-08.1",
+   "statement": "No production measuring equipment is past its calibration due date",
+   "expected": "0 overdue calibrations",
+   "basis": "stand-in; the calibration procedure on record is not distilled in this project's sources [VERIFY]",
+   "set_by": "vp-quality (demo)",
+   "validated": false,
+   "actual": "10 overdue calibration(s) at 2026-08-31 (Eastbrook 1, Westfield 9)",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: overdue-calibrations"
+   ]
+  },
+  {
+   "id": "E-08.2",
+   "statement": "PP3500 rev C lots are released only after the rev C test-fixture PQ is complete",
+   "expected": "PQ validated before the first rev C release",
+   "basis": "stand-in; the design-transfer plan's validation-before-release gate is not distilled in this project's sources [VERIFY]",
+   "set_by": "vp-quality (demo)",
+   "validated": false,
+   "actual": "2 rev C fixture PQ record(s) in-progress; 65 rev C lots released since 2026-03-25",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: revc-blockers",
+    "derived: revc-lots"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,27 @@
+dataset: commercial/internal-sales-accounts
+snapshot: '2026-09-21'
+created_at: '2026-09-21T10:35:33+00:00'
+sources:
+- type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for CRM / sales-ops revenue-by-account export)
+  retrieved_at: '2026-09-21T10:35:33+00:00'
+  usage_rights: internal
+  files:
+  - path: raw/export.json
+    sha256: f82537a657e8b8139f27b8e52084cee3cb794aed9361dab36020fde8bcdd034b
+transforms:
+- step: normalize
+  spec:
+    command: python3 gen.py normalize {raw_dir} {normalized_dir}
+  outputs:
+  - path: normalized/records.csv
+    sha256: 04d129f7228e0dcafffee8fee2eabf1842cb3ae7ea420aa44b33b59e8106ffea
+    parents:
+    - f82537a657e8b8139f27b8e52084cee3cb794aed9361dab36020fde8bcdd034b
+  script_sha256: 3c19b25f857fab77d1bcc3fc6e52c3cab92ace34fa598acac1c0598c61216c70
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 554

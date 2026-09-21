@@ -1,0 +1,402 @@
+{
+ "bq": "BQ-23",
+ "edition": "2026-09-21",
+ "generated_at": "2026-09-21T10:36:31+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "commercial.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "coverage-by-region",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "cumulative-coverage",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "projected-finish",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "weekly-run-rate",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-upgrade-campaign@2026-09-21",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "commercial/internal-upgrade-campaign",
+   "snapshot": "2026-09-21",
+   "age_days": 0,
+   "max_age_days": 7,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Campaign coverage",
+    "series": "coverage-stat",
+    "evidence_class": "measured",
+    "source": "commercial/internal-upgrade-campaign@2026-09-21"
+   },
+   {
+    "what": "Cumulative coverage % by region",
+    "series": "cumulative-coverage",
+    "evidence_class": "measured",
+    "source": "commercial/internal-upgrade-campaign@2026-09-21"
+   },
+   {
+    "what": "Coverage %",
+    "series": "coverage-by-region",
+    "evidence_class": "measured",
+    "source": "commercial/internal-upgrade-campaign@2026-09-21"
+   },
+   {
+    "what": "Completions per week (trailing 4w)",
+    "series": "weekly-run-rate",
+    "evidence_class": "derived",
+    "source": "commercial/internal-upgrade-campaign@2026-09-21",
+    "derivation": {
+     "method": "count of completions with completed_date in the 28-day window ending at the snapshot's latest completion, divided by 4",
+     "inputs": [
+      "src: commercial/internal-upgrade-campaign@2026-09-21"
+     ]
+    }
+   },
+   {
+    "what": "Projected finish date",
+    "series": "projected-finish",
+    "evidence_class": "derived",
+    "source": "commercial/internal-upgrade-campaign@2026-09-21",
+    "derivation": {
+     "method": "remaining devices \u00f7 weekly run-rate, projected forward from the window anchor",
+     "inputs": [
+      "src: commercial/internal-upgrade-campaign@2026-09-21",
+      "derived: weekly-run-rate"
+     ]
+    }
+   }
+  ],
+  "assumed": [],
+  "missing": []
+ },
+ "plan": {
+  "path": "plans/BQ-23.md",
+  "status": "in-sync",
+  "pinned": "4711873a612e112fd157cf9b725d6892d727c786818ac7f4e7f04e2895856bb5",
+  "current": "4711873a612e112fd157cf9b725d6892d727c786818ac7f4e7f04e2895856bb5"
+ },
+ "verifications": [],
+ "code": {
+  "status": "reviewed-current",
+  "artifacts": [
+   {
+    "path": "computations.py",
+    "sha256_12": "214082049489",
+    "role": "shared",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for BQ-06, BQ-12, BQ-18, BQ-19, BQ-23, BQ-24, BQ-25, BQ-26, BQ-27"
+    },
+    "review": {
+     "verdict": "APPROVED",
+     "by": "AI code reviewer (fix-verification)",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [],
+     "detail_ref": "tasks/ben/_work/108-code-review-shared-inline-2026-07-27.md"
+    },
+    "review_history": [
+     {
+      "sha256_12": "bf7fb8fa4263",
+      "date": "2026-07-27",
+      "verdict": "approved-with-findings",
+      "by": "AI code reviewer",
+      "summary": "Shared helpers sound (median/dedupe/windows/determinism verified; loud pin errors); BQ-26 refit commitments all implemented; findings are latent hazards and literal-fact rot risks, none invalidates a current published number.",
+      "findings": [
+       {
+        "id": "F-1",
+        "severity": "medium",
+        "summary": "helper/pct: thresholds compared on rounded rates (bq24 pause, bq18 breach, bq26 verdicts) \u2014 knife-edge risk",
+        "disposition": "fix: compare unrounded, round only at render"
+       },
+       {
+        "id": "F-2",
+        "severity": "medium",
+        "summary": "helper/module_dispatch: ModuleNotFoundError inside an existing bq module swallowed as 'no computation'",
+        "disposition": "fix: re-raise unless e.name is the dispatched module"
+       },
+       {
+        "id": "F-3",
+        "severity": "low",
+        "summary": "helper/evaluate_expectations: computed results with unknown E-ids silently dropped",
+        "disposition": "fix: loud check on unknown result ids"
+       },
+       {
+        "id": "F-4",
+        "severity": "low",
+        "summary": "helper/pct: zero denominator renders 0.0 not n/a",
+        "disposition": "accept: no caller stratum currently empties; revisit if one can"
+       },
+       {
+        "id": "F-5",
+        "severity": "low",
+        "summary": "helper/expectations_section: unescaped pipes in catalog text break markdown tables",
+        "disposition": "accept: catalog-controlled input"
+       },
+       {
+        "id": "F-6",
+        "severity": "medium",
+        "summary": "bq06: 'fastest frequent filer' computed from top_n-truncated set; exact today by coincidence (6 of 15 >=2)",
+        "disposition": "fix: filter >=2 clearances before top_n"
+       },
+       {
+        "id": "F-7",
+        "severity": "low",
+        "summary": "bq06: 'since 2021' scope literal rides on dataset acquisition scope (true vs pin)",
+        "disposition": "accept: plan-stated dataset scope"
+       },
+       {
+        "id": "F-8",
+        "severity": "low",
+        "summary": "bq18: current window 91d inclusive vs prior 90d \u2014 slight upward bias on 130% rising test; bq12 label same +1d",
+        "disposition": "fix: half-open windows"
+       },
+       {
+        "id": "F-9",
+        "severity": "low",
+        "summary": "bq18: window-trend derivation string hardcodes '90-day' instead of window param",
+        "disposition": "fix: interpolate the param"
+       },
+       {
+        "id": "F-10",
+        "severity": "medium",
+        "summary": "bq19: BLOCKED/'not yet quantified' headline is a literal; rate_ready computed but unused - rots if A-001 quantifies",
+        "disposition": "fix: branch headline on rate_ready; fail loud when True"
+       },
+       {
+        "id": "F-11",
+        "severity": "low",
+        "summary": "bq19: unmatched manufacturer names .title()-cased; plan says 'stay raw'",
+        "disposition": "accept: cosmetic, note for plan/code sync"
+       },
+       {
+        "id": "F-12",
+        "severity": "low",
+        "summary": "bq23: E-23.1 95% target judged by 100%-completion projection; target_pct unused in math (conservative)",
+        "disposition": "accept: plan defines projection as remaining/rate"
+       },
+       {
+        "id": "F-13",
+        "severity": "medium",
+        "summary": "bq24/25/26: complement status sets (!= scheduled / not in COMPLETED) absorb vocabulary drift, diluting the pause trigger",
+        "disposition": "fix: assert observed statuses subset of known vocabulary"
+       },
+       {
+        "id": "F-14",
+        "severity": "low",
+        "summary": "bq26: F26-2 residual \u2014 R1 mitigation lacks remote-path-rollback caveat (moot while convertible=0)",
+        "disposition": "fix: one clause at next re-answer"
+       },
+       {
+        "id": "F-15",
+        "severity": "medium",
+        "summary": "bq27: '(all on 2.9.x line)' narrated string-literal fact \u2014 true vs both pins, rots on refresh",
+        "disposition": "fix: compute the qualifier from the data"
+       },
+       {
+        "id": "F-16",
+        "severity": "medium",
+        "summary": "bq27: behind_map.get(fw,0) counts unmapped firmware as current \u2014 optimistic default on safety-framed metric",
+        "disposition": "fix: surface or fail on unmapped versions"
+       },
+       {
+        "id": "F-17",
+        "severity": "low",
+        "summary": "bq24/06/27/25: fragile lines.insert(-N) tail arithmetic + unused assume_path var \u2014 cosmetic",
+        "disposition": "accept: fold into next touch"
+       }
+      ],
+      "detail_ref": "tasks/ben/_work/108-code-review-shared-inline-2026-07-27.md",
+      "superseded": true
+     }
+    ]
+   },
+   {
+    "path": "corpus:commercial/internal-upgrade-campaign/gen.py",
+    "sha256_12": "90b0d06b9503",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": {
+     "verdict": "APPROVED-WITH-FINDINGS",
+     "by": "AI code reviewer",
+     "date": "2026-07-27",
+     "current": true,
+     "findings": [
+      {
+       "id": "F-1",
+       "severity": "low",
+       "summary": "All 4 rolled-back rows keep completed_date and duration_min; date-based completion counts would over-count",
+       "disposition": "accept: status-based consumers correct; document in README or blank the date at next refresh"
+      }
+     ],
+     "detail_ref": "tasks/ben/_work/108-code-review-generators-2026-07-27.md"
+    },
+    "review_history": []
+   }
+  ]
+ },
+ "verification_plan": [
+  {
+   "gate": "claim-lint",
+   "kind": "machine",
+   "note": "every figure marker-resolvable; zero errors before approval",
+   "done": true,
+   "evidence": "0 error(s) / 0 warning(s)"
+  },
+  {
+   "gate": "pin-freshness",
+   "kind": "machine",
+   "note": "all pinned snapshots within max_age_days (or visibly waived)",
+   "done": true,
+   "evidence": "1 pin(s) fresh"
+  },
+  {
+   "gate": "plan-currency",
+   "kind": "machine",
+   "note": "this plan's hash pinned into the edition; drift surfaces as a callout",
+   "done": true,
+   "evidence": "plan in-sync"
+  },
+  {
+   "gate": "code-audit",
+   "kind": "machine",
+   "note": "computation code hash pinned; deterministic checks green; AI review current",
+   "done": true,
+   "evidence": "code reviewed-current"
+  },
+  {
+   "gate": "adversarial-verify",
+   "kind": "agent",
+   "note": "independent pins-only re-derivation of the headline figures",
+   "done": false,
+   "evidence": "no adversarial-verify record filed on this edition"
+  },
+  {
+   "gate": "red-team",
+   "kind": "agent",
+   "note": "framing attack on basis choices, buried caveats, and verdict overclaim",
+   "done": false,
+   "evidence": "no red-team record filed on this edition"
+  }
+ ]
+}

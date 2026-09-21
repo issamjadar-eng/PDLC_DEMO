@@ -1,0 +1,374 @@
+{
+ "bq": "BQ-17",
+ "series": [
+  {
+   "id": "candidates",
+   "label": "Kill / pull-forward candidates",
+   "unit": "composite",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "argmax/argmin of the composite over eligible features; ties broken by earliest wave (pull) / fewest voices (kill)",
+    "inputs": [
+     "derived: composite",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-kol-register",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "pull forward \u2014 F4 Alerts Engine v1 (smart alarm filtering)",
+     "value": 0.616
+    },
+    {
+     "label": "kill candidate \u2014 F9 International expansion (EU MDR / Canada)",
+     "value": 0.0
+    }
+   ]
+  },
+  {
+   "id": "composite",
+   "label": "Composite score by feature",
+   "unit": "score",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "mean(pressure, rescaled net sentiment, attach-for-cloud-features) per plans/BQ-17.md",
+    "inputs": [
+     "src: commercial/external-competitor-features@2026-09-21",
+     "src: commercial/openfda-510k-infusion@2026-09-21",
+     "src: commercial/internal-kol-register@2026-09-21",
+     "derived: attach-rate",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/external-competitor-features",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "F1 Drug Library Manager GA",
+     "value": 0.616,
+     "pressure": 0.5,
+     "sentiment": 0.5,
+     "demand": 0.848,
+     "eligible": false
+    },
+    {
+     "label": "F2 Connectivity Adapter GA",
+     "value": 0.616,
+     "pressure": 0.5,
+     "sentiment": 0.5,
+     "demand": 0.848,
+     "eligible": false
+    },
+    {
+     "label": "F3 Fleet Management + Telemetry dashboards",
+     "value": 0.449,
+     "pressure": 0.0,
+     "sentiment": 0.5,
+     "demand": 0.848,
+     "eligible": false
+    },
+    {
+     "label": "F4 Alerts Engine v1 (smart alarm filtering)",
+     "value": 0.616,
+     "pressure": 1.0,
+     "sentiment": 0.0,
+     "demand": 0.848,
+     "eligible": true
+    },
+    {
+     "label": "F5 Clinical Surveillance",
+     "value": 0.574,
+     "pressure": 0.0,
+     "sentiment": 0.875,
+     "demand": 0.848,
+     "eligible": true
+    },
+    {
+     "label": "F6 Predictive monitoring (occlusion/infiltration/deterioration)",
+     "value": 0.616,
+     "pressure": 1.0,
+     "sentiment": 0.0,
+     "demand": 0.848,
+     "eligible": true
+    },
+    {
+     "label": "F7 Ambulatory PP3500-A (home PCA)",
+     "value": 0.0,
+     "pressure": 0.0,
+     "sentiment": 0.0,
+     "demand": 0.0,
+     "eligible": true
+    },
+    {
+     "label": "F8 Dose personalization decision-support",
+     "value": 0.283,
+     "pressure": 0.0,
+     "sentiment": 0.0,
+     "demand": 0.848,
+     "eligible": true
+    },
+    {
+     "label": "F9 International expansion (EU MDR / Canada)",
+     "value": 0.0,
+     "pressure": 0.0,
+     "sentiment": 0.0,
+     "demand": 0.0,
+     "eligible": true
+    }
+   ]
+  },
+  {
+   "id": "robustness",
+   "label": "Robustness of the two picks",
+   "unit": "",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "tie-vector identity check (an identical-axis-vector tie survives any weighting); composite recomputed without the sentiment axis (mean of pressure + demand); smallest pressure-to-sentiment weight transfer (0.25-pp scan to 10 pp) that flips the pull-forward pick",
+    "inputs": [
+     "derived: composite",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-kol-register",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "top tie (F4 / F6) weighting-invariant (identical axis vectors)",
+     "value": "yes"
+    },
+    {
+     "label": "bottom tie (F9 / F7) weighting-invariant (identical axis vectors)",
+     "value": "yes"
+    },
+    {
+     "label": "picks unchanged with the simulated sentiment axis dropped",
+     "value": "yes (F4 / F9)"
+    },
+    {
+     "label": "smallest pressure-to-sentiment weight transfer flipping the pull-forward pick (pp)",
+     "value": 2.25,
+     "flips_to": "F5"
+    }
+   ]
+  },
+  {
+   "id": "attach-rate",
+   "label": "Cloud Suite attach (demand actual)",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "active subscribed connected sites \u00f7 all connected sites",
+    "inputs": [
+     "src: commercial/internal-subscriptions@2026-09-21",
+     "src: commercial/internal-fleet@2026-09-21"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-subscriptions",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "of 46 connected sites with an active subscription",
+     "value": 84.8
+    }
+   ]
+  },
+  {
+   "id": "subscribed-sites-history",
+   "label": "Cumulative subscribed-site adds (gross)",
+   "unit": "sites",
+   "kind": "timeseries",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-subscriptions",
+    "snapshot": "2026-09-21",
+    "note": "gross adds by start month; churn dates not recorded"
+   },
+   "lines": [
+    {
+     "label": "subscribed sites (gross adds)",
+     "points": [
+      {
+       "x": "2024-01-01",
+       "y": 4
+      },
+      {
+       "x": "2024-02-01",
+       "y": 4
+      },
+      {
+       "x": "2024-03-01",
+       "y": 5
+      },
+      {
+       "x": "2024-04-01",
+       "y": 5
+      },
+      {
+       "x": "2024-05-01",
+       "y": 9
+      },
+      {
+       "x": "2024-06-01",
+       "y": 12
+      },
+      {
+       "x": "2024-07-01",
+       "y": 14
+      },
+      {
+       "x": "2024-08-01",
+       "y": 17
+      },
+      {
+       "x": "2024-09-01",
+       "y": 20
+      },
+      {
+       "x": "2024-10-01",
+       "y": 23
+      },
+      {
+       "x": "2024-11-01",
+       "y": 26
+      },
+      {
+       "x": "2024-12-01",
+       "y": 27
+      },
+      {
+       "x": "2025-01-01",
+       "y": 29
+      },
+      {
+       "x": "2025-02-01",
+       "y": 29
+      },
+      {
+       "x": "2025-03-01",
+       "y": 31
+      },
+      {
+       "x": "2025-04-01",
+       "y": 33
+      },
+      {
+       "x": "2025-05-01",
+       "y": 34
+      },
+      {
+       "x": "2025-06-01",
+       "y": 40
+      },
+      {
+       "x": "2025-07-01",
+       "y": 40
+      },
+      {
+       "x": "2025-08-01",
+       "y": 40
+      },
+      {
+       "x": "2025-09-01",
+       "y": 40
+      },
+      {
+       "x": "2025-10-01",
+       "y": 41
+      },
+      {
+       "x": "2025-11-01",
+       "y": 41
+      },
+      {
+       "x": "2025-12-01",
+       "y": 42
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "noncloud-demand",
+   "label": "Demand signal for non-cloud features (F7, F9)",
+   "unit": "",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "note": "no demand dataset exists for the home-infusion channel (F7) or international pipeline (F9) \u2014 their zero demand score is a data gap by construction, not measured absence"
+   },
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "Decision support, not the decision: pull-forward candidate F4 Alerts Engine v1 (smart alarm filtering) (composite 0.616, tie with F6 broken on earliest wave); kill candidate F9 International expansion (EU MDR / Canada) (composite 0.0, tie with F7 broken on weakest evidence base) \u2014 sentiment axis is simulated-panel only, demand axis is Cloud attach 84.8%. CAUTION on the kill read: the single F9 voice argues the slot is too LATE and too THIN \u2014 a voice FOR earlier EU investment, arithmetically converted into kill support by the 3-value sentiment vocabulary",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "high",
+    "statement": "Direction inversion on the kill candidate: the single F9 voice on file (Kuitunen) argues F9 is too LATE and too THIN \u2014 advocating earlier EU evidence investment \u2014 but the 3-value sentiment vocabulary encodes it as bare concern, arithmetically supporting the kill ranking; the only evidence on file contradicts the kill reading",
+    "action": "Present the voice's actual position alongside any kill discussion; add a stance/timing-direction dimension to the register before the next edition (BQ-16 RT-16.1 shares this defect)",
+    "evidence": [
+     "src: commercial/internal-kol-register@2026-09-21",
+     "derived: composite"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "high",
+    "statement": "The kill ranking rests on a composite whose sentiment third is simulated and whose demand third does not exist for non-cloud features \u2014 F9 scores zero pressure, zero measured demand, and its sentiment comes from 1 simulated voice(s)",
+    "mitigation": "Before any kill decision: collect real KOL evidence for the candidate and acquire a demand-side dataset for non-cloud features (home-infusion channel, international pipeline)",
+    "evidence": [
+     "derived: composite",
+     "src: commercial/internal-kol-register@2026-09-21"
+    ]
+   },
+   {
+    "id": "R2",
+    "severity": "medium",
+    "statement": "F9 and F7 tie exactly at composite 0.0 \u2014 only evidence thinness separates the kill candidate from the runner(s)-up",
+    "mitigation": "Treat both bottom-tier features as evidence-starved rather than ranking one safe; the tiebreak is stated, not meaningful",
+    "evidence": [
+     "derived: composite",
+     "src: commercial/internal-kol-register@2026-09-21"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "Equal axis weighting is a committed modeling choice, not derived from the plan of record \u2014 and the flip distance is SMALL: a ~2.25 pp pressure-to-sentiment weight transfer flips the pull-forward candidate to F5; the two picks themselves are tie-break-decided and weighting-invariant (see robustness) \u2014 revisit the weights with the council before acting",
+    "evidence": [
+     "config: commercial.yml",
+     "derived: robustness",
+     "derived: composite"
+    ]
+   },
+   {
+    "id": "W2",
+    "statement": "No business-case axis: revenue/margin per feature is absent from this composite entirely \u2014 the ranking is evidence pressure, not economics",
+    "evidence": [
+     "derived: composite"
+    ]
+   }
+  ]
+ },
+ "expectations": []
+}

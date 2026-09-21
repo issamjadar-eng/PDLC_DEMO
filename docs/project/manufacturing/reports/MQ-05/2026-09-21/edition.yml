@@ -1,0 +1,16 @@
+bq: MQ-05
+edition: '2026-09-21'
+status: draft
+created_at: '2026-09-21T10:37:04+00:00'
+pins:
+  manufacturing/internal-suppliers: '2026-09-21'
+plan:
+  path: plans/MQ-05.md
+  sha256: 006e9ab62faac85cd22e24c01036f1e423bfc27c7a7dabfdf19bbdc7ce5ac391
+code_artifacts:
+- path: bq_modules/mq_05.py
+  sha256: 9a5147c8ebc0f822175626a97d21f0b161b5354be14096bb2f224a8751bb1428
+- path: computations.py
+  sha256: 9239326ab95251f69f616354f94f4d51c498877ceb8b0c13b542f576252c6c05
+- path: corpus:manufacturing/internal-suppliers/gen.py
+  sha256: 6748baaf20a3b67bfa1054c8a1498221dd14c26989f7558cc4005b38ddafdbb6

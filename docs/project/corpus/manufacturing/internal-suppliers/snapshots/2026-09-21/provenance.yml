@@ -1,0 +1,28 @@
+dataset: manufacturing/internal-suppliers
+snapshot: '2026-09-21'
+created_at: '2026-09-21T10:35:44+00:00'
+as_of: '2026-08-31'
+sources:
+- type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for ASL + incoming-inspection log export)
+  retrieved_at: '2026-09-21T10:35:44+00:00'
+  usage_rights: internal
+  files:
+  - path: raw/export.json
+    sha256: 9c073d7ea14cee5fbdf30e742cd0862cee989830440c5554477cf92c0f774f1a
+transforms:
+- step: normalize
+  spec:
+    command: python3 gen.py normalize {raw_dir} {normalized_dir}
+  outputs:
+  - path: normalized/records.csv
+    sha256: 8756a5c94d88d8c2d51c5d124bbc44e06342ea4685e8d93607374fd1379fb395
+    parents:
+    - 9c073d7ea14cee5fbdf30e742cd0862cee989830440c5554477cf92c0f774f1a
+  script_sha256: 6748baaf20a3b67bfa1054c8a1498221dd14c26989f7558cc4005b38ddafdbb6
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 240

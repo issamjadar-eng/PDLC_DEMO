@@ -1,0 +1,85 @@
+{
+ "bq": "BQ-27",
+ "series": [
+  {
+   "id": "behind-stat",
+   "label": "Fleet currency",
+   "unit": "%",
+   "kind": "stat",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-fleet",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "of PP3500 fleet \u22651 firmware version behind",
+     "value": 56.7
+    }
+   ]
+  },
+  {
+   "id": "currency-history",
+   "label": "Fleet currency over time",
+   "unit": "%",
+   "kind": "timeseries",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "note": "one fleet snapshot exists \u2014 history accumulates as the 7-day refresh cadence produces more; a single point is not a trend"
+   },
+   "lines": [],
+   "points": []
+  },
+  {
+   "id": "behind-by-region",
+   "label": "% \u22651 version behind",
+   "unit": "%",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-fleet",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "APAC",
+     "value": 52.1
+    },
+    {
+     "label": "EMEA",
+     "value": 59.7
+    },
+    {
+     "label": "NA",
+     "value": 56.9
+    }
+   ]
+  },
+  {
+   "id": "currency-by-connectivity",
+   "label": "Current-version % by connectivity",
+   "unit": "%",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-fleet",
+    "snapshot": "2026-09-21"
+   },
+   "points": [
+    {
+     "label": "connected",
+     "value": 42.3
+    },
+    {
+     "label": "unconnected",
+     "value": 44.2
+    }
+   ]
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "56.7% of the PP3500 fleet is \u22651 firmware version behind (21.9% two behind); connected devices are current at 42.3% vs 44.2% for unconnected",
+   "evidence_class": "measured"
+  }
+ ]
+}

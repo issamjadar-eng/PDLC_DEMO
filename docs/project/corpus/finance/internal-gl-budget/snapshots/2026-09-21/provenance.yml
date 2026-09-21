@@ -1,0 +1,28 @@
+dataset: finance/internal-gl-budget
+snapshot: '2026-09-21'
+created_at: '2026-09-21T10:35:43+00:00'
+as_of: '2026-08-31'
+sources:
+- type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for GL / FP&A budget-vs-actual export)
+  retrieved_at: '2026-09-21T10:35:43+00:00'
+  usage_rights: internal
+  files:
+  - path: raw/export.json
+    sha256: 53dfd07de35e3e62a7d6a5cc4de04eefb2192060c4bc2d6ea3accca43c48799d
+transforms:
+- step: normalize
+  spec:
+    command: python3 gen.py normalize {raw_dir} {normalized_dir}
+  outputs:
+  - path: normalized/records.csv
+    sha256: 8dc52975a38f497e55436c339bb58bd85f4b2a9ee03e03d2c74131a0d4275754
+    parents:
+    - 53dfd07de35e3e62a7d6a5cc4de04eefb2192060c4bc2d6ea3accca43c48799d
+  script_sha256: 7b90119e86c6d0e280c7c5a02fd7ee602e17be85245b3e90d3f5d70a73caac9a
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 120
