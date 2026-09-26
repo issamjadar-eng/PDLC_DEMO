@@ -60,11 +60,13 @@
   },
   "user_turns": {
     "by_day": {
-      "2026-09-22": 2
+      "2026-09-22": 2,
+      "2026-09-26": 1
     },
     "by_task": {
-      "_unattributed": 2
+      "_unattributed": 2,
+      "ben/125": 1
     },
-    "total": 2
+    "total": 3
   }
 }
