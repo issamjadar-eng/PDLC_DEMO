@@ -585,7 +585,7 @@
           "messages": 1856,
           "output": 1622326
         },
-        "user_turns": 97
+        "user_turns": 98
       }
     }
   },
@@ -6713,7 +6713,7 @@
         "messages": 34,
         "output": 28298
       },
-      "user_turns": 0
+      "user_turns": 1
     },
     "dmytro/001": {
       "by_model": {},
