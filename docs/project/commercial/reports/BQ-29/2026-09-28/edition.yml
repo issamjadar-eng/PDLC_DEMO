@@ -1,0 +1,19 @@
+bq: BQ-29
+edition: '2026-09-28'
+status: draft
+created_at: '2026-09-28T11:37:28+00:00'
+pins:
+  commercial/internal-subscriptions: '2026-09-28'
+  commercial/internal-fleet: '2026-09-28'
+plan:
+  path: plans/BQ-29.md
+  sha256: 1ae994868553a84a542cd0b0842d28811604dbcb7bce3e9b8dce45f85ce50458
+code_artifacts:
+- path: bq_modules/bq_29.py
+  sha256: aebd47df946c500ca653abde71c67c73ac97efe1be7bbe46a173a3b02284a352
+- path: computations.py
+  sha256: 2140820494890c4c1712050248355fde06bba2331386103270bdfe48f88b3b78
+- path: corpus:commercial/internal-subscriptions/gen.py
+  sha256: 9c3b5bba0710cf54829155dbd2c0e98161c700c8a311494af32b6f5966da6fc7
+- path: corpus:commercial/internal-fleet/gen.py
+  sha256: 165e3ad1d98586ff1b211fb4493999879f957890664e07b069bf3fcaa4ba8961

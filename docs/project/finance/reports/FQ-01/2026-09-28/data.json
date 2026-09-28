@@ -1,0 +1,713 @@
+{
+ "bq": "FQ-01",
+ "series": [
+  {
+   "id": "gm-stat",
+   "label": "Company gross margin",
+   "unit": "%",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "(revenue \u2212 COGS) \u00f7 revenue over the closed quarters of the fiscal year; prior year = same quarters",
+    "inputs": [
+     "src: commercial/internal-financials@2026-09-28",
+     "config: finance.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-financials",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "H1 2026 gross margin",
+     "value": 51.5,
+     "sub": "H1 2025 50.6% (+1.0 pts); floor 55%"
+    }
+   ]
+  },
+  {
+   "id": "gm-by-line",
+   "label": "Gross margin by product line: window vs prior year",
+   "unit": "%",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "H1 2026",
+    "b_label": "H1 2025"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "(revenue \u2212 COGS) \u00f7 revenue per product line, window and prior-year quarters",
+    "inputs": [
+     "src: commercial/internal-financials@2026-09-28"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-financials",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "IP5000",
+     "a": 45.6,
+     "b": 47.1,
+     "delta_pts": -1.5
+    },
+    {
+     "label": "PP3000",
+     "a": 44.9,
+     "b": 46.4,
+     "delta_pts": -1.5
+    },
+    {
+     "label": "PP3500",
+     "a": 49.5,
+     "b": 49.5,
+     "delta_pts": 0.0
+    },
+    {
+     "label": "SP6000",
+     "a": 49.1,
+     "b": 49.1,
+     "delta_pts": -0.0
+    },
+    {
+     "label": "SP6500",
+     "a": 48.9,
+     "b": 49.0,
+     "delta_pts": -0.1
+    },
+    {
+     "label": "cloud-suite",
+     "a": 78.0,
+     "b": 78.0,
+     "delta_pts": 0.0
+    }
+   ]
+  },
+  {
+   "id": "gm-by-region",
+   "label": "Gross margin by region: window vs prior year",
+   "unit": "%",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "H1 2026",
+    "b_label": "H1 2025"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "(revenue \u2212 COGS) \u00f7 revenue per region, window and prior-year quarters",
+    "inputs": [
+     "src: commercial/internal-financials@2026-09-28"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-financials",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "APAC",
+     "a": 51.5,
+     "b": 50.4,
+     "delta_pts": 1.1
+    },
+    {
+     "label": "EMEA",
+     "a": 51.5,
+     "b": 50.5,
+     "delta_pts": 0.9
+    },
+    {
+     "label": "NA",
+     "a": 51.5,
+     "b": 50.6,
+     "delta_pts": 0.9
+    }
+   ]
+  },
+  {
+   "id": "gm-trend",
+   "label": "Quarterly gross margin: company and largest lines",
+   "unit": "%",
+   "kind": "timeseries",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "quarterly (revenue \u2212 COGS) \u00f7 revenue for the company and the top lines by window revenue",
+    "inputs": [
+     "src: commercial/internal-financials@2026-09-28"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-financials",
+    "snapshot": "2026-09-28"
+   },
+   "lines": [
+    {
+     "label": "company",
+     "points": [
+      {
+       "x": "2024-01-01",
+       "y": 50.0
+      },
+      {
+       "x": "2024-04-01",
+       "y": 50.0
+      },
+      {
+       "x": "2024-07-01",
+       "y": 50.1
+      },
+      {
+       "x": "2024-10-01",
+       "y": 50.3
+      },
+      {
+       "x": "2025-01-01",
+       "y": 50.5
+      },
+      {
+       "x": "2025-04-01",
+       "y": 50.6
+      },
+      {
+       "x": "2025-07-01",
+       "y": 50.8
+      },
+      {
+       "x": "2025-10-01",
+       "y": 51.0
+      },
+      {
+       "x": "2026-01-01",
+       "y": 51.4
+      },
+      {
+       "x": "2026-04-01",
+       "y": 51.7
+      }
+     ]
+    },
+    {
+     "label": "PP3500",
+     "points": [
+      {
+       "x": "2024-01-01",
+       "y": 49.5
+      },
+      {
+       "x": "2024-04-01",
+       "y": 49.5
+      },
+      {
+       "x": "2024-07-01",
+       "y": 49.4
+      },
+      {
+       "x": "2024-10-01",
+       "y": 49.5
+      },
+      {
+       "x": "2025-01-01",
+       "y": 49.6
+      },
+      {
+       "x": "2025-04-01",
+       "y": 49.5
+      },
+      {
+       "x": "2025-07-01",
+       "y": 49.5
+      },
+      {
+       "x": "2025-10-01",
+       "y": 49.6
+      },
+      {
+       "x": "2026-01-01",
+       "y": 49.5
+      },
+      {
+       "x": "2026-04-01",
+       "y": 49.5
+      }
+     ]
+    },
+    {
+     "label": "PP3000",
+     "points": [
+      {
+       "x": "2024-01-01",
+       "y": 48.0
+      },
+      {
+       "x": "2024-04-01",
+       "y": 47.6
+      },
+      {
+       "x": "2024-07-01",
+       "y": 47.3
+      },
+      {
+       "x": "2024-10-01",
+       "y": 46.9
+      },
+      {
+       "x": "2025-01-01",
+       "y": 46.6
+      },
+      {
+       "x": "2025-04-01",
+       "y": 46.2
+      },
+      {
+       "x": "2025-07-01",
+       "y": 45.8
+      },
+      {
+       "x": "2025-10-01",
+       "y": 45.6
+      },
+      {
+       "x": "2026-01-01",
+       "y": 45.0
+      },
+      {
+       "x": "2026-04-01",
+       "y": 44.7
+      }
+     ]
+    },
+    {
+     "label": "SP6000",
+     "points": [
+      {
+       "x": "2024-01-01",
+       "y": 49.2
+      },
+      {
+       "x": "2024-04-01",
+       "y": 49.2
+      },
+      {
+       "x": "2024-07-01",
+       "y": 49.1
+      },
+      {
+       "x": "2024-10-01",
+       "y": 49.0
+      },
+      {
+       "x": "2025-01-01",
+       "y": 49.2
+      },
+      {
+       "x": "2025-04-01",
+       "y": 49.1
+      },
+      {
+       "x": "2025-07-01",
+       "y": 49.1
+      },
+      {
+       "x": "2025-10-01",
+       "y": 49.1
+      },
+      {
+       "x": "2026-01-01",
+       "y": 49.1
+      },
+      {
+       "x": "2026-04-01",
+       "y": 49.0
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "cost-variance-by-line",
+   "label": "Standard-cost variance by line (window)",
+   "unit": "USD K",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "\u03a3 over quarter \u00d7 revenue type of (COGS \u00f7 units \u2212 standard unit cost) \u00d7 units; positive = unfavorable",
+    "inputs": [
+     "src: commercial/internal-financials@2026-09-28",
+     "src: finance/internal-standard-costs@2026-09-28",
+     "config: finance.yml"
+    ]
+   },
+   "provenance": {
+    "datasets": [
+     {
+      "dataset": "commercial/internal-financials",
+      "snapshot": "2026-09-28"
+     },
+     {
+      "dataset": "finance/internal-standard-costs",
+      "snapshot": "2026-09-28"
+     }
+    ]
+   },
+   "points": [
+    {
+     "label": "IP5000",
+     "value": 96,
+     "variance_pct": 4.6,
+     "hardware_variance_pct": 10.9
+    },
+    {
+     "label": "PP3000",
+     "value": 165,
+     "variance_pct": 4.9,
+     "hardware_variance_pct": 11.0
+    },
+    {
+     "label": "PP3500",
+     "value": -132,
+     "variance_pct": -1.2,
+     "hardware_variance_pct": -2.8
+    },
+    {
+     "label": "SP6000",
+     "value": 16,
+     "variance_pct": 0.6,
+     "hardware_variance_pct": -0.0
+    },
+    {
+     "label": "SP6500",
+     "value": 11,
+     "variance_pct": 0.6,
+     "hardware_variance_pct": 0.1
+    },
+    {
+     "label": "cloud-suite",
+     "value": 14,
+     "variance_pct": 1.3,
+     "hardware_variance_pct": null
+    }
+   ]
+  },
+  {
+   "id": "cost-variance-trend",
+   "label": "Hardware unit-cost variance vs standard, by quarter",
+   "unit": "%",
+   "kind": "timeseries",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "(hardware COGS \u00f7 hardware units \u2212 hardware standard) \u00f7 standard per quarter per line",
+    "inputs": [
+     "src: commercial/internal-financials@2026-09-28",
+     "src: finance/internal-standard-costs@2026-09-28"
+    ]
+   },
+   "provenance": {
+    "datasets": [
+     {
+      "dataset": "commercial/internal-financials",
+      "snapshot": "2026-09-28"
+     },
+     {
+      "dataset": "finance/internal-standard-costs",
+      "snapshot": "2026-09-28"
+     }
+    ]
+   },
+   "lines": [
+    {
+     "label": "IP5000 hardware",
+     "points": [
+      {
+       "x": "2024-01-01",
+       "y": 3.0
+      },
+      {
+       "x": "2024-04-01",
+       "y": 5.0
+      },
+      {
+       "x": "2024-07-01",
+       "y": 5.4
+      },
+      {
+       "x": "2024-10-01",
+       "y": 5.6
+      },
+      {
+       "x": "2025-01-01",
+       "y": 7.1
+      },
+      {
+       "x": "2025-04-01",
+       "y": 8.0
+      },
+      {
+       "x": "2025-07-01",
+       "y": 8.3
+      },
+      {
+       "x": "2025-10-01",
+       "y": 10.2
+      },
+      {
+       "x": "2026-01-01",
+       "y": 9.8
+      },
+      {
+       "x": "2026-04-01",
+       "y": 12.1
+      }
+     ]
+    },
+    {
+     "label": "PP3000 hardware",
+     "points": [
+      {
+       "x": "2024-01-01",
+       "y": 3.6
+      },
+      {
+       "x": "2024-04-01",
+       "y": 4.3
+      },
+      {
+       "x": "2024-07-01",
+       "y": 5.2
+      },
+      {
+       "x": "2024-10-01",
+       "y": 6.1
+      },
+      {
+       "x": "2025-01-01",
+       "y": 7.6
+      },
+      {
+       "x": "2025-04-01",
+       "y": 7.8
+      },
+      {
+       "x": "2025-07-01",
+       "y": 8.8
+      },
+      {
+       "x": "2025-10-01",
+       "y": 9.0
+      },
+      {
+       "x": "2026-01-01",
+       "y": 11.5
+      },
+      {
+       "x": "2026-04-01",
+       "y": 10.5
+      }
+     ]
+    },
+    {
+     "label": "PP3500 hardware",
+     "points": [
+      {
+       "x": "2024-01-01",
+       "y": -3.0
+      },
+      {
+       "x": "2024-04-01",
+       "y": -2.9
+      },
+      {
+       "x": "2024-07-01",
+       "y": -3.0
+      },
+      {
+       "x": "2024-10-01",
+       "y": -2.9
+      },
+      {
+       "x": "2025-01-01",
+       "y": -2.6
+      },
+      {
+       "x": "2025-04-01",
+       "y": -3.0
+      },
+      {
+       "x": "2025-07-01",
+       "y": -2.8
+      },
+      {
+       "x": "2025-10-01",
+       "y": -2.9
+      },
+      {
+       "x": "2026-01-01",
+       "y": -2.5
+      },
+      {
+       "x": "2026-04-01",
+       "y": -3.0
+      }
+     ]
+    },
+    {
+     "label": "SP6000 hardware",
+     "points": [
+      {
+       "x": "2024-01-01",
+       "y": 0.0
+      },
+      {
+       "x": "2024-04-01",
+       "y": -0.1
+      },
+      {
+       "x": "2024-07-01",
+       "y": 0.1
+      },
+      {
+       "x": "2024-10-01",
+       "y": 0.3
+      },
+      {
+       "x": "2025-01-01",
+       "y": 0.1
+      },
+      {
+       "x": "2025-04-01",
+       "y": 0.4
+      },
+      {
+       "x": "2025-07-01",
+       "y": 0.1
+      },
+      {
+       "x": "2025-10-01",
+       "y": -0.1
+      },
+      {
+       "x": "2026-01-01",
+       "y": -0.1
+      },
+      {
+       "x": "2026-04-01",
+       "y": 0.1
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "cost-variance-by-region",
+   "label": "Standard-cost variance by region",
+   "unit": "USD K",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "note": "the standard-cost roll-up (internal-standard-costs) carries no region dimension; a regional variance needs regional standards or a regional actual-cost feed from the ERP."
+   },
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "H1 2026 gross margin 51.5% vs 50.6% H1 2025 (+1.0 pts) \u2014 BELOW the 55% floor; 2 of 6 lines eroding (GM down 1 pt or more YoY); eroding: PP3000 -1.5 pts, IP5000 -1.5 pts; standard-cost variance beyond \u00b15% on 0 of 6 lines (all revenue types); hardware-only variance beyond \u00b15% on 2 of 5 device lines \u2014 unfavorable PP3000 +11.0%, IP5000 +10.9%",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "medium",
+    "statement": "PP3000 gross margin 44.9% in H1 2026 vs 46.4% in H1 2025 (-1.5 pts) while its hardware unit cost runs +11.0% above standard (line total +4.9%, diluted by consumables and service)",
+    "action": "Cost review of the line: reset the standard to actual, then decide price action vs run-down at the quarterly margin review",
+    "evidence": [
+     "derived: gm-by-line",
+     "derived: cost-variance-by-line",
+     "src: commercial/internal-financials@2026-09-28",
+     "src: finance/internal-standard-costs@2026-09-28",
+     "config: finance.yml"
+    ]
+   },
+   {
+    "id": "I2",
+    "severity": "medium",
+    "statement": "IP5000 gross margin 45.6% in H1 2026 vs 47.1% in H1 2025 (-1.5 pts) while its hardware unit cost runs +10.9% above standard (line total +4.6%, diluted by consumables and service)",
+    "action": "Cost review of the line: reset the standard to actual, then decide price action vs run-down at the quarterly margin review",
+    "evidence": [
+     "derived: gm-by-line",
+     "derived: cost-variance-by-line",
+     "src: commercial/internal-financials@2026-09-28",
+     "src: finance/internal-standard-costs@2026-09-28",
+     "config: finance.yml"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "medium",
+    "statement": "Company gross margin 51.5% sits below the 55% floor \u2014 the floor is a stand-in (no plan of record names one), so the miss is only as firm as an unratified target",
+    "mitigation": "Have finance ratify a margin floor in the plan of record and mark E-01.1 validated",
+    "evidence": [
+     "derived: gm-stat",
+     "config: finance.yml"
+    ]
+   },
+   {
+    "id": "R2",
+    "severity": "medium",
+    "statement": "Margin reporting on standards flatters IP5000, PP3000 \u2014 hardware unit cost runs above standard (PP3000 +11.0%, IP5000 +10.9%), so booked unit costs understate actual cost",
+    "mitigation": "Standard reset at the next standards cycle; interim margin reporting on actual unit cost",
+    "evidence": [
+     "derived: cost-variance-by-line",
+     "derived: cost-variance-trend",
+     "src: commercial/internal-financials@2026-09-28",
+     "src: finance/internal-standard-costs@2026-09-28"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "Mix masking: company margin is up +1.0 pts YoY while 2 line(s) erode \u2014 the aggregate is lifted by mix, not by line health",
+    "evidence": [
+     "derived: gm-stat",
+     "derived: gm-by-line"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-01.1",
+   "statement": "Company gross margin holds at or above the floor over the fiscal-year window",
+   "expected": "gross margin >= 55%",
+   "basis": "board-deck target carried forward; no plan of record names a floor [VERIFY]",
+   "set_by": "cfo (demo)",
+   "validated": false,
+   "actual": "51.5% (H1 2026); 2 of 6 lines eroding",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: gm-stat",
+    "derived: gm-by-line"
+   ]
+  },
+  {
+   "id": "E-01.2",
+   "statement": "No product line's standard-cost variance exceeds the review tolerance",
+   "expected": "|actual vs standard| <= 5% per line over the window",
+   "basis": "cost-accounting review trigger; no controller policy names a tolerance [VERIFY]",
+   "set_by": "controller (demo)",
+   "validated": false,
+   "actual": "0 of 6 lines beyond \u00b15% (all revenue types); hardware-only 2 of 5: PP3000 +11.0%, IP5000 +10.9%",
+   "verdict": "met",
+   "evidence": [
+    "derived: cost-variance-by-line"
+   ]
+  }
+ ]
+}

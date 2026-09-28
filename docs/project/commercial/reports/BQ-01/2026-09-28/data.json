@@ -1,0 +1,453 @@
+{
+ "bq": "BQ-01",
+ "series": [
+  {
+   "id": "totals-stat",
+   "label": "Trailing-4Q portfolio totals",
+   "unit": "mixed",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "portfolio totals = \u03a3 line revenue and \u03a3 (revenue \u2212 COGS) over the trailing window; funder-pair GM and its share = pair GM \u00f7 total GM",
+    "inputs": [
+     "src: commercial/internal-financials@2026-09-28",
+     "derived: gm-by-line"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-financials",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "revenue, 2025-Q3..2026-Q2 ($M)",
+     "value": 88.2
+    },
+    {
+     "label": "gross margin ($M)",
+     "value": 45.2
+    },
+    {
+     "label": "gross margin from PP3500 + cloud-suite ($M)",
+     "value": 27.0
+    },
+    {
+     "label": "of gross margin from PP3500 + cloud-suite (%)",
+     "value": 59.8
+    }
+   ]
+  },
+  {
+   "id": "gm-by-line",
+   "label": "Trailing-4Q revenue vs gross margin by line ($M)",
+   "unit": "$M",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "revenue",
+    "b_label": "gross margin"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "per line over the trailing four quarters: revenue = \u03a3 revenue_usd (measured); gross margin = revenue \u2212 COGS",
+    "inputs": [
+     "src: commercial/internal-financials@2026-09-28"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-financials",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "PP3500",
+     "a": 40.9,
+     "b": 20.3
+    },
+    {
+     "label": "cloud-suite",
+     "a": 8.6,
+     "b": 6.7
+    },
+    {
+     "label": "PP3000",
+     "a": 13.2,
+     "b": 6.0
+    },
+    {
+     "label": "SP6000",
+     "a": 10.1,
+     "b": 4.9
+    },
+    {
+     "label": "IP5000",
+     "a": 8.3,
+     "b": 3.8
+    },
+    {
+     "label": "SP6500",
+     "a": 7.0,
+     "b": 3.4
+    }
+   ]
+  },
+  {
+   "id": "gm-share",
+   "label": "Share of total gross margin by line",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "line trailing-4Q gross margin \u00f7 total trailing-4Q gross margin",
+    "inputs": [
+     "src: commercial/internal-financials@2026-09-28",
+     "derived: gm-by-line"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-financials",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "PP3500",
+     "value": 44.8
+    },
+    {
+     "label": "cloud-suite",
+     "value": 14.9
+    },
+    {
+     "label": "PP3000",
+     "value": 13.2
+    },
+    {
+     "label": "SP6000",
+     "value": 10.9
+    },
+    {
+     "label": "IP5000",
+     "value": 8.5
+    },
+    {
+     "label": "SP6500",
+     "value": 7.6
+    }
+   ]
+  },
+  {
+   "id": "gm-trend",
+   "label": "GM% \u2014 prior 4Q vs trailing 4Q by line",
+   "unit": "%",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "trailing 4Q",
+    "b_label": "prior 4Q"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "per line: (revenue \u2212 COGS) \u00f7 revenue over the trailing four quarters vs the four quarters before them",
+    "inputs": [
+     "src: commercial/internal-financials@2026-09-28",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-financials",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "PP3500",
+     "a": 49.5,
+     "b": 49.5
+    },
+    {
+     "label": "cloud-suite",
+     "a": 78.0,
+     "b": 78.0
+    },
+    {
+     "label": "PP3000",
+     "a": 45.3,
+     "b": 46.8
+    },
+    {
+     "label": "SP6000",
+     "a": 49.1,
+     "b": 49.1
+    },
+    {
+     "label": "IP5000",
+     "a": 45.9,
+     "b": 47.4
+    },
+    {
+     "label": "SP6500",
+     "a": 48.9,
+     "b": 48.9
+    }
+   ]
+  },
+  {
+   "id": "revenue-trend",
+   "label": "Quarterly revenue by line ($M; top 3 + other)",
+   "unit": "$M",
+   "kind": "timeseries",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-financials",
+    "snapshot": "2026-09-28"
+   },
+   "lines": [
+    {
+     "label": "PP3500",
+     "points": [
+      {
+       "x": "2024-01-01",
+       "y": 4.98
+      },
+      {
+       "x": "2024-04-01",
+       "y": 5.49
+      },
+      {
+       "x": "2024-07-01",
+       "y": 6.17
+      },
+      {
+       "x": "2024-10-01",
+       "y": 6.66
+      },
+      {
+       "x": "2025-01-01",
+       "y": 7.38
+      },
+      {
+       "x": "2025-04-01",
+       "y": 8.08
+      },
+      {
+       "x": "2025-07-01",
+       "y": 8.84
+      },
+      {
+       "x": "2025-10-01",
+       "y": 9.65
+      },
+      {
+       "x": "2026-01-01",
+       "y": 10.7
+      },
+      {
+       "x": "2026-04-01",
+       "y": 11.7
+      }
+     ]
+    },
+    {
+     "label": "PP3000",
+     "points": [
+      {
+       "x": "2024-01-01",
+       "y": 4.06
+      },
+      {
+       "x": "2024-04-01",
+       "y": 4.03
+      },
+      {
+       "x": "2024-07-01",
+       "y": 3.88
+      },
+      {
+       "x": "2024-10-01",
+       "y": 3.72
+      },
+      {
+       "x": "2025-01-01",
+       "y": 3.68
+      },
+      {
+       "x": "2025-04-01",
+       "y": 3.53
+      },
+      {
+       "x": "2025-07-01",
+       "y": 3.41
+      },
+      {
+       "x": "2025-10-01",
+       "y": 3.4
+      },
+      {
+       "x": "2026-01-01",
+       "y": 3.2
+      },
+      {
+       "x": "2026-04-01",
+       "y": 3.21
+      }
+     ]
+    },
+    {
+     "label": "SP6000",
+     "points": [
+      {
+       "x": "2024-01-01",
+       "y": 2.45
+      },
+      {
+       "x": "2024-04-01",
+       "y": 2.44
+      },
+      {
+       "x": "2024-07-01",
+       "y": 2.44
+      },
+      {
+       "x": "2024-10-01",
+       "y": 2.47
+      },
+      {
+       "x": "2025-01-01",
+       "y": 2.5
+      },
+      {
+       "x": "2025-04-01",
+       "y": 2.52
+      },
+      {
+       "x": "2025-07-01",
+       "y": 2.54
+      },
+      {
+       "x": "2025-10-01",
+       "y": 2.52
+      },
+      {
+       "x": "2026-01-01",
+       "y": 2.53
+      },
+      {
+       "x": "2026-04-01",
+       "y": 2.49
+      }
+     ]
+    },
+    {
+     "label": "other (IP5000+SP6500+cloud-suite)",
+     "points": [
+      {
+       "x": "2024-01-01",
+       "y": 5.24
+      },
+      {
+       "x": "2024-04-01",
+       "y": 5.18
+      },
+      {
+       "x": "2024-07-01",
+       "y": 5.33
+      },
+      {
+       "x": "2024-10-01",
+       "y": 5.33
+      },
+      {
+       "x": "2025-01-01",
+       "y": 5.41
+      },
+      {
+       "x": "2025-04-01",
+       "y": 5.56
+      },
+      {
+       "x": "2025-07-01",
+       "y": 5.68
+      },
+      {
+       "x": "2025-10-01",
+       "y": 5.81
+      },
+      {
+       "x": "2026-01-01",
+       "y": 6.08
+      },
+      {
+       "x": "2026-04-01",
+       "y": 6.41
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "opex-by-line",
+   "label": "Operating expense by line",
+   "unit": "$M",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "note": "no opex-allocation dataset in the corpus \u2014 funds/consumes is a gross-margin statement until one exists"
+   },
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "PP3500 and cloud-suite fund the company \u2014 59.8% of trailing-4Q gross margin ($27.0M of the portfolio's $45.2M GM on $88.2M revenue, window 2025-Q3..2026-Q2); all 6 lines gross-margin positive; margins compressing on IP5000, PP3000",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "medium",
+    "statement": "IP5000 gross margin is compressing \u2014 45.9% in the trailing window vs 47.4% in the prior four quarters (-1.5 pts)",
+    "mitigation": "Review pricing and COGS drivers for the line; set a floor at which the phase-out conversation formally opens",
+    "evidence": [
+     "derived: gm-trend",
+     "src: commercial/internal-financials@2026-09-28",
+     "config: commercial.yml"
+    ]
+   },
+   {
+    "id": "R2",
+    "severity": "medium",
+    "statement": "PP3000 gross margin is compressing \u2014 45.3% in the trailing window vs 46.8% in the prior four quarters (-1.5 pts)",
+    "mitigation": "Review pricing and COGS drivers for the line; set a floor at which the phase-out conversation formally opens",
+    "evidence": [
+     "derived: gm-trend",
+     "src: commercial/internal-financials@2026-09-28",
+     "config: commercial.yml"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "Gross margin only \u2014 no opex allocation exists per line, so a GM-positive line can still consume the company at operating level (stated data gap)",
+    "evidence": [
+     "derived: opex-by-line"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-01.1",
+   "statement": "Every product line is gross-margin positive over the trailing four quarters",
+   "expected": "gross margin > 0 per line, trailing 4Q",
+   "basis": "generic portfolio guardrail; no board-adopted floor",
+   "set_by": "cfo (demo)",
+   "validated": false,
+   "actual": "all lines positive; thinnest is PP3000 at 45.3%",
+   "verdict": "met",
+   "evidence": [
+    "derived: gm-by-line"
+   ]
+  }
+ ]
+}

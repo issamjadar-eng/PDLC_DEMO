@@ -1,0 +1,464 @@
+{
+ "bq": "BQ-13",
+ "series": [
+  {
+   "id": "runway-margin",
+   "label": "Months our launch trails a slow SaMD entrant",
+   "unit": "months",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "our launch anchor minus (data anchor + slow end of the A-005 SaMD band), in months",
+    "inputs": [
+     "assume: A-005",
+     "src: commercial/openfda-510k-infusion@2026-09-28",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/openfda-510k-infusion",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "months after our 2028-H2 anchor a slow (24-month) SaMD entrant starting 2026-07-24 would clear",
+     "value": 1
+    }
+   ]
+  },
+  {
+   "id": "hardware-edge-margin",
+   "label": "Hardware-scenario margin vs our launch anchor",
+   "unit": "",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "fast hardware edge (data anchor + fast end of the A-005 hardware band) minus each launch-anchor reading (first/last day of our_launch_period)",
+    "inputs": [
+     "assume: A-005",
+     "src: commercial/openfda-510k-infusion@2026-09-28",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/openfda-510k-infusion",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "days the fast hardware edge (2029-01-24) clears the favorable anchor (2028-07-01)",
+     "value": 207
+    },
+    {
+     "label": "months the fast hardware edge beats the end-of-period reading (2028-12-31)",
+     "value": 0
+    }
+   ]
+  },
+  {
+   "id": "predictive-shipping-check",
+   "label": "predictive_monitoring by product",
+   "unit": "",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/external-competitor-features",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "GlobalLogic PainEase PCA Advanced (PP3500)",
+     "value": "no (complete absence of predictive monitoring across portfolio)",
+     "verified": "yes"
+    },
+    {
+     "label": "BD Alaris",
+     "value": "no (reactive alarms only)",
+     "verified": "yes"
+    },
+    {
+     "label": "Baxter Spectrum IQ",
+     "value": "no (reactive alarms only)",
+     "verified": "yes"
+    },
+    {
+     "label": "ICU Medical Plum 360",
+     "value": "no (named reactive-alarm incumbent)",
+     "verified": "yes"
+    },
+    {
+     "label": "B.Braun Infusomat Space",
+     "value": "no (named reactive-alarm incumbent)",
+     "verified": "yes"
+    }
+   ]
+  },
+  {
+   "id": "entry-scenarios",
+   "label": "Modeled clearance window by entry scenario",
+   "unit": "",
+   "evidence_class": "assumed",
+   "provenance": {
+    "assumption": "A-005",
+    "note": "A-005 lead-time bands projected from the pinned snapshot's newest decision date; the acquisition scenario is modeled, not observed"
+   },
+   "points": [
+    {
+     "label": "SaMD-only entrant",
+     "value": "2028-01-24 \u2192 2028-07-24 (straddles our launch anchor)"
+    },
+    {
+     "label": "Hardware-integrated / clinical-evidence program",
+     "value": "2029-01-24 \u2192 2030-07-24 (clears after our launch anchor)"
+    },
+    {
+     "label": "Incumbent acquires AI entrant (SaMD clock on incumbent channel)",
+     "value": "2028-01-24 \u2192 2028-07-24 (straddles our launch anchor)"
+    }
+   ]
+  },
+  {
+   "id": "watch-flagged",
+   "label": "Keyword-flagged clearances (trailing 12 months)",
+   "unit": "",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/openfda-510k-infusion",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "K251636",
+     "value": "Baxter \u2014 software"
+    },
+    {
+     "label": "K251640",
+     "value": "Baxter \u2014 software"
+    }
+   ]
+  },
+  {
+   "id": "clearances-by-quarter",
+   "label": "FRN clearances per quarter (all / software / ai-predictive)",
+   "unit": "clearances",
+   "kind": "timeseries",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/openfda-510k-infusion",
+    "snapshot": "2026-09-28"
+   },
+   "lines": [
+    {
+     "label": "all FRN clearances",
+     "points": [
+      {
+       "x": "2021-10-01",
+       "y": 2
+      },
+      {
+       "x": "2022-01-01",
+       "y": 2
+      },
+      {
+       "x": "2022-04-01",
+       "y": 2
+      },
+      {
+       "x": "2022-07-01",
+       "y": 2
+      },
+      {
+       "x": "2022-10-01",
+       "y": 0
+      },
+      {
+       "x": "2023-01-01",
+       "y": 3
+      },
+      {
+       "x": "2023-04-01",
+       "y": 0
+      },
+      {
+       "x": "2023-07-01",
+       "y": 2
+      },
+      {
+       "x": "2023-10-01",
+       "y": 2
+      },
+      {
+       "x": "2024-01-01",
+       "y": 1
+      },
+      {
+       "x": "2024-04-01",
+       "y": 1
+      },
+      {
+       "x": "2024-07-01",
+       "y": 1
+      },
+      {
+       "x": "2024-10-01",
+       "y": 2
+      },
+      {
+       "x": "2025-01-01",
+       "y": 2
+      },
+      {
+       "x": "2025-04-01",
+       "y": 4
+      },
+      {
+       "x": "2025-07-01",
+       "y": 2
+      },
+      {
+       "x": "2025-10-01",
+       "y": 0
+      },
+      {
+       "x": "2026-01-01",
+       "y": 1
+      },
+      {
+       "x": "2026-04-01",
+       "y": 0
+      },
+      {
+       "x": "2026-07-01",
+       "y": 1
+      }
+     ]
+    },
+    {
+     "label": "software-flagged",
+     "points": [
+      {
+       "x": "2021-10-01",
+       "y": 0
+      },
+      {
+       "x": "2022-01-01",
+       "y": 0
+      },
+      {
+       "x": "2022-04-01",
+       "y": 1
+      },
+      {
+       "x": "2022-07-01",
+       "y": 1
+      },
+      {
+       "x": "2022-10-01",
+       "y": 0
+      },
+      {
+       "x": "2023-01-01",
+       "y": 2
+      },
+      {
+       "x": "2023-04-01",
+       "y": 0
+      },
+      {
+       "x": "2023-07-01",
+       "y": 1
+      },
+      {
+       "x": "2023-10-01",
+       "y": 0
+      },
+      {
+       "x": "2024-01-01",
+       "y": 0
+      },
+      {
+       "x": "2024-04-01",
+       "y": 1
+      },
+      {
+       "x": "2024-07-01",
+       "y": 0
+      },
+      {
+       "x": "2024-10-01",
+       "y": 1
+      },
+      {
+       "x": "2025-01-01",
+       "y": 0
+      },
+      {
+       "x": "2025-04-01",
+       "y": 1
+      },
+      {
+       "x": "2025-07-01",
+       "y": 2
+      },
+      {
+       "x": "2025-10-01",
+       "y": 0
+      },
+      {
+       "x": "2026-01-01",
+       "y": 0
+      },
+      {
+       "x": "2026-04-01",
+       "y": 0
+      },
+      {
+       "x": "2026-07-01",
+       "y": 0
+      }
+     ]
+    },
+    {
+     "label": "ai/predictive-flagged",
+     "points": [
+      {
+       "x": "2021-10-01",
+       "y": 0
+      },
+      {
+       "x": "2022-01-01",
+       "y": 0
+      },
+      {
+       "x": "2022-04-01",
+       "y": 0
+      },
+      {
+       "x": "2022-07-01",
+       "y": 0
+      },
+      {
+       "x": "2022-10-01",
+       "y": 0
+      },
+      {
+       "x": "2023-01-01",
+       "y": 0
+      },
+      {
+       "x": "2023-04-01",
+       "y": 0
+      },
+      {
+       "x": "2023-07-01",
+       "y": 0
+      },
+      {
+       "x": "2023-10-01",
+       "y": 0
+      },
+      {
+       "x": "2024-01-01",
+       "y": 0
+      },
+      {
+       "x": "2024-04-01",
+       "y": 0
+      },
+      {
+       "x": "2024-07-01",
+       "y": 0
+      },
+      {
+       "x": "2024-10-01",
+       "y": 0
+      },
+      {
+       "x": "2025-01-01",
+       "y": 0
+      },
+      {
+       "x": "2025-04-01",
+       "y": 0
+      },
+      {
+       "x": "2025-07-01",
+       "y": 0
+      },
+      {
+       "x": "2025-10-01",
+       "y": 0
+      },
+      {
+       "x": "2026-01-01",
+       "y": 0
+      },
+      {
+       "x": "2026-04-01",
+       "y": 0
+      },
+      {
+       "x": "2026-07-01",
+       "y": 0
+      }
+     ]
+    }
+   ],
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "Nobody in the competitive matrix documents predictive monitoring today, but the runway is assumption-thin: a SaMD-only entrant starting at the data anchor (2026-07-24) could clear 2028-01-24 to 2028-07-24 \u2014 about 1 months after our F6 2028-H2 launch anchor; an incumbent acquisition inherits the same clock; 0 ai/predictive-flagged clearance(s) in the trailing-12-month watch. The hardware-scenario reassurance holds: its fast edge clears the favorable launch anchor by 207 days \u2014 and the H2 anchor refinement is a catalog config choice, not a strategy-doc commitment",
+   "evidence_class": "assumed"
+  }
+ ],
+ "narrative": {
+  "issues": [],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "high",
+    "statement": "The F6 runway verdict is assumption-bounded: the entire lead-time model is A-005 (medium confidence), and the entrant clock is modeled from the data anchor (2026-07-24) \u2014 a program already underway is ahead of every figure here",
+    "mitigation": "Treat A-005's refresh triggers as standing: recompute on every 510(k) snapshot refresh and on any predictive-monitoring announcement; widen the corpus beyond product code FRN before relying on entrant absence",
+    "evidence": [
+     "assume: A-005",
+     "src: commercial/openfda-510k-infusion@2026-09-28"
+    ]
+   },
+   {
+    "id": "R2",
+    "severity": "medium",
+    "statement": "Acquisition scenario: an incumbent buying an AI entrant applies the 18-24-month SaMD clock to an established hospital channel \u2014 the fastest modeled path to closing our gap, and it is an assumption-class scenario, not an observed signal",
+    "mitigation": "Track M&A signals alongside the clearance watch; a deal announcement collapses the runway to the SaMD band immediately",
+    "evidence": [
+     "assume: A-005",
+     "derived: entry-scenarios",
+     "config: commercial.yml"
+    ]
+   },
+   {
+    "id": "R3",
+    "severity": "medium",
+    "statement": "The hardware-scenario reassurance ('clears after our launch anchor') holds by 207 days at the fast edge under the favorable anchor reading, and holds under the end-of-period reading (2028-12-31) as well; the H2 anchor refinement itself is a catalog config choice \u2014 the strategy doc commits only 'Y3 (2028)'",
+    "mitigation": "Ground the launch anchor in the plan of record (commit a half-year or a date in commercial-strategy.md D-COMM-1.4), and never quote the hardware-scenario reassurance without its margin",
+    "evidence": [
+     "derived: hardware-edge-margin",
+     "assume: A-005",
+     "config: commercial.yml"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "Entry could be underway undetected: unannounced development programs are invisible in public data by construction, and FRN-only scope cannot see a De Novo or non-FRN predictive SaMD \u2014 absence of signal is not absence of entrant",
+    "evidence": [
+     "src: commercial/openfda-510k-infusion@2026-09-28",
+     "derived: watch-flagged"
+    ]
+   }
+  ]
+ },
+ "expectations": []
+}

@@ -1,0 +1,876 @@
+{
+ "bq": "MQ-03",
+ "series": [
+  {
+   "id": "capa-stat",
+   "label": "CAPA posture",
+   "unit": "count",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "open = no closure date at as_of; past due = open and due < as_of; verified = effectiveness_verified true among closed",
+    "inputs": [
+     "src: manufacturing/internal-ncr-capa@2026-09-28",
+     "config: manufacturing.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-ncr-capa",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "open CAPAs",
+     "value": 32,
+     "sub": "at 2026-08-31"
+    },
+    {
+     "label": "past due",
+     "value": 21,
+     "sub": "66% of open; 5 critical"
+    },
+    {
+     "label": "effectiveness verified",
+     "value": 59.6,
+     "sub": "of 47 closed; backlog 19"
+    },
+    {
+     "label": "open NCRs",
+     "value": 19,
+     "sub": "9 past due"
+    }
+   ]
+  },
+  {
+   "id": "capa-pastdue-trend",
+   "label": "Open and past-due CAPAs at month-end",
+   "unit": "count",
+   "kind": "timeseries",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "at each month-end: CAPAs opened on/before, not closed by, and (past due) due before that date",
+    "inputs": [
+     "src: manufacturing/internal-ncr-capa@2026-09-28"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-ncr-capa",
+    "snapshot": "2026-09-28"
+   },
+   "lines": [
+    {
+     "label": "open CAPAs",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 5
+      },
+      {
+       "x": "2025-02-01",
+       "y": 8
+      },
+      {
+       "x": "2025-03-01",
+       "y": 10
+      },
+      {
+       "x": "2025-04-01",
+       "y": 12
+      },
+      {
+       "x": "2025-05-01",
+       "y": 12
+      },
+      {
+       "x": "2025-06-01",
+       "y": 14
+      },
+      {
+       "x": "2025-07-01",
+       "y": 11
+      },
+      {
+       "x": "2025-08-01",
+       "y": 12
+      },
+      {
+       "x": "2025-09-01",
+       "y": 15
+      },
+      {
+       "x": "2025-10-01",
+       "y": 13
+      },
+      {
+       "x": "2025-11-01",
+       "y": 13
+      },
+      {
+       "x": "2025-12-01",
+       "y": 12
+      },
+      {
+       "x": "2026-01-01",
+       "y": 14
+      },
+      {
+       "x": "2026-02-01",
+       "y": 16
+      },
+      {
+       "x": "2026-03-01",
+       "y": 16
+      },
+      {
+       "x": "2026-04-01",
+       "y": 21
+      },
+      {
+       "x": "2026-05-01",
+       "y": 25
+      },
+      {
+       "x": "2026-06-01",
+       "y": 25
+      },
+      {
+       "x": "2026-07-01",
+       "y": 27
+      },
+      {
+       "x": "2026-08-01",
+       "y": 32
+      }
+     ]
+    },
+    {
+     "label": "past-due open CAPAs",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 0
+      },
+      {
+       "x": "2025-02-01",
+       "y": 0
+      },
+      {
+       "x": "2025-03-01",
+       "y": 0
+      },
+      {
+       "x": "2025-04-01",
+       "y": 1
+      },
+      {
+       "x": "2025-05-01",
+       "y": 2
+      },
+      {
+       "x": "2025-06-01",
+       "y": 3
+      },
+      {
+       "x": "2025-07-01",
+       "y": 3
+      },
+      {
+       "x": "2025-08-01",
+       "y": 3
+      },
+      {
+       "x": "2025-09-01",
+       "y": 3
+      },
+      {
+       "x": "2025-10-01",
+       "y": 3
+      },
+      {
+       "x": "2025-11-01",
+       "y": 3
+      },
+      {
+       "x": "2025-12-01",
+       "y": 3
+      },
+      {
+       "x": "2026-01-01",
+       "y": 4
+      },
+      {
+       "x": "2026-02-01",
+       "y": 6
+      },
+      {
+       "x": "2026-03-01",
+       "y": 8
+      },
+      {
+       "x": "2026-04-01",
+       "y": 10
+      },
+      {
+       "x": "2026-05-01",
+       "y": 12
+      },
+      {
+       "x": "2026-06-01",
+       "y": 12
+      },
+      {
+       "x": "2026-07-01",
+       "y": 17
+      },
+      {
+       "x": "2026-08-01",
+       "y": 21
+      }
+     ]
+    },
+    {
+     "label": "of which critical",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 0
+      },
+      {
+       "x": "2025-02-01",
+       "y": 0
+      },
+      {
+       "x": "2025-03-01",
+       "y": 0
+      },
+      {
+       "x": "2025-04-01",
+       "y": 0
+      },
+      {
+       "x": "2025-05-01",
+       "y": 0
+      },
+      {
+       "x": "2025-06-01",
+       "y": 1
+      },
+      {
+       "x": "2025-07-01",
+       "y": 2
+      },
+      {
+       "x": "2025-08-01",
+       "y": 1
+      },
+      {
+       "x": "2025-09-01",
+       "y": 2
+      },
+      {
+       "x": "2025-10-01",
+       "y": 1
+      },
+      {
+       "x": "2025-11-01",
+       "y": 1
+      },
+      {
+       "x": "2025-12-01",
+       "y": 1
+      },
+      {
+       "x": "2026-01-01",
+       "y": 2
+      },
+      {
+       "x": "2026-02-01",
+       "y": 2
+      },
+      {
+       "x": "2026-03-01",
+       "y": 2
+      },
+      {
+       "x": "2026-04-01",
+       "y": 3
+      },
+      {
+       "x": "2026-05-01",
+       "y": 4
+      },
+      {
+       "x": "2026-06-01",
+       "y": 4
+      },
+      {
+       "x": "2026-07-01",
+       "y": 4
+      },
+      {
+       "x": "2026-08-01",
+       "y": 5
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "ncr-trend",
+   "label": "NCRs opened per month",
+   "unit": "count",
+   "kind": "timeseries",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "count of NCRs by opened month, all sources and supplier-sourced",
+    "inputs": [
+     "src: manufacturing/internal-ncr-capa@2026-09-28"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-ncr-capa",
+    "snapshot": "2026-09-28"
+   },
+   "lines": [
+    {
+     "label": "NCRs opened",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 10
+      },
+      {
+       "x": "2025-02-01",
+       "y": 10
+      },
+      {
+       "x": "2025-03-01",
+       "y": 10
+      },
+      {
+       "x": "2025-04-01",
+       "y": 10
+      },
+      {
+       "x": "2025-05-01",
+       "y": 10
+      },
+      {
+       "x": "2025-06-01",
+       "y": 10
+      },
+      {
+       "x": "2025-07-01",
+       "y": 10
+      },
+      {
+       "x": "2025-08-01",
+       "y": 10
+      },
+      {
+       "x": "2025-09-01",
+       "y": 10
+      },
+      {
+       "x": "2025-10-01",
+       "y": 10
+      },
+      {
+       "x": "2025-11-01",
+       "y": 10
+      },
+      {
+       "x": "2025-12-01",
+       "y": 10
+      },
+      {
+       "x": "2026-01-01",
+       "y": 10
+      },
+      {
+       "x": "2026-02-01",
+       "y": 10
+      },
+      {
+       "x": "2026-03-01",
+       "y": 10
+      },
+      {
+       "x": "2026-04-01",
+       "y": 11
+      },
+      {
+       "x": "2026-05-01",
+       "y": 11
+      },
+      {
+       "x": "2026-06-01",
+       "y": 11
+      },
+      {
+       "x": "2026-07-01",
+       "y": 12
+      },
+      {
+       "x": "2026-08-01",
+       "y": 12
+      }
+     ]
+    },
+    {
+     "label": "supplier-sourced",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 3
+      },
+      {
+       "x": "2025-02-01",
+       "y": 1
+      },
+      {
+       "x": "2025-03-01",
+       "y": 1
+      },
+      {
+       "x": "2025-04-01",
+       "y": 3
+      },
+      {
+       "x": "2025-05-01",
+       "y": 3
+      },
+      {
+       "x": "2025-06-01",
+       "y": 1
+      },
+      {
+       "x": "2025-07-01",
+       "y": 2
+      },
+      {
+       "x": "2025-08-01",
+       "y": 3
+      },
+      {
+       "x": "2025-09-01",
+       "y": 2
+      },
+      {
+       "x": "2025-10-01",
+       "y": 1
+      },
+      {
+       "x": "2025-11-01",
+       "y": 3
+      },
+      {
+       "x": "2025-12-01",
+       "y": 1
+      },
+      {
+       "x": "2026-01-01",
+       "y": 3
+      },
+      {
+       "x": "2026-02-01",
+       "y": 4
+      },
+      {
+       "x": "2026-03-01",
+       "y": 1
+      },
+      {
+       "x": "2026-04-01",
+       "y": 2
+      },
+      {
+       "x": "2026-05-01",
+       "y": 4
+      },
+      {
+       "x": "2026-06-01",
+       "y": 1
+      },
+      {
+       "x": "2026-07-01",
+       "y": 4
+      },
+      {
+       "x": "2026-08-01",
+       "y": 2
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "capa-open-by-source",
+   "label": "Open vs past-due CAPAs by source",
+   "unit": "count",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "open",
+    "b_label": "past due"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "open / past-due CAPA counts per source at as_of",
+    "inputs": [
+     "src: manufacturing/internal-ncr-capa@2026-09-28"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-ncr-capa",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "production",
+     "a": 18,
+     "b": 11
+    },
+    {
+     "label": "supplier",
+     "a": 4,
+     "b": 3
+    },
+    {
+     "label": "complaint",
+     "a": 2,
+     "b": 1
+    },
+    {
+     "label": "audit",
+     "a": 5,
+     "b": 3
+    },
+    {
+     "label": "field",
+     "a": 3,
+     "b": 3
+    }
+   ]
+  },
+  {
+   "id": "capa-open-by-severity",
+   "label": "Open vs past-due CAPAs by severity",
+   "unit": "count",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "open",
+    "b_label": "past due"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "open / past-due CAPA counts per severity at as_of",
+    "inputs": [
+     "src: manufacturing/internal-ncr-capa@2026-09-28"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-ncr-capa",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "minor",
+     "a": 12,
+     "b": 8
+    },
+    {
+     "label": "major",
+     "a": 14,
+     "b": 8
+    },
+    {
+     "label": "critical",
+     "a": 6,
+     "b": 5
+    }
+   ]
+  },
+  {
+   "id": "ncr-open-by-severity",
+   "label": "Open NCRs by severity (mean age)",
+   "unit": "count",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "open NCR count per severity; mean age = days from opened to as_of",
+    "inputs": [
+     "src: manufacturing/internal-ncr-capa@2026-09-28"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-ncr-capa",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "minor",
+     "value": 14,
+     "mean_age_days": 84.1
+    },
+    {
+     "label": "major",
+     "value": 3,
+     "mean_age_days": 230.7
+    },
+    {
+     "label": "critical",
+     "value": 2,
+     "mean_age_days": 290.0
+    }
+   ]
+  },
+  {
+   "id": "ncr-by-source",
+   "label": "NCRs opened by source, 2026-06..2026-08",
+   "unit": "count",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "NCRs opened in the trailing three months per source",
+    "inputs": [
+     "src: manufacturing/internal-ncr-capa@2026-09-28"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-ncr-capa",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "production",
+     "value": 16
+    },
+    {
+     "label": "supplier",
+     "value": 7
+    },
+    {
+     "label": "complaint",
+     "value": 2
+    },
+    {
+     "label": "audit",
+     "value": 5
+    },
+    {
+     "label": "field",
+     "value": 5
+    }
+   ]
+  },
+  {
+   "id": "effectiveness-by-quarter",
+   "label": "Closed CAPAs: effectiveness verified vs not, by closure quarter",
+   "unit": "count",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "verified",
+    "b_label": "not verified"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "closed CAPAs grouped by closure quarter, split on effectiveness_verified",
+    "inputs": [
+     "src: manufacturing/internal-ncr-capa@2026-09-28"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-ncr-capa",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "2025-Q1",
+     "a": 3,
+     "b": 1
+    },
+    {
+     "label": "2025-Q2",
+     "a": 7,
+     "b": 0
+    },
+    {
+     "label": "2025-Q3",
+     "a": 7,
+     "b": 4
+    },
+    {
+     "label": "2025-Q4",
+     "a": 9,
+     "b": 3
+    },
+    {
+     "label": "2026-Q1",
+     "a": 1,
+     "b": 6
+    },
+    {
+     "label": "2026-Q2",
+     "a": 0,
+     "b": 4
+    },
+    {
+     "label": "2026-Q3",
+     "a": 1,
+     "b": 1
+    }
+   ]
+  },
+  {
+   "id": "supplier-ncr-concentration",
+   "label": "Supplier-sourced NCRs by supplier",
+   "unit": "count",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "count of supplier-sourced NCRs per supplier_id over the whole register",
+    "inputs": [
+     "src: manufacturing/internal-ncr-capa@2026-09-28"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-ncr-capa",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "SUP-003",
+     "value": 21
+    },
+    {
+     "label": "SUP-002",
+     "value": 5
+    },
+    {
+     "label": "SUP-011",
+     "value": 5
+    },
+    {
+     "label": "SUP-001",
+     "value": 3
+    },
+    {
+     "label": "SUP-006",
+     "value": 3
+    },
+    {
+     "label": "SUP-005",
+     "value": 2
+    },
+    {
+     "label": "SUP-007",
+     "value": 2
+    },
+    {
+     "label": "SUP-012",
+     "value": 2
+    },
+    {
+     "label": "SUP-009",
+     "value": 1
+    },
+    {
+     "label": "SUP-010",
+     "value": 1
+    }
+   ]
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "At 2026-08-31: 32 open CAPAs, 21 past due (66%), 5 critical past due; past-due count rising (6 six months earlier \u2192 21); effectiveness verified on 28 of 47 closed CAPAs (60% vs 90% floor, backlog 19); 19 open NCRs (9 past due, mean age 129 d), NCR intake 11.7/month vs 10.7 prior; supplier NCRs concentrate on SUP-003 (21 of 45, 47%)",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "high",
+    "statement": "5 critical CAPA(s) past due at 2026-08-31: CAPA-2025-0012 (449 d over, production), CAPA-2025-0039 (217 d over, production), CAPA-2026-0003 (152 d over, production), CAPA-2026-0005 (107 d over, supplier), CAPA-2026-0017 (23 d over, audit)",
+    "action": "Escalate to the management-review agenda; assign owners and re-baselined due dates this week",
+    "evidence": [
+     "derived: capa-open-by-severity",
+     "src: manufacturing/internal-ncr-capa@2026-09-28"
+    ]
+   },
+   {
+    "id": "I2",
+    "severity": "high",
+    "statement": "Effectiveness verification is lagging: 60% of closed CAPAs verified against a 90% floor; the backlog of 19 unverified closures grows by closure quarter",
+    "action": "Schedule effectiveness checks for the oldest closures first; do not close new CAPAs without a dated verification plan",
+    "evidence": [
+     "derived: effectiveness-by-quarter",
+     "src: manufacturing/internal-ncr-capa@2026-09-28",
+     "config: manufacturing.yml"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "high",
+    "statement": "CAPA aging is rising \u2014 past-due open CAPAs went from 6 to 21 over six months; median days over due among past-due items is 107",
+    "mitigation": "Cap concurrent open CAPAs per owner; convert stalled investigations into interim containment + re-scoped CAPAs",
+    "evidence": [
+     "derived: capa-pastdue-trend",
+     "src: manufacturing/internal-ncr-capa@2026-09-28"
+    ]
+   },
+   {
+    "id": "R2",
+    "severity": "medium",
+    "statement": "Supplier-sourced NCRs concentrate on SUP-003 (21 of 45) \u2014 a single supplier is driving the supplier nonconformance load",
+    "mitigation": "Cross-check with the supplier scorecard and audit currency (MQ-05); consider a supplier corrective action request",
+    "evidence": [
+     "derived: supplier-ncr-concentration",
+     "src: manufacturing/internal-ncr-capa@2026-09-28"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "NCR intake 11.7/month in 2026-06..2026-08 vs 10.7/month in the prior three months; 9 open NCRs are past their due date",
+    "evidence": [
+     "derived: ncr-trend",
+     "derived: ncr-open-by-severity",
+     "src: manufacturing/internal-ncr-capa@2026-09-28"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-03.1",
+   "statement": "No critical CAPA is past its due date",
+   "expected": "0 critical CAPAs past due",
+   "basis": "stand-in; the CAPA procedure on record names no escalation rule for critical past-due items [VERIFY]",
+   "set_by": "vp-quality (demo)",
+   "validated": false,
+   "actual": "5 critical CAPA(s) past due at 2026-08-31",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: capa-open-by-severity"
+   ]
+  },
+  {
+   "id": "E-03.2",
+   "statement": "Closed CAPAs carry a completed effectiveness verification",
+   "expected": ">= 90% of closed CAPAs effectiveness-verified",
+   "basis": "stand-in; the CAPA procedure on record names no verification-completion target [VERIFY]",
+   "set_by": "vp-quality (demo)",
+   "validated": false,
+   "actual": "60% of closed CAPAs effectiveness-verified (28 of 47)",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: effectiveness-by-quarter"
+   ]
+  }
+ ]
+}

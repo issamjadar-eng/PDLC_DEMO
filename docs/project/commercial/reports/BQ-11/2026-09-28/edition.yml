@@ -1,0 +1,22 @@
+bq: BQ-11
+edition: '2026-09-28'
+status: draft
+created_at: '2026-09-28T11:37:29+00:00'
+pins:
+  commercial/internal-telemetry-utilization: '2026-09-28'
+  commercial/internal-fleet: '2026-09-28'
+  commercial/internal-sales-accounts: '2026-09-28'
+plan:
+  path: plans/BQ-11.md
+  sha256: 08443f9c368b66d5b5037c3d89ac5cc84c299321b0277401381cd352804c0191
+code_artifacts:
+- path: bq_modules/bq_11.py
+  sha256: e5c1ec64eac8482ba9e4851a83a72a0d5fa733a99203b0fe5acbe91916233e52
+- path: computations.py
+  sha256: 2140820494890c4c1712050248355fde06bba2331386103270bdfe48f88b3b78
+- path: corpus:commercial/internal-telemetry-utilization/gen.py
+  sha256: a5241bffcb6858480fcd3543b2e1558fc3ba62b9acd1a5d74669ca6ea3ee8fe7
+- path: corpus:commercial/internal-fleet/gen.py
+  sha256: 165e3ad1d98586ff1b211fb4493999879f957890664e07b069bf3fcaa4ba8961
+- path: corpus:commercial/internal-sales-accounts/gen.py
+  sha256: 3c19b25f857fab77d1bcc3fc6e52c3cab92ace34fa598acac1c0598c61216c70

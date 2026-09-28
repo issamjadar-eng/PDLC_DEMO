@@ -1,0 +1,28 @@
+dataset: finance/internal-ar-inventory
+snapshot: '2026-09-28'
+created_at: '2026-09-28T11:36:55+00:00'
+as_of: '2026-08-31'
+sources:
+- type: command
+  command: python3 gen.py gen --seed 42 --out {raw_dir}
+  system_of_record: demo generator (stand-in for ERP AR-aging + inventory-valuation export)
+  retrieved_at: '2026-09-28T11:36:55+00:00'
+  usage_rights: internal
+  files:
+  - path: raw/export.json
+    sha256: 00002f45f87832d04651e70d0717df1236bad6dac8ceb8005db5c4456fcb9a38
+transforms:
+- step: normalize
+  spec:
+    command: python3 gen.py normalize {raw_dir} {normalized_dir}
+  outputs:
+  - path: normalized/records.csv
+    sha256: 40326251f351e329c569f4f66d88abfa475c1d790ca656a0825a1a4d66e98189
+    parents:
+    - 00002f45f87832d04651e70d0717df1236bad6dac8ceb8005db5c4456fcb9a38
+  script_sha256: 41a50050f7f4efeca006c8ae17ae3277d7da37a48e4520918bf70198a8917d7c
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 1200

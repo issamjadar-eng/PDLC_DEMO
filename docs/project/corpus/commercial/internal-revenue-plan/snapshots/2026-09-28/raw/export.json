@@ -1,0 +1,849 @@
+{
+ "banner": "_Demo sample data - not for clinical use._",
+ "generator": "gen.py",
+ "seed": 42,
+ "as_of": "2026-07-25",
+ "plan_version": "LRP-2026.1 (approved 2026-02-10)",
+ "rows": [
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_usd": 6292000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_usd": 1452000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_usd": 847000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_usd": 1452000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_usd": 1089000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "cloud-suite",
+   "region": "NA",
+   "revenue_usd": 1331000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "cloud-suite",
+   "region": "NA",
+   "revenue_usd": 242000,
+   "regulatory_dependency": "letter-to-file"
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_usd": 3432000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_usd": 792000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_usd": 462000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_usd": 792000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_usd": 594000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "cloud-suite",
+   "region": "EMEA",
+   "revenue_usd": 726000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "cloud-suite",
+   "region": "EMEA",
+   "revenue_usd": 132000,
+   "regulatory_dependency": "letter-to-file"
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_usd": 1716000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_usd": 396000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_usd": 231000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_usd": 396000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_usd": 297000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "cloud-suite",
+   "region": "APAC",
+   "revenue_usd": 363000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "cloud-suite",
+   "region": "APAC",
+   "revenue_usd": 66000,
+   "regulatory_dependency": "letter-to-file"
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_usd": 6864000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_usd": 1584000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_usd": 924000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_usd": 1584000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_usd": 1188000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "cloud-suite",
+   "region": "NA",
+   "revenue_usd": 1452000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "cloud-suite",
+   "region": "NA",
+   "revenue_usd": 264000,
+   "regulatory_dependency": "letter-to-file"
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_usd": 3744000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_usd": 864000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_usd": 504000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_usd": 864000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_usd": 648000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "cloud-suite",
+   "region": "EMEA",
+   "revenue_usd": 792000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "cloud-suite",
+   "region": "EMEA",
+   "revenue_usd": 144000,
+   "regulatory_dependency": "letter-to-file"
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_usd": 1872000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_usd": 432000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_usd": 252000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_usd": 432000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_usd": 324000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "cloud-suite",
+   "region": "APAC",
+   "revenue_usd": 396000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "cloud-suite",
+   "region": "APAC",
+   "revenue_usd": 72000,
+   "regulatory_dependency": "letter-to-file"
+  },
+  {
+   "period": "2026-Q3",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_usd": 7436000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q3",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_usd": 1716000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q3",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_usd": 1001000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q3",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_usd": 1716000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q3",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_usd": 1287000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q3",
+   "product_line": "cloud-suite",
+   "region": "NA",
+   "revenue_usd": 1573000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q3",
+   "product_line": "cloud-suite",
+   "region": "NA",
+   "revenue_usd": 286000,
+   "regulatory_dependency": "letter-to-file"
+  },
+  {
+   "period": "2026-Q3",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_usd": 4056000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q3",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_usd": 936000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q3",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_usd": 546000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q3",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_usd": 936000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q3",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_usd": 702000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q3",
+   "product_line": "cloud-suite",
+   "region": "EMEA",
+   "revenue_usd": 858000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q3",
+   "product_line": "cloud-suite",
+   "region": "EMEA",
+   "revenue_usd": 156000,
+   "regulatory_dependency": "letter-to-file"
+  },
+  {
+   "period": "2026-Q3",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_usd": 2028000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q3",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_usd": 468000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q3",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_usd": 273000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q3",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_usd": 468000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q3",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_usd": 351000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q3",
+   "product_line": "cloud-suite",
+   "region": "APAC",
+   "revenue_usd": 429000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q3",
+   "product_line": "cloud-suite",
+   "region": "APAC",
+   "revenue_usd": 78000,
+   "regulatory_dependency": "letter-to-file"
+  },
+  {
+   "period": "2026-Q4",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_usd": 8008000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q4",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_usd": 1848000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q4",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_usd": 1078000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q4",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_usd": 1848000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q4",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_usd": 1386000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q4",
+   "product_line": "cloud-suite",
+   "region": "NA",
+   "revenue_usd": 1694000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q4",
+   "product_line": "cloud-suite",
+   "region": "NA",
+   "revenue_usd": 308000,
+   "regulatory_dependency": "letter-to-file"
+  },
+  {
+   "period": "2026-Q4",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_usd": 4368000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q4",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_usd": 1008000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q4",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_usd": 588000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q4",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_usd": 1008000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q4",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_usd": 756000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q4",
+   "product_line": "cloud-suite",
+   "region": "EMEA",
+   "revenue_usd": 924000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q4",
+   "product_line": "cloud-suite",
+   "region": "EMEA",
+   "revenue_usd": 168000,
+   "regulatory_dependency": "letter-to-file"
+  },
+  {
+   "period": "2026-Q4",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_usd": 2184000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q4",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_usd": 504000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q4",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_usd": 294000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q4",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_usd": 504000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q4",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_usd": 378000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q4",
+   "product_line": "cloud-suite",
+   "region": "APAC",
+   "revenue_usd": 462000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "2026-Q4",
+   "product_line": "cloud-suite",
+   "region": "APAC",
+   "revenue_usd": 84000,
+   "regulatory_dependency": "letter-to-file"
+  },
+  {
+   "period": "FY2027",
+   "product_line": "PP3500",
+   "region": "ALL",
+   "revenue_usd": 58000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2027",
+   "product_line": "PP3500",
+   "region": "ALL",
+   "revenue_usd": 4000000,
+   "regulatory_dependency": "letter-to-file"
+  },
+  {
+   "period": "FY2027",
+   "product_line": "PP3000",
+   "region": "ALL",
+   "revenue_usd": 10000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2027",
+   "product_line": "IP5000",
+   "region": "ALL",
+   "revenue_usd": 5000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2027",
+   "product_line": "SP6000",
+   "region": "ALL",
+   "revenue_usd": 15000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2027",
+   "product_line": "SP6500",
+   "region": "ALL",
+   "revenue_usd": 13000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2027",
+   "product_line": "cloud-suite",
+   "region": "ALL",
+   "revenue_usd": 14000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2027",
+   "product_line": "cloud-suite",
+   "region": "ALL",
+   "revenue_usd": 8000000,
+   "regulatory_dependency": "pccp-enabled"
+  },
+  {
+   "period": "FY2027",
+   "product_line": "cloud-suite",
+   "region": "ALL",
+   "revenue_usd": 3000000,
+   "regulatory_dependency": "new-submission"
+  },
+  {
+   "period": "FY2028",
+   "product_line": "PP3500",
+   "region": "ALL",
+   "revenue_usd": 60000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2028",
+   "product_line": "PP3500",
+   "region": "ALL",
+   "revenue_usd": 8000000,
+   "regulatory_dependency": "letter-to-file"
+  },
+  {
+   "period": "FY2028",
+   "product_line": "PP3000",
+   "region": "ALL",
+   "revenue_usd": 8000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2028",
+   "product_line": "IP5000",
+   "region": "ALL",
+   "revenue_usd": 4000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2028",
+   "product_line": "SP6000",
+   "region": "ALL",
+   "revenue_usd": 16000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2028",
+   "product_line": "SP6500",
+   "region": "ALL",
+   "revenue_usd": 14000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2028",
+   "product_line": "cloud-suite",
+   "region": "ALL",
+   "revenue_usd": 20000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2028",
+   "product_line": "cloud-suite",
+   "region": "ALL",
+   "revenue_usd": 30000000,
+   "regulatory_dependency": "pccp-enabled"
+  },
+  {
+   "period": "FY2028",
+   "product_line": "cloud-suite",
+   "region": "ALL",
+   "revenue_usd": 10000000,
+   "regulatory_dependency": "new-submission"
+  },
+  {
+   "period": "FY2029",
+   "product_line": "PP3500",
+   "region": "ALL",
+   "revenue_usd": 64000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2029",
+   "product_line": "PP3500",
+   "region": "ALL",
+   "revenue_usd": 10000000,
+   "regulatory_dependency": "letter-to-file"
+  },
+  {
+   "period": "FY2029",
+   "product_line": "PP3000",
+   "region": "ALL",
+   "revenue_usd": 6000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2029",
+   "product_line": "IP5000",
+   "region": "ALL",
+   "revenue_usd": 3000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2029",
+   "product_line": "SP6000",
+   "region": "ALL",
+   "revenue_usd": 17000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2029",
+   "product_line": "SP6500",
+   "region": "ALL",
+   "revenue_usd": 15000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2029",
+   "product_line": "cloud-suite",
+   "region": "ALL",
+   "revenue_usd": 25000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2029",
+   "product_line": "cloud-suite",
+   "region": "ALL",
+   "revenue_usd": 75000000,
+   "regulatory_dependency": "pccp-enabled"
+  },
+  {
+   "period": "FY2029",
+   "product_line": "cloud-suite",
+   "region": "ALL",
+   "revenue_usd": 30000000,
+   "regulatory_dependency": "new-submission"
+  },
+  {
+   "period": "FY2030",
+   "product_line": "PP3500",
+   "region": "ALL",
+   "revenue_usd": 66000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2030",
+   "product_line": "PP3500",
+   "region": "ALL",
+   "revenue_usd": 12000000,
+   "regulatory_dependency": "letter-to-file"
+  },
+  {
+   "period": "FY2030",
+   "product_line": "PP3000",
+   "region": "ALL",
+   "revenue_usd": 4000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2030",
+   "product_line": "IP5000",
+   "region": "ALL",
+   "revenue_usd": 2000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2030",
+   "product_line": "SP6000",
+   "region": "ALL",
+   "revenue_usd": 14000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2030",
+   "product_line": "SP6500",
+   "region": "ALL",
+   "revenue_usd": 12000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2030",
+   "product_line": "cloud-suite",
+   "region": "ALL",
+   "revenue_usd": 30000000,
+   "regulatory_dependency": "cleared"
+  },
+  {
+   "period": "FY2030",
+   "product_line": "cloud-suite",
+   "region": "ALL",
+   "revenue_usd": 140000000,
+   "regulatory_dependency": "pccp-enabled"
+  },
+  {
+   "period": "FY2030",
+   "product_line": "cloud-suite",
+   "region": "ALL",
+   "revenue_usd": 70000000,
+   "regulatory_dependency": "new-submission"
+  }
+ ]
+}

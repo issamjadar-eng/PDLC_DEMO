@@ -1,0 +1,873 @@
+{
+ "bq": "MQ-05",
+ "series": [
+  {
+   "id": "supplier-stat",
+   "label": "Incoming quality",
+   "unit": "%",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "lots rejected \u00f7 lots received and lot-weighted on-time over the trailing window",
+    "inputs": [
+     "src: manufacturing/internal-suppliers@2026-09-28",
+     "config: manufacturing.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-suppliers",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "reject rate 2026-06..2026-08",
+     "value": 2.3,
+     "sub": "2639 lots received"
+    },
+    {
+     "label": "on-time",
+     "value": 93.4,
+     "sub": "lot-weighted"
+    },
+    {
+     "label": "suppliers above ceiling",
+     "value": 3,
+     "sub": "of 12"
+    },
+    {
+     "label": "audits overdue",
+     "value": 1,
+     "sub": "single-source 2"
+    }
+   ]
+  },
+  {
+   "id": "reject-by-supplier",
+   "label": "Incoming reject rate by supplier",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "lots rejected \u00f7 lots received per supplier over the trailing window",
+    "inputs": [
+     "src: manufacturing/internal-suppliers@2026-09-28"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-suppliers",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "SUP-003 Meridian Drive Systems (pump-motor)",
+     "value": 7.9,
+     "single_source": true,
+     "status": "approved"
+    },
+    {
+     "label": "SUP-006 Halden Cell Works (battery)",
+     "value": 6.5,
+     "single_source": false,
+     "status": "probation"
+    },
+    {
+     "label": "SUP-011 Kestrel Electromech (pump-motor)",
+     "value": 4.3,
+     "single_source": false,
+     "status": "conditional"
+    },
+    {
+     "label": "SUP-010 Lumen Display Group (display)",
+     "value": 1.8,
+     "single_source": true,
+     "status": "approved"
+    },
+    {
+     "label": "SUP-009 Riverbend Fluidics (tubing-set)",
+     "value": 1.5,
+     "single_source": false,
+     "status": "approved"
+    },
+    {
+     "label": "SUP-001 Northwind Circuits (PCB)",
+     "value": 1.5,
+     "single_source": false,
+     "status": "approved"
+    },
+    {
+     "label": "SUP-002 Coastal PCB Assembly (PCB)",
+     "value": 1.4,
+     "single_source": false,
+     "status": "approved"
+    },
+    {
+     "label": "SUP-007 Sable Polymer Housings (enclosure)",
+     "value": 1.2,
+     "single_source": false,
+     "status": "approved"
+    },
+    {
+     "label": "SUP-005 Ardent Moldings (enclosure)",
+     "value": 1.2,
+     "single_source": false,
+     "status": "approved"
+    },
+    {
+     "label": "SUP-004 Voltaic Power Cells (battery)",
+     "value": 1.1,
+     "single_source": false,
+     "status": "approved"
+    },
+    {
+     "label": "SUP-008 Clearline Medical Tubing (tubing-set)",
+     "value": 0.8,
+     "single_source": false,
+     "status": "approved"
+    },
+    {
+     "label": "SUP-012 Brightfield Optics (display)",
+     "value": 0.8,
+     "single_source": false,
+     "status": "approved"
+    }
+   ]
+  },
+  {
+   "id": "ontime-by-supplier",
+   "label": "On-time delivery by supplier",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "lot-weighted mean of period on_time_pct per supplier over the trailing window",
+    "inputs": [
+     "src: manufacturing/internal-suppliers@2026-09-28"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-suppliers",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "SUP-006 Halden Cell Works (battery)",
+     "value": 82.4
+    },
+    {
+     "label": "SUP-003 Meridian Drive Systems (pump-motor)",
+     "value": 88.3
+    },
+    {
+     "label": "SUP-011 Kestrel Electromech (pump-motor)",
+     "value": 91.0
+    },
+    {
+     "label": "SUP-012 Brightfield Optics (display)",
+     "value": 91.4
+    },
+    {
+     "label": "SUP-007 Sable Polymer Housings (enclosure)",
+     "value": 92.2
+    },
+    {
+     "label": "SUP-002 Coastal PCB Assembly (PCB)",
+     "value": 93.6
+    },
+    {
+     "label": "SUP-004 Voltaic Power Cells (battery)",
+     "value": 94.2
+    },
+    {
+     "label": "SUP-005 Ardent Moldings (enclosure)",
+     "value": 94.5
+    },
+    {
+     "label": "SUP-009 Riverbend Fluidics (tubing-set)",
+     "value": 94.6
+    },
+    {
+     "label": "SUP-010 Lumen Display Group (display)",
+     "value": 94.8
+    },
+    {
+     "label": "SUP-001 Northwind Circuits (PCB)",
+     "value": 95.5
+    },
+    {
+     "label": "SUP-008 Clearline Medical Tubing (tubing-set)",
+     "value": 97.4
+    }
+   ]
+  },
+  {
+   "id": "reject-by-family",
+   "label": "Incoming reject rate by component family",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "lots rejected \u00f7 lots received per component family over the trailing window",
+    "inputs": [
+     "src: manufacturing/internal-suppliers@2026-09-28"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-suppliers",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "PCB",
+     "value": 1.4,
+     "suppliers": 2,
+     "single_source": 0
+    },
+    {
+     "label": "battery",
+     "value": 3.3,
+     "suppliers": 2,
+     "single_source": 0
+    },
+    {
+     "label": "display",
+     "value": 1.4,
+     "suppliers": 2,
+     "single_source": 1
+    },
+    {
+     "label": "enclosure",
+     "value": 1.2,
+     "suppliers": 2,
+     "single_source": 0
+    },
+    {
+     "label": "pump-motor",
+     "value": 7.2,
+     "suppliers": 2,
+     "single_source": 1
+    },
+    {
+     "label": "tubing-set",
+     "value": 1.1,
+     "suppliers": 2,
+     "single_source": 0
+    }
+   ]
+  },
+  {
+   "id": "scorecard-distribution",
+   "label": "Suppliers by scorecard (latest period)",
+   "unit": "count",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "count of suppliers per latest-period scorecard grade",
+    "inputs": [
+     "src: manufacturing/internal-suppliers@2026-09-28"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-suppliers",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "A",
+     "value": 4
+    },
+    {
+     "label": "B",
+     "value": 5
+    },
+    {
+     "label": "C",
+     "value": 1
+    },
+    {
+     "label": "D",
+     "value": 2
+    }
+   ]
+  },
+  {
+   "id": "single-source-exposure",
+   "label": "Single-source suppliers: reject rate",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "single_source suppliers with their window reject rate, scorecard and audit status",
+    "inputs": [
+     "src: manufacturing/internal-suppliers@2026-09-28"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-suppliers",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "SUP-003 Meridian Drive Systems (pump-motor)",
+     "value": 7.9,
+     "scorecard": "D",
+     "audit_overdue_days": 289
+    },
+    {
+     "label": "SUP-010 Lumen Display Group (display)",
+     "value": 1.8,
+     "scorecard": "A",
+     "audit_overdue_days": 0
+    }
+   ]
+  },
+  {
+   "id": "audit-currency",
+   "label": "Days to next supplier audit (negative = overdue)",
+   "unit": "days",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "next_audit_due \u2212 as_of per supplier",
+    "inputs": [
+     "src: manufacturing/internal-suppliers@2026-09-28"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-suppliers",
+    "snapshot": "2026-09-28"
+   },
+   "points": [
+    {
+     "label": "SUP-003 Meridian Drive Systems (pump-motor)",
+     "value": -289,
+     "last_audit": "2024-11-15"
+    },
+    {
+     "label": "SUP-002 Coastal PCB Assembly (PCB)",
+     "value": 22,
+     "last_audit": "2025-09-22"
+    },
+    {
+     "label": "SUP-006 Halden Cell Works (battery)",
+     "value": 44,
+     "last_audit": "2026-04-14"
+    },
+    {
+     "label": "SUP-012 Brightfield Optics (display)",
+     "value": 60,
+     "last_audit": "2025-10-30"
+    },
+    {
+     "label": "SUP-005 Ardent Moldings (enclosure)",
+     "value": 65,
+     "last_audit": "2025-11-04"
+    },
+    {
+     "label": "SUP-008 Clearline Medical Tubing (tubing-set)",
+     "value": 100,
+     "last_audit": "2025-12-09"
+    },
+    {
+     "label": "SUP-011 Kestrel Electromech (pump-motor)",
+     "value": 130,
+     "last_audit": "2026-07-08"
+    },
+    {
+     "label": "SUP-004 Voltaic Power Cells (battery)",
+     "value": 142,
+     "last_audit": "2026-01-20"
+    },
+    {
+     "label": "SUP-001 Northwind Circuits (PCB)",
+     "value": 163,
+     "last_audit": "2026-02-10"
+    },
+    {
+     "label": "SUP-007 Sable Polymer Housings (enclosure)",
+     "value": 184,
+     "last_audit": "2026-03-03"
+    },
+    {
+     "label": "SUP-009 Riverbend Fluidics (tubing-set)",
+     "value": 269,
+     "last_audit": "2026-05-27"
+    },
+    {
+     "label": "SUP-010 Lumen Display Group (display)",
+     "value": 291,
+     "last_audit": "2026-06-18"
+    }
+   ]
+  },
+  {
+   "id": "reject-trend",
+   "label": "Monthly incoming reject rate",
+   "unit": "%",
+   "kind": "timeseries",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "lots rejected \u00f7 lots received per period, all suppliers and each supplier above the ceiling",
+    "inputs": [
+     "src: manufacturing/internal-suppliers@2026-09-28"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-suppliers",
+    "snapshot": "2026-09-28"
+   },
+   "lines": [
+    {
+     "label": "all suppliers",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 1.4
+      },
+      {
+       "x": "2025-02-01",
+       "y": 1.7
+      },
+      {
+       "x": "2025-03-01",
+       "y": 1.5
+      },
+      {
+       "x": "2025-04-01",
+       "y": 1.4
+      },
+      {
+       "x": "2025-05-01",
+       "y": 1.5
+      },
+      {
+       "x": "2025-06-01",
+       "y": 1.6
+      },
+      {
+       "x": "2025-07-01",
+       "y": 1.2
+      },
+      {
+       "x": "2025-08-01",
+       "y": 1.4
+      },
+      {
+       "x": "2025-09-01",
+       "y": 1.6
+      },
+      {
+       "x": "2025-10-01",
+       "y": 1.4
+      },
+      {
+       "x": "2025-11-01",
+       "y": 1.6
+      },
+      {
+       "x": "2025-12-01",
+       "y": 1.4
+      },
+      {
+       "x": "2026-01-01",
+       "y": 1.8
+      },
+      {
+       "x": "2026-02-01",
+       "y": 1.9
+      },
+      {
+       "x": "2026-03-01",
+       "y": 2.0
+      },
+      {
+       "x": "2026-04-01",
+       "y": 2.1
+      },
+      {
+       "x": "2026-05-01",
+       "y": 1.7
+      },
+      {
+       "x": "2026-06-01",
+       "y": 1.9
+      },
+      {
+       "x": "2026-07-01",
+       "y": 2.5
+      },
+      {
+       "x": "2026-08-01",
+       "y": 2.4
+      }
+     ]
+    },
+    {
+     "label": "SUP-003 (pump-motor)",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 1.0
+      },
+      {
+       "x": "2025-02-01",
+       "y": 2.2
+      },
+      {
+       "x": "2025-03-01",
+       "y": 1.1
+      },
+      {
+       "x": "2025-04-01",
+       "y": 2.2
+      },
+      {
+       "x": "2025-05-01",
+       "y": 2.2
+      },
+      {
+       "x": "2025-06-01",
+       "y": 1.9
+      },
+      {
+       "x": "2025-07-01",
+       "y": 1.1
+      },
+      {
+       "x": "2025-08-01",
+       "y": 2.3
+      },
+      {
+       "x": "2025-09-01",
+       "y": 2.1
+      },
+      {
+       "x": "2025-10-01",
+       "y": 2.0
+      },
+      {
+       "x": "2025-11-01",
+       "y": 2.3
+      },
+      {
+       "x": "2025-12-01",
+       "y": 2.3
+      },
+      {
+       "x": "2026-01-01",
+       "y": 3.0
+      },
+      {
+       "x": "2026-02-01",
+       "y": 3.2
+      },
+      {
+       "x": "2026-03-01",
+       "y": 4.2
+      },
+      {
+       "x": "2026-04-01",
+       "y": 5.7
+      },
+      {
+       "x": "2026-05-01",
+       "y": 5.5
+      },
+      {
+       "x": "2026-06-01",
+       "y": 6.2
+      },
+      {
+       "x": "2026-07-01",
+       "y": 8.7
+      },
+      {
+       "x": "2026-08-01",
+       "y": 9.1
+      }
+     ]
+    },
+    {
+     "label": "SUP-006 (battery)",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 5.4
+      },
+      {
+       "x": "2025-02-01",
+       "y": 6.8
+      },
+      {
+       "x": "2025-03-01",
+       "y": 6.7
+      },
+      {
+       "x": "2025-04-01",
+       "y": 6.8
+      },
+      {
+       "x": "2025-05-01",
+       "y": 5.8
+      },
+      {
+       "x": "2025-06-01",
+       "y": 8.1
+      },
+      {
+       "x": "2025-07-01",
+       "y": 5.4
+      },
+      {
+       "x": "2025-08-01",
+       "y": 5.1
+      },
+      {
+       "x": "2025-09-01",
+       "y": 7.0
+      },
+      {
+       "x": "2025-10-01",
+       "y": 6.4
+      },
+      {
+       "x": "2025-11-01",
+       "y": 4.5
+      },
+      {
+       "x": "2025-12-01",
+       "y": 6.2
+      },
+      {
+       "x": "2026-01-01",
+       "y": 5.9
+      },
+      {
+       "x": "2026-02-01",
+       "y": 4.3
+      },
+      {
+       "x": "2026-03-01",
+       "y": 4.5
+      },
+      {
+       "x": "2026-04-01",
+       "y": 5.3
+      },
+      {
+       "x": "2026-05-01",
+       "y": 6.8
+      },
+      {
+       "x": "2026-06-01",
+       "y": 4.9
+      },
+      {
+       "x": "2026-07-01",
+       "y": 7.1
+      },
+      {
+       "x": "2026-08-01",
+       "y": 7.3
+      }
+     ]
+    },
+    {
+     "label": "SUP-011 (pump-motor)",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 4.3
+      },
+      {
+       "x": "2025-02-01",
+       "y": 4.3
+      },
+      {
+       "x": "2025-03-01",
+       "y": 0.0
+      },
+      {
+       "x": "2025-04-01",
+       "y": 0.0
+      },
+      {
+       "x": "2025-05-01",
+       "y": 3.6
+      },
+      {
+       "x": "2025-06-01",
+       "y": 0.0
+      },
+      {
+       "x": "2025-07-01",
+       "y": 0.0
+      },
+      {
+       "x": "2025-08-01",
+       "y": 5.6
+      },
+      {
+       "x": "2025-09-01",
+       "y": 5.3
+      },
+      {
+       "x": "2025-10-01",
+       "y": 0.0
+      },
+      {
+       "x": "2025-11-01",
+       "y": 0.0
+      },
+      {
+       "x": "2025-12-01",
+       "y": 0.0
+      },
+      {
+       "x": "2026-01-01",
+       "y": 3.7
+      },
+      {
+       "x": "2026-02-01",
+       "y": 0.0
+      },
+      {
+       "x": "2026-03-01",
+       "y": 0.0
+      },
+      {
+       "x": "2026-04-01",
+       "y": 0.0
+      },
+      {
+       "x": "2026-05-01",
+       "y": 4.0
+      },
+      {
+       "x": "2026-06-01",
+       "y": 4.2
+      },
+      {
+       "x": "2026-07-01",
+       "y": 4.0
+      },
+      {
+       "x": "2026-08-01",
+       "y": 5.0
+      }
+     ]
+    }
+   ],
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "Incoming reject rate 2.3% across 12 suppliers in 2026-06..2026-08 (2639 lots received), on-time 93.4%; 3 supplier(s) above the 3% ceiling: SUP-003 7.9% single-source, SUP-006 6.5% probation, SUP-011 4.3% conditional; 1 audit(s) overdue (SUP-003 by 289 d); 2 single-source supplier(s) (pump-motor, display); scorecards A 4 / B 5 / C 1 / D 2",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "high",
+    "statement": "SUP-003 Meridian Drive Systems (pump-motor) rejects 7.9% of incoming lots in 2026-06..2026-08 against the 3% ceiling; audit overdue by 289 d",
+    "action": "Issue a supplier corrective action request; tighten incoming sampling for the family until two clean periods",
+    "evidence": [
+     "derived: reject-by-supplier",
+     "src: manufacturing/internal-suppliers@2026-09-28",
+     "config: manufacturing.yml"
+    ]
+   },
+   {
+    "id": "I2",
+    "severity": "high",
+    "statement": "SUP-006 Halden Cell Works (battery) rejects 6.5% of incoming lots in 2026-06..2026-08 against the 3% ceiling; approval status probation",
+    "action": "Issue a supplier corrective action request; tighten incoming sampling for the family until two clean periods",
+    "evidence": [
+     "derived: reject-by-supplier",
+     "src: manufacturing/internal-suppliers@2026-09-28",
+     "config: manufacturing.yml"
+    ]
+   },
+   {
+    "id": "I3",
+    "severity": "medium",
+    "statement": "SUP-011 Kestrel Electromech (pump-motor) rejects 4.3% of incoming lots in 2026-06..2026-08 against the 3% ceiling; approval status conditional",
+    "action": "Issue a supplier corrective action request; tighten incoming sampling for the family until two clean periods",
+    "evidence": [
+     "derived: reject-by-supplier",
+     "src: manufacturing/internal-suppliers@2026-09-28",
+     "config: manufacturing.yml"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "high",
+    "statement": "Single-source exposure on pump-motor: SUP-003 Meridian Drive Systems (pump-motor) is the only approved source; scorecard D, reject 7.9%, next audit due 2025-11-15 (overdue 289 d)",
+    "mitigation": "Qualify a second source or hold safety stock sized to the requalification lead time; bring the audit current",
+    "evidence": [
+     "derived: single-source-exposure",
+     "derived: audit-currency",
+     "src: manufacturing/internal-suppliers@2026-09-28"
+    ]
+   },
+   {
+    "id": "R2",
+    "severity": "medium",
+    "statement": "Single-source exposure on display: SUP-010 Lumen Display Group (display) is the only approved source; scorecard A, reject 1.8%, next audit due 2027-06-18",
+    "mitigation": "Qualify a second source or hold safety stock sized to the requalification lead time; bring the audit current",
+    "evidence": [
+     "derived: single-source-exposure",
+     "derived: audit-currency",
+     "src: manufacturing/internal-suppliers@2026-09-28"
+    ]
+   },
+   {
+    "id": "R3",
+    "severity": "medium",
+    "statement": "The 3% reject ceiling and the 'no overdue audit' rule are stand-ins \u2014 the approved-supplier procedure on record names neither, so the verdict is only as good as an unratified threshold",
+    "mitigation": "Have supplier quality ratify the ceiling and audit-interval rule in the ASL procedure and mark E-05.x validated",
+    "evidence": [
+     "config: manufacturing.yml"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "SUP-006 Halden Cell Works (battery) is on probation \u2014 scorecard D, reject 6.5%, on-time 82.4% in 2026-06..2026-08",
+    "evidence": [
+     "derived: reject-by-supplier",
+     "derived: ontime-by-supplier",
+     "src: manufacturing/internal-suppliers@2026-09-28"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-05.1",
+   "statement": "Every supplier on the approved list has a current quality-system audit",
+   "expected": "0 suppliers with next audit due before the as-of date",
+   "basis": "stand-in; the approved-supplier procedure on record does not state the audit interval used here [VERIFY]",
+   "set_by": "supplier-quality (demo)",
+   "validated": false,
+   "actual": "1 supplier audit(s) overdue at 2026-08-31: SUP-003 (289 d)",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: audit-currency"
+   ]
+  },
+  {
+   "id": "E-05.2",
+   "statement": "Incoming reject rate stays under the ceiling for every supplier",
+   "expected": "<= 3% of lots rejected per supplier, trailing 3 months",
+   "basis": "stand-in reject ceiling; no supplier-quality target is on record [VERIFY]",
+   "set_by": "supplier-quality (demo)",
+   "validated": false,
+   "actual": "3 of 12 suppliers above 3% in 2026-06..2026-08: SUP-003 7.9%, SUP-006 6.5%, SUP-011 4.3%",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: reject-by-supplier"
+   ]
+  }
+ ]
+}

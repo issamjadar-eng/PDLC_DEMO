@@ -1,0 +1,336 @@
+{
+ "bq": "FQ-08",
+ "edition": "2026-09-28",
+ "generated_at": "2026-09-28T11:37:49+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "finance.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "cost-center-drivers",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "headcount-by-function",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "monthly-variance-trend",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "variance-by-function",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "variance-by-project",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "variance-pct-by-function",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "ytd-variance-stat",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "finance/internal-gl-budget@2026-09-28",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "finance/internal-gl-budget",
+   "snapshot": "2026-09-28",
+   "age_days": 0,
+   "max_age_days": 30,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Total opex vs budget YTD",
+    "series": "ytd-variance-stat",
+    "evidence_class": "derived",
+    "source": "finance/internal-gl-budget@2026-09-28",
+    "derivation": {
+     "method": "(\u03a3 actual \u2212 \u03a3 budget) \u00f7 \u03a3 budget over every period in the pin",
+     "inputs": [
+      "src: finance/internal-gl-budget@2026-09-28",
+      "config: finance.yml"
+     ]
+    }
+   },
+   {
+    "what": "Actual vs budget by function (YTD)",
+    "series": "variance-by-function",
+    "evidence_class": "derived",
+    "source": "finance/internal-gl-budget@2026-09-28",
+    "derivation": {
+     "method": "\u03a3 actual and \u03a3 budget per function over the window",
+     "inputs": [
+      "src: finance/internal-gl-budget@2026-09-28"
+     ]
+    }
+   },
+   {
+    "what": "Variance % by function (YTD)",
+    "series": "variance-pct-by-function",
+    "evidence_class": "derived",
+    "source": "finance/internal-gl-budget@2026-09-28",
+    "derivation": {
+     "method": "(actual \u2212 budget) \u00f7 budget per function over the window",
+     "inputs": [
+      "src: finance/internal-gl-budget@2026-09-28",
+      "config: finance.yml"
+     ]
+    }
+   },
+   {
+    "what": "Headcount: actual vs budget at 2026-08",
+    "series": "headcount-by-function",
+    "evidence_class": "measured",
+    "source": "finance/internal-gl-budget@2026-09-28"
+   },
+   {
+    "what": "Monthly variance %: total and largest-variance functions",
+    "series": "monthly-variance-trend",
+    "evidence_class": "derived",
+    "source": "finance/internal-gl-budget@2026-09-28",
+    "derivation": {
+     "method": "(actual \u2212 budget) \u00f7 budget per month for the total and the top functions by |YTD variance|",
+     "inputs": [
+      "src: finance/internal-gl-budget@2026-09-28"
+     ]
+    }
+   },
+   {
+    "what": "Cost-center variance inside breaching functions (YTD)",
+    "series": "cost-center-drivers",
+    "evidence_class": "derived",
+    "source": "finance/internal-gl-budget@2026-09-28",
+    "derivation": {
+     "method": "\u03a3 actual \u2212 \u03a3 budget per cost center for functions beyond the tolerance, ranked by |variance|",
+     "inputs": [
+      "src: finance/internal-gl-budget@2026-09-28",
+      "config: finance.yml"
+     ]
+    }
+   }
+  ],
+  "assumed": [],
+  "missing": [
+   {
+    "what": "Spend by program / project",
+    "series": "variance-by-project",
+    "evidence_class": "unavailable",
+    "source": "the GL export (internal-gl-budget) carries function and cost center only; program attribution and capitalization need a project dimension in the ledger feed.",
+    "note": "the GL export (internal-gl-budget) carries function and cost center only; program attribution and capitalization need a project dimension in the ledger feed."
+   }
+  ]
+ },
+ "plan": {
+  "path": "plans/FQ-08.md",
+  "status": "in-sync",
+  "pinned": "7eb2a198f743a6c3167dda13aab7e202329856c810e1cf9f87aa2442531af9dd",
+  "current": "7eb2a198f743a6c3167dda13aab7e202329856c810e1cf9f87aa2442531af9dd"
+ },
+ "verifications": [],
+ "code": {
+  "status": "unreviewed",
+  "artifacts": [
+   {
+    "path": "bq_modules/fq_08.py",
+    "sha256_12": "bb30bfcc4c3e",
+    "role": "module",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for FQ-08"
+    },
+    "review": null,
+    "review_history": []
+   },
+   {
+    "path": "computations.py",
+    "sha256_12": "b4f491aaa38e",
+    "role": "shared",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": null,
+    "review": null,
+    "review_history": []
+   },
+   {
+    "path": "corpus:finance/internal-gl-budget/gen.py",
+    "sha256_12": "7b90119e86c6",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": null,
+    "review_history": []
+   }
+  ]
+ },
+ "verification_plan": [
+  {
+   "gate": "claim-lint",
+   "kind": "machine",
+   "note": "every numeric claim marker-cited; zero lint errors (every edition)",
+   "done": true,
+   "evidence": "0 error(s) / 0 warning(s)"
+  },
+  {
+   "gate": "pin-freshness",
+   "kind": "machine",
+   "note": "all pinned snapshots within max_age_days, or a cited active waiver (every edition)",
+   "done": true,
+   "evidence": "1 pin(s) fresh"
+  },
+  {
+   "gate": "plan-currency",
+   "kind": "machine",
+   "note": "the edition was computed under the current version of this plan (every edition)",
+   "done": true,
+   "evidence": "plan in-sync"
+  },
+  {
+   "gate": "code-audit",
+   "kind": "machine",
+   "note": "deterministic code checks green and the computation reviewed at its pinned bytes (each code change)",
+   "done": false,
+   "evidence": "code unreviewed"
+  },
+  {
+   "gate": "adversarial-verify",
+   "kind": "agent",
+   "note": "independent pins-only re-derivation of the headline claims and drivers (each substantive re-answer)",
+   "done": false,
+   "evidence": "no adversarial-verify record filed on this edition"
+  },
+  {
+   "gate": "red-team",
+   "kind": "agent",
+   "note": "framing attack on the \"why\" attribution and the netting inside the total (each substantive re-answer)",
+   "done": false,
+   "evidence": "no red-team record filed on this edition"
+  }
+ ]
+}

@@ -1,0 +1,373 @@
+{
+ "bq": "FQ-06",
+ "edition": "2026-09-28",
+ "generated_at": "2026-09-28T11:37:49+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "finance.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "cash-trapped",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "dso-by-channel",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "dso-stat",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "inventory-days-by-line",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "inventory-days-trend",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "over90-by-channel",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "over90-trend",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "subscription-ar",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "finance/internal-ar-inventory@2026-09-28",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "finance/internal-ar-inventory",
+   "snapshot": "2026-09-28",
+   "age_days": 0,
+   "max_age_days": 30,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Company DSO",
+    "series": "dso-stat",
+    "evidence_class": "derived",
+    "source": "finance/internal-ar-inventory@2026-09-28",
+    "derivation": {
+     "method": "\u03a3 AR \u00f7 \u03a3 (AR \u00f7 dso_days) over all rows of the latest period",
+     "inputs": [
+      "src: finance/internal-ar-inventory@2026-09-28",
+      "config: finance.yml"
+     ]
+    }
+   },
+   {
+    "what": "Cash trapped above target",
+    "series": "cash-trapped",
+    "evidence_class": "derived",
+    "source": "finance/internal-ar-inventory@2026-09-28",
+    "derivation": {
+     "method": "over-90 AR + \u03a3 per line max(0, inventory \u2212 (inventory \u00f7 days) \u00d7 target days)",
+     "inputs": [
+      "src: finance/internal-ar-inventory@2026-09-28",
+      "config: finance.yml"
+     ]
+    }
+   },
+   {
+    "what": "DSO by channel (latest)",
+    "series": "dso-by-channel",
+    "evidence_class": "derived",
+    "source": "finance/internal-ar-inventory@2026-09-28",
+    "derivation": {
+     "method": "\u03a3 AR \u00f7 \u03a3 (AR \u00f7 dso_days) per channel, latest period",
+     "inputs": [
+      "src: finance/internal-ar-inventory@2026-09-28"
+     ]
+    }
+   },
+   {
+    "what": "DSO by region (latest)",
+    "series": "dso-by-region",
+    "evidence_class": "derived",
+    "source": "finance/internal-ar-inventory@2026-09-28",
+    "derivation": {
+     "method": "\u03a3 AR \u00f7 \u03a3 (AR \u00f7 dso_days) per region, latest period",
+     "inputs": [
+      "src: finance/internal-ar-inventory@2026-09-28"
+     ]
+    }
+   },
+   {
+    "what": "Over-90 AR share by channel (latest)",
+    "series": "over90-by-channel",
+    "evidence_class": "derived",
+    "source": "finance/internal-ar-inventory@2026-09-28",
+    "derivation": {
+     "method": "\u03a3 ar_over_90 \u00f7 \u03a3 AR per channel, latest period",
+     "inputs": [
+      "src: finance/internal-ar-inventory@2026-09-28",
+      "config: finance.yml"
+     ]
+    }
+   },
+   {
+    "what": "Over-90 AR share by channel, monthly",
+    "series": "over90-trend",
+    "evidence_class": "derived",
+    "source": "finance/internal-ar-inventory@2026-09-28",
+    "derivation": {
+     "method": "\u03a3 ar_over_90 \u00f7 \u03a3 AR per channel per month over the full history",
+     "inputs": [
+      "src: finance/internal-ar-inventory@2026-09-28"
+     ]
+    }
+   },
+   {
+    "what": "Inventory days of cover by line (latest)",
+    "series": "inventory-days-by-line",
+    "evidence_class": "derived",
+    "source": "finance/internal-ar-inventory@2026-09-28",
+    "derivation": {
+     "method": "\u03a3 inventory \u00f7 \u03a3 (inventory \u00f7 inventory_days) per line, latest period",
+     "inputs": [
+      "src: finance/internal-ar-inventory@2026-09-28",
+      "config: finance.yml"
+     ]
+    }
+   },
+   {
+    "what": "Inventory days by line, monthly",
+    "series": "inventory-days-trend",
+    "evidence_class": "derived",
+    "source": "finance/internal-ar-inventory@2026-09-28",
+    "derivation": {
+     "method": "\u03a3 inventory \u00f7 \u03a3 (inventory \u00f7 inventory_days) per line per month; smaller lines combined",
+     "inputs": [
+      "src: finance/internal-ar-inventory@2026-09-28"
+     ]
+    }
+   }
+  ],
+  "assumed": [],
+  "missing": [
+   {
+    "what": "Subscription (cloud-suite) receivables",
+    "series": "subscription-ar",
+    "evidence_class": "unavailable",
+    "source": "the working-capital cube (internal-ar-inventory) carries the five device lines only; subscription billing needs its own AR-aging feed.",
+    "note": "the working-capital cube (internal-ar-inventory) carries the five device lines only; subscription billing needs its own AR-aging feed."
+   }
+  ]
+ },
+ "plan": {
+  "path": "plans/FQ-06.md",
+  "status": "in-sync",
+  "pinned": "c61f1ad8f61ca948b0c5989bf0447796eddbd942235a98b373295608be59830b",
+  "current": "c61f1ad8f61ca948b0c5989bf0447796eddbd942235a98b373295608be59830b"
+ },
+ "verifications": [],
+ "code": {
+  "status": "unreviewed",
+  "artifacts": [
+   {
+    "path": "bq_modules/fq_06.py",
+    "sha256_12": "6bbb1a2b6d3c",
+    "role": "module",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for FQ-06"
+    },
+    "review": null,
+    "review_history": []
+   },
+   {
+    "path": "computations.py",
+    "sha256_12": "b4f491aaa38e",
+    "role": "shared",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": null,
+    "review": null,
+    "review_history": []
+   },
+   {
+    "path": "corpus:finance/internal-ar-inventory/gen.py",
+    "sha256_12": "41a50050f7f4",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": null,
+    "review_history": []
+   }
+  ]
+ },
+ "verification_plan": [
+  {
+   "gate": "claim-lint",
+   "kind": "machine",
+   "note": "every numeric claim marker-cited; zero lint errors (every edition)",
+   "done": true,
+   "evidence": "0 error(s) / 0 warning(s)"
+  },
+  {
+   "gate": "pin-freshness",
+   "kind": "machine",
+   "note": "all pinned snapshots within max_age_days, or a cited active waiver (every edition)",
+   "done": true,
+   "evidence": "1 pin(s) fresh"
+  },
+  {
+   "gate": "plan-currency",
+   "kind": "machine",
+   "note": "the edition was computed under the current version of this plan (every edition)",
+   "done": true,
+   "evidence": "plan in-sync"
+  },
+  {
+   "gate": "code-audit",
+   "kind": "machine",
+   "note": "deterministic code checks green and the computation reviewed at its pinned bytes (each code change)",
+   "done": false,
+   "evidence": "code unreviewed"
+  },
+  {
+   "gate": "adversarial-verify",
+   "kind": "agent",
+   "note": "independent pins-only re-derivation of the headline claims, incl. the flow-weighted aggregation (each substantive re-answer)",
+   "done": false,
+   "evidence": "no adversarial-verify record filed on this edition"
+  },
+  {
+   "gate": "red-team",
+   "kind": "agent",
+   "note": "framing attack on the stand-in thresholds and the trapped-cash definition (each substantive re-answer)",
+   "done": false,
+   "evidence": "no red-team record filed on this edition"
+  }
+ ]
+}

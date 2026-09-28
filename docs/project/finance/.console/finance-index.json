@@ -1,6 +1,6 @@
 {
  "schema_version": "1.6",
- "generated": "2026-09-21T10:37:09+00:00",
+ "generated": "2026-09-28T11:37:57+00:00",
  "domain": {
   "key": "finance",
   "name": "Finance",
@@ -39,8 +39,8 @@
    "cadence": "quarterly",
    "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": "2026-09-21",
-   "latest_edition": "2026-09-21",
+   "draft_edition": "2026-09-28",
+   "latest_edition": "2026-09-28",
    "editions": [
     {
      "edition": "2026-09-08",
@@ -56,14 +56,19 @@
      "edition": "2026-09-21",
      "status": "draft",
      "narrative": "missing"
+    },
+    {
+     "edition": "2026-09-28",
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
    "freshness": "fresh",
    "verdict_headline": "H1 2026 gross margin 51.5% vs 50.6% H1 2025 (+1.0 pts) \u2014 BELOW the 55% floor; 2 of 6 lines eroding (GM down 1 pt or more YoY); eroding: PP3000 -1.5 pts, IP5000 -1.5 pts; standard-cost variance beyond \u00b15% on 0 of 6 lines (all revenue types); hardware-only variance beyond \u00b15% on 2 of 5 device lines \u2014 unfavorable PP3000 +11.0%, IP5000 +10.9%",
    "evidence_class": "derived",
-   "report_path": "docs/project/finance/reports/FQ-01/2026-09-21/report.md",
-   "data_path": "docs/project/finance/reports/FQ-01/2026-09-21/data.json",
+   "report_path": "docs/project/finance/reports/FQ-01/2026-09-28/report.md",
+   "data_path": "docs/project/finance/reports/FQ-01/2026-09-28/data.json",
    "explainers": {
     "question": {
      "what": "The margin review: gross margin for the fiscal-year window against the same quarters a year earlier, cut by product line and by region, plus the gap between what each unit actually cost and the standard it was booked at.",
@@ -300,8 +305,8 @@
    "cadence": "monthly",
    "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": "2026-09-21",
-   "latest_edition": "2026-09-21",
+   "draft_edition": "2026-09-28",
+   "latest_edition": "2026-09-28",
    "editions": [
     {
      "edition": "2026-09-08",
@@ -317,14 +322,19 @@
      "edition": "2026-09-21",
      "status": "draft",
      "narrative": "missing"
+    },
+    {
+     "edition": "2026-09-28",
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
    "freshness": "fresh",
    "verdict_headline": "YTD 2026 (2026-01..2026-08) warranty spend $340K vs $276K same months 2025 (+23.1%); per installed unit: PP3000 $801 (+101.6% YoY), PP3500 $149 (-16.2% YoY; rev A $94 (-48.9%), rev B $242 (+47.0%)); over-indexing revisions: PP3500 rev B 48% of claims vs 37% of fleet (1.31\u00d7); not normalizable (registry carries no revision split): SP6000 rev A 88% of claims (21 of 24), PP3000 rev B 64% of claims (67 of 105), IP5000 rev B 52% of claims (21 of 40); 37% of claims link to a complaint (99 of 267); per-unit unavailable for IP5000, SP6000, SP6500 (no fleet denominator)",
    "evidence_class": "derived",
-   "report_path": "docs/project/finance/reports/FQ-03/2026-09-21/report.md",
-   "data_path": "docs/project/finance/reports/FQ-03/2026-09-21/data.json",
+   "report_path": "docs/project/finance/reports/FQ-03/2026-09-28/report.md",
+   "data_path": "docs/project/finance/reports/FQ-03/2026-09-28/data.json",
    "explainers": {
     "question": {
      "what": "What warranty failures are costing: spend year-to-date against the same months a year earlier, cost per device in the field by product line and hardware revision, how much of it traces to a logged complaint, and the monthly trend.",
@@ -634,8 +644,8 @@
    "cadence": "monthly",
    "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": "2026-09-21",
-   "latest_edition": "2026-09-21",
+   "draft_edition": "2026-09-28",
+   "latest_edition": "2026-09-28",
    "editions": [
     {
      "edition": "2026-09-08",
@@ -651,14 +661,19 @@
      "edition": "2026-09-21",
      "status": "draft",
      "narrative": "missing"
+    },
+    {
+     "edition": "2026-09-28",
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
    "freshness": "fresh",
    "verdict_headline": "As of 2026-08: company DSO 55.2 days vs 50 target (OVER); Northgate Purchasing Group DSO 80.0 days with over-90 share 32.5% (1 of 4 channels over the 15% threshold); inventory days over the 75-day target on 2 of 5 lines (PP3000 134, IP5000 120); cash trapped $3.36M = $1.77M over-90 AR + $1.59M inventory above target cover",
    "evidence_class": "derived",
-   "report_path": "docs/project/finance/reports/FQ-06/2026-09-21/report.md",
-   "data_path": "docs/project/finance/reports/FQ-06/2026-09-21/data.json",
+   "report_path": "docs/project/finance/reports/FQ-06/2026-09-28/report.md",
+   "data_path": "docs/project/finance/reports/FQ-06/2026-09-28/data.json",
    "explainers": {
     "question": {
      "what": "The working-capital review as of the latest month in the data: how long customers take to pay by purchasing channel and region, how much of the receivables are seriously overdue, how many days of inventory each product line holds, and the cash all of that is tying up above target.",
@@ -892,8 +907,8 @@
    "cadence": "monthly",
    "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": "2026-09-21",
-   "latest_edition": "2026-09-21",
+   "draft_edition": "2026-09-28",
+   "latest_edition": "2026-09-28",
    "editions": [
     {
      "edition": "2026-09-08",
@@ -909,14 +924,19 @@
      "edition": "2026-09-21",
      "status": "draft",
      "narrative": "missing"
+    },
+    {
+     "edition": "2026-09-28",
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
    "freshness": "fresh",
    "verdict_headline": "YTD 2026 (2026-01..2026-08) opex $28.84M vs budget $28.40M (+1.5%, within the \u00b13% total tolerance); 3 of 6 functions breach the \u00b15% band; Regulatory/Quality +16.7% (driver RQ-EXT +$427K (+76.2%)); Sales & Marketing -9.8% (driver SM-NA -$401K (-11.9%); headcount 45 vs 53 budget at 2026-08 \u2014 hiring lag); R&D +6.6% (driver RD-FW +$524K (+17.2%); headcount 48 vs 45 budget at 2026-08)",
    "evidence_class": "derived",
-   "report_path": "docs/project/finance/reports/FQ-08/2026-09-21/report.md",
-   "data_path": "docs/project/finance/reports/FQ-08/2026-09-21/data.json",
+   "report_path": "docs/project/finance/reports/FQ-08/2026-09-28/report.md",
+   "data_path": "docs/project/finance/reports/FQ-08/2026-09-28/data.json",
    "explainers": {
     "question": {
      "what": "Year-to-date operating spend against budget for each function, the headcount each is running against plan, and \u2014 for each function outside tolerance \u2014 the cost center driving the breach.",
