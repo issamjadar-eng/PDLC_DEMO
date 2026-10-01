@@ -1,0 +1,221 @@
+{
+ "as_of": "2026-10-01",
+ "domains": [
+  {
+   "key": "commercial",
+   "name": "Commercial",
+   "answered": [
+    {
+     "id": "BQ-01",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-02",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-03",
+     "edition": "2026-07-27.4",
+     "draft": false
+    },
+    {
+     "id": "BQ-04",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-05",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-06",
+     "edition": "2026-07-27.2",
+     "draft": false
+    },
+    {
+     "id": "BQ-07",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-08",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-09",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-10",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-11",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-12",
+     "edition": "2026-07-27.2",
+     "draft": false
+    },
+    {
+     "id": "BQ-13",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-14",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-15",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-16",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-17",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-18",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-19",
+     "edition": "2026-07-27.2",
+     "draft": false
+    },
+    {
+     "id": "BQ-20",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-21",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-22",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-23",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-24",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-25",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-26",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-27",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-28",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-29",
+     "edition": "2026-07-27.3",
+     "draft": false
+    },
+    {
+     "id": "BQ-30",
+     "edition": "2026-07-27.3",
+     "draft": false
+    }
+   ],
+   "unanswered": [],
+   "issues": 27,
+   "risks": 44,
+   "expectations": {
+    "met": 5,
+    "not-met": 15,
+    "at-risk": 1,
+    "not-evaluable": 0
+   }
+  },
+  {
+   "key": "finance",
+   "name": "Finance",
+   "answered": [],
+   "unanswered": [
+    "FQ-01",
+    "FQ-02",
+    "FQ-03",
+    "FQ-04",
+    "FQ-05",
+    "FQ-06",
+    "FQ-07",
+    "FQ-08",
+    "FQ-09",
+    "FQ-10"
+   ],
+   "issues": 0,
+   "risks": 0,
+   "expectations": {
+    "met": 0,
+    "not-met": 0,
+    "at-risk": 0,
+    "not-evaluable": 0
+   }
+  },
+  {
+   "key": "manufacturing",
+   "name": "Manufacturing",
+   "answered": [],
+   "unanswered": [
+    "MQ-01",
+    "MQ-02",
+    "MQ-03",
+    "MQ-04",
+    "MQ-05",
+    "MQ-06",
+    "MQ-07",
+    "MQ-08",
+    "MQ-09",
+    "MQ-10"
+   ],
+   "issues": 0,
+   "risks": 0,
+   "expectations": {
+    "met": 0,
+    "not-met": 0,
+    "at-risk": 0,
+    "not-evaluable": 0
+   }
+  }
+ ],
+ "include_drafts": false
+}

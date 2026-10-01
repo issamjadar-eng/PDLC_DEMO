@@ -1,6 +1,6 @@
 {
  "schema_version": "1.6",
- "generated": "2026-09-28T11:37:58+00:00",
+ "generated": "2026-10-01T11:43:06+00:00",
  "domain": {
   "key": "manufacturing",
   "name": "Manufacturing",
@@ -43,8 +43,8 @@
    "cadence": "weekly",
    "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": "2026-09-28",
-   "latest_edition": "2026-09-28",
+   "draft_edition": "2026-10-01",
+   "latest_edition": "2026-10-01",
    "editions": [
     {
      "edition": "2026-09-08",
@@ -65,14 +65,19 @@
      "edition": "2026-09-28",
      "status": "draft",
      "narrative": "missing"
+    },
+    {
+     "edition": "2026-10-01",
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
    "freshness": "fresh",
    "verdict_headline": "Trailing 3-month window 2026-06..2026-08: portfolio first-pass yield 96.6% on 10970 units started (down 0.1 pts vs the prior 3 months); 0 of 5 lines below the 95% floor; 2 of 20 line\u00d7station cells below the floor: PP3500 \u00b7 test 93.5% since 2026-04, IP5000 \u00b7 test 94.9% since 2026-04; erosion is rev-specific \u2014 PP3500 rev C at test 92.5% vs other revs 96.1%, below the floor since 2026-04; scrap 1.0%, rework 2.4% of units started",
    "evidence_class": "derived",
-   "report_path": "docs/project/manufacturing/reports/MQ-01/2026-09-28/report.md",
-   "data_path": "docs/project/manufacturing/reports/MQ-01/2026-09-28/data.json",
+   "report_path": "docs/project/manufacturing/reports/MQ-01/2026-10-01/report.md",
+   "data_path": "docs/project/manufacturing/reports/MQ-01/2026-10-01/data.json",
    "explainers": {
     "question": {
      "what": "The plant's yield review: what share of units pass each step the first time, cut by product line, hardware revision, station, and site \u2014 and, for any cell below the floor, the month the erosion started.",
@@ -280,8 +285,8 @@
    "cadence": "weekly",
    "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": "2026-09-28",
-   "latest_edition": "2026-09-28",
+   "draft_edition": "2026-10-01",
+   "latest_edition": "2026-10-01",
    "editions": [
     {
      "edition": "2026-09-08",
@@ -302,14 +307,19 @@
      "edition": "2026-09-28",
      "status": "draft",
      "narrative": "missing"
+    },
+    {
+     "edition": "2026-10-01",
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
    "freshness": "fresh",
    "verdict_headline": "At 2026-08-31: 32 open CAPAs, 21 past due (66%), 5 critical past due; past-due count rising (6 six months earlier \u2192 21); effectiveness verified on 28 of 47 closed CAPAs (60% vs 90% floor, backlog 19); 19 open NCRs (9 past due, mean age 129 d), NCR intake 11.7/month vs 10.7 prior; supplier NCRs concentrate on SUP-003 (21 of 45, 47%)",
    "evidence_class": "derived",
-   "report_path": "docs/project/manufacturing/reports/MQ-03/2026-09-28/report.md",
-   "data_path": "docs/project/manufacturing/reports/MQ-03/2026-09-28/data.json",
+   "report_path": "docs/project/manufacturing/reports/MQ-03/2026-10-01/report.md",
+   "data_path": "docs/project/manufacturing/reports/MQ-03/2026-10-01/data.json",
    "explainers": {
     "question": {
      "what": "The quality-system backlog review: how many nonconformances and CAPAs are open, how many are past due, how old they are, where they come from, and whether closed CAPAs were verified effective.",
@@ -524,8 +534,8 @@
    "cadence": "monthly",
    "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": "2026-09-28",
-   "latest_edition": "2026-09-28",
+   "draft_edition": "2026-10-01",
+   "latest_edition": "2026-10-01",
    "editions": [
     {
      "edition": "2026-09-08",
@@ -546,14 +556,19 @@
      "edition": "2026-09-28",
      "status": "draft",
      "narrative": "missing"
+    },
+    {
+     "edition": "2026-10-01",
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
    "freshness": "fresh",
    "verdict_headline": "Incoming reject rate 2.3% across 12 suppliers in 2026-06..2026-08 (2639 lots received), on-time 93.4%; 3 supplier(s) above the 3% ceiling: SUP-003 7.9% single-source, SUP-006 6.5% probation, SUP-011 4.3% conditional; 1 audit(s) overdue (SUP-003 by 289 d); 2 single-source supplier(s) (pump-motor, display); scorecards A 4 / B 5 / C 1 / D 2",
    "evidence_class": "derived",
-   "report_path": "docs/project/manufacturing/reports/MQ-05/2026-09-28/report.md",
-   "data_path": "docs/project/manufacturing/reports/MQ-05/2026-09-28/data.json",
+   "report_path": "docs/project/manufacturing/reports/MQ-05/2026-10-01/report.md",
+   "data_path": "docs/project/manufacturing/reports/MQ-05/2026-10-01/data.json",
    "explainers": {
     "question": {
      "what": "The supplier-quality review: which suppliers are rejecting parts at incoming inspection or delivering late, how the scorecards are distributed, which components depend on a single supplier, and whose audits are overdue.",
@@ -795,8 +810,8 @@
    "cadence": "weekly",
    "status": "draft-only",
    "approved_edition": null,
-   "draft_edition": "2026-09-28",
-   "latest_edition": "2026-09-28",
+   "draft_edition": "2026-10-01",
+   "latest_edition": "2026-10-01",
    "editions": [
     {
      "edition": "2026-09-08",
@@ -817,14 +832,19 @@
      "edition": "2026-09-28",
      "status": "draft",
      "narrative": "missing"
+    },
+    {
+     "edition": "2026-10-01",
+     "status": "draft",
+     "narrative": "missing"
     }
    ],
    "assumptions": [],
    "freshness": "fresh",
    "verdict_headline": "At 2026-08-31: 10 overdue and 6 due-within-30-day items across 155 register entries; overdue calibrations Eastbrook 1, Westfield 9 \u2014 the cluster is at Westfield; PP3500 rev C release blockers: 3 validation item(s) not validated (PQ in-progress due 2026-09-30, PQ in-progress due 2026-09-30, OQ not-started due 2026-10-15) and 4 DHR-incomplete lot(s); 65 rev C lots already released since 2026-03-25 while the fixture PQ is still in-progress",
    "evidence_class": "derived",
-   "report_path": "docs/project/manufacturing/reports/MQ-08/2026-09-28/report.md",
-   "data_path": "docs/project/manufacturing/reports/MQ-08/2026-09-28/data.json",
+   "report_path": "docs/project/manufacturing/reports/MQ-08/2026-10-01/report.md",
+   "data_path": "docs/project/manufacturing/reports/MQ-08/2026-10-01/data.json",
    "explainers": {
     "question": {
      "what": "The validation and metrology status review: which equipment and processes are overdue or coming due for validation, calibration, or maintenance, by site and product line \u2014 and what is still open on the PP3500 rev C production path.",

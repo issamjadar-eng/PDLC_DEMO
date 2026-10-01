@@ -1,0 +1,463 @@
+{
+ "bq": "FQ-03",
+ "edition": "2026-10-01",
+ "generated_at": "2026-10-01T11:42:59+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "finance.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "complaint-linkage",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "complaints-context",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "cost-per-unit-by-rev",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "cost-per-unit-yoy",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "disposition-mix",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "monthly-cost-trend",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "per-unit-unavailable",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "revision-concentration",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "revision-failure-categories",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-complaints@2026-09-28",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "commercial/internal-fleet@2026-09-28",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  },
+  {
+   "kind": "src",
+   "value": "finance/internal-warranty-claims@2026-09-28",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "finance/internal-warranty-claims",
+   "snapshot": "2026-09-28",
+   "age_days": 3,
+   "max_age_days": 30,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/internal-fleet",
+   "snapshot": "2026-09-28",
+   "age_days": 3,
+   "max_age_days": 7,
+   "band": "fresh",
+   "waived": false
+  },
+  {
+   "dataset": "commercial/internal-complaints",
+   "snapshot": "2026-09-28",
+   "age_days": 3,
+   "max_age_days": 7,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Warranty spend YTD",
+    "series": "warranty-spend-stat",
+    "evidence_class": "derived",
+    "source": "finance/internal-warranty-claims@2026-09-28",
+    "derivation": {
+     "method": "\u03a3 cost_usd over claims dated in the fiscal-year months present in the pin; prior = same months one year earlier",
+     "inputs": [
+      "src: finance/internal-warranty-claims@2026-09-28",
+      "config: finance.yml"
+     ]
+    }
+   },
+   {
+    "what": "Warranty cost per installed unit YTD",
+    "series": "cost-per-unit-by-rev",
+    "evidence_class": "derived",
+    "source": "finance/internal-warranty-claims@2026-09-28 + commercial/internal-fleet@2026-09-28",
+    "derivation": {
+     "method": "\u03a3 claim cost (window) \u00f7 fleet-registry device count per model / hw_rev",
+     "inputs": [
+      "src: finance/internal-warranty-claims@2026-09-28",
+      "src: commercial/internal-fleet@2026-09-28"
+     ]
+    }
+   },
+   {
+    "what": "Per-unit warranty cost: YTD vs prior year",
+    "series": "cost-per-unit-yoy",
+    "evidence_class": "derived",
+    "source": "finance/internal-warranty-claims@2026-09-28 + commercial/internal-fleet@2026-09-28",
+    "derivation": {
+     "method": "per-unit cost (as above) for the window and the prior-year months, same denominator",
+     "inputs": [
+      "src: finance/internal-warranty-claims@2026-09-28",
+      "src: commercial/internal-fleet@2026-09-28"
+     ]
+    }
+   },
+   {
+    "what": "Monthly warranty cost by line",
+    "series": "monthly-cost-trend",
+    "evidence_class": "derived",
+    "source": "finance/internal-warranty-claims@2026-09-28",
+    "derivation": {
+     "method": "\u03a3 cost_usd per claim month per product line over the full log; smaller lines aggregated",
+     "inputs": [
+      "src: finance/internal-warranty-claims@2026-09-28"
+     ]
+    }
+   },
+   {
+    "what": "Warranty spend by disposition (YTD)",
+    "series": "disposition-mix",
+    "evidence_class": "derived",
+    "source": "finance/internal-warranty-claims@2026-09-28",
+    "derivation": {
+     "method": "\u03a3 cost_usd per disposition over the window",
+     "inputs": [
+      "src: finance/internal-warranty-claims@2026-09-28"
+     ]
+    }
+   },
+   {
+    "what": "Claim share vs installed share by revision (YTD)",
+    "series": "revision-concentration",
+    "evidence_class": "derived",
+    "source": "finance/internal-warranty-claims@2026-09-28 + commercial/internal-fleet@2026-09-28",
+    "derivation": {
+     "method": "per line with >1 revision: claims on the revision \u00f7 line claims, vs registry devices on the revision \u00f7 registry devices of the line (null where the registry carries no split)",
+     "inputs": [
+      "src: finance/internal-warranty-claims@2026-09-28",
+      "src: commercial/internal-fleet@2026-09-28",
+      "config: finance.yml"
+     ]
+    }
+   },
+   {
+    "what": "Failure categories \u2014 PP3500 rev B (YTD)",
+    "series": "revision-failure-categories",
+    "evidence_class": "derived",
+    "source": "finance/internal-warranty-claims@2026-09-28 + commercial/internal-fleet@2026-09-28",
+    "derivation": {
+     "method": "claim count per failure_category for the most over-indexed revision (or the largest not-normalizable concentration)",
+     "inputs": [
+      "src: finance/internal-warranty-claims@2026-09-28",
+      "src: commercial/internal-fleet@2026-09-28",
+      "config: finance.yml"
+     ]
+    }
+   },
+   {
+    "what": "Share of claims linked to a complaint (YTD)",
+    "series": "complaint-linkage",
+    "evidence_class": "derived",
+    "source": "finance/internal-warranty-claims@2026-09-28",
+    "derivation": {
+     "method": "claims with linked_complaint = yes \u00f7 claims, per product line, over the window",
+     "inputs": [
+      "src: finance/internal-warranty-claims@2026-09-28"
+     ]
+    }
+   },
+   {
+    "what": "Linked claims vs complaints logged (YTD)",
+    "series": "complaints-context",
+    "evidence_class": "derived",
+    "source": "finance/internal-warranty-claims@2026-09-28 + commercial/internal-complaints@2026-09-28",
+    "derivation": {
+     "method": "per fleet model: linked claims in the window vs complaints opened in the same months",
+     "inputs": [
+      "src: finance/internal-warranty-claims@2026-09-28",
+      "src: commercial/internal-complaints@2026-09-28"
+     ]
+    }
+   }
+  ],
+  "assumed": [],
+  "missing": [
+   {
+    "what": "Per-unit cost \u2014 lines / revisions without a fleet denominator",
+    "series": "per-unit-unavailable",
+    "evidence_class": "unavailable",
+    "source": "the fleet registry (internal-fleet) carries no IP5000, SP6000, SP6500 devices and records PP3000 hw_rev as unknown; per-unit figures need those populations in the registry export.",
+    "note": "the fleet registry (internal-fleet) carries no IP5000, SP6000, SP6500 devices and records PP3000 hw_rev as unknown; per-unit figures need those populations in the registry export."
+   }
+  ]
+ },
+ "plan": {
+  "path": "plans/FQ-03.md",
+  "status": "in-sync",
+  "pinned": "9fab15577647d92b2c81d981f243f59b2a09c9b5d680423fc3d1ddd1f72d7d1a",
+  "current": "9fab15577647d92b2c81d981f243f59b2a09c9b5d680423fc3d1ddd1f72d7d1a"
+ },
+ "verifications": [],
+ "code": {
+  "status": "unreviewed",
+  "artifacts": [
+   {
+    "path": "bq_modules/fq_03.py",
+    "sha256_12": "a2b09915a05e",
+    "role": "module",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for FQ-03"
+    },
+    "review": null,
+    "review_history": []
+   },
+   {
+    "path": "computations.py",
+    "sha256_12": "b4f491aaa38e",
+    "role": "shared",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": null,
+    "review": null,
+    "review_history": []
+   },
+   {
+    "path": "corpus:finance/internal-warranty-claims/gen.py",
+    "sha256_12": "0bcadc675bd7",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": null,
+    "review_history": []
+   },
+   {
+    "path": "corpus:commercial/internal-fleet/gen.py",
+    "sha256_12": "165e3ad1d985",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": null,
+    "review_history": []
+   },
+   {
+    "path": "corpus:commercial/internal-complaints/gen.py",
+    "sha256_12": "557b73673e87",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": null,
+    "review_history": []
+   }
+  ]
+ },
+ "verification_plan": [
+  {
+   "gate": "claim-lint",
+   "kind": "machine",
+   "note": "every numeric claim marker-cited; zero lint errors (every edition)",
+   "done": true,
+   "evidence": "0 error(s) / 0 warning(s)"
+  },
+  {
+   "gate": "pin-freshness",
+   "kind": "machine",
+   "note": "all pinned snapshots within max_age_days, or a cited active waiver (every edition)",
+   "done": true,
+   "evidence": "3 pin(s) fresh"
+  },
+  {
+   "gate": "plan-currency",
+   "kind": "machine",
+   "note": "the edition was computed under the current version of this plan (every edition)",
+   "done": true,
+   "evidence": "plan in-sync"
+  },
+  {
+   "gate": "code-audit",
+   "kind": "machine",
+   "note": "deterministic code checks green and the computation reviewed at its pinned bytes (each code change)",
+   "done": false,
+   "evidence": "code unreviewed"
+  },
+  {
+   "gate": "adversarial-verify",
+   "kind": "agent",
+   "note": "independent pins-only re-derivation of the headline claims, incl. the fleet denominators (each substantive re-answer)",
+   "done": false,
+   "evidence": "no adversarial-verify record filed on this edition"
+  },
+  {
+   "gate": "red-team",
+   "kind": "agent",
+   "note": "framing attack on the point-in-time denominator and the per-unit gaps (each substantive re-answer)",
+   "done": false,
+   "evidence": "no red-team record filed on this edition"
+  }
+ ]
+}

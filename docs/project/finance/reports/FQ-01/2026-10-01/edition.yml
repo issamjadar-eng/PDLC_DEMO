@@ -1,0 +1,19 @@
+bq: FQ-01
+edition: '2026-10-01'
+status: draft
+created_at: '2026-10-01T11:42:59+00:00'
+pins:
+  commercial/internal-financials: '2026-09-28'
+  finance/internal-standard-costs: '2026-09-28'
+plan:
+  path: plans/FQ-01.md
+  sha256: 466c93ed7bca366f069da537655a016a9a54e0c7cffa2861a2ee94ed1786ba06
+code_artifacts:
+- path: bq_modules/fq_01.py
+  sha256: 439bce3a162fc8b2466b1b803e4c293b155fe147b8c848aa335d1ec3db244e4f
+- path: computations.py
+  sha256: b4f491aaa38e3be4d1246b6e045ad3c8c067406d9e85120852ec20de5ee0d6be
+- path: corpus:commercial/internal-financials/gen.py
+  sha256: 9eff72abc58203aeab19bb98be97e93af263dfa6dcf8552c101e35f9df8f1ed6
+- path: corpus:finance/internal-standard-costs/gen.py
+  sha256: 062d1eb5e6d1cf7e5d4eba64251322ab87cd1150ab90f9f2b877ca96bbe036f0

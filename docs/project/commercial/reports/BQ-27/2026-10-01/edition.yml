@@ -1,0 +1,14 @@
+bq: BQ-27
+edition: '2026-10-01'
+status: draft
+created_at: '2026-10-01T11:42:55+00:00'
+pins:
+  commercial/internal-fleet: '2026-09-28'
+plan:
+  path: plans/BQ-27.md
+  sha256: 3c103176aef7a37c202fa6077a1708828875e4c9ec1ff10a584d6158af596f0b
+code_artifacts:
+- path: computations.py
+  sha256: 2140820494890c4c1712050248355fde06bba2331386103270bdfe48f88b3b78
+- path: corpus:commercial/internal-fleet/gen.py
+  sha256: 165e3ad1d98586ff1b211fb4493999879f957890664e07b069bf3fcaa4ba8961

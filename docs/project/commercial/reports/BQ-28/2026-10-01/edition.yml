@@ -1,0 +1,19 @@
+bq: BQ-28
+edition: '2026-10-01'
+status: draft
+created_at: '2026-10-01T11:42:56+00:00'
+pins:
+  commercial/internal-financials: '2026-09-28'
+  commercial/internal-revenue-plan: '2026-09-28'
+plan:
+  path: plans/BQ-28.md
+  sha256: 4acf26384e07c43d19da279024078209bdb03aa919c306936f22fcabad685cf4
+code_artifacts:
+- path: bq_modules/bq_28.py
+  sha256: 326e194a31a94b4dc0ee3afc2b10803b4b6eac66458805da1bd58749b5ca59bd
+- path: computations.py
+  sha256: 2140820494890c4c1712050248355fde06bba2331386103270bdfe48f88b3b78
+- path: corpus:commercial/internal-financials/gen.py
+  sha256: 9eff72abc58203aeab19bb98be97e93af263dfa6dcf8552c101e35f9df8f1ed6
+- path: corpus:commercial/internal-revenue-plan/gen.py
+  sha256: e9ee93796a07dbdf82a387f24b1e1f77f45b3831fcd6dff18e3e6ba32638c9e4
