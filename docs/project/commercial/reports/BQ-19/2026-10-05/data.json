@@ -1,0 +1,263 @@
+{
+ "bq": "BQ-19",
+ "series": [
+  {
+   "id": "total-events",
+   "label": "Class-wide MAUDE events (charted window)",
+   "unit": "events",
+   "kind": "stat",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/openfda-maude-infusion-monthly",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "FRN events since 2023 (excl. lag tail)",
+     "value": 303772
+    }
+   ]
+  },
+  {
+   "id": "monthly-events",
+   "label": "Class-wide MAUDE events per month",
+   "unit": "events",
+   "kind": "timeseries",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/openfda-maude-infusion-monthly",
+    "snapshot": "2026-10-05"
+   },
+   "lines": [
+    {
+     "label": "FRN class",
+     "points": [
+      {
+       "x": "2023-01-01",
+       "y": 8731
+      },
+      {
+       "x": "2023-02-01",
+       "y": 17447
+      },
+      {
+       "x": "2023-03-01",
+       "y": 19945
+      },
+      {
+       "x": "2023-04-01",
+       "y": 17245
+      },
+      {
+       "x": "2023-05-01",
+       "y": 16021
+      },
+      {
+       "x": "2023-06-01",
+       "y": 18605
+      },
+      {
+       "x": "2023-07-01",
+       "y": 15491
+      },
+      {
+       "x": "2023-08-01",
+       "y": 18659
+      },
+      {
+       "x": "2023-09-01",
+       "y": 12929
+      },
+      {
+       "x": "2023-10-01",
+       "y": 7637
+      },
+      {
+       "x": "2023-11-01",
+       "y": 7798
+      },
+      {
+       "x": "2023-12-01",
+       "y": 5330
+      },
+      {
+       "x": "2024-01-01",
+       "y": 4467
+      },
+      {
+       "x": "2024-02-01",
+       "y": 6975
+      },
+      {
+       "x": "2024-03-01",
+       "y": 5408
+      },
+      {
+       "x": "2024-04-01",
+       "y": 5052
+      },
+      {
+       "x": "2024-05-01",
+       "y": 4680
+      },
+      {
+       "x": "2024-06-01",
+       "y": 4627
+      },
+      {
+       "x": "2024-07-01",
+       "y": 4461
+      },
+      {
+       "x": "2024-08-01",
+       "y": 3672
+      },
+      {
+       "x": "2024-09-01",
+       "y": 4352
+      },
+      {
+       "x": "2024-10-01",
+       "y": 5000
+      },
+      {
+       "x": "2024-11-01",
+       "y": 4818
+      },
+      {
+       "x": "2024-12-01",
+       "y": 4219
+      },
+      {
+       "x": "2025-01-01",
+       "y": 4142
+      },
+      {
+       "x": "2025-02-01",
+       "y": 4269
+      },
+      {
+       "x": "2025-03-01",
+       "y": 4487
+      },
+      {
+       "x": "2025-04-01",
+       "y": 4496
+      },
+      {
+       "x": "2025-05-01",
+       "y": 4230
+      },
+      {
+       "x": "2025-06-01",
+       "y": 4320
+      },
+      {
+       "x": "2025-07-01",
+       "y": 5124
+      },
+      {
+       "x": "2025-08-01",
+       "y": 4649
+      },
+      {
+       "x": "2025-09-01",
+       "y": 4894
+      },
+      {
+       "x": "2025-10-01",
+       "y": 4986
+      },
+      {
+       "x": "2025-11-01",
+       "y": 4025
+      },
+      {
+       "x": "2025-12-01",
+       "y": 3864
+      },
+      {
+       "x": "2026-01-01",
+       "y": 3623
+      },
+      {
+       "x": "2026-02-01",
+       "y": 4026
+      },
+      {
+       "x": "2026-03-01",
+       "y": 4732
+      },
+      {
+       "x": "2026-04-01",
+       "y": 5169
+      },
+      {
+       "x": "2026-05-01",
+       "y": 4814
+      },
+      {
+       "x": "2026-06-01",
+       "y": 4353
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "events-by-mfr",
+   "label": "MAUDE events by manufacturer (canonical)",
+   "unit": "events",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/openfda-maude-infusion-mfr",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "BD (CareFusion)",
+     "value": 66712
+    },
+    {
+     "label": "Baxter",
+     "value": 10075
+    },
+    {
+     "label": "ICU Medical",
+     "value": 9704
+    },
+    {
+     "label": "Smiths Medical",
+     "value": 9239
+    },
+    {
+     "label": "Fresenius Kabi",
+     "value": 7353
+    },
+    {
+     "label": "Medtronic",
+     "value": 5905
+    }
+   ]
+  },
+  {
+   "id": "rate-by-mfr",
+   "label": "Event rate per installed device",
+   "unit": "events/device",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "assumption": "A-001",
+    "note": "blocked until A-001 quantifies installed-base denominators"
+   },
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "MAUDE event COUNTS are comparable with caveats; RATE comparison is BLOCKED \u2014 the installed-base denominator (A-001) is not yet quantified",
+   "evidence_class": "measured"
+  }
+ ]
+}

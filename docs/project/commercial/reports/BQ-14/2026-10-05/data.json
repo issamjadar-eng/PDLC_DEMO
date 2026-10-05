@@ -1,0 +1,153 @@
+{
+ "bq": "BQ-14",
+ "series": [
+  {
+   "id": "parity-stat",
+   "label": "Parity position",
+   "unit": "attributes",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "count of per-attribute verdicts (ahead/parity/behind) and routing of behind-gaps through the attribute-lane map + attribute-lane-relation (closes vs adjacent)",
+    "inputs": [
+     "src: commercial/external-competitor-features@2026-10-05",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/external-competitor-features",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "attributes behind",
+     "value": 4
+    },
+    {
+     "label": "lane-routed but adjacency-only (lane does not close the gap)",
+     "value": 2
+    },
+    {
+     "label": "silently unaddressed",
+     "value": 1
+    }
+   ]
+  },
+  {
+   "id": "parity-matrix",
+   "label": "Verdict by attribute",
+   "unit": "",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "per-attribute verdict per the committed classification rules (plans/BQ-14.md)",
+    "inputs": [
+     "src: commercial/external-competitor-features@2026-10-05",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/external-competitor-features",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "battery_hours",
+     "value": "ahead \u2014 \u2014"
+    },
+    {
+     "label": "ders_drug_library",
+     "value": "parity (provisional) \u2014 \u2014"
+    },
+    {
+     "label": "flow_accuracy_pct",
+     "value": "ahead \u2014 \u2014"
+    },
+    {
+     "label": "integrated_etco2",
+     "value": "behind \u2014 gap on roadmap \u2014 F6, Y3 (2028) (ADJACENCY, not closure \u2014 nearest lane responds via a different mechanism)"
+    },
+    {
+     "label": "pca_mode",
+     "value": "parity \u2014 \u2014"
+    },
+    {
+     "label": "pca_pause_or_etco2",
+     "value": "behind \u2014 gap on roadmap \u2014 F4, Y2 (2027) (ADJACENCY, not closure \u2014 nearest lane responds via a different mechanism)"
+    },
+    {
+     "label": "predictive_monitoring",
+     "value": "parity \u2014 \u2014"
+    },
+    {
+     "label": "remote_update_capability",
+     "value": "parity \u2014 \u2014"
+    },
+    {
+     "label": "weight_kg",
+     "value": "behind \u2014 SILENTLY UNADDRESSED \u2014 no roadmap lane owns this gap"
+    },
+    {
+     "label": "wireless_connectivity",
+     "value": "behind (provisional) \u2014 roadmap-committed (planned) \u2014 F2, Y1 (2026) (lane closes the gap)"
+    }
+   ]
+  },
+  {
+   "id": "parity-history",
+   "label": "Parity position over time",
+   "unit": "attributes",
+   "kind": "timeseries",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "note": "one curated snapshot exists; history accumulates as the matrix is re-curated (180-day cadence) \u2014 a single point is not a trend"
+   },
+   "lines": [],
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "10 attributes compared: 2 ahead, 4 parity, 4 behind \u2014 3 behind-gaps have a roadmap lane (of which 2 adjacency-only: integrated_etco2, pca_pause_or_etco2 \u2014 the lane responds but does not mechanically close the gap), 1 SILENTLY UNADDRESSED (weight_kg)",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "high",
+    "statement": "weight_kg is behind (0.75 vs Smiths Medical (ICU Medical) CADD Legacy at 0.45) and NO roadmap lane owns the gap \u2014 silently unaddressed, nobody has decided about it",
+    "action": "Put the gap on the roadmap-council agenda: accept it explicitly (documented trade-off) or assign it a lane \u2014 silence is the only wrong state",
+    "evidence": [
+     "src: commercial/external-competitor-features@2026-10-05",
+     "derived: parity-matrix",
+     "config: commercial.yml"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "high",
+    "statement": "BD ships PCA Pause and integrated EtCO2 today while our nearest roadmap answers sit in the F4 (Y2 (2027)) and F6 (Y3 (2028)) slots \u2014 and BOTH lane assignments are adjacency, not closure: F4 is smart alarm filtering and F6 is predictive monitoring, neither a hardware PCA-pause response nor a capnography module, so BD's shipped capability may remain unanswered even after F4/F6 land",
+    "mitigation": "Feed this gap into the BQ-17 kill/pull-forward composite and the positioning guidance: sell the connected-safety story, do not contest PCA-pause head-to-head, and have the roadmap council decide explicitly whether the adjacency answer is the committed answer",
+    "evidence": [
+     "src: commercial/external-competitor-features@2026-10-05",
+     "derived: parity-matrix",
+     "config: commercial.yml"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "Deliberate matrix absences (dataset README): our PCA-pause/EtCO2 rows, several competitor accuracy specs, Plum Duo and Perfusor Space products \u2014 absences are under-coverage, not verdicts; curate before the next edition",
+    "evidence": [
+     "src: commercial/external-competitor-features@2026-10-05"
+    ]
+   }
+  ]
+ },
+ "expectations": []
+}

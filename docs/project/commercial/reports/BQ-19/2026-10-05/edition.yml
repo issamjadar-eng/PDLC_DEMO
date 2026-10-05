@@ -1,0 +1,13 @@
+bq: BQ-19
+edition: '2026-10-05'
+status: draft
+created_at: '2026-10-05T11:59:35+00:00'
+pins:
+  commercial/openfda-maude-infusion-mfr: '2026-10-05'
+  commercial/openfda-maude-infusion-monthly: '2026-10-05'
+plan:
+  path: plans/BQ-19.md
+  sha256: 4642a413e40358a54aa10ced08355eac8ba89064ff243834ba8722a48d388ce2
+code_artifacts:
+- path: computations.py
+  sha256: 2140820494890c4c1712050248355fde06bba2331386103270bdfe48f88b3b78

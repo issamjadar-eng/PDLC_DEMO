@@ -1,0 +1,203 @@
+{
+ "bq": "BQ-07",
+ "series": [
+  {
+   "id": "installed-units",
+   "label": "Our NA in-segment installed base (FY2026H1)",
+   "unit": "units",
+   "kind": "stat",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-sales-accounts",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "PP3500 + PP3000 + IP5000 units installed, NA",
+     "value": 522
+    }
+   ]
+  },
+  {
+   "id": "share-range",
+   "label": "FY2026H1 share range (A-003 denominator)",
+   "unit": "%",
+   "evidence_class": "assumed",
+   "provenance": {
+    "assumption": "A-003",
+    "note": "numerator measured from commercial/internal-sales-accounts@2026-10-05; denominator is the A-003 range (LOW confidence) \u2014 order-of-magnitude only"
+   },
+   "points": [
+    {
+     "label": "unit share, low (vs 1.8M-unit base)",
+     "value": 0.029
+    },
+    {
+     "label": "unit share, high (vs 1.1M-unit base)",
+     "value": 0.047
+    },
+    {
+     "label": "revenue share, low (vs $3.0B market)",
+     "value": 0.55
+    },
+    {
+     "label": "revenue share, high (vs $1.5B market)",
+     "value": 1.1
+    }
+   ]
+  },
+  {
+   "id": "units-by-line",
+   "label": "NA in-segment units by product line (FY2026H1)",
+   "unit": "units",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-sales-accounts",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "PP3500",
+     "value": 339
+    },
+    {
+     "label": "PP3000",
+     "value": 99
+    },
+    {
+     "label": "IP5000",
+     "value": 84
+    }
+   ]
+  },
+  {
+   "id": "share-trend",
+   "label": "Unit-share range by FY (constant A-003 denominator)",
+   "unit": "%",
+   "kind": "timeseries",
+   "evidence_class": "assumed",
+   "provenance": {
+    "assumption": "A-003",
+    "note": "denominator held constant across FYs \u2014 trend shape is our unit growth, not market-adjusted share"
+   },
+   "lines": [
+    {
+     "label": "share vs 1.8M base (low)",
+     "points": [
+      {
+       "x": "2024-12-31",
+       "y": 0.023
+      },
+      {
+       "x": "2025-12-31",
+       "y": 0.027
+      },
+      {
+       "x": "2026-06-30",
+       "y": 0.029
+      }
+     ]
+    },
+    {
+     "label": "share vs 1.1M base (high)",
+     "points": [
+      {
+       "x": "2024-12-31",
+       "y": 0.038
+      },
+      {
+       "x": "2025-12-31",
+       "y": 0.044
+      },
+      {
+       "x": "2026-06-30",
+       "y": 0.047
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "growth-rate",
+   "label": "Installed-base growth vs assumed market growth",
+   "unit": "%/yr",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "our rate = (units_FY2026H1 / units_FY2024)^(1/1.5yr) - 1; market rate transcribed from the assumption record",
+    "inputs": [
+     "src: commercial/internal-sales-accounts@2026-10-05",
+     "assume: A-003"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-sales-accounts",
+    "snapshot": "2026-10-05",
+    "note": "mismatched bases: our rate is unit growth of the NA in-segment installed base; the market rate is A-003's dollar CAGR of the total US infusion-pump market \u2014 directional comparison only"
+   },
+   "points": [
+    {
+     "label": "our NA in-segment installed base",
+     "value": 16.0
+    },
+    {
+     "label": "assumed market CAGR",
+     "value": 7.3
+    }
+   ]
+  },
+  {
+   "id": "competitor-unit-split",
+   "label": "Competitor US unit split (BD / Baxter / ICU)",
+   "unit": "units",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "note": "no public competitor unit census; would require purchased analyst unit data or vendor disclosures \u2014 never estimated here"
+   },
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "US (NA-proxy) PCA/LVP smart-pump share is a RANGE, not a number: ~0.029%\u20130.047% of installed base and ~0.55%\u20131.1% of annual segment dollars (A-003 denominator, LOW confidence); our installed base grew ~16.0%/yr vs the assumed market ~7.3%/yr \u2014 directionally gaining, from a tiny base (mismatched bases: ours is UNIT growth of our NA in-segment book; A-003's rate is the DOLLAR CAGR of the total US infusion-pump market \u2014 directional comparison only)",
+   "evidence_class": "assumed"
+  }
+ ],
+ "narrative": {
+  "issues": [],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "high",
+    "statement": "The entire share figure rests on A-003 (LOW confidence, triangulated from public analyst-report summaries) \u2014 the denominator could be off by a large factor, and the unit-share and dollar-share bases already tell different stories (stock share vs flow share)",
+    "mitigation": "Treat share as order-of-magnitude only; refresh A-003 annually or on any new market report; consider purchasing analyst unit data to retire the assumption",
+    "evidence": [
+     "assume: A-003",
+     "derived: share-range"
+    ]
+   },
+   {
+    "id": "R2",
+    "severity": "medium",
+    "statement": "US share is proxied by the NA region and the denominator is held constant across fiscal years (market growth not modeled per-year) \u2014 both stated simplifications of the committed plan",
+    "mitigation": "Acceptable at order-of-magnitude precision; revisit if the sales dataset gains a country field or A-003 gains dated vintages",
+    "evidence": [
+     "derived: share-range",
+     "assume: A-003"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "Growth-rate differential (ours ~16.0%/yr vs market ~7.3%/yr) is the only taking-share evidence available at this share magnitude \u2014 watch it each quarter",
+    "evidence": [
+     "derived: growth-rate",
+     "assume: A-003"
+    ]
+   }
+  ]
+ },
+ "expectations": []
+}

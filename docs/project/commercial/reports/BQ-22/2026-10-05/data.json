@@ -1,0 +1,497 @@
+{
+ "bq": "BQ-22",
+ "series": [
+  {
+   "id": "died-stat",
+   "label": "Died in a spreadsheet",
+   "unit": "%",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "no-action signals + signals open past the SLA at the as-of anchor, over the signal population",
+    "inputs": [
+     "src: commercial/internal-signal-register@2026-10-05",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-signal-register",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "of 40 lifetime signals",
+     "value": 40.0
+    },
+    {
+     "label": "of 21 trailing-12-month signals",
+     "value": 28.6
+    }
+   ]
+  },
+  {
+   "id": "funnel",
+   "label": "Disposition funnel: trailing 12 months vs lifetime",
+   "unit": "signals",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "trailing 12 months",
+    "b_label": "lifetime"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "signals bucketed by disposition; died = no-action + open past SLA at the as-of anchor; cohort = opened in the 365 days ending at the anchor",
+    "inputs": [
+     "src: commercial/internal-signal-register@2026-10-05",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-signal-register",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "landed: design",
+     "a": 4,
+     "b": 9
+    },
+    {
+     "label": "landed: upgrade",
+     "a": 5,
+     "b": 6
+    },
+    {
+     "label": "monitoring",
+     "a": 4,
+     "b": 7
+    },
+    {
+     "label": "no action",
+     "a": 4,
+     "b": 10
+    },
+    {
+     "label": "open > 90d",
+     "a": 2,
+     "b": 6
+    },
+    {
+     "label": "open \u2264 90d",
+     "a": 2,
+     "b": 2
+    }
+   ]
+  },
+  {
+   "id": "disposition-distribution",
+   "label": "Time to disposition (days)",
+   "unit": "signals",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "closed_date \u2212 opened_date for every dispositioned signal, bucketed 0\u201330/31\u201360/61\u201390/91\u2013120/121\u2013180/>180",
+    "inputs": [
+     "src: commercial/internal-signal-register@2026-10-05"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-signal-register",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "0\u201330 days",
+     "value": 0
+    },
+    {
+     "label": "31\u201360 days",
+     "value": 3
+    },
+    {
+     "label": "61\u201390 days",
+     "value": 11
+    },
+    {
+     "label": "91\u2013120 days",
+     "value": 9
+    },
+    {
+     "label": "121\u2013180 days",
+     "value": 9
+    },
+    {
+     "label": ">180 days",
+     "value": 0
+    }
+   ]
+  },
+  {
+   "id": "sla-compliance",
+   "label": "Cohort SLA compliance (90 days)",
+   "unit": "signals",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "adjudicated cohort signals split by (closed_date \u2212 opened_date) <= SLA; stale-open counted as breach; recent-open excluded as pending",
+    "inputs": [
+     "src: commercial/internal-signal-register@2026-10-05",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-signal-register",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "within SLA",
+     "value": 7
+    },
+    {
+     "label": "breached",
+     "value": 12
+    },
+    {
+     "label": "pending (open \u2264 SLA)",
+     "value": 2
+    }
+   ]
+  },
+  {
+   "id": "signal-trend",
+   "label": "Signals opened vs dispositions closed per month",
+   "unit": "signals/month",
+   "kind": "timeseries",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-signal-register",
+    "snapshot": "2026-10-05"
+   },
+   "lines": [
+    {
+     "label": "signals opened",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 2
+      },
+      {
+       "x": "2025-02-01",
+       "y": 2
+      },
+      {
+       "x": "2025-03-01",
+       "y": 4
+      },
+      {
+       "x": "2025-04-01",
+       "y": 6
+      },
+      {
+       "x": "2025-05-01",
+       "y": 2
+      },
+      {
+       "x": "2025-06-01",
+       "y": 3
+      },
+      {
+       "x": "2025-07-01",
+       "y": 0
+      },
+      {
+       "x": "2025-08-01",
+       "y": 3
+      },
+      {
+       "x": "2025-09-01",
+       "y": 1
+      },
+      {
+       "x": "2025-10-01",
+       "y": 4
+      },
+      {
+       "x": "2025-11-01",
+       "y": 1
+      },
+      {
+       "x": "2025-12-01",
+       "y": 2
+      },
+      {
+       "x": "2026-01-01",
+       "y": 3
+      },
+      {
+       "x": "2026-02-01",
+       "y": 2
+      },
+      {
+       "x": "2026-03-01",
+       "y": 2
+      },
+      {
+       "x": "2026-04-01",
+       "y": 0
+      },
+      {
+       "x": "2026-05-01",
+       "y": 2
+      },
+      {
+       "x": "2026-06-01",
+       "y": 1
+      },
+      {
+       "x": "2026-07-01",
+       "y": 0
+      }
+     ]
+    },
+    {
+     "label": "dispositions closed",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 0
+      },
+      {
+       "x": "2025-02-01",
+       "y": 0
+      },
+      {
+       "x": "2025-03-01",
+       "y": 1
+      },
+      {
+       "x": "2025-04-01",
+       "y": 1
+      },
+      {
+       "x": "2025-05-01",
+       "y": 2
+      },
+      {
+       "x": "2025-06-01",
+       "y": 3
+      },
+      {
+       "x": "2025-07-01",
+       "y": 2
+      },
+      {
+       "x": "2025-08-01",
+       "y": 3
+      },
+      {
+       "x": "2025-09-01",
+       "y": 1
+      },
+      {
+       "x": "2025-10-01",
+       "y": 2
+      },
+      {
+       "x": "2025-11-01",
+       "y": 1
+      },
+      {
+       "x": "2025-12-01",
+       "y": 2
+      },
+      {
+       "x": "2026-01-01",
+       "y": 2
+      },
+      {
+       "x": "2026-02-01",
+       "y": 1
+      },
+      {
+       "x": "2026-03-01",
+       "y": 3
+      },
+      {
+       "x": "2026-04-01",
+       "y": 1
+      },
+      {
+       "x": "2026-05-01",
+       "y": 3
+      },
+      {
+       "x": "2026-06-01",
+       "y": 3
+      },
+      {
+       "x": "2026-07-01",
+       "y": 1
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "exemplars",
+   "label": "Loop-closed exemplars (signal \u2192 ref)",
+   "unit": "",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-signal-register",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "SIG-2025-004",
+     "value": "alarm-fatigue \u2192 design-input (DI-0045)"
+    },
+    {
+     "label": "SIG-2025-005",
+     "value": "keypad-wear \u2192 requirement-change (REQ-0046)"
+    },
+    {
+     "label": "SIG-2025-006",
+     "value": "dose-programming \u2192 design-input (DI-0042)"
+    },
+    {
+     "label": "SIG-2025-016",
+     "value": "dose-programming \u2192 requirement-change (REQ-0048)"
+    },
+    {
+     "label": "SIG-2025-017",
+     "value": "battery \u2192 upgrade-item (UPG-0052)"
+    },
+    {
+     "label": "SIG-2025-019",
+     "value": "alarm-fatigue \u2192 design-input (DI-0043)"
+    },
+    {
+     "label": "SIG-2025-020",
+     "value": "screen-display \u2192 requirement-change (REQ-0047)"
+    },
+    {
+     "label": "SIG-2025-021",
+     "value": "dose-programming \u2192 design-input (DI-0044)"
+    },
+    {
+     "label": "SIG-2025-024",
+     "value": "drug-library \u2192 requirement-change (REQ-0049)"
+    },
+    {
+     "label": "SIG-2025-028",
+     "value": "over-delivery \u2192 upgrade-item (UPG-0101)"
+    },
+    {
+     "label": "SIG-2026-002",
+     "value": "tubing-set \u2192 upgrade-item (UPG-0050)"
+    },
+    {
+     "label": "SIG-2026-003",
+     "value": "alarm-fatigue \u2192 design-input (DI-0041)"
+    },
+    {
+     "label": "SIG-2026-004",
+     "value": "screen-display \u2192 upgrade-item (UPG-0053)"
+    },
+    {
+     "label": "SIG-2026-005",
+     "value": "over-delivery \u2192 upgrade-item (UPG-0102)"
+    },
+    {
+     "label": "SIG-2026-009",
+     "value": "battery \u2192 upgrade-item (UPG-0051)"
+    }
+   ]
+  },
+  {
+   "id": "ref-verification",
+   "label": "Cross-system verification of disposition refs",
+   "unit": "",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "note": "register \u2194 DHF \u2194 upgrade-campaign trace not yet built \u2014 landed dispositions are trusted from the register's refs"
+   },
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "16 of 40 lifetime signals (40.0%) died in a spreadsheet (no-action or open past the 90-day SLA); trailing 12 months: 6 of 21 (28.6%) died vs 9 landed in design/upgrade \u2014 and only 36.8% of adjudicated cohort signals met the SLA, so E-22.1 is NOT met",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "high",
+    "statement": "40.0% of lifetime signals (10 no-action + 6 open past 90 days) never reached the design or upgrade pipeline \u2014 the post-market \u2192 design-input loop is leaking",
+    "action": "Triage every stale-open signal to a disposition this quarter; require a recorded rationale for no-action dispositions; put SLA aging on the management-review dashboard",
+    "evidence": [
+     "derived: funnel",
+     "src: commercial/internal-signal-register@2026-10-05",
+     "config: commercial.yml"
+    ]
+   },
+   {
+    "id": "I2",
+    "severity": "medium",
+    "statement": "Even signals that DO get dispositioned run slow: only 36.8% of the adjudicated cohort met the 90-day SLA (median lifetime time-to-disposition 103.5 days)",
+    "action": "Set a triage checkpoint at day 30 for every open signal; report aging weekly to the signal-review board",
+    "evidence": [
+     "derived: sla-compliance",
+     "derived: disposition-distribution",
+     "src: commercial/internal-signal-register@2026-10-05"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "medium",
+    "statement": "The 90-day SLA is a stand-in, not yet traced to the post-market SOP \u2014 the verdict is only as good as its threshold",
+    "mitigation": "Verify the SLA against the QMS post-market surveillance SOP and mark E-22.1 validated",
+    "evidence": [
+     "config: commercial.yml"
+    ]
+   },
+   {
+    "id": "R2",
+    "severity": "medium",
+    "statement": "Landed dispositions are trusted from the register's DI-/REQ-/UPG- refs \u2014 no cross-system trace yet verifies those refs exist in the requirements or upgrade systems",
+    "mitigation": "Build the register \u2194 DHF \u2194 upgrade-campaign trace as a follow-on check",
+    "evidence": [
+     "derived: exemplars"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "The loop CAN close: 15 signals landed with refs, including both over-delivery signal(s) (SIG-2025-028 \u2192 UPG-0101, SIG-2026-005 \u2192 UPG-0102) \u2014 the counter-beat to BQ-20's franchise-killer watch",
+    "evidence": [
+     "derived: exemplars",
+     "src: commercial/internal-signal-register@2026-10-05"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-22.1",
+   "statement": "Every field signal reaches a disposition within the review SLA",
+   "expected": "100% dispositioned within 90 days of opening",
+   "basis": "stand-in for the QMS signal-review SLA [VERIFY against the post-market SOP]",
+   "set_by": "vp-quality (demo)",
+   "validated": false,
+   "actual": "36.8% of adjudicated cohort signals dispositioned within 90 days (7 within, 12 breached incl. 2 stale-open; 2 recent-open pending, excluded)",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: sla-compliance",
+    "src: commercial/internal-signal-register@2026-10-05"
+   ]
+  }
+ ]
+}

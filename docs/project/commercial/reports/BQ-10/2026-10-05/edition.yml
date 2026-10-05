@@ -1,0 +1,14 @@
+bq: BQ-10
+edition: '2026-10-05'
+status: draft
+created_at: '2026-10-05T11:58:33+00:00'
+pins:
+  commercial/external-competitor-features: '2026-10-05'
+plan:
+  path: plans/BQ-10.md
+  sha256: b381c5c8bcc7b7e14fdee249a1477f8c27904e8b649ea40418bf2ac8c2911969
+code_artifacts:
+- path: bq_modules/bq_10.py
+  sha256: 7af29884d75a9f051e2f95a1b8e1c90a8253872028ae983e4a28a46e048fe8db
+- path: computations.py
+  sha256: 2140820494890c4c1712050248355fde06bba2331386103270bdfe48f88b3b78

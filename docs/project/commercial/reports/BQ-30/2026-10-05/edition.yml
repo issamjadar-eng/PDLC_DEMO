@@ -1,0 +1,19 @@
+bq: BQ-30
+edition: '2026-10-05'
+status: draft
+created_at: '2026-10-05T11:59:22+00:00'
+pins:
+  commercial/internal-upgrade-campaign: '2026-10-05'
+  commercial/internal-fleet: '2026-10-05'
+plan:
+  path: plans/BQ-30.md
+  sha256: e225cac2d9ee8f73ac98e43562238dd1fd0b919b3eb4f6772cd200937bbc16c1
+code_artifacts:
+- path: bq_modules/bq_30.py
+  sha256: c2a4bfba042a426f547f8956bb9a609bb231daaec0da85016b3b48721d3e5747
+- path: computations.py
+  sha256: 2140820494890c4c1712050248355fde06bba2331386103270bdfe48f88b3b78
+- path: corpus:commercial/internal-upgrade-campaign/gen.py
+  sha256: 90b0d06b9503e9ee2aae6ba5e0b74ebad2513893d6ac8f8866c73bcdb4976e3b
+- path: corpus:commercial/internal-fleet/gen.py
+  sha256: 165e3ad1d98586ff1b211fb4493999879f957890664e07b069bf3fcaa4ba8961

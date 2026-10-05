@@ -1,0 +1,411 @@
+{
+ "bq": "BQ-05",
+ "series": [
+  {
+   "id": "exposure-stat",
+   "label": "Regulatory exposure of the plan",
+   "unit": "mixed",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "dependent (pccp-enabled + new-submission) revenue \u00f7 total plan revenue, per plan year and across the window",
+    "inputs": [
+     "src: commercial/internal-revenue-plan@2026-10-05",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-revenue-plan",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "five-year dependent revenue ($M)",
+     "value": 366.0
+    },
+    {
+     "label": "peak exposure (FY2030, %)",
+     "value": 60.0
+    },
+    {
+     "label": "plan years over the threshold",
+     "value": 2
+    }
+   ]
+  },
+  {
+   "id": "plan-by-dependency",
+   "label": "Plan revenue by regulatory dependency ($M)",
+   "unit": "$M",
+   "kind": "timeseries",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-revenue-plan",
+    "snapshot": "2026-10-05"
+   },
+   "lines": [
+    {
+     "label": "cleared",
+     "points": [
+      {
+       "x": "2026-01-01",
+       "y": 103.0
+      },
+      {
+       "x": "2027-01-01",
+       "y": 115.0
+      },
+      {
+       "x": "2028-01-01",
+       "y": 122.0
+      },
+      {
+       "x": "2029-01-01",
+       "y": 130.0
+      },
+      {
+       "x": "2030-01-01",
+       "y": 128.0
+      }
+     ]
+    },
+    {
+     "label": "letter-to-file",
+     "points": [
+      {
+       "x": "2026-01-01",
+       "y": 2.0
+      },
+      {
+       "x": "2027-01-01",
+       "y": 4.0
+      },
+      {
+       "x": "2028-01-01",
+       "y": 8.0
+      },
+      {
+       "x": "2029-01-01",
+       "y": 10.0
+      },
+      {
+       "x": "2030-01-01",
+       "y": 12.0
+      }
+     ]
+    },
+    {
+     "label": "pccp-enabled",
+     "points": [
+      {
+       "x": "2026-01-01",
+       "y": 0.0
+      },
+      {
+       "x": "2027-01-01",
+       "y": 8.0
+      },
+      {
+       "x": "2028-01-01",
+       "y": 30.0
+      },
+      {
+       "x": "2029-01-01",
+       "y": 75.0
+      },
+      {
+       "x": "2030-01-01",
+       "y": 140.0
+      }
+     ]
+    },
+    {
+     "label": "new-submission",
+     "points": [
+      {
+       "x": "2026-01-01",
+       "y": 0.0
+      },
+      {
+       "x": "2027-01-01",
+       "y": 3.0
+      },
+      {
+       "x": "2028-01-01",
+       "y": 10.0
+      },
+      {
+       "x": "2029-01-01",
+       "y": 30.0
+      },
+      {
+       "x": "2030-01-01",
+       "y": 70.0
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "exposure-by-year",
+   "label": "Exposure % per plan year",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "per plan year: (pccp-enabled + new-submission revenue) \u00f7 total plan revenue",
+    "inputs": [
+     "src: commercial/internal-revenue-plan@2026-10-05",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-revenue-plan",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "FY2026",
+     "value": 0.0
+    },
+    {
+     "label": "FY2027",
+     "value": 8.5
+    },
+    {
+     "label": "FY2028",
+     "value": 23.5
+    },
+    {
+     "label": "FY2029",
+     "value": 42.9
+    },
+    {
+     "label": "FY2030",
+     "value": 60.0
+    }
+   ]
+  },
+  {
+   "id": "slip-scenarios",
+   "label": "Plan totals under uniform slips ($M)",
+   "unit": "$M",
+   "kind": "timeseries",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "uniform within-year earning; an M-month slip moves M/12 of each year's dependent revenue to the next year; past-final-year revenue leaves the window",
+    "inputs": [
+     "src: commercial/internal-revenue-plan@2026-10-05",
+     "config: commercial.yml",
+     "derived: exposure-by-year"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-revenue-plan",
+    "snapshot": "2026-10-05"
+   },
+   "lines": [
+    {
+     "label": "plan of record",
+     "points": [
+      {
+       "x": "2026-01-01",
+       "y": 105.0
+      },
+      {
+       "x": "2027-01-01",
+       "y": 130.0
+      },
+      {
+       "x": "2028-01-01",
+       "y": 170.0
+      },
+      {
+       "x": "2029-01-01",
+       "y": 245.0
+      },
+      {
+       "x": "2030-01-01",
+       "y": 350.0
+      }
+     ]
+    },
+    {
+     "label": "6-month slip",
+     "points": [
+      {
+       "x": "2026-01-01",
+       "y": 105.0
+      },
+      {
+       "x": "2027-01-01",
+       "y": 124.5
+      },
+      {
+       "x": "2028-01-01",
+       "y": 155.5
+      },
+      {
+       "x": "2029-01-01",
+       "y": 212.5
+      },
+      {
+       "x": "2030-01-01",
+       "y": 297.5
+      }
+     ]
+    },
+    {
+     "label": "12-month slip",
+     "points": [
+      {
+       "x": "2026-01-01",
+       "y": 105.0
+      },
+      {
+       "x": "2027-01-01",
+       "y": 119.0
+      },
+      {
+       "x": "2028-01-01",
+       "y": 141.0
+      },
+      {
+       "x": "2029-01-01",
+       "y": 180.0
+      },
+      {
+       "x": "2030-01-01",
+       "y": 245.0
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "fda-review-stat",
+   "label": "FRN 510(k) review interval (public)",
+   "unit": "days",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "median of (decision_date \u2212 date_received) across FRN clearances with both dates in the pinned snapshot",
+    "inputs": [
+     "src: commercial/openfda-510k-infusion@2026-10-05"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/openfda-510k-infusion",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "median days, 30 clearances since 2021",
+     "value": 214.0
+    }
+   ]
+  },
+  {
+   "id": "exposure-history",
+   "label": "Exposure % across plan versions",
+   "unit": "%",
+   "kind": "timeseries",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "note": "only plan version LRP-2026.1 is snapshotted \u2014 exposure history needs successive plan-of-record snapshots"
+   },
+   "lines": [],
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "$366.0M of the $1,000.0M five-year plan sits behind FDA decisions not yet received; exposure crosses the 40% threshold in FY2029, FY2030 (peak 60.0% in FY2030)",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "high",
+    "statement": "FY2029 exposure is 42.9% \u2014 $105.0M of $245.0M sits behind pccp-enabled or new-submission decisions, over the 40% threshold",
+    "action": "Require a formal contingency in the plan narrative for the year; tie each dependent revenue block to a named submission milestone so slips become trackable events",
+    "evidence": [
+     "derived: exposure-by-year",
+     "src: commercial/internal-revenue-plan@2026-10-05",
+     "config: commercial.yml"
+    ]
+   },
+   {
+    "id": "I2",
+    "severity": "high",
+    "statement": "FY2030 exposure is 60.0% \u2014 $210.0M of $350.0M sits behind pccp-enabled or new-submission decisions, over the 40% threshold",
+    "action": "Require a formal contingency in the plan narrative for the year; tie each dependent revenue block to a named submission milestone so slips become trackable events",
+    "evidence": [
+     "derived: exposure-by-year",
+     "src: commercial/internal-revenue-plan@2026-10-05",
+     "config: commercial.yml"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "medium",
+    "statement": "A uniform 6-month slip of all dependent revenue cuts FY2030 by $52.5M and pushes $105.0M past FY2030 \u2014 out of the five-year window entirely",
+    "mitigation": "The slip is arithmetic, not probability \u2014 pair it with the regulatory team's submission-timeline confidence before treating either scenario as the planning case",
+    "evidence": [
+     "derived: slip-scenarios",
+     "src: commercial/internal-revenue-plan@2026-10-05",
+     "config: commercial.yml"
+    ]
+   },
+   {
+    "id": "R2",
+    "severity": "high",
+    "statement": "A uniform 12-month slip of all dependent revenue cuts FY2030 by $105.0M and pushes $210.0M past FY2030 \u2014 out of the five-year window entirely",
+    "mitigation": "The slip is arithmetic, not probability \u2014 pair it with the regulatory team's submission-timeline confidence before treating either scenario as the planning case",
+    "evidence": [
+     "derived: slip-scenarios",
+     "src: commercial/internal-revenue-plan@2026-10-05",
+     "config: commercial.yml"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "Public base rate: median FRN 510(k) review runs 214.0 days received-to-decision across 30 clearances since 2021 \u2014 one review cycle (214.0 days) vs \u2248182 days for the smallest (6-month) slip scenario, and that measures cleared traditional/special 510(k)s, not PCCP or novel pathways",
+    "evidence": [
+     "derived: fda-review-stat",
+     "src: commercial/openfda-510k-infusion@2026-10-05"
+    ]
+   },
+   {
+    "id": "W2",
+    "statement": "The slip method moves all dependent revenue uniformly \u2014 the plan data has no submission-event linkage, so per-program slips are not computable (stated gap; a submission register dataset would fix it)",
+    "evidence": [
+     "derived: slip-scenarios"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-05.1",
+   "statement": "Regulatory-dependent revenue stays below the exposure threshold in every plan year",
+   "expected": "<= 40% of plan-year revenue behind not-yet-received FDA decisions",
+   "basis": "stand-in risk-appetite threshold; the plan of record sets none",
+   "set_by": "audit-committee (demo)",
+   "validated": false,
+   "actual": "FY2026: 0.0%; FY2027: 8.5%; FY2028: 23.5%; FY2029: 42.9%; FY2030: 60.0% \u2014 over threshold in FY2029, FY2030",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: exposure-by-year"
+   ]
+  }
+ ]
+}

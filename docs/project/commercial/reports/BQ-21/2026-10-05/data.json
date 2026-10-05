@@ -1,0 +1,416 @@
+{
+ "bq": "BQ-21",
+ "series": [
+  {
+   "id": "ontime-stat",
+   "label": "MDR on-time rate (trailing 12 months)",
+   "unit": "%",
+   "kind": "stat",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-regulatory-docket",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "of 19 MDRs filed in the window, on time",
+     "value": 94.7
+    },
+    {
+     "label": "open docket items",
+     "value": 2
+    }
+   ]
+  },
+  {
+   "id": "docket-rollup",
+   "label": "Docket records by type",
+   "unit": "records",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-regulatory-docket",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "correction",
+     "value": 2,
+     "open": 0,
+     "filed": 0,
+     "closed": 2
+    },
+    {
+     "label": "fsca",
+     "value": 1,
+     "open": 1,
+     "filed": 0,
+     "closed": 0
+    },
+    {
+     "label": "mdr",
+     "value": 30,
+     "open": 1,
+     "filed": 4,
+     "closed": 25
+    }
+   ]
+  },
+  {
+   "id": "filing-trend",
+   "label": "MDR filings vs late filings per month",
+   "unit": "filings/month",
+   "kind": "timeseries",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-regulatory-docket",
+    "snapshot": "2026-10-05"
+   },
+   "lines": [
+    {
+     "label": "MDR filings",
+     "points": [
+      {
+       "x": "2025-02-01",
+       "y": 2
+      },
+      {
+       "x": "2025-03-01",
+       "y": 2
+      },
+      {
+       "x": "2025-04-01",
+       "y": 0
+      },
+      {
+       "x": "2025-05-01",
+       "y": 5
+      },
+      {
+       "x": "2025-06-01",
+       "y": 1
+      },
+      {
+       "x": "2025-07-01",
+       "y": 4
+      },
+      {
+       "x": "2025-08-01",
+       "y": 1
+      },
+      {
+       "x": "2025-09-01",
+       "y": 2
+      },
+      {
+       "x": "2025-10-01",
+       "y": 5
+      },
+      {
+       "x": "2025-11-01",
+       "y": 1
+      },
+      {
+       "x": "2025-12-01",
+       "y": 2
+      },
+      {
+       "x": "2026-01-01",
+       "y": 0
+      },
+      {
+       "x": "2026-02-01",
+       "y": 1
+      },
+      {
+       "x": "2026-03-01",
+       "y": 1
+      },
+      {
+       "x": "2026-04-01",
+       "y": 0
+      },
+      {
+       "x": "2026-05-01",
+       "y": 2
+      }
+     ]
+    },
+    {
+     "label": "late filings",
+     "points": [
+      {
+       "x": "2025-02-01",
+       "y": 0
+      },
+      {
+       "x": "2025-03-01",
+       "y": 0
+      },
+      {
+       "x": "2025-04-01",
+       "y": 0
+      },
+      {
+       "x": "2025-05-01",
+       "y": 1
+      },
+      {
+       "x": "2025-06-01",
+       "y": 0
+      },
+      {
+       "x": "2025-07-01",
+       "y": 0
+      },
+      {
+       "x": "2025-08-01",
+       "y": 0
+      },
+      {
+       "x": "2025-09-01",
+       "y": 0
+      },
+      {
+       "x": "2025-10-01",
+       "y": 1
+      },
+      {
+       "x": "2025-11-01",
+       "y": 0
+      },
+      {
+       "x": "2025-12-01",
+       "y": 0
+      },
+      {
+       "x": "2026-01-01",
+       "y": 0
+      },
+      {
+       "x": "2026-02-01",
+       "y": 0
+      },
+      {
+       "x": "2026-03-01",
+       "y": 0
+      },
+      {
+       "x": "2026-04-01",
+       "y": 0
+      },
+      {
+       "x": "2026-05-01",
+       "y": 0
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "open-items",
+   "label": "Open items vs deadline",
+   "unit": "",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/internal-regulatory-docket",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "FSCA-2026-001",
+     "value": "report filed on time; action open pending completion"
+    },
+    {
+     "label": "MDR-2026-0005",
+     "value": "unfiled \u2014 deadline BLOWN by 68 days"
+    }
+   ]
+  },
+  {
+   "id": "ontime-rate",
+   "label": "On-time vs late (trailing window)",
+   "unit": "MDRs",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "MDRs with filed_date in the 365 days ending at the latest event date in the pin, split by filed_date <= regulatory_deadline",
+    "inputs": [
+     "src: commercial/internal-regulatory-docket@2026-10-05",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-regulatory-docket",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "on time",
+     "value": 18
+    },
+    {
+     "label": "late",
+     "value": 1
+    }
+   ]
+  },
+  {
+   "id": "basis-sensitivity",
+   "label": "On-time rate under alternative bases",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "on-time rate recomputed under the pin-date-anchored filed-date window, the opened-date window, and lifetime \u2014 alongside the published filed-date/latest-event basis",
+    "inputs": [
+     "src: commercial/internal-regulatory-docket@2026-10-05",
+     "config: commercial.yml",
+     "derived: ontime-rate"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-regulatory-docket",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "filed-date window, latest-event anchor (published)",
+     "value": 94.7,
+     "on_time": 18,
+     "in_basis": 19,
+     "late": 1
+    },
+    {
+     "label": "filed-date window, pin-date anchor",
+     "value": 100.0,
+     "on_time": 11,
+     "in_basis": 11,
+     "late": 0
+    },
+    {
+     "label": "opened-date window, latest-event anchor",
+     "value": 93.3,
+     "on_time": 14,
+     "in_basis": 15,
+     "late": 1
+    },
+    {
+     "label": "lifetime (all filed MDRs)",
+     "value": 93.1,
+     "on_time": 27,
+     "in_basis": 29,
+     "late": 2
+    }
+   ]
+  },
+  {
+   "id": "exposure-list",
+   "label": "Exposure list (open + late items)",
+   "unit": "items",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "union of open docket items and late filings inside the trailing window, enumerated by record id",
+    "inputs": [
+     "src: commercial/internal-regulatory-docket@2026-10-05",
+     "derived: ontime-rate",
+     "derived: open-items"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-regulatory-docket",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "FSCA-2026-001",
+     "value": "report filed on time; action open pending completion"
+    },
+    {
+     "label": "MDR-2026-0005",
+     "value": "unfiled \u2014 deadline BLOWN by 68 days"
+    },
+    {
+     "label": "MDR-2025-0018",
+     "value": "filed 9 days late (2025-10-04)"
+    }
+   ]
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "If FDA walks in tomorrow: 2 open docket item(s) (MDR-2026-0005 due in -68 days at the pin date; FSCA-2026-001 rollout incomplete) and 1 late MDR filing(s) in the trailing 12 months \u2014 on-time rate 94.7% (18 of 19); E-21.1 NOT met",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "high",
+    "statement": "MDR-2026-0005 (over-delivery) is open and unfiled with -68 days to its regulatory deadline (2026-07-29) at the pin date \u2014 the over-delivery event under investigation (see BQ-20)",
+    "action": "Confirm the MDR narrative is in final review NOW; file before the deadline; escalate to RA leadership if investigation inputs are the blocker",
+    "evidence": [
+     "derived: open-items",
+     "src: commercial/internal-regulatory-docket@2026-10-05"
+    ]
+   },
+   {
+    "id": "I2",
+    "severity": "medium",
+    "statement": "FSCA-2026-001 (drug-library-correction) remains open: rollout as recorded \u2014 \"NA complete 2026-06, EMEA in progress (~60% sites), APAC pending\" \u2014 an FDA investigator will ask why APAC has not started",
+    "action": "Get the pending region(s) (APAC) scheduled and in-progress completion dated; track per-site completion evidence for the FSCA file",
+    "evidence": [
+     "derived: open-items",
+     "src: commercial/internal-regulatory-docket@2026-10-05"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "medium",
+    "statement": "1 MDR(s) filed late inside the trailing window (MDR-2025-0018 +9d) \u2014 a repeat-observation pattern an investigator can cite even at a 94.7% on-time rate",
+    "mitigation": "Root-cause the late filing (intake-to-decision lag vs narrative drafting); add a deadline-minus-7-days internal gate to the RA tracker",
+    "evidence": [
+     "derived: ontime-rate",
+     "src: commercial/internal-regulatory-docket@2026-10-05"
+    ]
+   },
+   {
+    "id": "R2",
+    "severity": "medium",
+    "statement": "This docket audits filing timeliness of what was docketed \u2014 the complaint-to-MDR reportability decision trail is not a corpus dataset, so under-docketing would be invisible here",
+    "mitigation": "Acquire the reportability-decision log as a dataset; until then pair this answer with BQ-20's complaint-level watch",
+    "evidence": [
+     "derived: docket-rollup"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "Lifetime late filings: 2 (MDR-2025-0007 +4d; MDR-2025-0018 +9d) \u2014 1 (MDR-2025-0007) predate(s) the trailing window but stay(s) on the audit record",
+    "evidence": [
+     "derived: ontime-rate",
+     "src: commercial/internal-regulatory-docket@2026-10-05"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-21.1",
+   "statement": "Every MDR is filed within its regulatory deadline",
+   "expected": "0 late filings, trailing 12 months",
+   "basis": "30-day MDR filing requirement (21 CFR 803) [VERIFY against docs/external distillation]",
+   "set_by": "vp-quality (demo)",
+   "validated": false,
+   "actual": "1 late filing(s) in the trailing 12 months (MDR-2025-0018 +9d); lifetime record holds 2 late filing(s)",
+   "verdict": "not-met",
+   "evidence": [
+    "derived: ontime-rate",
+    "src: commercial/internal-regulatory-docket@2026-10-05"
+   ]
+  }
+ ]
+}

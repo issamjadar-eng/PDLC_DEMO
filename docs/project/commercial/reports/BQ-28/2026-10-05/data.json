@@ -1,0 +1,408 @@
+{
+ "bq": "BQ-28",
+ "series": [
+  {
+   "id": "ytd-variance",
+   "label": "YTD revenue vs plan",
+   "unit": "%",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "(sum of actual revenue \u2212 sum of plan revenue) \u00f7 plan revenue over the closed quarters of the fiscal year",
+    "inputs": [
+     "src: commercial/internal-financials@2026-10-05",
+     "src: commercial/internal-revenue-plan@2026-10-05",
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-financials",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "H1 2026 variance vs plan",
+     "value": -4.1,
+     "sub": "actual $46.3M vs plan $48.3M"
+    }
+   ]
+  },
+  {
+   "id": "quarterly-trend",
+   "label": "Quarterly revenue: actual vs 2026 plan",
+   "unit": "USD M",
+   "kind": "timeseries",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "quarterly totals of actual revenue (all history in the pin) and of the fiscal-year plan rows",
+    "inputs": [
+     "src: commercial/internal-financials@2026-10-05",
+     "src: commercial/internal-revenue-plan@2026-10-05"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-financials",
+    "snapshot": "2026-10-05"
+   },
+   "lines": [
+    {
+     "label": "actual revenue",
+     "points": [
+      {
+       "x": "2024-01-01",
+       "y": 16.7
+      },
+      {
+       "x": "2024-04-01",
+       "y": 17.1
+      },
+      {
+       "x": "2024-07-01",
+       "y": 17.8
+      },
+      {
+       "x": "2024-10-01",
+       "y": 18.2
+      },
+      {
+       "x": "2025-01-01",
+       "y": 19.0
+      },
+      {
+       "x": "2025-04-01",
+       "y": 19.7
+      },
+      {
+       "x": "2025-07-01",
+       "y": 20.5
+      },
+      {
+       "x": "2025-10-01",
+       "y": 21.4
+      },
+      {
+       "x": "2026-01-01",
+       "y": 22.5
+      },
+      {
+       "x": "2026-04-01",
+       "y": 23.8
+      }
+     ]
+    },
+    {
+     "label": "plan 2026 (LRP)",
+     "points": [
+      {
+       "x": "2026-01-01",
+       "y": 23.1
+      },
+      {
+       "x": "2026-04-01",
+       "y": 25.2
+      },
+      {
+       "x": "2026-07-01",
+       "y": 27.3
+      },
+      {
+       "x": "2026-10-01",
+       "y": 29.4
+      }
+     ]
+    }
+   ],
+   "points": []
+  },
+  {
+   "id": "variance-by-line",
+   "label": "Actual vs plan by product line",
+   "unit": "USD M",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "actual",
+    "b_label": "plan"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "revenue summed per product line over the closed quarters, actual and plan",
+    "inputs": [
+     "src: commercial/internal-financials@2026-10-05",
+     "src: commercial/internal-revenue-plan@2026-10-05"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-financials",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "IP5000",
+     "a": 4.0,
+     "b": 3.2,
+     "variance_pct": 24.3
+    },
+    {
+     "label": "PP3000",
+     "a": 6.4,
+     "b": 5.5,
+     "variance_pct": 16.1
+    },
+    {
+     "label": "PP3500",
+     "a": 22.4,
+     "b": 23.9,
+     "variance_pct": -6.3
+    },
+    {
+     "label": "SP6000",
+     "a": 5.0,
+     "b": 5.5,
+     "variance_pct": -9.1
+    },
+    {
+     "label": "SP6500",
+     "a": 3.5,
+     "b": 4.1,
+     "variance_pct": -15.7
+    },
+    {
+     "label": "cloud-suite",
+     "a": 5.0,
+     "b": 6.0,
+     "variance_pct": -16.4
+    }
+   ]
+  },
+  {
+   "id": "variance-by-region",
+   "label": "Actual vs plan by region",
+   "unit": "USD M",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "actual",
+    "b_label": "plan"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "revenue summed per region over the closed quarters, actual and plan",
+    "inputs": [
+     "src: commercial/internal-financials@2026-10-05",
+     "src: commercial/internal-revenue-plan@2026-10-05"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-financials",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "APAC",
+     "a": 7.0,
+     "b": 7.2,
+     "variance_pct": -3.2
+    },
+    {
+     "label": "EMEA",
+     "a": 13.8,
+     "b": 14.5,
+     "variance_pct": -4.5
+    },
+    {
+     "label": "NA",
+     "a": 25.5,
+     "b": 26.6,
+     "variance_pct": -4.1
+    }
+   ]
+  },
+  {
+   "id": "variance-by-quarter",
+   "label": "Variance vs plan by quarter",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "(actual \u2212 plan) \u00f7 plan per closed quarter",
+    "inputs": [
+     "src: commercial/internal-financials@2026-10-05",
+     "src: commercial/internal-revenue-plan@2026-10-05"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-financials",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "2026-Q1",
+     "value": -2.6
+    },
+    {
+     "label": "2026-Q2",
+     "value": -5.5
+    }
+   ]
+  },
+  {
+   "id": "variance-contribution",
+   "label": "Variance contribution ($M) by line",
+   "unit": "USD M",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "actual \u2212 plan in dollars per product line \u2014 the netting inside the composite",
+    "inputs": [
+     "src: commercial/internal-financials@2026-10-05",
+     "src: commercial/internal-revenue-plan@2026-10-05"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-financials",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "IP5000",
+     "value": 0.8
+    },
+    {
+     "label": "PP3000",
+     "value": 0.9
+    },
+    {
+     "label": "PP3500",
+     "value": -1.5
+    },
+    {
+     "label": "SP6000",
+     "value": -0.5
+    },
+    {
+     "label": "SP6500",
+     "value": -0.6
+    },
+    {
+     "label": "cloud-suite",
+     "value": -1.0
+    }
+   ]
+  },
+  {
+   "id": "price-volume-split",
+   "label": "Volume vs price variance bridge",
+   "unit": "USD M",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "note": "the plan of record (internal-revenue-plan) carries no planned units \u2014 a volume/price bridge needs plan-side units; actuals alone cannot attribute the variance. Acquire planned units in the LRP export to unlock this."
+   },
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "H1 2026 revenue $46.3M vs plan $48.3M (-4.1%, within the \u00b15% tolerance overall; 4 of 6 lines breach the band individually on the downside); under plan: cloud-suite -16.4%, SP6500 -15.7%, SP6000 -9.1%, PP3500 -6.3%; masked by IP5000 +24.3%, PP3000 +16.1%; 2026-Q2 alone breached at -5.5%",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "high",
+    "statement": "cloud-suite is -16.4% under plan for H1 2026 ($5.0M actual vs $6.0M plan) \u2014 beyond the \u00b15% flagging tolerance",
+    "action": "Confirm driver with the win/loss and funnel reviews; decide reforecast vs recovery plan for the line at the monthly close",
+    "evidence": [
+     "derived: variance-by-line",
+     "src: commercial/internal-financials@2026-10-05",
+     "src: commercial/internal-revenue-plan@2026-10-05",
+     "config: commercial.yml"
+    ]
+   },
+   {
+    "id": "I2",
+    "severity": "high",
+    "statement": "SP6500 is -15.7% under plan for H1 2026 ($3.5M actual vs $4.1M plan) \u2014 beyond the \u00b15% flagging tolerance",
+    "action": "Confirm driver with the win/loss and funnel reviews; decide reforecast vs recovery plan for the line at the monthly close",
+    "evidence": [
+     "derived: variance-by-line",
+     "src: commercial/internal-financials@2026-10-05",
+     "src: commercial/internal-revenue-plan@2026-10-05",
+     "config: commercial.yml"
+    ]
+   },
+   {
+    "id": "I3",
+    "severity": "medium",
+    "statement": "SP6000 is -9.1% under plan for H1 2026 ($5.0M actual vs $5.5M plan) \u2014 beyond the \u00b15% flagging tolerance",
+    "action": "Confirm driver with the win/loss and funnel reviews; decide reforecast vs recovery plan for the line at the monthly close",
+    "evidence": [
+     "derived: variance-by-line",
+     "src: commercial/internal-financials@2026-10-05",
+     "src: commercial/internal-revenue-plan@2026-10-05",
+     "config: commercial.yml"
+    ]
+   },
+   {
+    "id": "I4",
+    "severity": "medium",
+    "statement": "PP3500 is -6.3% under plan for H1 2026 ($22.4M actual vs $23.9M plan) \u2014 beyond the \u00b15% flagging tolerance",
+    "action": "Confirm driver with the win/loss and funnel reviews; decide reforecast vs recovery plan for the line at the monthly close",
+    "evidence": [
+     "derived: variance-by-line",
+     "src: commercial/internal-financials@2026-10-05",
+     "src: commercial/internal-revenue-plan@2026-10-05",
+     "config: commercial.yml"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "medium",
+    "statement": "Quarter-over-quarter timing is deteriorating: 2026-Q1 -2.6% \u2192 2026-Q2 -5.5% \u2014 the latest quarter breaches the \u00b15% band on its own",
+    "mitigation": "Treat the next monthly close as the reforecast trigger check; do not wait for the YTD composite to breach",
+    "evidence": [
+     "derived: variance-by-quarter",
+     "src: commercial/internal-financials@2026-10-05",
+     "src: commercial/internal-revenue-plan@2026-10-05",
+     "config: commercial.yml"
+    ]
+   },
+   {
+    "id": "R2",
+    "severity": "medium",
+    "statement": "The \u00b15% tolerance is a stand-in \u2014 the plan of record names no reforecast trigger, so the within/outside verdict is only as good as an unratified threshold",
+    "mitigation": "Have finance ratify a tolerance in the plan of record and mark E-28.1 validated",
+    "evidence": [
+     "config: commercial.yml"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "Mix masking: IP5000 at +24.3%, PP3000 at +16.1% over plan offsets the under-plan lines inside the composite \u2014 the total variance understates the flagship/growth miss",
+    "evidence": [
+     "derived: variance-by-line",
+     "derived: variance-contribution"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-28.1",
+   "statement": "Year-to-date revenue tracks the 2026 plan within tolerance",
+   "expected": "within +/- 5% of plan, YTD",
+   "basis": "standard reforecast trigger; the plan of record names no tolerance [VERIFY]",
+   "set_by": "cfo (demo)",
+   "validated": false,
+   "actual": "-4.1% YTD (H1 2026) \u2014 within tolerance overall; 4 of 6 lines breach the \u00b15% band individually on the downside",
+   "verdict": "met",
+   "evidence": [
+    "derived: ytd-variance",
+    "derived: variance-by-line"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,356 @@
+{
+ "bq": "MQ-05",
+ "edition": "2026-10-05",
+ "generated_at": "2026-10-05T11:59:51+00:00",
+ "lint": {
+  "status": "pass",
+  "errors": [],
+  "warnings": [],
+  "checks": [
+   {
+    "id": "artifacts",
+    "name": "Edition artifacts",
+    "description": "report.md and data.json exist for this edition",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "numeric-coverage",
+    "name": "Numeric-claim coverage",
+    "description": "every numeric claim in the report carries a resolvable marker on its line",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "marker-resolution",
+    "name": "Marker resolution",
+    "description": "every cited marker resolves \u2014 pinned snapshot on disk, active assumption, computed series, config file, active waiver",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "estimation-language",
+    "name": "Estimation language",
+    "description": "estimation words (estimated / likely / modeled / approximately \u2026) cite a stated assumption record",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "pin-freshness",
+    "name": "Pin freshness",
+    "description": "every pinned snapshot is within its dataset's max_age_days, or a cited waiver is active",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "series-hygiene",
+    "name": "Series hygiene",
+    "description": "every data.json series declares a valid evidence class and its provenance",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "derivation-chain",
+    "name": "Derivation chain",
+    "description": "every derived series declares HOW it was derived \u2014 a method and its inputs (src/derived/config markers), so the data chain is walkable",
+    "status": "pass",
+    "findings": []
+   },
+   {
+    "id": "plan-currency",
+    "name": "Plan currency",
+    "description": "the question has an analysis plan and this edition was computed under its current version \u2014 a drifted or missing plan is called out, and intent-honoring is verified by an agent intent-check",
+    "status": "pass",
+    "findings": []
+   }
+  ]
+ },
+ "references": [
+  {
+   "kind": "config",
+   "value": "manufacturing.yml",
+   "resolved": true,
+   "note": "versioned configuration file present"
+  },
+  {
+   "kind": "derived",
+   "value": "audit-currency",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "ontime-by-supplier",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "reject-by-supplier",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "reject-trend",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "scorecard-distribution",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "single-source-exposure",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "supplier-stat",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "derived",
+   "value": "v-main",
+   "resolved": true,
+   "note": "computed series/verdict in this edition's data.json"
+  },
+  {
+   "kind": "src",
+   "value": "manufacturing/internal-suppliers@2026-10-05",
+   "resolved": true,
+   "note": "pinned immutable snapshot present on disk"
+  }
+ ],
+ "freshness": [
+  {
+   "dataset": "manufacturing/internal-suppliers",
+   "snapshot": "2026-10-05",
+   "age_days": 0,
+   "max_age_days": 30,
+   "band": "fresh",
+   "waived": false
+  }
+ ],
+ "data_availability": {
+  "have": [
+   {
+    "what": "Incoming quality",
+    "series": "supplier-stat",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-suppliers@2026-10-05",
+    "derivation": {
+     "method": "lots rejected \u00f7 lots received and lot-weighted on-time over the trailing window",
+     "inputs": [
+      "src: manufacturing/internal-suppliers@2026-10-05",
+      "config: manufacturing.yml"
+     ]
+    }
+   },
+   {
+    "what": "Incoming reject rate by supplier",
+    "series": "reject-by-supplier",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-suppliers@2026-10-05",
+    "derivation": {
+     "method": "lots rejected \u00f7 lots received per supplier over the trailing window",
+     "inputs": [
+      "src: manufacturing/internal-suppliers@2026-10-05"
+     ]
+    }
+   },
+   {
+    "what": "On-time delivery by supplier",
+    "series": "ontime-by-supplier",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-suppliers@2026-10-05",
+    "derivation": {
+     "method": "lot-weighted mean of period on_time_pct per supplier over the trailing window",
+     "inputs": [
+      "src: manufacturing/internal-suppliers@2026-10-05"
+     ]
+    }
+   },
+   {
+    "what": "Incoming reject rate by component family",
+    "series": "reject-by-family",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-suppliers@2026-10-05",
+    "derivation": {
+     "method": "lots rejected \u00f7 lots received per component family over the trailing window",
+     "inputs": [
+      "src: manufacturing/internal-suppliers@2026-10-05"
+     ]
+    }
+   },
+   {
+    "what": "Suppliers by scorecard (latest period)",
+    "series": "scorecard-distribution",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-suppliers@2026-10-05",
+    "derivation": {
+     "method": "count of suppliers per latest-period scorecard grade",
+     "inputs": [
+      "src: manufacturing/internal-suppliers@2026-10-05"
+     ]
+    }
+   },
+   {
+    "what": "Single-source suppliers: reject rate",
+    "series": "single-source-exposure",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-suppliers@2026-10-05",
+    "derivation": {
+     "method": "single_source suppliers with their window reject rate, scorecard and audit status",
+     "inputs": [
+      "src: manufacturing/internal-suppliers@2026-10-05"
+     ]
+    }
+   },
+   {
+    "what": "Days to next supplier audit (negative = overdue)",
+    "series": "audit-currency",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-suppliers@2026-10-05",
+    "derivation": {
+     "method": "next_audit_due \u2212 as_of per supplier",
+     "inputs": [
+      "src: manufacturing/internal-suppliers@2026-10-05"
+     ]
+    }
+   },
+   {
+    "what": "Monthly incoming reject rate",
+    "series": "reject-trend",
+    "evidence_class": "derived",
+    "source": "manufacturing/internal-suppliers@2026-10-05",
+    "derivation": {
+     "method": "lots rejected \u00f7 lots received per period, all suppliers and each supplier above the ceiling",
+     "inputs": [
+      "src: manufacturing/internal-suppliers@2026-10-05"
+     ]
+    }
+   }
+  ],
+  "assumed": [],
+  "missing": []
+ },
+ "plan": {
+  "path": "plans/MQ-05.md",
+  "status": "in-sync",
+  "pinned": "006e9ab62faac85cd22e24c01036f1e423bfc27c7a7dabfdf19bbdc7ce5ac391",
+  "current": "006e9ab62faac85cd22e24c01036f1e423bfc27c7a7dabfdf19bbdc7ce5ac391"
+ },
+ "verifications": [],
+ "code": {
+  "status": "unreviewed",
+  "artifacts": [
+   {
+    "path": "bq_modules/mq_05.py",
+    "sha256_12": "9a5147c8ebc0",
+    "role": "module",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "pass",
+     "method": "double-run byte-compare of report.md+data.json replaying latest-edition pins for MQ-05"
+    },
+    "review": null,
+    "review_history": []
+   },
+   {
+    "path": "computations.py",
+    "sha256_12": "9239326ab952",
+    "role": "shared",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": null,
+    "review": null,
+    "review_history": []
+   },
+   {
+    "path": "corpus:manufacturing/internal-suppliers/gen.py",
+    "sha256_12": "6748baaf20a3",
+    "role": "generator",
+    "static_lint": {
+     "status": "pass",
+     "tool": "py_compile",
+     "findings": []
+    },
+    "poison_scan": {
+     "status": "pass",
+     "hits": []
+    },
+    "determinism": {
+     "status": "n/a",
+     "method": "generator \u2014 replayed at acquisition time, not by code-audit"
+    },
+    "review": null,
+    "review_history": []
+   }
+  ]
+ },
+ "verification_plan": [
+  {
+   "gate": "claim-lint",
+   "kind": "machine",
+   "note": "every numeric claim marker-cited; zero lint errors (every edition)",
+   "done": true,
+   "evidence": "0 error(s) / 0 warning(s)"
+  },
+  {
+   "gate": "pin-freshness",
+   "kind": "machine",
+   "note": "all pinned snapshots within max_age_days, or a cited active waiver (every edition)",
+   "done": true,
+   "evidence": "1 pin(s) fresh"
+  },
+  {
+   "gate": "plan-currency",
+   "kind": "machine",
+   "note": "the edition was computed under the current version of this plan (every edition)",
+   "done": true,
+   "evidence": "plan in-sync"
+  },
+  {
+   "gate": "code-audit",
+   "kind": "machine",
+   "note": "deterministic code checks green and the computation reviewed at its pinned bytes (each code change)",
+   "done": false,
+   "evidence": "code unreviewed"
+  },
+  {
+   "gate": "adversarial-verify",
+   "kind": "agent",
+   "note": "independent pins-only re-derivation of the headline claims (each substantive re-answer)",
+   "done": false,
+   "evidence": "no adversarial-verify record filed on this edition"
+  },
+  {
+   "gate": "red-team",
+   "kind": "agent",
+   "note": "framing attack on the answer's presentation and emphasis (each substantive re-answer)",
+   "done": false,
+   "evidence": "no red-team record filed on this edition"
+  }
+ ]
+}

@@ -1,0 +1,16 @@
+bq: BQ-01
+edition: '2026-10-05'
+status: draft
+created_at: '2026-10-05T11:58:42+00:00'
+pins:
+  commercial/internal-financials: '2026-10-05'
+plan:
+  path: plans/BQ-01.md
+  sha256: c563a5845652b8d8d4c3f026466173529a8e76b9d29047a3fff5ea945dc3e348
+code_artifacts:
+- path: bq_modules/bq_01.py
+  sha256: c6a7a090dee2fadef0cccea83c07712d69eac982466c3d37b306f6a746fe5ed7
+- path: computations.py
+  sha256: 2140820494890c4c1712050248355fde06bba2331386103270bdfe48f88b3b78
+- path: corpus:commercial/internal-financials/gen.py
+  sha256: 9eff72abc58203aeab19bb98be97e93af263dfa6dcf8552c101e35f9df8f1ed6

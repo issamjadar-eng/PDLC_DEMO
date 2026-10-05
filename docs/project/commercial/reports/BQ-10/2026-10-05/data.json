@@ -1,0 +1,225 @@
+{
+ "bq": "BQ-10",
+ "series": [
+  {
+   "id": "our-tco",
+   "label": "Our 5-yr TCO per pump",
+   "unit": "USD",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "capital + 5 \u00d7 (cloud + consumables + service) over the declared per-pump constants",
+    "inputs": [
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "note": "declared plan constants in commercial.yml (demo stand-ins for finance-validated rates)"
+   },
+   "points": [
+    {
+     "label": "all-in (capital + cloud + consumables + service)",
+     "value": 8900
+    },
+    {
+     "label": "capital + service only (A-004-comparable basis)",
+     "value": 5100
+    }
+   ]
+  },
+  {
+   "id": "tco-comparison",
+   "label": "5-yr TCO, capital+service basis: us vs class-wide competitor range",
+   "unit": "USD",
+   "evidence_class": "assumed",
+   "provenance": {
+    "assumption": "A-004",
+    "note": "competitor side excludes consumables and software subscription (undisclosed) \u2014 their true all-in TCO is above this range; ours from commercial.yml constants"
+   },
+   "points": [
+    {
+     "label": "PP3500 (capital + service)",
+     "value": 5100
+    },
+    {
+     "label": "competitor range, low",
+     "value": 3000
+    },
+    {
+     "label": "competitor range, high",
+     "value": 15000
+    }
+   ]
+  },
+  {
+   "id": "our-tco-components",
+   "label": "Our 5-yr TCO components",
+   "unit": "USD",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "per-pump constants \u00d7 5-yr horizon (capital one-time)",
+    "inputs": [
+     "config: commercial.yml"
+    ]
+   },
+   "provenance": {
+    "note": "declared plan constants in commercial.yml"
+   },
+   "points": [
+    {
+     "label": "capital",
+     "value": 4200
+    },
+    {
+     "label": "cloud subscription \u00d7 5yr",
+     "value": 2250
+    },
+    {
+     "label": "consumables \u00d7 5yr",
+     "value": 1550
+    },
+    {
+     "label": "service \u00d7 5yr",
+     "value": 900
+    }
+   ]
+  },
+  {
+   "id": "feature-context",
+   "label": "Feature cells (value + verification status)",
+   "unit": "",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/external-competitor-features",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "PainEase PCA Advanced (PP3500) \u2014 ders_drug_library",
+     "value": "yes (drug library 200+ medications)"
+    },
+    {
+     "label": "PainEase PCA Advanced (PP3500) \u2014 wireless_connectivity",
+     "value": "planned Y1 (Connectivity Adapter MDDS - roadmap F2)"
+    },
+    {
+     "label": "PainEase PCA Advanced (PP3500) \u2014 predictive_monitoring",
+     "value": "no (complete absence of predictive monitoring across portfolio)"
+    },
+    {
+     "label": "PainEase PCA Advanced (PP3500) \u2014 battery_hours",
+     "value": "150"
+    },
+    {
+     "label": "PainEase PCA Advanced (PP3500) \u2014 flow_accuracy_pct",
+     "value": "0.35"
+    },
+    {
+     "label": "Alaris \u2014 ders_drug_library",
+     "value": "yes (Guardrails)"
+    },
+    {
+     "label": "Alaris \u2014 wireless_connectivity",
+     "value": "yes (Wi-Fi)"
+    },
+    {
+     "label": "Alaris \u2014 predictive_monitoring",
+     "value": "no (reactive alarms only)"
+    },
+    {
+     "label": "Alaris \u2014 battery_hours",
+     "value": "6"
+    },
+    {
+     "label": "Alaris \u2014 flow_accuracy_pct",
+     "value": "2.3"
+    },
+    {
+     "label": "Spectrum IQ \u2014 ders_drug_library",
+     "value": "yes (Dose IQ safety software) (verify)"
+    },
+    {
+     "label": "Spectrum IQ \u2014 wireless_connectivity",
+     "value": "yes (EMR auto-programming integration) (verify)"
+    },
+    {
+     "label": "Spectrum IQ \u2014 predictive_monitoring",
+     "value": "no (reactive alarms only)"
+    },
+    {
+     "label": "Spectrum IQ \u2014 flow_accuracy_pct",
+     "value": "2.3"
+    },
+    {
+     "label": "Plum 360 \u2014 ders_drug_library",
+     "value": "yes (ICU Medical MedNet - up to 2500 drugs / 40 care areas)"
+    },
+    {
+     "label": "Plum 360 \u2014 wireless_connectivity",
+     "value": "yes (Ethernet + 802.11 a/b/g/n dual-band)"
+    },
+    {
+     "label": "Plum 360 \u2014 predictive_monitoring",
+     "value": "no (named reactive-alarm incumbent)"
+    },
+    {
+     "label": "Plum 360 \u2014 battery_hours",
+     "value": "7"
+    }
+   ]
+  },
+  {
+   "id": "tco-history",
+   "label": "TCO position over time",
+   "unit": "USD",
+   "kind": "timeseries",
+   "evidence_class": "unavailable",
+   "provenance": {
+    "note": "single A-004 vintage and single curated-matrix snapshot \u2014 a history needs dated assumption refreshes (procurement disclosures, GPO pricing, analyst commentary); not faked"
+   },
+   "lines": [],
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "Indicative, assumption-bounded: our 5-yr TCO is $8,900/pump all-in ($5,100 on the capital+service basis) vs a class-wide competitor range of ~$3,000\u2013$15,000 on capital+service ONLY \u2014 competitor consumables and software subscription are undisclosed and excluded, so their true all-in TCO sits ABOVE that range; the ranges overlap and no hard we-win claim is supportable",
+   "evidence_class": "assumed"
+  }
+ ],
+ "narrative": {
+  "issues": [],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "high",
+    "statement": "The comparison is not like-for-like by construction: the competitor range excludes consumables (undisclosed) and quantifies software subscription only as 'required, magnitude unknown', while our figure includes both \u2014 the spread understates competitor cost",
+    "mitigation": "Present only the capital+service basis side-by-side in buyer-facing material; state the exclusions verbatim from the assumption record",
+    "evidence": [
+     "assume: A-004",
+     "derived: tco-comparison"
+    ]
+   },
+   {
+    "id": "R2",
+    "severity": "medium",
+    "statement": "Our own cost constants are demo stand-ins, not finance-validated rates \u2014 both sides of the buyer's spreadsheet are currently unvalidated",
+    "mitigation": "Have finance ratify the four per-pump constants before external use; then re-answer",
+    "evidence": [
+     "config: commercial.yml"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "A-004's refresh trigger is a new procurement award / GPO disclosure / analyst pricing commentary \u2014 any of these should prompt a re-answer",
+    "evidence": [
+     "assume: A-004"
+    ]
+   }
+  ]
+ },
+ "expectations": []
+}

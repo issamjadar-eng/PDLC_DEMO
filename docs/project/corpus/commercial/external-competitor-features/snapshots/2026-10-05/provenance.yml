@@ -1,0 +1,27 @@
+dataset: commercial/external-competitor-features
+snapshot: '2026-10-05'
+created_at: '2026-10-05T11:58:24+00:00'
+sources:
+- type: file
+  path: /home/runner/work/PDLC_DEMO/PDLC_DEMO/docs/project/corpus/commercial/external-competitor-features/curated.csv
+  system_of_record: hand-curated compilation — project competitive-landscape docs (docs/project/input-analysis/competitive-landscape/,
+    strategies/) + public vendor/web sources cited per row in source_ref
+  retrieved_at: '2026-10-05T11:58:24+00:00'
+  usage_rights: public information, compiled — verify before external use
+  files:
+  - path: raw/curated.csv
+    sha256: 4f686929f4807f2d0871cc43038b1bc3130d3d082cab4094d9395ca9b461c138
+transforms:
+- step: normalize
+  spec:
+    command: cp {raw_dir}/curated.csv {normalized_dir}/records.csv
+  outputs:
+  - path: normalized/records.csv
+    sha256: 4f686929f4807f2d0871cc43038b1bc3130d3d082cab4094d9395ca9b461c138
+    parents:
+    - 4f686929f4807f2d0871cc43038b1bc3130d3d082cab4094d9395ca9b461c138
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 42

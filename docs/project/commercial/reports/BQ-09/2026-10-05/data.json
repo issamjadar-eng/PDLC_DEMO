@@ -1,0 +1,367 @@
+{
+ "bq": "BQ-09",
+ "series": [
+  {
+   "id": "inwindow-rate",
+   "label": "In-window win rate",
+   "unit": "%",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "won \u00f7 decided over opportunities whose canonical incumbent had an FRN recall posted within 180d before close",
+    "inputs": [
+     "src: commercial/internal-winloss@2026-10-05",
+     "src: commercial/openfda-recalls-infusion@2026-10-05",
+     "config: commercial.yml",
+     "config: entity-aliases.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-winloss",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "decided incumbent-held opps in the 180d window (n=55)",
+     "value": 67.3
+    }
+   ]
+  },
+  {
+   "id": "window-split",
+   "label": "Win rate in vs out of the disruption window",
+   "unit": "%",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "in-window",
+    "b_label": "out-of-window"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "win rate per population; in-window per the recall join above",
+    "inputs": [
+     "src: commercial/internal-winloss@2026-10-05",
+     "src: commercial/openfda-recalls-infusion@2026-10-05",
+     "config: commercial.yml",
+     "config: entity-aliases.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-winloss",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "win rate %",
+     "a": 67.3,
+     "b": 14.3
+    }
+   ]
+  },
+  {
+   "id": "window-sensitivity",
+   "label": "Win rate split at the 90-day sensitivity window",
+   "unit": "%",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "in-window",
+    "b_label": "out-of-window"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "the same recall join recomputed with a 90-day window \u2014 committed sensitivity check on the window definition",
+    "inputs": [
+     "src: commercial/internal-winloss@2026-10-05",
+     "src: commercial/openfda-recalls-infusion@2026-10-05",
+     "config: commercial.yml",
+     "config: entity-aliases.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-winloss",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "win rate %",
+     "a": 65.8,
+     "b": 54.2
+    }
+   ]
+  },
+  {
+   "id": "decay-buckets",
+   "label": "Win rate by months since incumbent's most recent recall",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "decided opps bucketed by days since the most recent prior recall posting \u00f7 30.44; win rate per bucket",
+    "inputs": [
+     "src: commercial/internal-winloss@2026-10-05",
+     "src: commercial/openfda-recalls-infusion@2026-10-05",
+     "config: commercial.yml",
+     "config: entity-aliases.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-winloss",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "0-3 months",
+     "value": 65.8,
+     "n": 38
+    },
+    {
+     "label": "3-6 months",
+     "value": 70.6,
+     "n": 17
+    },
+    {
+     "label": "6-12 months",
+     "value": 0.0,
+     "n": 5
+    },
+    {
+     "label": ">12 months / no prior recall",
+     "value": 50.0,
+     "n": 2
+    }
+   ]
+  },
+  {
+   "id": "recalls-by-incumbent",
+   "label": "FRN recalls posted since 2021, by canonical firm",
+   "unit": "recalls",
+   "evidence_class": "measured",
+   "provenance": {
+    "dataset": "commercial/openfda-recalls-infusion",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "B. Braun",
+     "value": 8
+    },
+    {
+     "label": "BD (CareFusion)",
+     "value": 16
+    },
+    {
+     "label": "Baxter",
+     "value": 29
+    },
+    {
+     "label": "Fresenius Kabi",
+     "value": 21
+    },
+    {
+     "label": "ICU Medical",
+     "value": 22
+    },
+    {
+     "label": "Smiths Medical",
+     "value": 18
+    }
+   ]
+  },
+  {
+   "id": "quarterly-outcomes",
+   "label": "Quarterly decided outcomes, in vs out of window",
+   "unit": "opportunities/quarter",
+   "kind": "timeseries",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "decided opps per close-quarter, split by the recall join",
+    "inputs": [
+     "src: commercial/internal-winloss@2026-10-05",
+     "src: commercial/openfda-recalls-infusion@2026-10-05",
+     "config: commercial.yml",
+     "config: entity-aliases.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "commercial/internal-winloss",
+    "snapshot": "2026-10-05"
+   },
+   "lines": [
+    {
+     "label": "in-window won",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 5
+      },
+      {
+       "x": "2025-04-01",
+       "y": 4
+      },
+      {
+       "x": "2025-07-01",
+       "y": 5
+      },
+      {
+       "x": "2025-10-01",
+       "y": 6
+      },
+      {
+       "x": "2026-01-01",
+       "y": 13
+      },
+      {
+       "x": "2026-04-01",
+       "y": 3
+      },
+      {
+       "x": "2026-07-01",
+       "y": 1
+      }
+     ]
+    },
+    {
+     "label": "in-window lost",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 3
+      },
+      {
+       "x": "2025-04-01",
+       "y": 3
+      },
+      {
+       "x": "2025-07-01",
+       "y": 1
+      },
+      {
+       "x": "2025-10-01",
+       "y": 3
+      },
+      {
+       "x": "2026-01-01",
+       "y": 6
+      },
+      {
+       "x": "2026-04-01",
+       "y": 2
+      },
+      {
+       "x": "2026-07-01",
+       "y": 0
+      }
+     ]
+    },
+    {
+     "label": "out-of-window won",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 0
+      },
+      {
+       "x": "2025-04-01",
+       "y": 0
+      },
+      {
+       "x": "2025-07-01",
+       "y": 0
+      },
+      {
+       "x": "2025-10-01",
+       "y": 1
+      },
+      {
+       "x": "2026-01-01",
+       "y": 0
+      },
+      {
+       "x": "2026-04-01",
+       "y": 0
+      },
+      {
+       "x": "2026-07-01",
+       "y": 0
+      }
+     ]
+    },
+    {
+     "label": "out-of-window lost",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 0
+      },
+      {
+       "x": "2025-04-01",
+       "y": 1
+      },
+      {
+       "x": "2025-07-01",
+       "y": 2
+      },
+      {
+       "x": "2025-10-01",
+       "y": 0
+      },
+      {
+       "x": "2026-01-01",
+       "y": 2
+      },
+      {
+       "x": "2026-04-01",
+       "y": 1
+      },
+      {
+       "x": "2026-07-01",
+       "y": 0
+      }
+     ]
+    }
+   ],
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "Method demo (fabricated CRM joined to REAL FDA recall dates): we win 67.3% of decided opportunities where the incumbent had an FRN recall posted within 180 days of close (n=55) vs 14.3% outside the window (n=7); there is no uniform decay across the interior buckets (65.8% \u2192 70.6% \u2192 0.0%); the >12 months / no prior recall tail sits at 50.0% (n=2)",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "high",
+    "statement": "The effect size is NOT market evidence: opportunity records are demo-fabricated and their seeded disruption windows were set independently of the real recall calendar \u2014 only the join method generalizes",
+    "mitigation": "Re-run against the real CRM export before any strategy decision; keep the recall join and decay buckets as the reusable method",
+    "evidence": [
+     "src: commercial/internal-winloss@2026-10-05",
+     "src: commercial/openfda-recalls-infusion@2026-10-05"
+    ]
+   },
+   {
+    "id": "R2",
+    "severity": "medium",
+    "statement": "Large incumbents recall so often that 55 of 62 decided incumbent-held opportunities fall in-window \u2014 the out-of-window control group (n=7) is too small to carry weight on its own",
+    "mitigation": "Read the months-since-recall decay buckets, not the binary in/out split; grow the control by extending history or narrowing the window definition",
+    "evidence": [
+     "derived: decay-buckets",
+     "src: commercial/openfda-recalls-infusion@2026-10-05"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "Recall severity/scope carries no weighting (any FRN posting counts) and non-recall integration disruptions have no dataset \u2014 both widen what 'disruption' means vs what is measured",
+    "evidence": [
+     "derived: window-split"
+    ]
+   }
+  ]
+ },
+ "expectations": []
+}

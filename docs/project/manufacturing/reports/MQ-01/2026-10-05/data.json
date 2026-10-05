@@ -1,0 +1,581 @@
+{
+ "bq": "MQ-01",
+ "series": [
+  {
+   "id": "fpy-stat",
+   "label": "First-pass yield, scrap, rework",
+   "unit": "%",
+   "kind": "stat",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "units passed first time \u00f7 units started (scrap, rework: same denominator) over the trailing window",
+    "inputs": [
+     "src: manufacturing/internal-production-lots@2026-10-05",
+     "config: manufacturing.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-production-lots",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "FPY 2026-06..2026-08",
+     "value": 96.6,
+     "sub": "prior window 96.7%"
+    },
+    {
+     "label": "scrap rate",
+     "value": 1.0,
+     "sub": "of units started"
+    },
+    {
+     "label": "rework rate",
+     "value": 2.4,
+     "sub": "of units started"
+    },
+    {
+     "label": "lines below floor",
+     "value": 0,
+     "sub": "of 5"
+    }
+   ]
+  },
+  {
+   "id": "fpy-by-line",
+   "label": "First-pass yield by product line",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "FPY per product line over the trailing window",
+    "inputs": [
+     "src: manufacturing/internal-production-lots@2026-10-05"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-production-lots",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "IP5000",
+     "value": 96.1,
+     "units_started": 882
+    },
+    {
+     "label": "PP3000",
+     "value": 96.7,
+     "units_started": 943
+    },
+    {
+     "label": "PP3500",
+     "value": 96.5,
+     "units_started": 7136
+    },
+    {
+     "label": "SP6000",
+     "value": 97.4,
+     "units_started": 1065
+    },
+    {
+     "label": "SP6500",
+     "value": 97.1,
+     "units_started": 944
+    }
+   ]
+  },
+  {
+   "id": "fpy-by-station",
+   "label": "First-pass yield by station",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "FPY per line station over the trailing window",
+    "inputs": [
+     "src: manufacturing/internal-production-lots@2026-10-05"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-production-lots",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "SMT",
+     "value": 96.9,
+     "units_started": 2647
+    },
+    {
+     "label": "final-assembly",
+     "value": 96.3,
+     "units_started": 2746
+    },
+    {
+     "label": "test",
+     "value": 94.4,
+     "units_started": 2919
+    },
+    {
+     "label": "pack",
+     "value": 99.1,
+     "units_started": 2658
+    }
+   ]
+  },
+  {
+   "id": "fpy-by-site",
+   "label": "First-pass yield by site",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "FPY per plant over the trailing window",
+    "inputs": [
+     "src: manufacturing/internal-production-lots@2026-10-05"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-production-lots",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "Eastbrook",
+     "value": 96.4,
+     "units_started": 6141
+    },
+    {
+     "label": "Westfield",
+     "value": 96.9,
+     "units_started": 4829
+    }
+   ]
+  },
+  {
+   "id": "scrap-rework-by-line",
+   "label": "Scrap vs rework rate by product line",
+   "unit": "%",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "scrap",
+    "b_label": "rework"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "units scrapped \u00f7 units started and units reworked \u00f7 units started per line",
+    "inputs": [
+     "src: manufacturing/internal-production-lots@2026-10-05"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-production-lots",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "IP5000",
+     "a": 1.1,
+     "b": 2.7
+    },
+    {
+     "label": "PP3000",
+     "a": 1.0,
+     "b": 2.3
+    },
+    {
+     "label": "PP3500",
+     "a": 1.0,
+     "b": 2.5
+    },
+    {
+     "label": "SP6000",
+     "a": 0.8,
+     "b": 1.9
+    },
+    {
+     "label": "SP6500",
+     "a": 1.0,
+     "b": 1.9
+    }
+   ]
+  },
+  {
+   "id": "erosion-cells",
+   "label": "Line \u00d7 station cells below the floor (and since when)",
+   "unit": "%",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "cells with window FPY < floor; onset = first month of the trailing run of months whose rolling window FPY is below the floor",
+    "inputs": [
+     "src: manufacturing/internal-production-lots@2026-10-05",
+     "config: manufacturing.yml"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-production-lots",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "PP3500 \u00b7 test",
+     "value": 93.5,
+     "since": "2026-04"
+    },
+    {
+     "label": "IP5000 \u00b7 test",
+     "value": 94.9,
+     "since": "2026-04"
+    }
+   ]
+  },
+  {
+   "id": "pp3500-rev-by-station",
+   "label": "PP3500 first-pass yield by hw rev and station",
+   "unit": "%",
+   "kind": "paired-bars",
+   "pairs": {
+    "a_label": "rev C",
+    "b_label": "rev B"
+   },
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "FPY per (hw_rev, station) for PP3500 lots in the trailing window",
+    "inputs": [
+     "src: manufacturing/internal-production-lots@2026-10-05"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-production-lots",
+    "snapshot": "2026-10-05"
+   },
+   "points": [
+    {
+     "label": "SMT",
+     "a": 97.0,
+     "b": 98.3,
+     "rev_B": 98.3,
+     "rev_C": 97.0
+    },
+    {
+     "label": "final-assembly",
+     "a": 96.5,
+     "b": 95.8,
+     "rev_B": 95.8,
+     "rev_C": 96.5
+    },
+    {
+     "label": "test",
+     "a": 92.5,
+     "b": 96.1,
+     "rev_B": 96.1,
+     "rev_C": 92.5
+    },
+    {
+     "label": "pack",
+     "a": 99.0,
+     "b": 99.6,
+     "rev_B": 99.6,
+     "rev_C": 99.0
+    }
+   ]
+  },
+  {
+   "id": "fpy-trend",
+   "label": "Monthly first-pass yield",
+   "unit": "%",
+   "kind": "timeseries",
+   "evidence_class": "derived",
+   "derivation": {
+    "method": "monthly FPY for the portfolio and for the PP3500 rev/station cell with the widest gap (plus its peers)",
+    "inputs": [
+     "src: manufacturing/internal-production-lots@2026-10-05"
+    ]
+   },
+   "provenance": {
+    "dataset": "manufacturing/internal-production-lots",
+    "snapshot": "2026-10-05"
+   },
+   "lines": [
+    {
+     "label": "portfolio (all lots)",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 97.1
+      },
+      {
+       "x": "2025-02-01",
+       "y": 97.4
+      },
+      {
+       "x": "2025-03-01",
+       "y": 97.2
+      },
+      {
+       "x": "2025-04-01",
+       "y": 97.4
+      },
+      {
+       "x": "2025-05-01",
+       "y": 97.4
+      },
+      {
+       "x": "2025-06-01",
+       "y": 97.1
+      },
+      {
+       "x": "2025-07-01",
+       "y": 97.4
+      },
+      {
+       "x": "2025-08-01",
+       "y": 97.3
+      },
+      {
+       "x": "2025-09-01",
+       "y": 97.4
+      },
+      {
+       "x": "2025-10-01",
+       "y": 97.0
+      },
+      {
+       "x": "2025-11-01",
+       "y": 97.0
+      },
+      {
+       "x": "2025-12-01",
+       "y": 97.3
+      },
+      {
+       "x": "2026-01-01",
+       "y": 97.3
+      },
+      {
+       "x": "2026-02-01",
+       "y": 97.3
+      },
+      {
+       "x": "2026-03-01",
+       "y": 97.3
+      },
+      {
+       "x": "2026-04-01",
+       "y": 96.5
+      },
+      {
+       "x": "2026-05-01",
+       "y": 96.2
+      },
+      {
+       "x": "2026-06-01",
+       "y": 96.5
+      },
+      {
+       "x": "2026-07-01",
+       "y": 96.5
+      },
+      {
+       "x": "2026-08-01",
+       "y": 96.8
+      }
+     ]
+    },
+    {
+     "label": "PP3500 rev C @ test",
+     "points": [
+      {
+       "x": "2026-03-01",
+       "y": 96.0
+      },
+      {
+       "x": "2026-04-01",
+       "y": 90.2
+      },
+      {
+       "x": "2026-05-01",
+       "y": 88.3
+      },
+      {
+       "x": "2026-06-01",
+       "y": 89.9
+      },
+      {
+       "x": "2026-07-01",
+       "y": 93.1
+      },
+      {
+       "x": "2026-08-01",
+       "y": 93.7
+      }
+     ]
+    },
+    {
+     "label": "PP3500 rev B @ test",
+     "points": [
+      {
+       "x": "2025-01-01",
+       "y": 96.0
+      },
+      {
+       "x": "2025-02-01",
+       "y": 96.1
+      },
+      {
+       "x": "2025-03-01",
+       "y": 96.8
+      },
+      {
+       "x": "2025-04-01",
+       "y": 96.5
+      },
+      {
+       "x": "2025-05-01",
+       "y": 96.0
+      },
+      {
+       "x": "2025-06-01",
+       "y": 96.3
+      },
+      {
+       "x": "2025-07-01",
+       "y": 96.2
+      },
+      {
+       "x": "2025-08-01",
+       "y": 95.8
+      },
+      {
+       "x": "2025-09-01",
+       "y": 96.6
+      },
+      {
+       "x": "2025-10-01",
+       "y": 96.2
+      },
+      {
+       "x": "2025-11-01",
+       "y": 96.3
+      },
+      {
+       "x": "2025-12-01",
+       "y": 96.5
+      },
+      {
+       "x": "2026-01-01",
+       "y": 96.4
+      },
+      {
+       "x": "2026-02-01",
+       "y": 96.5
+      },
+      {
+       "x": "2026-03-01",
+       "y": 96.6
+      },
+      {
+       "x": "2026-04-01",
+       "y": 96.8
+      },
+      {
+       "x": "2026-05-01",
+       "y": 95.9
+      },
+      {
+       "x": "2026-06-01",
+       "y": 95.3
+      },
+      {
+       "x": "2026-07-01",
+       "y": null
+      },
+      {
+       "x": "2026-08-01",
+       "y": 97.0
+      }
+     ]
+    }
+   ],
+   "points": []
+  }
+ ],
+ "verdicts": [
+  {
+   "id": "v-main",
+   "headline": "Trailing 3-month window 2026-06..2026-08: portfolio first-pass yield 96.6% on 10970 units started (down 0.1 pts vs the prior 3 months); 0 of 5 lines below the 95% floor; 2 of 20 line\u00d7station cells below the floor: PP3500 \u00b7 test 93.5% since 2026-04, IP5000 \u00b7 test 94.9% since 2026-04; erosion is rev-specific \u2014 PP3500 rev C at test 92.5% vs other revs 96.1%, below the floor since 2026-04; scrap 1.0%, rework 2.4% of units started",
+   "evidence_class": "derived"
+  }
+ ],
+ "narrative": {
+  "issues": [
+   {
+    "id": "I1",
+    "severity": "medium",
+    "statement": "PP3500 \u00b7 test first-pass yield 93.5% in 2026-06..2026-08, below the 95% floor every month since 2026-04",
+    "action": "Open / link the NCR and containment for the cell; confirm whether the failure mode is fixture, process, or component (see MQ-03 / MQ-05)",
+    "evidence": [
+     "derived: erosion-cells",
+     "src: manufacturing/internal-production-lots@2026-10-05",
+     "config: manufacturing.yml"
+    ]
+   },
+   {
+    "id": "I2",
+    "severity": "medium",
+    "statement": "IP5000 \u00b7 test first-pass yield 94.9% in 2026-06..2026-08, below the 95% floor every month since 2026-04",
+    "action": "Open / link the NCR and containment for the cell; confirm whether the failure mode is fixture, process, or component (see MQ-03 / MQ-05)",
+    "evidence": [
+     "derived: erosion-cells",
+     "src: manufacturing/internal-production-lots@2026-10-05",
+     "config: manufacturing.yml"
+    ]
+   }
+  ],
+  "risks": [
+   {
+    "id": "R1",
+    "severity": "high",
+    "statement": "PP3500 rev C yields 92.5% at test against 96.1% for the other rev(s) at the same station \u2014 a revision-specific defect, not a station drift; rev C share of PP3500 lots keeps rising so portfolio FPY follows it",
+    "mitigation": "Hold rev-specific FPY as a release-readiness input for the rev C ramp; tie the test-station failure Pareto to the rev C fixture PQ (MQ-08)",
+    "evidence": [
+     "derived: pp3500-rev-by-station",
+     "derived: fpy-trend",
+     "src: manufacturing/internal-production-lots@2026-10-05"
+    ]
+   },
+   {
+    "id": "R2",
+    "severity": "medium",
+    "statement": "The 95% floor is a stand-in \u2014 no yield target is on record in a manufacturing plan or the pFMEA, so 'below floor' is only as good as an unratified threshold",
+    "mitigation": "Have manufacturing engineering ratify per-line FPY targets and mark E-01.1 validated",
+    "evidence": [
+     "config: manufacturing.yml"
+    ]
+   }
+  ],
+  "watch": [
+   {
+    "id": "W1",
+    "statement": "Site cut: Eastbrook is the lower-yield plant at 96.4% in 2026-06..2026-08 \u2014 check whether the gap is mix (which lines run there) or process",
+    "evidence": [
+     "derived: fpy-by-site",
+     "src: manufacturing/internal-production-lots@2026-10-05"
+    ]
+   }
+  ]
+ },
+ "expectations": [
+  {
+   "id": "E-01.1",
+   "statement": "Every product line holds first-pass yield at or above the floor over the trailing window",
+   "expected": "FPY >= 95% per line, trailing 3 months",
+   "basis": "stand-in yield floor; no per-line target is on record in a manufacturing plan or the pFMEA [VERIFY]",
+   "set_by": "vp-manufacturing (demo)",
+   "validated": false,
+   "actual": "0 of 5 lines below 95% in 2026-06..2026-08",
+   "verdict": "met",
+   "evidence": [
+    "derived: fpy-by-line"
+   ]
+  }
+ ]
+}
