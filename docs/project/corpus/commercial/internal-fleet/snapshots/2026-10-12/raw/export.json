@@ -1,0 +1,8847 @@
+{
+ "banner": "_Demo sample data - not for clinical use._",
+ "generator": "gen.py",
+ "seed": 42,
+ "rows": [
+  {
+   "device_serial": "PE-00001",
+   "model": "PP3500",
+   "site_id": "S-NA-01",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00002",
+   "model": "PP3000",
+   "site_id": "S-NA-01",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00003",
+   "model": "PP3500",
+   "site_id": "S-NA-01",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00004",
+   "model": "PP3000",
+   "site_id": "S-NA-01",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00005",
+   "model": "PP3000",
+   "site_id": "S-NA-01",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00006",
+   "model": "PP3500",
+   "site_id": "S-NA-01",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00007",
+   "model": "PP3500",
+   "site_id": "S-NA-02",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00008",
+   "model": "PP3500",
+   "site_id": "S-NA-02",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00009",
+   "model": "PP3500",
+   "site_id": "S-NA-02",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00010",
+   "model": "PP3500",
+   "site_id": "S-NA-02",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00011",
+   "model": "PP3500",
+   "site_id": "S-NA-02",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00012",
+   "model": "PP3500",
+   "site_id": "S-NA-02",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00013",
+   "model": "PP3500",
+   "site_id": "S-NA-03",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00014",
+   "model": "PP3500",
+   "site_id": "S-NA-03",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00015",
+   "model": "PP3500",
+   "site_id": "S-NA-03",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00016",
+   "model": "PP3500",
+   "site_id": "S-NA-03",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00017",
+   "model": "PP3000",
+   "site_id": "S-NA-03",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00018",
+   "model": "PP3500",
+   "site_id": "S-NA-03",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00019",
+   "model": "PP3500",
+   "site_id": "S-NA-03",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00020",
+   "model": "PP3500",
+   "site_id": "S-NA-03",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00021",
+   "model": "PP3000",
+   "site_id": "S-NA-03",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00022",
+   "model": "PP3500",
+   "site_id": "S-NA-03",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00023",
+   "model": "PP3500",
+   "site_id": "S-NA-03",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00024",
+   "model": "PP3500",
+   "site_id": "S-NA-03",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00025",
+   "model": "PP3500",
+   "site_id": "S-NA-03",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00026",
+   "model": "PP3500",
+   "site_id": "S-NA-03",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00027",
+   "model": "PP3500",
+   "site_id": "S-NA-03",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00028",
+   "model": "PP3000",
+   "site_id": "S-NA-03",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00029",
+   "model": "PP3500",
+   "site_id": "S-NA-04",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00030",
+   "model": "PP3000",
+   "site_id": "S-NA-04",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00031",
+   "model": "PP3500",
+   "site_id": "S-NA-04",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00032",
+   "model": "PP3500",
+   "site_id": "S-NA-04",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00033",
+   "model": "PP3500",
+   "site_id": "S-NA-04",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00034",
+   "model": "PP3500",
+   "site_id": "S-NA-04",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00035",
+   "model": "PP3000",
+   "site_id": "S-NA-04",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00036",
+   "model": "PP3500",
+   "site_id": "S-NA-04",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00037",
+   "model": "PP3500",
+   "site_id": "S-NA-04",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00038",
+   "model": "PP3500",
+   "site_id": "S-NA-04",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00039",
+   "model": "PP3500",
+   "site_id": "S-NA-05",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00040",
+   "model": "PP3500",
+   "site_id": "S-NA-05",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00041",
+   "model": "PP3500",
+   "site_id": "S-NA-05",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00042",
+   "model": "PP3500",
+   "site_id": "S-NA-05",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00043",
+   "model": "PP3500",
+   "site_id": "S-NA-05",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00044",
+   "model": "PP3500",
+   "site_id": "S-NA-05",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00045",
+   "model": "PP3500",
+   "site_id": "S-NA-05",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00046",
+   "model": "PP3500",
+   "site_id": "S-NA-05",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00047",
+   "model": "PP3500",
+   "site_id": "S-NA-05",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00048",
+   "model": "PP3500",
+   "site_id": "S-NA-05",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00049",
+   "model": "PP3000",
+   "site_id": "S-NA-06",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00050",
+   "model": "PP3500",
+   "site_id": "S-NA-06",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00051",
+   "model": "PP3000",
+   "site_id": "S-NA-06",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00052",
+   "model": "PP3500",
+   "site_id": "S-NA-06",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00053",
+   "model": "PP3000",
+   "site_id": "S-NA-06",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00054",
+   "model": "PP3500",
+   "site_id": "S-NA-06",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00055",
+   "model": "PP3500",
+   "site_id": "S-NA-06",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00056",
+   "model": "PP3000",
+   "site_id": "S-NA-06",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00057",
+   "model": "PP3500",
+   "site_id": "S-NA-06",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00058",
+   "model": "PP3500",
+   "site_id": "S-NA-06",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00059",
+   "model": "PP3500",
+   "site_id": "S-NA-07",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00060",
+   "model": "PP3500",
+   "site_id": "S-NA-07",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00061",
+   "model": "PP3500",
+   "site_id": "S-NA-07",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00062",
+   "model": "PP3000",
+   "site_id": "S-NA-07",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00063",
+   "model": "PP3500",
+   "site_id": "S-NA-07",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00064",
+   "model": "PP3500",
+   "site_id": "S-NA-07",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00065",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00066",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00067",
+   "model": "PP3000",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00068",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00069",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00070",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00071",
+   "model": "PP3000",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00072",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00073",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00074",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00075",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00076",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00077",
+   "model": "PP3000",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00078",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00079",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00080",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00081",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00082",
+   "model": "PP3000",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00083",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00084",
+   "model": "PP3000",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00085",
+   "model": "PP3000",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00086",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00087",
+   "model": "PP3000",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00088",
+   "model": "PP3000",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00089",
+   "model": "PP3000",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00090",
+   "model": "PP3000",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00091",
+   "model": "PP3000",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00092",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00093",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00094",
+   "model": "PP3000",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00095",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00096",
+   "model": "PP3000",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00097",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00098",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00099",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00100",
+   "model": "PP3000",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00101",
+   "model": "PP3000",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00102",
+   "model": "PP3000",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00103",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00104",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00105",
+   "model": "PP3500",
+   "site_id": "S-NA-08",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00106",
+   "model": "PP3500",
+   "site_id": "S-NA-09",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00107",
+   "model": "PP3500",
+   "site_id": "S-NA-09",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00108",
+   "model": "PP3500",
+   "site_id": "S-NA-09",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00109",
+   "model": "PP3500",
+   "site_id": "S-NA-09",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00110",
+   "model": "PP3500",
+   "site_id": "S-NA-09",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00111",
+   "model": "PP3500",
+   "site_id": "S-NA-09",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00112",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00113",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00114",
+   "model": "PP3000",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00115",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00116",
+   "model": "PP3000",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00117",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00118",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00119",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00120",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00121",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00122",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00123",
+   "model": "PP3000",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00124",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00125",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00126",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00127",
+   "model": "PP3000",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00128",
+   "model": "PP3000",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00129",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00130",
+   "model": "PP3000",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00131",
+   "model": "PP3000",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00132",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00133",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00134",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00135",
+   "model": "PP3000",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00136",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00137",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00138",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00139",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00140",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00141",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00142",
+   "model": "PP3000",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00143",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00144",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00145",
+   "model": "PP3000",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00146",
+   "model": "PP3000",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00147",
+   "model": "PP3000",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00148",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00149",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00150",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00151",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00152",
+   "model": "PP3500",
+   "site_id": "S-NA-10",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00153",
+   "model": "PP3000",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00154",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00155",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00156",
+   "model": "PP3000",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00157",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00158",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00159",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00160",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00161",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00162",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00163",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00164",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00165",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00166",
+   "model": "PP3000",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00167",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00168",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00169",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00170",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00171",
+   "model": "PP3000",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00172",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00173",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00174",
+   "model": "PP3000",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00175",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00176",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00177",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00178",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00179",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00180",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00181",
+   "model": "PP3500",
+   "site_id": "S-NA-11",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00182",
+   "model": "PP3500",
+   "site_id": "S-NA-12",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00183",
+   "model": "PP3500",
+   "site_id": "S-NA-12",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00184",
+   "model": "PP3500",
+   "site_id": "S-NA-12",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00185",
+   "model": "PP3500",
+   "site_id": "S-NA-12",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00186",
+   "model": "PP3500",
+   "site_id": "S-NA-12",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00187",
+   "model": "PP3500",
+   "site_id": "S-NA-12",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00188",
+   "model": "PP3500",
+   "site_id": "S-NA-13",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00189",
+   "model": "PP3500",
+   "site_id": "S-NA-13",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00190",
+   "model": "PP3500",
+   "site_id": "S-NA-13",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00191",
+   "model": "PP3500",
+   "site_id": "S-NA-13",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00192",
+   "model": "PP3500",
+   "site_id": "S-NA-13",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00193",
+   "model": "PP3500",
+   "site_id": "S-NA-13",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00194",
+   "model": "PP3000",
+   "site_id": "S-NA-14",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00195",
+   "model": "PP3500",
+   "site_id": "S-NA-14",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00196",
+   "model": "PP3000",
+   "site_id": "S-NA-14",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00197",
+   "model": "PP3500",
+   "site_id": "S-NA-14",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00198",
+   "model": "PP3500",
+   "site_id": "S-NA-14",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00199",
+   "model": "PP3500",
+   "site_id": "S-NA-14",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00200",
+   "model": "PP3500",
+   "site_id": "S-NA-15",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00201",
+   "model": "PP3500",
+   "site_id": "S-NA-15",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00202",
+   "model": "PP3500",
+   "site_id": "S-NA-15",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00203",
+   "model": "PP3000",
+   "site_id": "S-NA-15",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00204",
+   "model": "PP3500",
+   "site_id": "S-NA-15",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00205",
+   "model": "PP3500",
+   "site_id": "S-NA-15",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00206",
+   "model": "PP3500",
+   "site_id": "S-NA-15",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00207",
+   "model": "PP3500",
+   "site_id": "S-NA-15",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00208",
+   "model": "PP3000",
+   "site_id": "S-NA-15",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00209",
+   "model": "PP3500",
+   "site_id": "S-NA-15",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00210",
+   "model": "PP3500",
+   "site_id": "S-NA-16",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00211",
+   "model": "PP3500",
+   "site_id": "S-NA-16",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00212",
+   "model": "PP3500",
+   "site_id": "S-NA-16",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00213",
+   "model": "PP3500",
+   "site_id": "S-NA-16",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00214",
+   "model": "PP3500",
+   "site_id": "S-NA-16",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00215",
+   "model": "PP3000",
+   "site_id": "S-NA-16",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00216",
+   "model": "PP3500",
+   "site_id": "S-NA-16",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00217",
+   "model": "PP3500",
+   "site_id": "S-NA-16",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00218",
+   "model": "PP3000",
+   "site_id": "S-NA-16",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00219",
+   "model": "PP3500",
+   "site_id": "S-NA-16",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00220",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00221",
+   "model": "PP3000",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00222",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00223",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00224",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00225",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00226",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00227",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00228",
+   "model": "PP3000",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00229",
+   "model": "PP3000",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00230",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00231",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00232",
+   "model": "PP3000",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00233",
+   "model": "PP3000",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00234",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00235",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00236",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00237",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00238",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00239",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00240",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00241",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00242",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00243",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00244",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00245",
+   "model": "PP3000",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00246",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00247",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00248",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00249",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00250",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00251",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00252",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00253",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00254",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00255",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00256",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00257",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00258",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00259",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00260",
+   "model": "PP3500",
+   "site_id": "S-NA-17",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00261",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00262",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00263",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00264",
+   "model": "PP3000",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00265",
+   "model": "PP3000",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00266",
+   "model": "PP3000",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00267",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00268",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00269",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00270",
+   "model": "PP3000",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00271",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00272",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00273",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00274",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00275",
+   "model": "PP3000",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00276",
+   "model": "PP3000",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00277",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00278",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00279",
+   "model": "PP3000",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00280",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00281",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00282",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00283",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00284",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00285",
+   "model": "PP3000",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00286",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00287",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00288",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00289",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00290",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00291",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00292",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00293",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00294",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00295",
+   "model": "PP3000",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00296",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00297",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00298",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00299",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00300",
+   "model": "PP3000",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00301",
+   "model": "PP3500",
+   "site_id": "S-NA-18",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00302",
+   "model": "PP3000",
+   "site_id": "S-NA-19",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00303",
+   "model": "PP3500",
+   "site_id": "S-NA-19",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00304",
+   "model": "PP3000",
+   "site_id": "S-NA-19",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00305",
+   "model": "PP3500",
+   "site_id": "S-NA-19",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00306",
+   "model": "PP3500",
+   "site_id": "S-NA-19",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00307",
+   "model": "PP3500",
+   "site_id": "S-NA-19",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00308",
+   "model": "PP3000",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00309",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00310",
+   "model": "PP3000",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00311",
+   "model": "PP3000",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00312",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00313",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00314",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00315",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00316",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00317",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00318",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00319",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00320",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00321",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00322",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00323",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00324",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00325",
+   "model": "PP3000",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00326",
+   "model": "PP3000",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00327",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00328",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00329",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00330",
+   "model": "PP3000",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00331",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00332",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00333",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00334",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00335",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00336",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00337",
+   "model": "PP3000",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00338",
+   "model": "PP3000",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00339",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00340",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00341",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00342",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00343",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00344",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00345",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00346",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00347",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00348",
+   "model": "PP3500",
+   "site_id": "S-NA-20",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00349",
+   "model": "PP3000",
+   "site_id": "S-NA-21",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00350",
+   "model": "PP3500",
+   "site_id": "S-NA-21",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00351",
+   "model": "PP3500",
+   "site_id": "S-NA-21",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00352",
+   "model": "PP3000",
+   "site_id": "S-NA-21",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00353",
+   "model": "PP3000",
+   "site_id": "S-NA-21",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00354",
+   "model": "PP3500",
+   "site_id": "S-NA-21",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00355",
+   "model": "PP3500",
+   "site_id": "S-NA-21",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00356",
+   "model": "PP3500",
+   "site_id": "S-NA-21",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00357",
+   "model": "PP3500",
+   "site_id": "S-NA-21",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00358",
+   "model": "PP3500",
+   "site_id": "S-NA-21",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00359",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00360",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00361",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00362",
+   "model": "PP3000",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00363",
+   "model": "PP3000",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00364",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00365",
+   "model": "PP3000",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00366",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00367",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00368",
+   "model": "PP3000",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00369",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00370",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00371",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00372",
+   "model": "PP3000",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00373",
+   "model": "PP3000",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00374",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00375",
+   "model": "PP3000",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00376",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00377",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00378",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00379",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00380",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00381",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00382",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00383",
+   "model": "PP3000",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00384",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00385",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00386",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00387",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00388",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00389",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00390",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00391",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00392",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00393",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00394",
+   "model": "PP3000",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00395",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00396",
+   "model": "PP3000",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00397",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00398",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00399",
+   "model": "PP3500",
+   "site_id": "S-NA-22",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00400",
+   "model": "PP3500",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00401",
+   "model": "PP3000",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00402",
+   "model": "PP3500",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00403",
+   "model": "PP3500",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00404",
+   "model": "PP3000",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00405",
+   "model": "PP3000",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00406",
+   "model": "PP3500",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00407",
+   "model": "PP3500",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00408",
+   "model": "PP3000",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00409",
+   "model": "PP3000",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00410",
+   "model": "PP3500",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00411",
+   "model": "PP3500",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00412",
+   "model": "PP3500",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00413",
+   "model": "PP3500",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00414",
+   "model": "PP3500",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00415",
+   "model": "PP3000",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00416",
+   "model": "PP3500",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00417",
+   "model": "PP3500",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00418",
+   "model": "PP3500",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00419",
+   "model": "PP3500",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00420",
+   "model": "PP3000",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00421",
+   "model": "PP3500",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00422",
+   "model": "PP3500",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00423",
+   "model": "PP3500",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00424",
+   "model": "PP3500",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00425",
+   "model": "PP3500",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00426",
+   "model": "PP3500",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00427",
+   "model": "PP3500",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00428",
+   "model": "PP3500",
+   "site_id": "S-NA-23",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00429",
+   "model": "PP3500",
+   "site_id": "S-NA-24",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00430",
+   "model": "PP3500",
+   "site_id": "S-NA-24",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00431",
+   "model": "PP3500",
+   "site_id": "S-NA-24",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00432",
+   "model": "PP3500",
+   "site_id": "S-NA-24",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00433",
+   "model": "PP3500",
+   "site_id": "S-NA-24",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00434",
+   "model": "PP3500",
+   "site_id": "S-NA-24",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00435",
+   "model": "PP3000",
+   "site_id": "S-NA-24",
+   "region": "NA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00436",
+   "model": "PP3500",
+   "site_id": "S-NA-24",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00437",
+   "model": "PP3500",
+   "site_id": "S-NA-24",
+   "region": "NA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00438",
+   "model": "PP3500",
+   "site_id": "S-NA-24",
+   "region": "NA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00439",
+   "model": "PP3500",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00440",
+   "model": "PP3500",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00441",
+   "model": "PP3000",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00442",
+   "model": "PP3500",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00443",
+   "model": "PP3500",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00444",
+   "model": "PP3000",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00445",
+   "model": "PP3500",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00446",
+   "model": "PP3500",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00447",
+   "model": "PP3500",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00448",
+   "model": "PP3500",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00449",
+   "model": "PP3500",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00450",
+   "model": "PP3500",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00451",
+   "model": "PP3500",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00452",
+   "model": "PP3000",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00453",
+   "model": "PP3500",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00454",
+   "model": "PP3000",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00455",
+   "model": "PP3000",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00456",
+   "model": "PP3500",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00457",
+   "model": "PP3000",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00458",
+   "model": "PP3500",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00459",
+   "model": "PP3500",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00460",
+   "model": "PP3500",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00461",
+   "model": "PP3500",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00462",
+   "model": "PP3500",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00463",
+   "model": "PP3500",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00464",
+   "model": "PP3000",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00465",
+   "model": "PP3500",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00466",
+   "model": "PP3000",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00467",
+   "model": "PP3500",
+   "site_id": "S-EMEA-01",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00468",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00469",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00470",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00471",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00472",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00473",
+   "model": "PP3000",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00474",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00475",
+   "model": "PP3000",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00476",
+   "model": "PP3000",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00477",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00478",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00479",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00480",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00481",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00482",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00483",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00484",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00485",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00486",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00487",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00488",
+   "model": "PP3000",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00489",
+   "model": "PP3000",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00490",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00491",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00492",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00493",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00494",
+   "model": "PP3000",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00495",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00496",
+   "model": "PP3000",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00497",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00498",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00499",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00500",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00501",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00502",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00503",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00504",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00505",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00506",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00507",
+   "model": "PP3500",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00508",
+   "model": "PP3000",
+   "site_id": "S-EMEA-02",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00509",
+   "model": "PP3500",
+   "site_id": "S-EMEA-03",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00510",
+   "model": "PP3000",
+   "site_id": "S-EMEA-03",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00511",
+   "model": "PP3500",
+   "site_id": "S-EMEA-03",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00512",
+   "model": "PP3500",
+   "site_id": "S-EMEA-03",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00513",
+   "model": "PP3500",
+   "site_id": "S-EMEA-03",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00514",
+   "model": "PP3000",
+   "site_id": "S-EMEA-03",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00515",
+   "model": "PP3000",
+   "site_id": "S-EMEA-03",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00516",
+   "model": "PP3500",
+   "site_id": "S-EMEA-03",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00517",
+   "model": "PP3500",
+   "site_id": "S-EMEA-03",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00518",
+   "model": "PP3500",
+   "site_id": "S-EMEA-03",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00519",
+   "model": "PP3500",
+   "site_id": "S-EMEA-03",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00520",
+   "model": "PP3500",
+   "site_id": "S-EMEA-03",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00521",
+   "model": "PP3000",
+   "site_id": "S-EMEA-03",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00522",
+   "model": "PP3000",
+   "site_id": "S-EMEA-03",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00523",
+   "model": "PP3500",
+   "site_id": "S-EMEA-03",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00524",
+   "model": "PP3500",
+   "site_id": "S-EMEA-03",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00525",
+   "model": "PP3000",
+   "site_id": "S-EMEA-04",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00526",
+   "model": "PP3500",
+   "site_id": "S-EMEA-04",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00527",
+   "model": "PP3500",
+   "site_id": "S-EMEA-04",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00528",
+   "model": "PP3500",
+   "site_id": "S-EMEA-04",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00529",
+   "model": "PP3500",
+   "site_id": "S-EMEA-04",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00530",
+   "model": "PP3500",
+   "site_id": "S-EMEA-04",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00531",
+   "model": "PP3000",
+   "site_id": "S-EMEA-05",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00532",
+   "model": "PP3500",
+   "site_id": "S-EMEA-05",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00533",
+   "model": "PP3500",
+   "site_id": "S-EMEA-05",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00534",
+   "model": "PP3500",
+   "site_id": "S-EMEA-05",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00535",
+   "model": "PP3500",
+   "site_id": "S-EMEA-05",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00536",
+   "model": "PP3000",
+   "site_id": "S-EMEA-05",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00537",
+   "model": "PP3500",
+   "site_id": "S-EMEA-05",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00538",
+   "model": "PP3500",
+   "site_id": "S-EMEA-05",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00539",
+   "model": "PP3500",
+   "site_id": "S-EMEA-05",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00540",
+   "model": "PP3000",
+   "site_id": "S-EMEA-05",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00541",
+   "model": "PP3500",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00542",
+   "model": "PP3000",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00543",
+   "model": "PP3500",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00544",
+   "model": "PP3000",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00545",
+   "model": "PP3500",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00546",
+   "model": "PP3000",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00547",
+   "model": "PP3500",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00548",
+   "model": "PP3000",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00549",
+   "model": "PP3500",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00550",
+   "model": "PP3500",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00551",
+   "model": "PP3000",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00552",
+   "model": "PP3500",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00553",
+   "model": "PP3500",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00554",
+   "model": "PP3000",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00555",
+   "model": "PP3500",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00556",
+   "model": "PP3500",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00557",
+   "model": "PP3000",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00558",
+   "model": "PP3500",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00559",
+   "model": "PP3500",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00560",
+   "model": "PP3500",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00561",
+   "model": "PP3500",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00562",
+   "model": "PP3500",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00563",
+   "model": "PP3500",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00564",
+   "model": "PP3500",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00565",
+   "model": "PP3500",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00566",
+   "model": "PP3500",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00567",
+   "model": "PP3000",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00568",
+   "model": "PP3500",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00569",
+   "model": "PP3500",
+   "site_id": "S-EMEA-06",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00570",
+   "model": "PP3000",
+   "site_id": "S-EMEA-07",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00571",
+   "model": "PP3500",
+   "site_id": "S-EMEA-07",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00572",
+   "model": "PP3500",
+   "site_id": "S-EMEA-07",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00573",
+   "model": "PP3500",
+   "site_id": "S-EMEA-07",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00574",
+   "model": "PP3000",
+   "site_id": "S-EMEA-07",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00575",
+   "model": "PP3000",
+   "site_id": "S-EMEA-07",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00576",
+   "model": "PP3500",
+   "site_id": "S-EMEA-07",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00577",
+   "model": "PP3500",
+   "site_id": "S-EMEA-07",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00578",
+   "model": "PP3000",
+   "site_id": "S-EMEA-07",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00579",
+   "model": "PP3500",
+   "site_id": "S-EMEA-07",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00580",
+   "model": "PP3500",
+   "site_id": "S-EMEA-07",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00581",
+   "model": "PP3000",
+   "site_id": "S-EMEA-07",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00582",
+   "model": "PP3500",
+   "site_id": "S-EMEA-07",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00583",
+   "model": "PP3000",
+   "site_id": "S-EMEA-07",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00584",
+   "model": "PP3500",
+   "site_id": "S-EMEA-07",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00585",
+   "model": "PP3500",
+   "site_id": "S-EMEA-07",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00586",
+   "model": "PP3500",
+   "site_id": "S-EMEA-08",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00587",
+   "model": "PP3000",
+   "site_id": "S-EMEA-08",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00588",
+   "model": "PP3500",
+   "site_id": "S-EMEA-08",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00589",
+   "model": "PP3500",
+   "site_id": "S-EMEA-08",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00590",
+   "model": "PP3500",
+   "site_id": "S-EMEA-08",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00591",
+   "model": "PP3500",
+   "site_id": "S-EMEA-08",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00592",
+   "model": "PP3500",
+   "site_id": "S-EMEA-08",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00593",
+   "model": "PP3500",
+   "site_id": "S-EMEA-08",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00594",
+   "model": "PP3500",
+   "site_id": "S-EMEA-08",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00595",
+   "model": "PP3500",
+   "site_id": "S-EMEA-08",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00596",
+   "model": "PP3500",
+   "site_id": "S-EMEA-08",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00597",
+   "model": "PP3500",
+   "site_id": "S-EMEA-08",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00598",
+   "model": "PP3500",
+   "site_id": "S-EMEA-08",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00599",
+   "model": "PP3000",
+   "site_id": "S-EMEA-08",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00600",
+   "model": "PP3500",
+   "site_id": "S-EMEA-08",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00601",
+   "model": "PP3000",
+   "site_id": "S-EMEA-08",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00602",
+   "model": "PP3500",
+   "site_id": "S-EMEA-09",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00603",
+   "model": "PP3500",
+   "site_id": "S-EMEA-09",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00604",
+   "model": "PP3500",
+   "site_id": "S-EMEA-09",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00605",
+   "model": "PP3500",
+   "site_id": "S-EMEA-09",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00606",
+   "model": "PP3500",
+   "site_id": "S-EMEA-09",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00607",
+   "model": "PP3500",
+   "site_id": "S-EMEA-09",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00608",
+   "model": "PP3500",
+   "site_id": "S-EMEA-09",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00609",
+   "model": "PP3500",
+   "site_id": "S-EMEA-09",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00610",
+   "model": "PP3500",
+   "site_id": "S-EMEA-09",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00611",
+   "model": "PP3500",
+   "site_id": "S-EMEA-09",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00612",
+   "model": "PP3500",
+   "site_id": "S-EMEA-10",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00613",
+   "model": "PP3500",
+   "site_id": "S-EMEA-10",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00614",
+   "model": "PP3500",
+   "site_id": "S-EMEA-10",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00615",
+   "model": "PP3000",
+   "site_id": "S-EMEA-10",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00616",
+   "model": "PP3000",
+   "site_id": "S-EMEA-10",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00617",
+   "model": "PP3500",
+   "site_id": "S-EMEA-10",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00618",
+   "model": "PP3500",
+   "site_id": "S-EMEA-10",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00619",
+   "model": "PP3500",
+   "site_id": "S-EMEA-10",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00620",
+   "model": "PP3500",
+   "site_id": "S-EMEA-10",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00621",
+   "model": "PP3500",
+   "site_id": "S-EMEA-10",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00622",
+   "model": "PP3500",
+   "site_id": "S-EMEA-11",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00623",
+   "model": "PP3500",
+   "site_id": "S-EMEA-11",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00624",
+   "model": "PP3500",
+   "site_id": "S-EMEA-11",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00625",
+   "model": "PP3500",
+   "site_id": "S-EMEA-11",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00626",
+   "model": "PP3500",
+   "site_id": "S-EMEA-11",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00627",
+   "model": "PP3000",
+   "site_id": "S-EMEA-11",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00628",
+   "model": "PP3500",
+   "site_id": "S-EMEA-11",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00629",
+   "model": "PP3500",
+   "site_id": "S-EMEA-11",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00630",
+   "model": "PP3000",
+   "site_id": "S-EMEA-11",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00631",
+   "model": "PP3000",
+   "site_id": "S-EMEA-11",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00632",
+   "model": "PP3500",
+   "site_id": "S-EMEA-11",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00633",
+   "model": "PP3500",
+   "site_id": "S-EMEA-11",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00634",
+   "model": "PP3500",
+   "site_id": "S-EMEA-11",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00635",
+   "model": "PP3000",
+   "site_id": "S-EMEA-11",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00636",
+   "model": "PP3500",
+   "site_id": "S-EMEA-11",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00637",
+   "model": "PP3500",
+   "site_id": "S-EMEA-11",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00638",
+   "model": "PP3500",
+   "site_id": "S-EMEA-12",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00639",
+   "model": "PP3000",
+   "site_id": "S-EMEA-12",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00640",
+   "model": "PP3000",
+   "site_id": "S-EMEA-12",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00641",
+   "model": "PP3500",
+   "site_id": "S-EMEA-12",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00642",
+   "model": "PP3500",
+   "site_id": "S-EMEA-12",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00643",
+   "model": "PP3500",
+   "site_id": "S-EMEA-12",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00644",
+   "model": "PP3500",
+   "site_id": "S-EMEA-13",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00645",
+   "model": "PP3500",
+   "site_id": "S-EMEA-13",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00646",
+   "model": "PP3500",
+   "site_id": "S-EMEA-13",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00647",
+   "model": "PP3500",
+   "site_id": "S-EMEA-13",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00648",
+   "model": "PP3000",
+   "site_id": "S-EMEA-13",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00649",
+   "model": "PP3000",
+   "site_id": "S-EMEA-13",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00650",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00651",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00652",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00653",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00654",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00655",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00656",
+   "model": "PP3000",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00657",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00658",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00659",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00660",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00661",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00662",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00663",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00664",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00665",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00666",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00667",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00668",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00669",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00670",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00671",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00672",
+   "model": "PP3000",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00673",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00674",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00675",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00676",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00677",
+   "model": "PP3500",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00678",
+   "model": "PP3000",
+   "site_id": "S-EMEA-14",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00679",
+   "model": "PP3000",
+   "site_id": "S-EMEA-15",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00680",
+   "model": "PP3000",
+   "site_id": "S-EMEA-15",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00681",
+   "model": "PP3500",
+   "site_id": "S-EMEA-15",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00682",
+   "model": "PP3000",
+   "site_id": "S-EMEA-15",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00683",
+   "model": "PP3500",
+   "site_id": "S-EMEA-15",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00684",
+   "model": "PP3500",
+   "site_id": "S-EMEA-15",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00685",
+   "model": "PP3500",
+   "site_id": "S-EMEA-16",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00686",
+   "model": "PP3500",
+   "site_id": "S-EMEA-16",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00687",
+   "model": "PP3500",
+   "site_id": "S-EMEA-16",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00688",
+   "model": "PP3500",
+   "site_id": "S-EMEA-16",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00689",
+   "model": "PP3000",
+   "site_id": "S-EMEA-16",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00690",
+   "model": "PP3500",
+   "site_id": "S-EMEA-16",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00691",
+   "model": "PP3000",
+   "site_id": "S-EMEA-16",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00692",
+   "model": "PP3500",
+   "site_id": "S-EMEA-16",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00693",
+   "model": "PP3500",
+   "site_id": "S-EMEA-16",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00694",
+   "model": "PP3500",
+   "site_id": "S-EMEA-16",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00695",
+   "model": "PP3500",
+   "site_id": "S-EMEA-16",
+   "region": "EMEA",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00696",
+   "model": "PP3000",
+   "site_id": "S-EMEA-16",
+   "region": "EMEA",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00697",
+   "model": "PP3500",
+   "site_id": "S-EMEA-16",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00698",
+   "model": "PP3500",
+   "site_id": "S-EMEA-16",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00699",
+   "model": "PP3500",
+   "site_id": "S-EMEA-16",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00700",
+   "model": "PP3500",
+   "site_id": "S-EMEA-16",
+   "region": "EMEA",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00701",
+   "model": "PP3500",
+   "site_id": "S-APAC-01",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00702",
+   "model": "PP3500",
+   "site_id": "S-APAC-01",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00703",
+   "model": "PP3500",
+   "site_id": "S-APAC-01",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00704",
+   "model": "PP3000",
+   "site_id": "S-APAC-01",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00705",
+   "model": "PP3500",
+   "site_id": "S-APAC-01",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00706",
+   "model": "PP3500",
+   "site_id": "S-APAC-01",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00707",
+   "model": "PP3500",
+   "site_id": "S-APAC-01",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00708",
+   "model": "PP3500",
+   "site_id": "S-APAC-01",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00709",
+   "model": "PP3500",
+   "site_id": "S-APAC-01",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00710",
+   "model": "PP3500",
+   "site_id": "S-APAC-01",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00711",
+   "model": "PP3500",
+   "site_id": "S-APAC-01",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00712",
+   "model": "PP3500",
+   "site_id": "S-APAC-01",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00713",
+   "model": "PP3500",
+   "site_id": "S-APAC-01",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00714",
+   "model": "PP3500",
+   "site_id": "S-APAC-01",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00715",
+   "model": "PP3000",
+   "site_id": "S-APAC-01",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00716",
+   "model": "PP3500",
+   "site_id": "S-APAC-01",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00717",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00718",
+   "model": "PP3000",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00719",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00720",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00721",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00722",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00723",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00724",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00725",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00726",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00727",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00728",
+   "model": "PP3000",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00729",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00730",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00731",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00732",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00733",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00734",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00735",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00736",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00737",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00738",
+   "model": "PP3000",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00739",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00740",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00741",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00742",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00743",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00744",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00745",
+   "model": "PP3000",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00746",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00747",
+   "model": "PP3000",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00748",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00749",
+   "model": "PP3000",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00750",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00751",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00752",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00753",
+   "model": "PP3000",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00754",
+   "model": "PP3000",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00755",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00756",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00757",
+   "model": "PP3500",
+   "site_id": "S-APAC-02",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00758",
+   "model": "PP3500",
+   "site_id": "S-APAC-03",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00759",
+   "model": "PP3500",
+   "site_id": "S-APAC-03",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00760",
+   "model": "PP3000",
+   "site_id": "S-APAC-03",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00761",
+   "model": "PP3500",
+   "site_id": "S-APAC-03",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00762",
+   "model": "PP3500",
+   "site_id": "S-APAC-03",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00763",
+   "model": "PP3000",
+   "site_id": "S-APAC-03",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00764",
+   "model": "PP3000",
+   "site_id": "S-APAC-03",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00765",
+   "model": "PP3000",
+   "site_id": "S-APAC-03",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00766",
+   "model": "PP3500",
+   "site_id": "S-APAC-03",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00767",
+   "model": "PP3500",
+   "site_id": "S-APAC-03",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00768",
+   "model": "PP3500",
+   "site_id": "S-APAC-03",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00769",
+   "model": "PP3500",
+   "site_id": "S-APAC-03",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00770",
+   "model": "PP3500",
+   "site_id": "S-APAC-03",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00771",
+   "model": "PP3500",
+   "site_id": "S-APAC-03",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00772",
+   "model": "PP3000",
+   "site_id": "S-APAC-03",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00773",
+   "model": "PP3500",
+   "site_id": "S-APAC-03",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00774",
+   "model": "PP3500",
+   "site_id": "S-APAC-04",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00775",
+   "model": "PP3500",
+   "site_id": "S-APAC-04",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00776",
+   "model": "PP3500",
+   "site_id": "S-APAC-04",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00777",
+   "model": "PP3500",
+   "site_id": "S-APAC-04",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00778",
+   "model": "PP3500",
+   "site_id": "S-APAC-04",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00779",
+   "model": "PP3500",
+   "site_id": "S-APAC-04",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00780",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00781",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00782",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00783",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00784",
+   "model": "PP3000",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00785",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00786",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00787",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00788",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00789",
+   "model": "PP3000",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00790",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00791",
+   "model": "PP3000",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00792",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00793",
+   "model": "PP3000",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00794",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00795",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00796",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00797",
+   "model": "PP3000",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00798",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00799",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00800",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00801",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00802",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00803",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00804",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00805",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00806",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00807",
+   "model": "PP3000",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00808",
+   "model": "PP3500",
+   "site_id": "S-APAC-05",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00809",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00810",
+   "model": "PP3000",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00811",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00812",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00813",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00814",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00815",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00816",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00817",
+   "model": "PP3000",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00818",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00819",
+   "model": "PP3000",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00820",
+   "model": "PP3000",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00821",
+   "model": "PP3000",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00822",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00823",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00824",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00825",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00826",
+   "model": "PP3000",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00827",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00828",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00829",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00830",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00831",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00832",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00833",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00834",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00835",
+   "model": "PP3000",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00836",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00837",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00838",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00839",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00840",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00841",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00842",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00843",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00844",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00845",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00846",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00847",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00848",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00849",
+   "model": "PP3500",
+   "site_id": "S-APAC-06",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00850",
+   "model": "PP3500",
+   "site_id": "S-APAC-07",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00851",
+   "model": "PP3500",
+   "site_id": "S-APAC-07",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00852",
+   "model": "PP3000",
+   "site_id": "S-APAC-07",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00853",
+   "model": "PP3500",
+   "site_id": "S-APAC-07",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00854",
+   "model": "PP3000",
+   "site_id": "S-APAC-07",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00855",
+   "model": "PP3000",
+   "site_id": "S-APAC-07",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00856",
+   "model": "PP3500",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00857",
+   "model": "PP3500",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00858",
+   "model": "PP3500",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00859",
+   "model": "PP3500",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00860",
+   "model": "PP3500",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00861",
+   "model": "PP3000",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00862",
+   "model": "PP3500",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00863",
+   "model": "PP3500",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00864",
+   "model": "PP3500",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00865",
+   "model": "PP3500",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00866",
+   "model": "PP3500",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00867",
+   "model": "PP3500",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00868",
+   "model": "PP3500",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00869",
+   "model": "PP3000",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00870",
+   "model": "PP3500",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00871",
+   "model": "PP3000",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00872",
+   "model": "PP3500",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00873",
+   "model": "PP3500",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00874",
+   "model": "PP3000",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00875",
+   "model": "PP3000",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.1",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00876",
+   "model": "PP3500",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00877",
+   "model": "PP3500",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00878",
+   "model": "PP3000",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00879",
+   "model": "PP3500",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00880",
+   "model": "PP3500",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00881",
+   "model": "PP3500",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.4.0",
+   "connected": "yes",
+   "last_seen": "2026-07-21"
+  },
+  {
+   "device_serial": "PE-00882",
+   "model": "PP3000",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "-",
+   "firmware_version": "2.9.3",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00883",
+   "model": "PP3500",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "A",
+   "firmware_version": "3.2.0",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  },
+  {
+   "device_serial": "PE-00884",
+   "model": "PP3500",
+   "site_id": "S-APAC-08",
+   "region": "APAC",
+   "hw_rev": "B",
+   "firmware_version": "3.1.2",
+   "connected": "no",
+   "last_seen": "2026-06-30"
+  }
+ ]
+}
