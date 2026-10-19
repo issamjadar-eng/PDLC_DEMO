@@ -1,0 +1,410 @@
+{
+  "meta": {
+    "disclaimer": "Do not rely on openFDA to make decisions regarding medical care. While we make every effort to ensure that data is accurate, you should assume all results are unvalidated. We may limit or otherwise restrict your access to the API in line with our Terms of Service.",
+    "terms": "https://open.fda.gov/terms/",
+    "license": "https://open.fda.gov/license/",
+    "last_updated": "2026-10-07"
+  },
+  "results": [
+    {
+      "term": "CAREFUSION SD",
+      "count": 56040
+    },
+    {
+      "term": "CAREFUSION 303, INC.",
+      "count": 13354
+    },
+    {
+      "term": "BAXTER HEALTHCARE CORPORATION",
+      "count": 8747
+    },
+    {
+      "term": "ICU MEDICAL, INC.",
+      "count": 7606
+    },
+    {
+      "term": "SMITHS MEDICAL ASD, INC.",
+      "count": 7303
+    },
+    {
+      "term": "MEDTRONIC PUERTO RICO OPERATIONS CO.",
+      "count": 5481
+    },
+    {
+      "term": "FRESENIUS KABI USA, LLC",
+      "count": 2406
+    },
+    {
+      "term": "FRESENIUS KABI USA LLC",
+      "count": 2189
+    },
+    {
+      "term": "ZYNO MEDICAL, LLC",
+      "count": 1735
+    },
+    {
+      "term": "SMITHS MEDICAL ASD, INC",
+      "count": 1669
+    },
+    {
+      "term": "BAXTER INTERNATIONAL INC.",
+      "count": 1560
+    },
+    {
+      "term": "FRESENIUS VIAL S.A.S.",
+      "count": 1509
+    },
+    {
+      "term": "FRESENIUS VIAL S.A.S",
+      "count": 1080
+    },
+    {
+      "term": "ICU Medical, Inc.",
+      "count": 944
+    },
+    {
+      "term": "ICU Medical Costa Rica Ltd.",
+      "count": 664
+    },
+    {
+      "term": "ICU MEDICAL, INC",
+      "count": 594
+    },
+    {
+      "term": "SMITH¿S MEDICAL ASD, INC.",
+      "count": 583
+    },
+    {
+      "term": "ICU MEDICAL COSTA RICA LTD.",
+      "count": 546
+    },
+    {
+      "term": "B BRAUN MELSUNGEN AG",
+      "count": 477
+    },
+    {
+      "term": "MOOG MEDICAL DEVICES GROUP",
+      "count": 448
+    },
+    {
+      "term": "Medtronic Puerto Rico Operations Co.",
+      "count": 415
+    },
+    {
+      "term": "Fresenius Kabi USA LLC",
+      "count": 410
+    },
+    {
+      "term": "B. BRAUN MELSUNGEN AG",
+      "count": 350
+    },
+    {
+      "term": "B. BRAUN AVITUM AG",
+      "count": 248
+    },
+    {
+      "term": "ICU MEDICAL",
+      "count": 225
+    },
+    {
+      "term": "MEDTRONIC MINIMED",
+      "count": 191
+    },
+    {
+      "term": "MOOG MEDICAL DEVICES",
+      "count": 182
+    },
+    {
+      "term": "MOOG COSTA RICA, SRL",
+      "count": 168
+    },
+    {
+      "term": "MOOG / ZEVEX, INC.",
+      "count": 144
+    },
+    {
+      "term": "EITAN MEDICAL LTD.",
+      "count": 143
+    },
+    {
+      "term": "",
+      "count": 120
+    },
+    {
+      "term": "ICU MEDICAL, INC., OAKDALE MN",
+      "count": 114
+    },
+    {
+      "term": "Zyno Medical, LLC",
+      "count": 113
+    },
+    {
+      "term": "RMS MEDICAL / KORU MEDICAL SYSTEMS, INC.",
+      "count": 96
+    },
+    {
+      "term": "KORU MEDICAL SYSTEMS, INC.",
+      "count": 82
+    },
+    {
+      "term": "B. BRAUN MEDICAL INC.",
+      "count": 74
+    },
+    {
+      "term": "SMITHS MEDICAL / ICU MEDICAL, INC.",
+      "count": 74
+    },
+    {
+      "term": "ZYNO MEDICAL LLC",
+      "count": 73
+    },
+    {
+      "term": "B Braun Melsungen AG",
+      "count": 72
+    },
+    {
+      "term": "BELMONT MEDICAL TECHNOLOGIES",
+      "count": 69
+    },
+    {
+      "term": "MILLYARD ADVANCED MEDICAL PRODUCTS, LLC",
+      "count": 66
+    },
+    {
+      "term": "ICU Medical, Inc",
+      "count": 64
+    },
+    {
+      "term": "SMITHS MEDICAL MD, INC",
+      "count": 58
+    },
+    {
+      "term": "RMS MEDICAL/KORU MEDICAL SYSTEMS, INC.",
+      "count": 50
+    },
+    {
+      "term": "RMS MEDICAL/ KORU MEDICAL SYSTEMS, INC.",
+      "count": 46
+    },
+    {
+      "term": "FRESENIUS KABI DEUTSCHLAND GMBH",
+      "count": 42
+    },
+    {
+      "term": "KORU MEDICAL SYSTEMS",
+      "count": 42
+    },
+    {
+      "term": "ZEVEX, INC.",
+      "count": 42
+    },
+    {
+      "term": "Eitan Medical Ltd.",
+      "count": 41
+    },
+    {
+      "term": "MOOG/ZEVEX, INC.",
+      "count": 37
+    },
+    {
+      "term": "SMITHS MEDICAL/ICU MEDICAL, INC.",
+      "count": 37
+    },
+    {
+      "term": "IRADIMED CORPORATION",
+      "count": 32
+    },
+    {
+      "term": "Millyard Advanced Medical Products, LLC",
+      "count": 31
+    },
+    {
+      "term": "PHILLIPS-MEDISIZE A/S",
+      "count": 28
+    },
+    {
+      "term": "B.BRAUN MELSUNGEN AG",
+      "count": 27
+    },
+    {
+      "term": "EITAN MEDICAL LTD",
+      "count": 27
+    },
+    {
+      "term": "ICU MEDICAL, INC./SMITHS MEDICAL",
+      "count": 25
+    },
+    {
+      "term": "ZEVEX, INC./MOOG, INC.",
+      "count": 22
+    },
+    {
+      "term": "RMS MEDICAL /KORU MEDICAL SYSTEMS, INC.",
+      "count": 21
+    },
+    {
+      "term": "BD/CAREFUSION 303, INC.",
+      "count": 19
+    },
+    {
+      "term": "SMITHS MEDICAL ASD, INC./ ICU MEDICAL, INC.",
+      "count": 18
+    },
+    {
+      "term": "UNKNOWN",
+      "count": 18
+    },
+    {
+      "term": "ZEVEX, INC./ MOOG, INC.",
+      "count": 18
+    },
+    {
+      "term": "BECTON DICKINSON INFUSION THERAPY SYSTEMS INC. S.A. DE C.V.",
+      "count": 17
+    },
+    {
+      "term": "UNK",
+      "count": 17
+    },
+    {
+      "term": "AVANOS MEDICAL INC.",
+      "count": 16
+    },
+    {
+      "term": "MOOG, INC. / ZEVEX, INC.",
+      "count": 16
+    },
+    {
+      "term": "KORU MEDICAL SYSTEMS, INC./RMS MEDICAL",
+      "count": 15
+    },
+    {
+      "term": "B. Braun Melsungen AG",
+      "count": 14
+    },
+    {
+      "term": "Moog Medical Devices",
+      "count": 14
+    },
+    {
+      "term": "Moog Medical Devices Group",
+      "count": 14
+    },
+    {
+      "term": "SMITHS MEDICAL ASD, INC. / ICU MEDICAL, INC.",
+      "count": 14
+    },
+    {
+      "term": "SMITHS MEDICAL INTERNATIONAL LTD.",
+      "count": 14
+    },
+    {
+      "term": "ZEVEX INC.",
+      "count": 14
+    },
+    {
+      "term": "INFUTRONIX, LLC",
+      "count": 13
+    },
+    {
+      "term": "SMITHS MEDICAL /ICU MEDICAL, INC.",
+      "count": 13
+    },
+    {
+      "term": "B.Braun Melsungen AG",
+      "count": 11
+    },
+    {
+      "term": "ICU Medical Nederland B.V.",
+      "count": 11
+    },
+    {
+      "term": "FRESENIUS KABI AG",
+      "count": 10
+    },
+    {
+      "term": "SMITHS MEDICAL MD, INC.",
+      "count": 10
+    },
+    {
+      "term": "Fresenius Kabi USA, LLC",
+      "count": 9
+    },
+    {
+      "term": "MOOG/ ZEVEX, INC.",
+      "count": 9
+    },
+    {
+      "term": "SMITHS HEALTHCARE MANUFACTURING S.A. DE C.V.",
+      "count": 9
+    },
+    {
+      "term": "BD/ CAREFUSION 303, INC.",
+      "count": 8
+    },
+    {
+      "term": "ICU MEDICAL HEALTHCARE MANUFACTURING S.A. DE C.V.",
+      "count": 8
+    },
+    {
+      "term": "ICU Medical Costa Rica Ltd",
+      "count": 8
+    },
+    {
+      "term": "MOOG COSTA RICA, SRL.",
+      "count": 8
+    },
+    {
+      "term": "MOOG, INC./ZEVEX, INC.",
+      "count": 8
+    },
+    {
+      "term": "Phillips-Medisize A/S",
+      "count": 8
+    },
+    {
+      "term": "SMITHS MEDICAL ASD",
+      "count": 8
+    },
+    {
+      "term": "SMITH¿S MEDICAL INTERNATIONAL LTD.",
+      "count": 8
+    },
+    {
+      "term": "BD / CAREFUSION 303, INC.",
+      "count": 7
+    },
+    {
+      "term": "MOOG COSTA RICA, SRL/ZEVEX, INC.",
+      "count": 7
+    },
+    {
+      "term": "ST PAUL",
+      "count": 7
+    },
+    {
+      "term": "BAXTER HEALTHCARE CORPORATION.",
+      "count": 6
+    },
+    {
+      "term": "CAREFUSION 303, INC./BECTON DICKINSON & COMPANY",
+      "count": 6
+    },
+    {
+      "term": "ICU MEDICAL DE MEXICO, S. DE R.L. DE C.V.",
+      "count": 6
+    },
+    {
+      "term": "ICU MEDICAL INC",
+      "count": 6
+    },
+    {
+      "term": "PUMP, INFUSION",
+      "count": 6
+    },
+    {
+      "term": "SMITHS MEDIAL ASD, INC.",
+      "count": 6
+    }
+  ]
+}

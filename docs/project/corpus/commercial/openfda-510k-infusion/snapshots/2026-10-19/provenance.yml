@@ -1,0 +1,37 @@
+dataset: commercial/openfda-510k-infusion
+snapshot: '2026-10-19'
+created_at: '2026-10-19T10:26:22+00:00'
+sources:
+- type: openfda
+  url: https://api.fda.gov/device/510k.json?search=product_code%3AFRN+AND+decision_date%3A%5B2021-01-01+TO+2030-01-01%5D&limit=100&skip=0
+  pages: 1
+  retrieved_at: '2026-10-19T10:26:22+00:00'
+  usage_rights: public-domain (openFDA — https://open.fda.gov/license/)
+  files:
+  - path: raw/page-001.json
+    sha256: c496a0119c462b9e94e85946cb53a16494ea2789ba05900bd49d1efe026ebf9b
+transforms:
+- step: normalize
+  spec:
+    type: openfda-flatten
+    output: records.csv
+    fields:
+    - k_number
+    - applicant
+    - device_name
+    - decision_code
+    - decision_date
+    - date_received
+    - product_code
+    - clearance_type
+    - openfda.device_class
+  outputs:
+  - path: normalized/records.csv
+    sha256: b571481f6d2660580f39132517a0cc08731baf1437fa34a4434235d180b04412
+    parents:
+    - c496a0119c462b9e94e85946cb53a16494ea2789ba05900bd49d1efe026ebf9b
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 30

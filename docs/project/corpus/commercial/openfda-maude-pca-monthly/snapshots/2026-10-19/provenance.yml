@@ -1,0 +1,26 @@
+dataset: commercial/openfda-maude-pca-monthly
+snapshot: '2026-10-19'
+created_at: '2026-10-19T10:26:24+00:00'
+sources:
+- type: openfda-count
+  url: https://api.fda.gov/device/event.json?search=device.device_report_product_code%3AMEA+AND+date_received%3A%5B20230101+TO+20301231%5D&count=date_received
+  retrieved_at: '2026-10-19T10:26:24+00:00'
+  usage_rights: public-domain (openFDA — https://open.fda.gov/license/)
+  files:
+  - path: raw/page-001.json
+    sha256: 9033ffa50ac12625b11db8800d757529b800bbc60df0a4878c3f7ac47db2fe73
+transforms:
+- step: normalize
+  spec:
+    type: openfda-count
+    output: records.csv
+  outputs:
+  - path: normalized/records.csv
+    sha256: ed27d241da084e8b9adcd48f87baa67514014bf9623c2d12a22f16ed7959df54
+    parents:
+    - 9033ffa50ac12625b11db8800d757529b800bbc60df0a4878c3f7ac47db2fe73
+assumptions_referenced: []
+checks:
+  schema_valid: true
+  asserts_passed: true
+  row_count: 980
