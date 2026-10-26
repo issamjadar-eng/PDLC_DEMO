@@ -1,0 +1,1608 @@
+{
+ "banner": "_Demo sample data - not for clinical use._",
+ "generator": "gen.py",
+ "seed": 42,
+ "as_of": "2026-08-31",
+ "rows": [
+  {
+   "period": "2024-Q1",
+   "product_line": "IP5000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 3302.76,
+   "material_usd": 1981.66,
+   "labor_usd": 495.41,
+   "overhead_usd": 825.69
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "IP5000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 11.17,
+   "material_usd": 7.82,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.23
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "IP5000",
+   "revenue_type": "service",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 1478.0,
+   "material_usd": 147.8,
+   "labor_usd": 1034.6,
+   "overhead_usd": 295.6
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 3594.02,
+   "material_usd": 2156.41,
+   "labor_usd": 539.1,
+   "overhead_usd": 898.51
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 11.22,
+   "material_usd": 7.85,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.25
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3000",
+   "revenue_type": "service",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 1481.57,
+   "material_usd": 148.16,
+   "labor_usd": 1037.1,
+   "overhead_usd": 296.31
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3500",
+   "revenue_type": "hardware",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 4290.07,
+   "material_usd": 2574.04,
+   "labor_usd": 643.51,
+   "overhead_usd": 1072.52
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3500",
+   "revenue_type": "consumables",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 11.18,
+   "material_usd": 7.82,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3500",
+   "revenue_type": "service",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 1479.31,
+   "material_usd": 147.93,
+   "labor_usd": 1035.51,
+   "overhead_usd": 295.87
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 2303.48,
+   "material_usd": 1382.09,
+   "labor_usd": 345.52,
+   "overhead_usd": 575.87
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 11.19,
+   "material_usd": 7.83,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6000",
+   "revenue_type": "service",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 1480.05,
+   "material_usd": 148.0,
+   "labor_usd": 1036.03,
+   "overhead_usd": 296.02
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6500",
+   "revenue_type": "hardware",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 2851.88,
+   "material_usd": 1711.13,
+   "labor_usd": 427.78,
+   "overhead_usd": 712.97
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6500",
+   "revenue_type": "consumables",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 11.18,
+   "material_usd": 7.83,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.23
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6500",
+   "revenue_type": "service",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 1481.33,
+   "material_usd": 148.13,
+   "labor_usd": 1036.93,
+   "overhead_usd": 296.27
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "cloud-suite",
+   "revenue_type": "subscription",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 1041.88,
+   "material_usd": 52.09,
+   "labor_usd": 416.75,
+   "overhead_usd": 573.04
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "IP5000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 3327.41,
+   "material_usd": 1996.45,
+   "labor_usd": 499.11,
+   "overhead_usd": 831.85
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "IP5000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 11.21,
+   "material_usd": 7.85,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "IP5000",
+   "revenue_type": "service",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 1482.75,
+   "material_usd": 148.27,
+   "labor_usd": 1037.92,
+   "overhead_usd": 296.56
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 3625.23,
+   "material_usd": 2175.14,
+   "labor_usd": 543.79,
+   "overhead_usd": 906.3
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 11.23,
+   "material_usd": 7.86,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.25
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3000",
+   "revenue_type": "service",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 1481.76,
+   "material_usd": 148.18,
+   "labor_usd": 1037.23,
+   "overhead_usd": 296.35
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3500",
+   "revenue_type": "hardware",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 4275.9,
+   "material_usd": 2565.54,
+   "labor_usd": 641.38,
+   "overhead_usd": 1068.98
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3500",
+   "revenue_type": "consumables",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 11.18,
+   "material_usd": 7.83,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.23
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3500",
+   "revenue_type": "service",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 1484.06,
+   "material_usd": 148.41,
+   "labor_usd": 1038.84,
+   "overhead_usd": 296.81
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 2307.74,
+   "material_usd": 1384.64,
+   "labor_usd": 346.16,
+   "overhead_usd": 576.94
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 11.18,
+   "material_usd": 7.82,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6000",
+   "revenue_type": "service",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 1476.42,
+   "material_usd": 147.64,
+   "labor_usd": 1033.49,
+   "overhead_usd": 295.29
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6500",
+   "revenue_type": "hardware",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 2865.96,
+   "material_usd": 1719.58,
+   "labor_usd": 429.89,
+   "overhead_usd": 716.49
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6500",
+   "revenue_type": "consumables",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 11.21,
+   "material_usd": 7.85,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6500",
+   "revenue_type": "service",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 1482.73,
+   "material_usd": 148.27,
+   "labor_usd": 1037.91,
+   "overhead_usd": 296.55
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "cloud-suite",
+   "revenue_type": "subscription",
+   "std_version": "STD-2024.1",
+   "std_unit_cost_usd": 1043.04,
+   "material_usd": 52.15,
+   "labor_usd": 417.21,
+   "overhead_usd": 573.68
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "IP5000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 3366.73,
+   "material_usd": 2020.04,
+   "labor_usd": 505.01,
+   "overhead_usd": 841.68
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "IP5000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 11.24,
+   "material_usd": 7.87,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.25
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "IP5000",
+   "revenue_type": "service",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 1478.92,
+   "material_usd": 147.89,
+   "labor_usd": 1035.24,
+   "overhead_usd": 295.79
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 3673.15,
+   "material_usd": 2203.89,
+   "labor_usd": 550.97,
+   "overhead_usd": 918.29
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 11.23,
+   "material_usd": 7.86,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.25
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3000",
+   "revenue_type": "service",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 1481.05,
+   "material_usd": 148.11,
+   "labor_usd": 1036.74,
+   "overhead_usd": 296.2
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3500",
+   "revenue_type": "hardware",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 4289.29,
+   "material_usd": 2573.57,
+   "labor_usd": 643.39,
+   "overhead_usd": 1072.33
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3500",
+   "revenue_type": "consumables",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 11.21,
+   "material_usd": 7.85,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3500",
+   "revenue_type": "service",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 1481.82,
+   "material_usd": 148.18,
+   "labor_usd": 1037.27,
+   "overhead_usd": 296.37
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 2303.71,
+   "material_usd": 1382.22,
+   "labor_usd": 345.56,
+   "overhead_usd": 575.93
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 11.19,
+   "material_usd": 7.83,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6000",
+   "revenue_type": "service",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 1478.13,
+   "material_usd": 147.81,
+   "labor_usd": 1034.69,
+   "overhead_usd": 295.63
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6500",
+   "revenue_type": "hardware",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 2852.79,
+   "material_usd": 1711.67,
+   "labor_usd": 427.92,
+   "overhead_usd": 713.2
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6500",
+   "revenue_type": "consumables",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 11.19,
+   "material_usd": 7.83,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6500",
+   "revenue_type": "service",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 1476.46,
+   "material_usd": 147.65,
+   "labor_usd": 1033.52,
+   "overhead_usd": 295.29
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "cloud-suite",
+   "revenue_type": "subscription",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 1040.21,
+   "material_usd": 52.01,
+   "labor_usd": 416.08,
+   "overhead_usd": 572.12
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "IP5000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 3401.77,
+   "material_usd": 2041.06,
+   "labor_usd": 510.27,
+   "overhead_usd": 850.44
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "IP5000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 11.2,
+   "material_usd": 7.84,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "IP5000",
+   "revenue_type": "service",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 1478.85,
+   "material_usd": 147.88,
+   "labor_usd": 1035.19,
+   "overhead_usd": 295.78
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 3701.54,
+   "material_usd": 2220.92,
+   "labor_usd": 555.23,
+   "overhead_usd": 925.39
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 11.19,
+   "material_usd": 7.83,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3000",
+   "revenue_type": "service",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 1483.88,
+   "material_usd": 148.39,
+   "labor_usd": 1038.71,
+   "overhead_usd": 296.78
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3500",
+   "revenue_type": "hardware",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 4283.8,
+   "material_usd": 2570.28,
+   "labor_usd": 642.57,
+   "overhead_usd": 1070.95
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3500",
+   "revenue_type": "consumables",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 11.21,
+   "material_usd": 7.85,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3500",
+   "revenue_type": "service",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 1477.08,
+   "material_usd": 147.71,
+   "labor_usd": 1033.96,
+   "overhead_usd": 295.41
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 2313.18,
+   "material_usd": 1387.91,
+   "labor_usd": 346.98,
+   "overhead_usd": 578.29
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 11.18,
+   "material_usd": 7.83,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.23
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6000",
+   "revenue_type": "service",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 1478.93,
+   "material_usd": 147.89,
+   "labor_usd": 1035.25,
+   "overhead_usd": 295.79
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6500",
+   "revenue_type": "hardware",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 2868.4,
+   "material_usd": 1721.04,
+   "labor_usd": 430.26,
+   "overhead_usd": 717.1
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6500",
+   "revenue_type": "consumables",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 11.21,
+   "material_usd": 7.85,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6500",
+   "revenue_type": "service",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 1480.51,
+   "material_usd": 148.05,
+   "labor_usd": 1036.35,
+   "overhead_usd": 296.11
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "cloud-suite",
+   "revenue_type": "subscription",
+   "std_version": "STD-2024.2",
+   "std_unit_cost_usd": 1042.75,
+   "material_usd": 52.14,
+   "labor_usd": 417.1,
+   "overhead_usd": 573.51
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "IP5000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 3439.06,
+   "material_usd": 2063.44,
+   "labor_usd": 515.86,
+   "overhead_usd": 859.76
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "IP5000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 11.22,
+   "material_usd": 7.86,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "IP5000",
+   "revenue_type": "service",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 1477.59,
+   "material_usd": 147.76,
+   "labor_usd": 1034.32,
+   "overhead_usd": 295.51
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 3733.49,
+   "material_usd": 2240.09,
+   "labor_usd": 560.02,
+   "overhead_usd": 933.38
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 11.19,
+   "material_usd": 7.83,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3000",
+   "revenue_type": "service",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 1477.94,
+   "material_usd": 147.79,
+   "labor_usd": 1034.56,
+   "overhead_usd": 295.59
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3500",
+   "revenue_type": "hardware",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 4272.58,
+   "material_usd": 2563.55,
+   "labor_usd": 640.89,
+   "overhead_usd": 1068.14
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3500",
+   "revenue_type": "consumables",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 11.23,
+   "material_usd": 7.86,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.25
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3500",
+   "revenue_type": "service",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 1483.34,
+   "material_usd": 148.33,
+   "labor_usd": 1038.34,
+   "overhead_usd": 296.67
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 2307.43,
+   "material_usd": 1384.46,
+   "labor_usd": 346.11,
+   "overhead_usd": 576.86
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 11.22,
+   "material_usd": 7.85,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.25
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6000",
+   "revenue_type": "service",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 1479.07,
+   "material_usd": 147.91,
+   "labor_usd": 1035.35,
+   "overhead_usd": 295.81
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6500",
+   "revenue_type": "hardware",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 2867.11,
+   "material_usd": 1720.27,
+   "labor_usd": 430.07,
+   "overhead_usd": 716.77
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6500",
+   "revenue_type": "consumables",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 11.2,
+   "material_usd": 7.84,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6500",
+   "revenue_type": "service",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 1477.91,
+   "material_usd": 147.79,
+   "labor_usd": 1034.54,
+   "overhead_usd": 295.58
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "cloud-suite",
+   "revenue_type": "subscription",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 1040.02,
+   "material_usd": 52.0,
+   "labor_usd": 416.01,
+   "overhead_usd": 572.01
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "IP5000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 3466.28,
+   "material_usd": 2079.77,
+   "labor_usd": 519.94,
+   "overhead_usd": 866.57
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "IP5000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 11.19,
+   "material_usd": 7.83,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "IP5000",
+   "revenue_type": "service",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 1480.75,
+   "material_usd": 148.08,
+   "labor_usd": 1036.53,
+   "overhead_usd": 296.14
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 3789.02,
+   "material_usd": 2273.41,
+   "labor_usd": 568.35,
+   "overhead_usd": 947.26
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 11.2,
+   "material_usd": 7.84,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3000",
+   "revenue_type": "service",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 1477.51,
+   "material_usd": 147.75,
+   "labor_usd": 1034.26,
+   "overhead_usd": 295.5
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3500",
+   "revenue_type": "hardware",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 4292.78,
+   "material_usd": 2575.67,
+   "labor_usd": 643.92,
+   "overhead_usd": 1073.19
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3500",
+   "revenue_type": "consumables",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 11.21,
+   "material_usd": 7.84,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.25
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3500",
+   "revenue_type": "service",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 1476.37,
+   "material_usd": 147.64,
+   "labor_usd": 1033.46,
+   "overhead_usd": 295.27
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 2303.72,
+   "material_usd": 1382.23,
+   "labor_usd": 345.56,
+   "overhead_usd": 575.93
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 11.18,
+   "material_usd": 7.83,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.23
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6000",
+   "revenue_type": "service",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 1481.13,
+   "material_usd": 148.11,
+   "labor_usd": 1036.79,
+   "overhead_usd": 296.23
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6500",
+   "revenue_type": "hardware",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 2865.01,
+   "material_usd": 1719.01,
+   "labor_usd": 429.75,
+   "overhead_usd": 716.25
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6500",
+   "revenue_type": "consumables",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 11.2,
+   "material_usd": 7.84,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6500",
+   "revenue_type": "service",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 1476.12,
+   "material_usd": 147.61,
+   "labor_usd": 1033.29,
+   "overhead_usd": 295.22
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "cloud-suite",
+   "revenue_type": "subscription",
+   "std_version": "STD-2025.1",
+   "std_unit_cost_usd": 1040.86,
+   "material_usd": 52.04,
+   "labor_usd": 416.34,
+   "overhead_usd": 572.48
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "IP5000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 3508.41,
+   "material_usd": 2105.05,
+   "labor_usd": 526.26,
+   "overhead_usd": 877.1
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "IP5000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 11.21,
+   "material_usd": 7.84,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.25
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "IP5000",
+   "revenue_type": "service",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 1484.18,
+   "material_usd": 148.42,
+   "labor_usd": 1038.93,
+   "overhead_usd": 296.83
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 3824.26,
+   "material_usd": 2294.56,
+   "labor_usd": 573.64,
+   "overhead_usd": 956.06
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 11.17,
+   "material_usd": 7.82,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.23
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3000",
+   "revenue_type": "service",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 1481.96,
+   "material_usd": 148.2,
+   "labor_usd": 1037.37,
+   "overhead_usd": 296.39
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3500",
+   "revenue_type": "hardware",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 4284.67,
+   "material_usd": 2570.8,
+   "labor_usd": 642.7,
+   "overhead_usd": 1071.17
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3500",
+   "revenue_type": "consumables",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 11.21,
+   "material_usd": 7.85,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3500",
+   "revenue_type": "service",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 1477.93,
+   "material_usd": 147.79,
+   "labor_usd": 1034.55,
+   "overhead_usd": 295.59
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 2311.95,
+   "material_usd": 1387.17,
+   "labor_usd": 346.79,
+   "overhead_usd": 577.99
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 11.18,
+   "material_usd": 7.83,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.23
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6000",
+   "revenue_type": "service",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 1479.42,
+   "material_usd": 147.94,
+   "labor_usd": 1035.59,
+   "overhead_usd": 295.89
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6500",
+   "revenue_type": "hardware",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 2859.21,
+   "material_usd": 1715.52,
+   "labor_usd": 428.88,
+   "overhead_usd": 714.81
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6500",
+   "revenue_type": "consumables",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 11.24,
+   "material_usd": 7.86,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.26
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6500",
+   "revenue_type": "service",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 1483.34,
+   "material_usd": 148.33,
+   "labor_usd": 1038.34,
+   "overhead_usd": 296.67
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "cloud-suite",
+   "revenue_type": "subscription",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 1040.12,
+   "material_usd": 52.01,
+   "labor_usd": 416.05,
+   "overhead_usd": 572.06
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "IP5000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 3531.01,
+   "material_usd": 2118.61,
+   "labor_usd": 529.65,
+   "overhead_usd": 882.75
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "IP5000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 11.18,
+   "material_usd": 7.83,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.23
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "IP5000",
+   "revenue_type": "service",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 1483.66,
+   "material_usd": 148.37,
+   "labor_usd": 1038.56,
+   "overhead_usd": 296.73
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 3860.56,
+   "material_usd": 2316.34,
+   "labor_usd": 579.08,
+   "overhead_usd": 965.14
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 11.19,
+   "material_usd": 7.83,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3000",
+   "revenue_type": "service",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 1481.23,
+   "material_usd": 148.12,
+   "labor_usd": 1036.86,
+   "overhead_usd": 296.25
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3500",
+   "revenue_type": "hardware",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 4282.8,
+   "material_usd": 2569.68,
+   "labor_usd": 642.42,
+   "overhead_usd": 1070.7
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3500",
+   "revenue_type": "consumables",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 11.18,
+   "material_usd": 7.83,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.23
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3500",
+   "revenue_type": "service",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 1482.33,
+   "material_usd": 148.23,
+   "labor_usd": 1037.63,
+   "overhead_usd": 296.47
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 2310.55,
+   "material_usd": 1386.33,
+   "labor_usd": 346.58,
+   "overhead_usd": 577.64
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 11.22,
+   "material_usd": 7.86,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6000",
+   "revenue_type": "service",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 1480.27,
+   "material_usd": 148.03,
+   "labor_usd": 1036.19,
+   "overhead_usd": 296.05
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6500",
+   "revenue_type": "hardware",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 2851.43,
+   "material_usd": 1710.86,
+   "labor_usd": 427.71,
+   "overhead_usd": 712.86
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6500",
+   "revenue_type": "consumables",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 11.19,
+   "material_usd": 7.84,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.23
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6500",
+   "revenue_type": "service",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 1475.73,
+   "material_usd": 147.57,
+   "labor_usd": 1033.01,
+   "overhead_usd": 295.15
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "cloud-suite",
+   "revenue_type": "subscription",
+   "std_version": "STD-2025.2",
+   "std_unit_cost_usd": 1044.28,
+   "material_usd": 52.21,
+   "labor_usd": 417.71,
+   "overhead_usd": 574.36
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "IP5000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 3572.1,
+   "material_usd": 2143.26,
+   "labor_usd": 535.81,
+   "overhead_usd": 893.03
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "IP5000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 11.23,
+   "material_usd": 7.86,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.25
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "IP5000",
+   "revenue_type": "service",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 1478.29,
+   "material_usd": 147.83,
+   "labor_usd": 1034.8,
+   "overhead_usd": 295.66
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 3877.69,
+   "material_usd": 2326.61,
+   "labor_usd": 581.65,
+   "overhead_usd": 969.43
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 11.23,
+   "material_usd": 7.86,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.25
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3000",
+   "revenue_type": "service",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 1483.97,
+   "material_usd": 148.4,
+   "labor_usd": 1038.78,
+   "overhead_usd": 296.79
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3500",
+   "revenue_type": "hardware",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 4269.36,
+   "material_usd": 2561.62,
+   "labor_usd": 640.4,
+   "overhead_usd": 1067.34
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3500",
+   "revenue_type": "consumables",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 11.2,
+   "material_usd": 7.84,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3500",
+   "revenue_type": "service",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 1476.17,
+   "material_usd": 147.62,
+   "labor_usd": 1033.32,
+   "overhead_usd": 295.23
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 2313.61,
+   "material_usd": 1388.17,
+   "labor_usd": 347.04,
+   "overhead_usd": 578.4
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 11.22,
+   "material_usd": 7.86,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6000",
+   "revenue_type": "service",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 1476.7,
+   "material_usd": 147.67,
+   "labor_usd": 1033.69,
+   "overhead_usd": 295.34
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6500",
+   "revenue_type": "hardware",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 2859.58,
+   "material_usd": 1715.75,
+   "labor_usd": 428.94,
+   "overhead_usd": 714.89
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6500",
+   "revenue_type": "consumables",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 11.21,
+   "material_usd": 7.85,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6500",
+   "revenue_type": "service",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 1477.91,
+   "material_usd": 147.79,
+   "labor_usd": 1034.54,
+   "overhead_usd": 295.58
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "cloud-suite",
+   "revenue_type": "subscription",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 1043.93,
+   "material_usd": 52.2,
+   "labor_usd": 417.57,
+   "overhead_usd": 574.16
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "IP5000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 3595.34,
+   "material_usd": 2157.2,
+   "labor_usd": 539.3,
+   "overhead_usd": 898.84
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "IP5000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 11.19,
+   "material_usd": 7.83,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "IP5000",
+   "revenue_type": "service",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 1480.35,
+   "material_usd": 148.03,
+   "labor_usd": 1036.24,
+   "overhead_usd": 296.08
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 3929.41,
+   "material_usd": 2357.65,
+   "labor_usd": 589.41,
+   "overhead_usd": 982.35
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 11.18,
+   "material_usd": 7.83,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.23
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3000",
+   "revenue_type": "service",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 1478.33,
+   "material_usd": 147.83,
+   "labor_usd": 1034.83,
+   "overhead_usd": 295.67
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3500",
+   "revenue_type": "hardware",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 4292.72,
+   "material_usd": 2575.63,
+   "labor_usd": 643.91,
+   "overhead_usd": 1073.18
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3500",
+   "revenue_type": "consumables",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 11.22,
+   "material_usd": 7.85,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.25
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3500",
+   "revenue_type": "service",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 1479.45,
+   "material_usd": 147.95,
+   "labor_usd": 1035.62,
+   "overhead_usd": 295.88
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6000",
+   "revenue_type": "hardware",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 2310.24,
+   "material_usd": 1386.15,
+   "labor_usd": 346.54,
+   "overhead_usd": 577.55
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6000",
+   "revenue_type": "consumables",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 11.18,
+   "material_usd": 7.83,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.23
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6000",
+   "revenue_type": "service",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 1477.56,
+   "material_usd": 147.76,
+   "labor_usd": 1034.29,
+   "overhead_usd": 295.51
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6500",
+   "revenue_type": "hardware",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 2857.22,
+   "material_usd": 1714.33,
+   "labor_usd": 428.58,
+   "overhead_usd": 714.31
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6500",
+   "revenue_type": "consumables",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 11.21,
+   "material_usd": 7.85,
+   "labor_usd": 1.12,
+   "overhead_usd": 2.24
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6500",
+   "revenue_type": "service",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 1477.6,
+   "material_usd": 147.76,
+   "labor_usd": 1034.32,
+   "overhead_usd": 295.52
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "cloud-suite",
+   "revenue_type": "subscription",
+   "std_version": "STD-2026.1",
+   "std_unit_cost_usd": 1039.85,
+   "material_usd": 51.99,
+   "labor_usd": 415.94,
+   "overhead_usd": 571.92
+  }
+ ]
+}

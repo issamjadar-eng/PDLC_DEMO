@@ -1,0 +1,4328 @@
+{
+ "banner": "_Demo sample data - not for clinical use._",
+ "generator": "gen.py",
+ "seed": 42,
+ "as_of": "2026-07-25",
+ "rows": [
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 1614004,
+   "cogs_usd": 839282,
+   "units": 202
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 714823,
+   "cogs_usd": 300226,
+   "units": 26475
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 405381,
+   "cogs_usd": 243228,
+   "units": 162
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 851375,
+   "cogs_usd": 442715,
+   "units": 106
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 412972,
+   "cogs_usd": 173448,
+   "units": 15295
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 228352,
+   "cogs_usd": 137011,
+   "units": 91
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 448985,
+   "cogs_usd": 233472,
+   "units": 56
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 195956,
+   "cogs_usd": 82301,
+   "units": 7258
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 111881,
+   "cogs_usd": 67129,
+   "units": 45
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 656756,
+   "cogs_usd": 407189,
+   "units": 109
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 1067305,
+   "cogs_usd": 448268,
+   "units": 39530
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 500660,
+   "cogs_usd": 300396,
+   "units": 200
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 358133,
+   "cogs_usd": 222043,
+   "units": 60
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 581223,
+   "cogs_usd": 244114,
+   "units": 21527
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 276244,
+   "cogs_usd": 165746,
+   "units": 110
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 186785,
+   "cogs_usd": 115807,
+   "units": 31
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 291126,
+   "cogs_usd": 122273,
+   "units": 10782
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 137460,
+   "cogs_usd": 82476,
+   "units": 55
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 443996,
+   "cogs_usd": 275278,
+   "units": 81
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 743152,
+   "cogs_usd": 312124,
+   "units": 27524
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 348756,
+   "cogs_usd": 209253,
+   "units": 140
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 240076,
+   "cogs_usd": 148847,
+   "units": 44
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 416623,
+   "cogs_usd": 174982,
+   "units": 15430
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 180570,
+   "cogs_usd": 108342,
+   "units": 72
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 122487,
+   "cogs_usd": 75942,
+   "units": 22
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 208250,
+   "cogs_usd": 87465,
+   "units": 7713
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 89819,
+   "cogs_usd": 53891,
+   "units": 36
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 582576,
+   "cogs_usd": 320417,
+   "units": 139
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 522486,
+   "cogs_usd": 219444,
+   "units": 19351
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 229309,
+   "cogs_usd": 137585,
+   "units": 92
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 336431,
+   "cogs_usd": 185037,
+   "units": 80
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 282380,
+   "cogs_usd": 118600,
+   "units": 10459
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 124408,
+   "cogs_usd": 74645,
+   "units": 50
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 170395,
+   "cogs_usd": 93717,
+   "units": 41
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 137295,
+   "cogs_usd": 57664,
+   "units": 5085
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 62282,
+   "cogs_usd": 37369,
+   "units": 25
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 474175,
+   "cogs_usd": 260796,
+   "units": 91
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 349785,
+   "cogs_usd": 146910,
+   "units": 12955
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 158456,
+   "cogs_usd": 95074,
+   "units": 63
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 253559,
+   "cogs_usd": 139458,
+   "units": 49
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 192093,
+   "cogs_usd": 80679,
+   "units": 7115
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 80948,
+   "cogs_usd": 48569,
+   "units": 32
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 123257,
+   "cogs_usd": 67791,
+   "units": 24
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 92908,
+   "cogs_usd": 39021,
+   "units": 3441
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 40588,
+   "cogs_usd": 24353,
+   "units": 16
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "cloud-suite",
+   "region": "NA",
+   "revenue_type": "subscription",
+   "revenue_usd": 375507,
+   "cogs_usd": 82612,
+   "units": 78
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "cloud-suite",
+   "region": "EMEA",
+   "revenue_type": "subscription",
+   "revenue_usd": 202616,
+   "cogs_usd": 44575,
+   "units": 42
+  },
+  {
+   "period": "2024-Q1",
+   "product_line": "cloud-suite",
+   "region": "APAC",
+   "revenue_type": "subscription",
+   "revenue_usd": 102789,
+   "cogs_usd": 22614,
+   "units": 21
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 1774879,
+   "cogs_usd": 922937,
+   "units": 222
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 808526,
+   "cogs_usd": 339581,
+   "units": 29945
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 449375,
+   "cogs_usd": 269625,
+   "units": 180
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 935463,
+   "cogs_usd": 486441,
+   "units": 117
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 437524,
+   "cogs_usd": 183760,
+   "units": 16205
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 256338,
+   "cogs_usd": 153803,
+   "units": 103
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 484531,
+   "cogs_usd": 251956,
+   "units": 61
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 224864,
+   "cogs_usd": 94443,
+   "units": 8328
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 120585,
+   "cogs_usd": 72351,
+   "units": 48
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 674087,
+   "cogs_usd": 426023,
+   "units": 112
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 1030605,
+   "cogs_usd": 432854,
+   "units": 38171
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 480751,
+   "cogs_usd": 288451,
+   "units": 192
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 375205,
+   "cogs_usd": 237130,
+   "units": 63
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 584175,
+   "cogs_usd": 245354,
+   "units": 21636
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 265988,
+   "cogs_usd": 159593,
+   "units": 106
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 183199,
+   "cogs_usd": 115782,
+   "units": 31
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 296775,
+   "cogs_usd": 124646,
+   "units": 10992
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 135314,
+   "cogs_usd": 81188,
+   "units": 54
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 406924,
+   "cogs_usd": 257176,
+   "units": 74
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 714947,
+   "cogs_usd": 300278,
+   "units": 26480
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 321985,
+   "cogs_usd": 193191,
+   "units": 129
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 222661,
+   "cogs_usd": 140722,
+   "units": 40
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 395769,
+   "cogs_usd": 166223,
+   "units": 14658
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 184576,
+   "cogs_usd": 110746,
+   "units": 74
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 116854,
+   "cogs_usd": 73852,
+   "units": 21
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 199565,
+   "cogs_usd": 83817,
+   "units": 7391
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 90238,
+   "cogs_usd": 54143,
+   "units": 36
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 599957,
+   "cogs_usd": 329976,
+   "units": 143
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 527839,
+   "cogs_usd": 221692,
+   "units": 19550
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 227806,
+   "cogs_usd": 136684,
+   "units": 91
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 323797,
+   "cogs_usd": 178088,
+   "units": 77
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 273022,
+   "cogs_usd": 114669,
+   "units": 10112
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 125280,
+   "cogs_usd": 75168,
+   "units": 50
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 161870,
+   "cogs_usd": 89029,
+   "units": 39
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 140278,
+   "cogs_usd": 58917,
+   "units": 5195
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 64318,
+   "cogs_usd": 38591,
+   "units": 26
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 458282,
+   "cogs_usd": 252055,
+   "units": 88
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 338720,
+   "cogs_usd": 142262,
+   "units": 12545
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 160130,
+   "cogs_usd": 96078,
+   "units": 64
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 252192,
+   "cogs_usd": 138706,
+   "units": 48
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 182815,
+   "cogs_usd": 76782,
+   "units": 6771
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 80957,
+   "cogs_usd": 48574,
+   "units": 32
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 122065,
+   "cogs_usd": 67136,
+   "units": 23
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 95463,
+   "cogs_usd": 40095,
+   "units": 3536
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 42981,
+   "cogs_usd": 25789,
+   "units": 17
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "cloud-suite",
+   "region": "NA",
+   "revenue_type": "subscription",
+   "revenue_usd": 442332,
+   "cogs_usd": 97313,
+   "units": 92
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "cloud-suite",
+   "region": "EMEA",
+   "revenue_type": "subscription",
+   "revenue_usd": 234306,
+   "cogs_usd": 51547,
+   "units": 49
+  },
+  {
+   "period": "2024-Q2",
+   "product_line": "cloud-suite",
+   "region": "APAC",
+   "revenue_type": "subscription",
+   "revenue_usd": 120242,
+   "cogs_usd": 26453,
+   "units": 25
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 2008059,
+   "cogs_usd": 1044191,
+   "units": 251
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 901195,
+   "cogs_usd": 378502,
+   "units": 33378
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 518325,
+   "cogs_usd": 310995,
+   "units": 207
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 1083898,
+   "cogs_usd": 563627,
+   "units": 135
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 471252,
+   "cogs_usd": 197926,
+   "units": 17454
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 277266,
+   "cogs_usd": 166359,
+   "units": 111
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 534403,
+   "cogs_usd": 277890,
+   "units": 67
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 245935,
+   "cogs_usd": 103293,
+   "units": 9109
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 133686,
+   "cogs_usd": 80212,
+   "units": 53
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 649336,
+   "cogs_usd": 418172,
+   "units": 108
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 995426,
+   "cogs_usd": 418079,
+   "units": 36868
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 468412,
+   "cogs_usd": 281047,
+   "units": 187
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 348937,
+   "cogs_usd": 224715,
+   "units": 58
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 580718,
+   "cogs_usd": 243902,
+   "units": 21508
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 264561,
+   "cogs_usd": 158736,
+   "units": 106
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 171802,
+   "cogs_usd": 110640,
+   "units": 29
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 280200,
+   "cogs_usd": 117684,
+   "units": 10378
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 125118,
+   "cogs_usd": 75071,
+   "units": 50
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 412483,
+   "cogs_usd": 265639,
+   "units": 75
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 734175,
+   "cogs_usd": 308354,
+   "units": 27192
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 308679,
+   "cogs_usd": 185207,
+   "units": 123
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 220222,
+   "cogs_usd": 141823,
+   "units": 40
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 392321,
+   "cogs_usd": 164775,
+   "units": 14530
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 166377,
+   "cogs_usd": 99826,
+   "units": 67
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 111188,
+   "cogs_usd": 71605,
+   "units": 20
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 195078,
+   "cogs_usd": 81933,
+   "units": 7225
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 87472,
+   "cogs_usd": 52483,
+   "units": 35
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 609510,
+   "cogs_usd": 335230,
+   "units": 145
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 492936,
+   "cogs_usd": 207033,
+   "units": 18257
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 226470,
+   "cogs_usd": 135882,
+   "units": 91
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 318905,
+   "cogs_usd": 175398,
+   "units": 76
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 289678,
+   "cogs_usd": 121665,
+   "units": 10729
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 129088,
+   "cogs_usd": 77453,
+   "units": 52
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 170227,
+   "cogs_usd": 93625,
+   "units": 41
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 137876,
+   "cogs_usd": 57908,
+   "units": 5107
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 60430,
+   "cogs_usd": 36258,
+   "units": 24
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 475971,
+   "cogs_usd": 261784,
+   "units": 92
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 358889,
+   "cogs_usd": 150734,
+   "units": 13292
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 148895,
+   "cogs_usd": 89337,
+   "units": 60
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 251718,
+   "cogs_usd": 138445,
+   "units": 48
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 182486,
+   "cogs_usd": 76644,
+   "units": 6759
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 85751,
+   "cogs_usd": 51451,
+   "units": 34
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 128680,
+   "cogs_usd": 70774,
+   "units": 25
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 91691,
+   "cogs_usd": 38510,
+   "units": 3396
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 41917,
+   "cogs_usd": 25150,
+   "units": 17
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "cloud-suite",
+   "region": "NA",
+   "revenue_type": "subscription",
+   "revenue_usd": 518377,
+   "cogs_usd": 114043,
+   "units": 108
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "cloud-suite",
+   "region": "EMEA",
+   "revenue_type": "subscription",
+   "revenue_usd": 276336,
+   "cogs_usd": 60794,
+   "units": 58
+  },
+  {
+   "period": "2024-Q3",
+   "product_line": "cloud-suite",
+   "region": "APAC",
+   "revenue_type": "subscription",
+   "revenue_usd": 145010,
+   "cogs_usd": 31902,
+   "units": 30
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 2111478,
+   "cogs_usd": 1097969,
+   "units": 264
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 966208,
+   "cogs_usd": 405807,
+   "units": 35785
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 551178,
+   "cogs_usd": 330707,
+   "units": 220
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 1180157,
+   "cogs_usd": 613682,
+   "units": 148
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 526563,
+   "cogs_usd": 221157,
+   "units": 19502
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 295186,
+   "cogs_usd": 177112,
+   "units": 118
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 602373,
+   "cogs_usd": 313234,
+   "units": 75
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 272964,
+   "cogs_usd": 114645,
+   "units": 10110
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 149108,
+   "cogs_usd": 89465,
+   "units": 60
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 623708,
+   "cogs_usd": 409152,
+   "units": 104
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 966317,
+   "cogs_usd": 405853,
+   "units": 35790
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 446684,
+   "cogs_usd": 268010,
+   "units": 179
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 335326,
+   "cogs_usd": 219974,
+   "units": 56
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 547403,
+   "cogs_usd": 229909,
+   "units": 20274
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 243754,
+   "cogs_usd": 146252,
+   "units": 98
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 166061,
+   "cogs_usd": 108936,
+   "units": 28
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 262454,
+   "cogs_usd": 110230,
+   "units": 9721
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 125873,
+   "cogs_usd": 75524,
+   "units": 50
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 375018,
+   "cogs_usd": 246012,
+   "units": 68
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 706719,
+   "cogs_usd": 296822,
+   "units": 26175
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 309853,
+   "cogs_usd": 185912,
+   "units": 124
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 201911,
+   "cogs_usd": 132454,
+   "units": 37
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 365548,
+   "cogs_usd": 153530,
+   "units": 13539
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 166505,
+   "cogs_usd": 99903,
+   "units": 67
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 102155,
+   "cogs_usd": 67013,
+   "units": 19
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 181195,
+   "cogs_usd": 76102,
+   "units": 6711
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 85004,
+   "cogs_usd": 51002,
+   "units": 34
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 614546,
+   "cogs_usd": 338000,
+   "units": 146
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 514889,
+   "cogs_usd": 216253,
+   "units": 19070
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 236106,
+   "cogs_usd": 141664,
+   "units": 94
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 341512,
+   "cogs_usd": 187832,
+   "units": 81
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 274493,
+   "cogs_usd": 115287,
+   "units": 10166
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 121858,
+   "cogs_usd": 73115,
+   "units": 49
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 165737,
+   "cogs_usd": 91155,
+   "units": 39
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 139872,
+   "cogs_usd": 58746,
+   "units": 5180
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 62793,
+   "cogs_usd": 37676,
+   "units": 25
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 470467,
+   "cogs_usd": 258757,
+   "units": 90
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 351306,
+   "cogs_usd": 147548,
+   "units": 13011
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 159965,
+   "cogs_usd": 95979,
+   "units": 64
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 243904,
+   "cogs_usd": 134147,
+   "units": 47
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 187528,
+   "cogs_usd": 78762,
+   "units": 6945
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 82920,
+   "cogs_usd": 49752,
+   "units": 33
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 129646,
+   "cogs_usd": 71305,
+   "units": 25
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 92600,
+   "cogs_usd": 38892,
+   "units": 3430
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 40959,
+   "cogs_usd": 24575,
+   "units": 16
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "cloud-suite",
+   "region": "NA",
+   "revenue_type": "subscription",
+   "revenue_usd": 596469,
+   "cogs_usd": 131223,
+   "units": 124
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "cloud-suite",
+   "region": "EMEA",
+   "revenue_type": "subscription",
+   "revenue_usd": 324648,
+   "cogs_usd": 71423,
+   "units": 68
+  },
+  {
+   "period": "2024-Q4",
+   "product_line": "cloud-suite",
+   "region": "APAC",
+   "revenue_type": "subscription",
+   "revenue_usd": 160451,
+   "cogs_usd": 35299,
+   "units": 33
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 2290220,
+   "cogs_usd": 1190915,
+   "units": 286
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 1124750,
+   "cogs_usd": 472395,
+   "units": 41657
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 601646,
+   "cogs_usd": 360988,
+   "units": 241
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 1311575,
+   "cogs_usd": 682019,
+   "units": 164
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 595796,
+   "cogs_usd": 250234,
+   "units": 22067
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 317818,
+   "cogs_usd": 190691,
+   "units": 127
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 662821,
+   "cogs_usd": 344667,
+   "units": 83
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 304679,
+   "cogs_usd": 127965,
+   "units": 11284
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 171020,
+   "cogs_usd": 102612,
+   "units": 68
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 624754,
+   "cogs_usd": 417336,
+   "units": 104
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 993600,
+   "cogs_usd": 417312,
+   "units": 36800
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 431214,
+   "cogs_usd": 258728,
+   "units": 172
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 329156,
+   "cogs_usd": 219876,
+   "units": 55
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 515181,
+   "cogs_usd": 216376,
+   "units": 19081
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 239746,
+   "cogs_usd": 143847,
+   "units": 96
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 158950,
+   "cogs_usd": 106178,
+   "units": 26
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 261075,
+   "cogs_usd": 109652,
+   "units": 9669
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 125521,
+   "cogs_usd": 75312,
+   "units": 50
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 361085,
+   "cogs_usd": 241204,
+   "units": 66
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 672071,
+   "cogs_usd": 282270,
+   "units": 24892
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 288100,
+   "cogs_usd": 172860,
+   "units": 115
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 199489,
+   "cogs_usd": 133259,
+   "units": 36
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 371552,
+   "cogs_usd": 156052,
+   "units": 13761
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 163964,
+   "cogs_usd": 98378,
+   "units": 66
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 100811,
+   "cogs_usd": 67341,
+   "units": 18
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 182351,
+   "cogs_usd": 76587,
+   "units": 6754
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 76679,
+   "cogs_usd": 46007,
+   "units": 31
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 604141,
+   "cogs_usd": 332277,
+   "units": 144
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 538043,
+   "cogs_usd": 225978,
+   "units": 19928
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 233474,
+   "cogs_usd": 140084,
+   "units": 93
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 336110,
+   "cogs_usd": 184861,
+   "units": 80
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 288483,
+   "cogs_usd": 121163,
+   "units": 10685
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 122065,
+   "cogs_usd": 73239,
+   "units": 49
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 168618,
+   "cogs_usd": 92740,
+   "units": 40
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 141468,
+   "cogs_usd": 59417,
+   "units": 5240
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 65059,
+   "cogs_usd": 39036,
+   "units": 26
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 449339,
+   "cogs_usd": 247136,
+   "units": 86
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 359273,
+   "cogs_usd": 150895,
+   "units": 13306
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 148827,
+   "cogs_usd": 89296,
+   "units": 60
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 245666,
+   "cogs_usd": 135116,
+   "units": 47
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 190437,
+   "cogs_usd": 79984,
+   "units": 7053
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 85177,
+   "cogs_usd": 51106,
+   "units": 34
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 123331,
+   "cogs_usd": 67832,
+   "units": 24
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 91626,
+   "cogs_usd": 38483,
+   "units": 3394
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 43311,
+   "cogs_usd": 25987,
+   "units": 17
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "cloud-suite",
+   "region": "NA",
+   "revenue_type": "subscription",
+   "revenue_usd": 680655,
+   "cogs_usd": 149744,
+   "units": 142
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "cloud-suite",
+   "region": "EMEA",
+   "revenue_type": "subscription",
+   "revenue_usd": 381826,
+   "cogs_usd": 84002,
+   "units": 80
+  },
+  {
+   "period": "2025-Q1",
+   "product_line": "cloud-suite",
+   "region": "APAC",
+   "revenue_type": "subscription",
+   "revenue_usd": 191290,
+   "cogs_usd": 42084,
+   "units": 40
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 2554084,
+   "cogs_usd": 1328124,
+   "units": 319
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 1204714,
+   "cogs_usd": 505980,
+   "units": 44619
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 666047,
+   "cogs_usd": 399628,
+   "units": 266
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 1450961,
+   "cogs_usd": 754500,
+   "units": 181
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 637304,
+   "cogs_usd": 267668,
+   "units": 23604
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 368909,
+   "cogs_usd": 221346,
+   "units": 148
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 686442,
+   "cogs_usd": 356950,
+   "units": 86
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 323653,
+   "cogs_usd": 135934,
+   "units": 11987
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 183809,
+   "cogs_usd": 110285,
+   "units": 74
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 576646,
+   "cogs_usd": 392119,
+   "units": 96
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 923847,
+   "cogs_usd": 388016,
+   "units": 34217
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 438409,
+   "cogs_usd": 263045,
+   "units": 175
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 308718,
+   "cogs_usd": 209928,
+   "units": 51
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 509731,
+   "cogs_usd": 214087,
+   "units": 18879
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 243756,
+   "cogs_usd": 146254,
+   "units": 98
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 166167,
+   "cogs_usd": 112994,
+   "units": 28
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 246989,
+   "cogs_usd": 103735,
+   "units": 9148
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 114515,
+   "cogs_usd": 68709,
+   "units": 46
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 346641,
+   "cogs_usd": 235716,
+   "units": 63
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 652718,
+   "cogs_usd": 274141,
+   "units": 24175
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 286032,
+   "cogs_usd": 171619,
+   "units": 114
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 198543,
+   "cogs_usd": 135009,
+   "units": 36
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 340509,
+   "cogs_usd": 143014,
+   "units": 12611
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 147259,
+   "cogs_usd": 88355,
+   "units": 59
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 98921,
+   "cogs_usd": 67266,
+   "units": 18
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 174852,
+   "cogs_usd": 73438,
+   "units": 6476
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 76379,
+   "cogs_usd": 45827,
+   "units": 31
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 641257,
+   "cogs_usd": 352691,
+   "units": 153
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 527611,
+   "cogs_usd": 221596,
+   "units": 19541
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 223984,
+   "cogs_usd": 134390,
+   "units": 90
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 345195,
+   "cogs_usd": 189857,
+   "units": 82
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 279723,
+   "cogs_usd": 117484,
+   "units": 10360
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 128843,
+   "cogs_usd": 77306,
+   "units": 52
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 174238,
+   "cogs_usd": 95831,
+   "units": 41
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 137984,
+   "cogs_usd": 57953,
+   "units": 5111
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 61634,
+   "cogs_usd": 36980,
+   "units": 25
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 447476,
+   "cogs_usd": 246112,
+   "units": 86
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 347975,
+   "cogs_usd": 146150,
+   "units": 12888
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 151195,
+   "cogs_usd": 90717,
+   "units": 60
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 254113,
+   "cogs_usd": 139762,
+   "units": 49
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 192290,
+   "cogs_usd": 80762,
+   "units": 7122
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 82008,
+   "cogs_usd": 49205,
+   "units": 33
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 127353,
+   "cogs_usd": 70044,
+   "units": 24
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 92716,
+   "cogs_usd": 38941,
+   "units": 3434
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 41961,
+   "cogs_usd": 25177,
+   "units": 17
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "cloud-suite",
+   "region": "NA",
+   "revenue_type": "subscription",
+   "revenue_usd": 832055,
+   "cogs_usd": 183052,
+   "units": 173
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "cloud-suite",
+   "region": "EMEA",
+   "revenue_type": "subscription",
+   "revenue_usd": 451765,
+   "cogs_usd": 99388,
+   "units": 94
+  },
+  {
+   "period": "2025-Q2",
+   "product_line": "cloud-suite",
+   "region": "APAC",
+   "revenue_type": "subscription",
+   "revenue_usd": 212628,
+   "cogs_usd": 46778,
+   "units": 44
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 2810477,
+   "cogs_usd": 1461448,
+   "units": 351
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 1292856,
+   "cogs_usd": 542999,
+   "units": 47884
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 702273,
+   "cogs_usd": 421364,
+   "units": 281
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 1575872,
+   "cogs_usd": 819453,
+   "units": 197
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 725898,
+   "cogs_usd": 304877,
+   "units": 26885
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 391305,
+   "cogs_usd": 234783,
+   "units": 157
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 786092,
+   "cogs_usd": 408768,
+   "units": 98
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 360495,
+   "cogs_usd": 151408,
+   "units": 13352
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 198297,
+   "cogs_usd": 118978,
+   "units": 79
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 546144,
+   "cogs_usd": 377932,
+   "units": 91
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 878602,
+   "cogs_usd": 369013,
+   "units": 32541
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 429633,
+   "cogs_usd": 257780,
+   "units": 172
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 320079,
+   "cogs_usd": 221494,
+   "units": 53
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 497904,
+   "cogs_usd": 209120,
+   "units": 18441
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 233463,
+   "cogs_usd": 140078,
+   "units": 93
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 156053,
+   "cogs_usd": 107989,
+   "units": 26
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 241064,
+   "cogs_usd": 101247,
+   "units": 8928
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 110300,
+   "cogs_usd": 66180,
+   "units": 44
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 333944,
+   "cogs_usd": 231089,
+   "units": 61
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 624948,
+   "cogs_usd": 262478,
+   "units": 23146
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 272784,
+   "cogs_usd": 163671,
+   "units": 109
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 190327,
+   "cogs_usd": 131706,
+   "units": 35
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 340879,
+   "cogs_usd": 143169,
+   "units": 12625
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 141977,
+   "cogs_usd": 85186,
+   "units": 57
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 90641,
+   "cogs_usd": 62724,
+   "units": 16
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 159920,
+   "cogs_usd": 67166,
+   "units": 5923
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 74303,
+   "cogs_usd": 44582,
+   "units": 30
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 639347,
+   "cogs_usd": 351641,
+   "units": 152
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 519873,
+   "cogs_usd": 218347,
+   "units": 19255
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 236592,
+   "cogs_usd": 141955,
+   "units": 95
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 328987,
+   "cogs_usd": 180943,
+   "units": 78
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 295533,
+   "cogs_usd": 124124,
+   "units": 10946
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 131545,
+   "cogs_usd": 78927,
+   "units": 53
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 175613,
+   "cogs_usd": 96587,
+   "units": 42
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 146405,
+   "cogs_usd": 61490,
+   "units": 5422
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 65858,
+   "cogs_usd": 39515,
+   "units": 26
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 444436,
+   "cogs_usd": 244440,
+   "units": 85
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 353058,
+   "cogs_usd": 148284,
+   "units": 13076
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 151933,
+   "cogs_usd": 91160,
+   "units": 61
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 260685,
+   "cogs_usd": 143377,
+   "units": 50
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 193570,
+   "cogs_usd": 81299,
+   "units": 7169
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 86447,
+   "cogs_usd": 51868,
+   "units": 35
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 129132,
+   "cogs_usd": 71023,
+   "units": 25
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 92737,
+   "cogs_usd": 38950,
+   "units": 3435
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 42966,
+   "cogs_usd": 25779,
+   "units": 17
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "cloud-suite",
+   "region": "NA",
+   "revenue_type": "subscription",
+   "revenue_usd": 905559,
+   "cogs_usd": 199223,
+   "units": 189
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "cloud-suite",
+   "region": "EMEA",
+   "revenue_type": "subscription",
+   "revenue_usd": 525111,
+   "cogs_usd": 115524,
+   "units": 109
+  },
+  {
+   "period": "2025-Q3",
+   "product_line": "cloud-suite",
+   "region": "APAC",
+   "revenue_type": "subscription",
+   "revenue_usd": 262279,
+   "cogs_usd": 57701,
+   "units": 55
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 3041472,
+   "cogs_usd": 1581565,
+   "units": 380
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 1484685,
+   "cogs_usd": 623568,
+   "units": 54988
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 801896,
+   "cogs_usd": 481137,
+   "units": 321
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 1670217,
+   "cogs_usd": 868513,
+   "units": 209
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 808486,
+   "cogs_usd": 339564,
+   "units": 29944
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 429229,
+   "cogs_usd": 257537,
+   "units": 172
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 816003,
+   "cogs_usd": 424321,
+   "units": 102
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 385217,
+   "cogs_usd": 161791,
+   "units": 14267
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 216381,
+   "cogs_usd": 129829,
+   "units": 87
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 567461,
+   "cogs_usd": 399492,
+   "units": 95
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 915174,
+   "cogs_usd": 384373,
+   "units": 33895
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 397207,
+   "cogs_usd": 238324,
+   "units": 159
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 304162,
+   "cogs_usd": 214130,
+   "units": 51
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 477350,
+   "cogs_usd": 200487,
+   "units": 17680
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 229045,
+   "cogs_usd": 137427,
+   "units": 92
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 150814,
+   "cogs_usd": 106173,
+   "units": 25
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 249061,
+   "cogs_usd": 104605,
+   "units": 9224
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 106884,
+   "cogs_usd": 64131,
+   "units": 43
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 337832,
+   "cogs_usd": 237834,
+   "units": 61
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 566443,
+   "cogs_usd": 237906,
+   "units": 20979
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 265279,
+   "cogs_usd": 159167,
+   "units": 106
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 174257,
+   "cogs_usd": 122677,
+   "units": 32
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 307189,
+   "cogs_usd": 129019,
+   "units": 11377
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 138804,
+   "cogs_usd": 83282,
+   "units": 56
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 90418,
+   "cogs_usd": 63654,
+   "units": 16
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 156198,
+   "cogs_usd": 65603,
+   "units": 5785
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 70360,
+   "cogs_usd": 42216,
+   "units": 28
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 623956,
+   "cogs_usd": 343176,
+   "units": 149
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 521581,
+   "cogs_usd": 219064,
+   "units": 19318
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 236945,
+   "cogs_usd": 142167,
+   "units": 95
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 333357,
+   "cogs_usd": 183346,
+   "units": 79
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 291932,
+   "cogs_usd": 122611,
+   "units": 10812
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 123335,
+   "cogs_usd": 74001,
+   "units": 49
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 175803,
+   "cogs_usd": 96692,
+   "units": 42
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 144009,
+   "cogs_usd": 60484,
+   "units": 5334
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 65355,
+   "cogs_usd": 39213,
+   "units": 26
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 470942,
+   "cogs_usd": 259018,
+   "units": 91
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 351230,
+   "cogs_usd": 147517,
+   "units": 13009
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 152327,
+   "cogs_usd": 91396,
+   "units": 61
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 243331,
+   "cogs_usd": 133832,
+   "units": 47
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 191483,
+   "cogs_usd": 80423,
+   "units": 7092
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 82859,
+   "cogs_usd": 49715,
+   "units": 33
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 124124,
+   "cogs_usd": 68268,
+   "units": 24
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 97131,
+   "cogs_usd": 40795,
+   "units": 3597
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 42738,
+   "cogs_usd": 25643,
+   "units": 17
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "cloud-suite",
+   "region": "NA",
+   "revenue_type": "subscription",
+   "revenue_usd": 1067125,
+   "cogs_usd": 234768,
+   "units": 222
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "cloud-suite",
+   "region": "EMEA",
+   "revenue_type": "subscription",
+   "revenue_usd": 582492,
+   "cogs_usd": 128148,
+   "units": 121
+  },
+  {
+   "period": "2025-Q4",
+   "product_line": "cloud-suite",
+   "region": "APAC",
+   "revenue_type": "subscription",
+   "revenue_usd": 293591,
+   "cogs_usd": 64590,
+   "units": 61
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 3394881,
+   "cogs_usd": 1765338,
+   "units": 424
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 1566773,
+   "cogs_usd": 658045,
+   "units": 58029
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 858511,
+   "cogs_usd": 515106,
+   "units": 343
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 1854447,
+   "cogs_usd": 964313,
+   "units": 232
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 899414,
+   "cogs_usd": 377754,
+   "units": 33312
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 489517,
+   "cogs_usd": 293710,
+   "units": 196
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 963233,
+   "cogs_usd": 500881,
+   "units": 120
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 438418,
+   "cogs_usd": 184135,
+   "units": 16238
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 237492,
+   "cogs_usd": 142495,
+   "units": 95
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 536898,
+   "cogs_usd": 384419,
+   "units": 89
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 821553,
+   "cogs_usd": 345052,
+   "units": 30428
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 385535,
+   "cogs_usd": 231321,
+   "units": 154
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 290098,
+   "cogs_usd": 207710,
+   "units": 48
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 469762,
+   "cogs_usd": 197300,
+   "units": 17399
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 216587,
+   "cogs_usd": 129952,
+   "units": 87
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 145459,
+   "cogs_usd": 104148,
+   "units": 24
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 232308,
+   "cogs_usd": 97569,
+   "units": 8604
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 104519,
+   "cogs_usd": 62712,
+   "units": 42
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 311886,
+   "cogs_usd": 223311,
+   "units": 57
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 576050,
+   "cogs_usd": 241941,
+   "units": 21335
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 251396,
+   "cogs_usd": 150838,
+   "units": 101
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 165981,
+   "cogs_usd": 118842,
+   "units": 30
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 294326,
+   "cogs_usd": 123617,
+   "units": 10901
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 134119,
+   "cogs_usd": 80471,
+   "units": 54
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 86149,
+   "cogs_usd": 61683,
+   "units": 16
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 150212,
+   "cogs_usd": 63089,
+   "units": 5563
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 68683,
+   "cogs_usd": 41210,
+   "units": 27
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 639091,
+   "cogs_usd": 351500,
+   "units": 152
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 536361,
+   "cogs_usd": 225272,
+   "units": 19865
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 231465,
+   "cogs_usd": 138879,
+   "units": 93
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 333504,
+   "cogs_usd": 183427,
+   "units": 79
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 277592,
+   "cogs_usd": 116589,
+   "units": 10281
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 126463,
+   "cogs_usd": 75878,
+   "units": 51
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 170525,
+   "cogs_usd": 93789,
+   "units": 41
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 148323,
+   "cogs_usd": 62296,
+   "units": 5493
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 62343,
+   "cogs_usd": 37406,
+   "units": 25
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 458838,
+   "cogs_usd": 252361,
+   "units": 88
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 350097,
+   "cogs_usd": 147041,
+   "units": 12967
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 150235,
+   "cogs_usd": 90141,
+   "units": 60
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 255959,
+   "cogs_usd": 140777,
+   "units": 49
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 188915,
+   "cogs_usd": 79344,
+   "units": 6997
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 82280,
+   "cogs_usd": 49368,
+   "units": 33
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 127573,
+   "cogs_usd": 70165,
+   "units": 25
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 90762,
+   "cogs_usd": 38120,
+   "units": 3362
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 42843,
+   "cogs_usd": 25706,
+   "units": 17
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "cloud-suite",
+   "region": "NA",
+   "revenue_type": "subscription",
+   "revenue_usd": 1285137,
+   "cogs_usd": 282730,
+   "units": 268
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "cloud-suite",
+   "region": "EMEA",
+   "revenue_type": "subscription",
+   "revenue_usd": 664565,
+   "cogs_usd": 146204,
+   "units": 138
+  },
+  {
+   "period": "2026-Q1",
+   "product_line": "cloud-suite",
+   "region": "APAC",
+   "revenue_type": "subscription",
+   "revenue_usd": 341026,
+   "cogs_usd": 75026,
+   "units": 71
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 3666165,
+   "cogs_usd": 1906406,
+   "units": 458
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 1816285,
+   "cogs_usd": 762840,
+   "units": 67270
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3500",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 974784,
+   "cogs_usd": 584870,
+   "units": 390
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 1979087,
+   "cogs_usd": 1029125,
+   "units": 247
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 936512,
+   "cogs_usd": 393335,
+   "units": 34686
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3500",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 545733,
+   "cogs_usd": 327440,
+   "units": 218
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 1022904,
+   "cogs_usd": 531910,
+   "units": 128
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 489366,
+   "cogs_usd": 205534,
+   "units": 18125
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3500",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 269028,
+   "cogs_usd": 161417,
+   "units": 108
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 539051,
+   "cogs_usd": 392429,
+   "units": 90
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 836421,
+   "cogs_usd": 351297,
+   "units": 30979
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 394152,
+   "cogs_usd": 236491,
+   "units": 158
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 291844,
+   "cogs_usd": 212462,
+   "units": 49
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 456853,
+   "cogs_usd": 191878,
+   "units": 16920
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 211161,
+   "cogs_usd": 126697,
+   "units": 84
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 141545,
+   "cogs_usd": 103045,
+   "units": 24
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 232373,
+   "cogs_usd": 97597,
+   "units": 8606
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "PP3000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 104158,
+   "cogs_usd": 62495,
+   "units": 42
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 309589,
+   "cogs_usd": 225381,
+   "units": 56
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 546256,
+   "cogs_usd": 229428,
+   "units": 20232
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "IP5000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 235280,
+   "cogs_usd": 141168,
+   "units": 94
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 160513,
+   "cogs_usd": 116854,
+   "units": 29
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 286351,
+   "cogs_usd": 120268,
+   "units": 10606
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "IP5000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 130011,
+   "cogs_usd": 78007,
+   "units": 52
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 83573,
+   "cogs_usd": 60841,
+   "units": 15
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 146380,
+   "cogs_usd": 61479,
+   "units": 5421
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "IP5000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 64949,
+   "cogs_usd": 38970,
+   "units": 26
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 618282,
+   "cogs_usd": 340055,
+   "units": 147
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 513721,
+   "cogs_usd": 215763,
+   "units": 19027
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6000",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 233785,
+   "cogs_usd": 140271,
+   "units": 94
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 337166,
+   "cogs_usd": 185441,
+   "units": 80
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 285831,
+   "cogs_usd": 120049,
+   "units": 10586
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6000",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 130160,
+   "cogs_usd": 78096,
+   "units": 52
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 166751,
+   "cogs_usd": 91713,
+   "units": 40
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 141890,
+   "cogs_usd": 59594,
+   "units": 5255
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6000",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 65878,
+   "cogs_usd": 39527,
+   "units": 26
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "hardware",
+   "revenue_usd": 469629,
+   "cogs_usd": 258296,
+   "units": 90
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "consumables",
+   "revenue_usd": 334420,
+   "cogs_usd": 140457,
+   "units": 12386
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6500",
+   "region": "NA",
+   "revenue_type": "service",
+   "revenue_usd": 152862,
+   "cogs_usd": 91717,
+   "units": 61
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "hardware",
+   "revenue_usd": 252859,
+   "cogs_usd": 139072,
+   "units": 49
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "consumables",
+   "revenue_usd": 187727,
+   "cogs_usd": 78845,
+   "units": 6953
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6500",
+   "region": "EMEA",
+   "revenue_type": "service",
+   "revenue_usd": 82030,
+   "cogs_usd": 49218,
+   "units": 33
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "hardware",
+   "revenue_usd": 125195,
+   "cogs_usd": 68857,
+   "units": 24
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "consumables",
+   "revenue_usd": 97561,
+   "cogs_usd": 40975,
+   "units": 3613
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "SP6500",
+   "region": "APAC",
+   "revenue_type": "service",
+   "revenue_usd": 42283,
+   "cogs_usd": 25370,
+   "units": 17
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "cloud-suite",
+   "region": "NA",
+   "revenue_type": "subscription",
+   "revenue_usd": 1482059,
+   "cogs_usd": 326053,
+   "units": 309
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "cloud-suite",
+   "region": "EMEA",
+   "revenue_type": "subscription",
+   "revenue_usd": 818661,
+   "cogs_usd": 180105,
+   "units": 171
+  },
+  {
+   "period": "2026-Q2",
+   "product_line": "cloud-suite",
+   "region": "APAC",
+   "revenue_type": "subscription",
+   "revenue_usd": 406429,
+   "cogs_usd": 89414,
+   "units": 85
+  }
+ ]
+}

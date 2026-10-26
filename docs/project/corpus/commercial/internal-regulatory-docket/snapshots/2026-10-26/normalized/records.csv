@@ -1,0 +1,34 @@
+record_id,type,opened_date,regulatory_deadline,filed_date,status,category,region,description
+MDR-2025-0001,mdr,2025-02-01,2025-03-03,2025-02-20,closed,dose-programming,EMEA,Dose programming discrepancy identified at pump review
+MDR-2025-0002,mdr,2025-02-06,2025-03-08,2025-02-27,closed,mechanical,NA,Mechanical fault (door latch / keypad) reported from field
+CORR-2025-001,correction,2025-03-10,2025-03-24,2025-03-18,closed,labeling-correction,NA,IFU clarification on bolus lockout labeling; closed 2025-06
+MDR-2025-0003,mdr,2025-03-11,2025-04-10,2025-03-29,closed,battery,EMEA,Unexpected battery depletion / shutdown during infusion
+MDR-2025-0004,mdr,2025-03-13,2025-04-12,2025-03-31,closed,occlusion-alarm,APAC,Occlusion alarm failure-to-annunciate reported during PCA therapy
+MDR-2025-0005,mdr,2025-04-04,2025-05-04,2025-05-01,closed,dose-programming,NA,Dose programming discrepancy identified at pump review
+MDR-2025-0006,mdr,2025-04-09,2025-05-09,2025-05-01,closed,battery,NA,Unexpected battery depletion / shutdown during infusion
+MDR-2025-0007,mdr,2025-04-10,2025-05-10,2025-05-14,closed,occlusion-alarm,EMEA,Occlusion alarm failure-to-annunciate reported during PCA therapy
+MDR-2025-0008,mdr,2025-04-18,2025-05-18,2025-05-08,closed,battery,APAC,Unexpected battery depletion / shutdown during infusion
+MDR-2025-0009,mdr,2025-04-29,2025-05-29,2025-05-22,closed,occlusion-alarm,NA,Occlusion alarm failure-to-annunciate reported during PCA therapy
+MDR-2025-0010,mdr,2025-05-12,2025-06-11,2025-06-02,closed,other,NA,Miscellaneous reportable field event
+MDR-2025-0011,mdr,2025-06-10,2025-07-10,2025-07-01,closed,dose-programming,EMEA,Dose programming discrepancy identified at pump review
+MDR-2025-0012,mdr,2025-06-13,2025-07-13,2025-07-05,closed,occlusion-alarm,NA,Occlusion alarm failure-to-annunciate reported during PCA therapy
+MDR-2025-0013,mdr,2025-06-17,2025-07-17,2025-07-09,closed,software,NA,Software anomaly observed on pump UI during therapy
+MDR-2025-0014,mdr,2025-06-29,2025-07-29,2025-07-23,closed,dose-programming,NA,Dose programming discrepancy identified at pump review
+MDR-2025-0015,mdr,2025-07-20,2025-08-19,2025-08-16,closed,software,APAC,Software anomaly observed on pump UI during therapy
+MDR-2025-0016,mdr,2025-08-18,2025-09-17,2025-09-10,closed,dose-programming,NA,Dose programming discrepancy identified at pump review
+MDR-2025-0017,mdr,2025-08-21,2025-09-20,2025-09-16,closed,occlusion-alarm,APAC,Occlusion alarm failure-to-annunciate reported during PCA therapy
+MDR-2025-0018,mdr,2025-08-26,2025-09-25,2025-10-04,closed,mechanical,NA,Mechanical fault (door latch / keypad) reported from field
+CORR-2025-002,correction,2025-09-02,2025-09-16,2025-09-11,closed,software-patch,EMEA,Firmware 3.2.1 display-timeout patch; closed 2025-12
+MDR-2025-0019,mdr,2025-09-19,2025-10-19,2025-10-16,closed,other,APAC,Miscellaneous reportable field event
+MDR-2025-0020,mdr,2025-10-01,2025-10-31,2025-10-22,closed,software,EMEA,Software anomaly observed on pump UI during therapy
+MDR-2025-0021,mdr,2025-10-02,2025-11-01,2025-10-22,closed,mechanical,EMEA,Mechanical fault (door latch / keypad) reported from field
+MDR-2025-0022,mdr,2025-10-05,2025-11-04,2025-10-31,closed,software,EMEA,Software anomaly observed on pump UI during therapy
+MDR-2025-0023,mdr,2025-11-01,2025-12-01,2025-11-19,closed,mechanical,NA,Mechanical fault (door latch / keypad) reported from field
+MDR-2025-0024,mdr,2025-11-23,2025-12-23,2025-12-13,closed,occlusion-alarm,EMEA,Occlusion alarm failure-to-annunciate reported during PCA therapy
+MDR-2025-0025,mdr,2025-12-03,2026-01-02,2025-12-30,closed,mechanical,NA,Mechanical fault (door latch / keypad) reported from field
+MDR-2026-0001,mdr,2026-01-13,2026-02-12,2026-02-04,filed,occlusion-alarm,NA,Occlusion alarm failure-to-annunciate reported during PCA therapy
+MDR-2026-0002,mdr,2026-02-17,2026-03-19,2026-03-14,filed,battery,EMEA,Unexpected battery depletion / shutdown during infusion
+MDR-2026-0003,mdr,2026-04-19,2026-05-19,2026-05-14,filed,occlusion-alarm,NA,Occlusion alarm failure-to-annunciate reported during PCA therapy
+MDR-2026-0004,mdr,2026-04-23,2026-05-23,2026-05-12,filed,battery,NA,Unexpected battery depletion / shutdown during infusion
+FSCA-2026-001,fsca,2026-05-12,2026-05-26,2026-05-20,open,drug-library-correction,ALL,"Field correction: PCA drug library v3.4.1 hard-limit update. Rollout status: NA complete 2026-06, EMEA in progress (~60% sites), APAC pending"
+MDR-2026-0005,mdr,2026-06-29,2026-07-29,,open,over-delivery,NA,"Suspected over-delivery event during PCA therapy; investigation ongoing, MDR in preparation"
