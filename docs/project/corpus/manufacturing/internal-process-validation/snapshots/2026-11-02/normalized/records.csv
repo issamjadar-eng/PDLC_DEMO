@@ -1,0 +1,156 @@
+record_id,type,asset_or_process,product_line,site,status,completed_date,due_date,owner_function
+VAL-0001,IQ,SMT reflow oven line A,,Eastbrook,validated,2025-02-05,2025-02-17,manufacturing-engineering
+VAL-0002,OQ,SMT reflow oven line A,,Eastbrook,validated,2025-02-24,2025-03-05,manufacturing-engineering
+VAL-0003,PQ,SMT reflow oven line A,,Eastbrook,validated,2025-03-14,2025-03-21,quality
+VAL-0004,IQ,SMT reflow oven line B,,Westfield,validated,2025-07-02,2025-07-09,manufacturing-engineering
+VAL-0005,OQ,SMT reflow oven line B,,Westfield,validated,2025-07-25,2025-08-06,manufacturing-engineering
+VAL-0006,PQ,SMT reflow oven line B,,Westfield,validated,2025-08-19,2025-08-24,quality
+VAL-0007,IQ,automated optical inspection,,Eastbrook,validated,2025-09-17,2025-10-05,manufacturing-engineering
+VAL-0008,OQ,automated optical inspection,,Eastbrook,validated,2025-09-30,2025-10-19,manufacturing-engineering
+VAL-0009,PQ,automated optical inspection,,Eastbrook,validated,2025-10-26,2025-11-08,quality
+VAL-0010,IQ,automated optical inspection,,Westfield,validated,2025-01-27,2025-02-14,manufacturing-engineering
+VAL-0011,OQ,automated optical inspection,,Westfield,validated,2025-02-19,2025-03-04,manufacturing-engineering
+VAL-0012,PQ,automated optical inspection,,Westfield,validated,2025-03-08,2025-03-19,quality
+VAL-0013,IQ,pump-motor press-fit process,PP3500,Eastbrook,validated,2025-06-05,2025-06-22,manufacturing-engineering
+VAL-0014,OQ,pump-motor press-fit process,PP3500,Eastbrook,validated,2025-06-25,2025-07-11,manufacturing-engineering
+VAL-0015,PQ,pump-motor press-fit process,PP3500,Eastbrook,validated,2025-07-19,2025-08-01,quality
+VAL-0016,IQ,pump-motor press-fit process,PP3500,Westfield,validated,2025-01-31,2025-02-08,manufacturing-engineering
+VAL-0017,OQ,pump-motor press-fit process,PP3500,Westfield,validated,2025-02-19,2025-02-26,manufacturing-engineering
+VAL-0018,PQ,pump-motor press-fit process,PP3500,Westfield,validated,2025-03-13,2025-03-27,quality
+VAL-0019,IQ,occlusion pressure test process,PP3500,Eastbrook,validated,2025-06-22,2025-06-29,manufacturing-engineering
+VAL-0020,OQ,occlusion pressure test process,PP3500,Eastbrook,validated,2025-07-09,2025-07-21,manufacturing-engineering
+VAL-0021,PQ,occlusion pressure test process,PP3500,Eastbrook,validated,2025-08-02,2025-08-09,quality
+VAL-0022,IQ,occlusion pressure test process,PP3500,Westfield,validated,2025-04-29,2025-05-16,manufacturing-engineering
+VAL-0023,OQ,occlusion pressure test process,PP3500,Westfield,validated,2025-05-22,2025-06-10,manufacturing-engineering
+VAL-0024,PQ,occlusion pressure test process,PP3500,Westfield,validated,2025-06-17,2025-07-03,quality
+VAL-0025,IQ,flow-accuracy test process,PP3000,Eastbrook,validated,2025-03-17,2025-03-28,manufacturing-engineering
+VAL-0026,OQ,flow-accuracy test process,PP3000,Eastbrook,validated,2025-04-11,2025-04-24,manufacturing-engineering
+VAL-0027,PQ,flow-accuracy test process,PP3000,Eastbrook,validated,2025-05-01,2025-05-08,quality
+VAL-0028,IQ,flow-accuracy test process,IP5000,Eastbrook,validated,2025-03-21,2025-03-31,manufacturing-engineering
+VAL-0029,OQ,flow-accuracy test process,IP5000,Eastbrook,validated,2025-04-14,2025-05-01,manufacturing-engineering
+VAL-0030,PQ,flow-accuracy test process,IP5000,Eastbrook,validated,2025-05-01,2025-05-13,quality
+VAL-0031,IQ,flow-accuracy test process,SP6000,Westfield,validated,2025-06-27,2025-07-09,manufacturing-engineering
+VAL-0032,OQ,flow-accuracy test process,SP6000,Westfield,validated,2025-07-17,2025-08-01,manufacturing-engineering
+VAL-0033,PQ,flow-accuracy test process,SP6000,Westfield,validated,2025-08-12,2025-08-25,quality
+VAL-0034,IQ,flow-accuracy test process,SP6500,Westfield,validated,2025-02-16,2025-03-03,manufacturing-engineering
+VAL-0035,OQ,flow-accuracy test process,SP6500,Westfield,validated,2025-03-02,2025-03-22,manufacturing-engineering
+VAL-0036,PQ,flow-accuracy test process,SP6500,Westfield,validated,2025-03-25,2025-04-13,quality
+VAL-0037,IQ,ultrasonic enclosure weld,PP3500,Eastbrook,validated,2025-03-11,2025-03-23,manufacturing-engineering
+VAL-0038,OQ,ultrasonic enclosure weld,PP3500,Eastbrook,validated,2025-04-06,2025-04-19,manufacturing-engineering
+VAL-0039,PQ,ultrasonic enclosure weld,PP3500,Eastbrook,validated,2025-04-27,2025-05-15,quality
+VAL-0040,IQ,ultrasonic enclosure weld,SP6000,Westfield,validated,2025-07-15,2025-07-24,manufacturing-engineering
+VAL-0041,OQ,ultrasonic enclosure weld,SP6000,Westfield,validated,2025-08-09,2025-08-29,manufacturing-engineering
+VAL-0042,PQ,ultrasonic enclosure weld,SP6000,Westfield,validated,2025-08-22,2025-08-28,quality
+VAL-0043,IQ,final functional test fixture rev B,PP3500,Eastbrook,validated,2025-02-15,2025-02-25,manufacturing-engineering
+VAL-0044,OQ,final functional test fixture rev B,PP3500,Eastbrook,validated,2025-03-07,2025-03-25,manufacturing-engineering
+VAL-0045,PQ,final functional test fixture rev B,PP3500,Eastbrook,validated,2025-03-26,2025-04-02,quality
+VAL-0046,IQ,final functional test fixture rev B,PP3500,Westfield,validated,2025-07-22,2025-08-10,manufacturing-engineering
+VAL-0047,OQ,final functional test fixture rev B,PP3500,Westfield,validated,2025-08-10,2025-08-23,manufacturing-engineering
+VAL-0048,PQ,final functional test fixture rev B,PP3500,Westfield,validated,2025-08-30,2025-09-04,quality
+VAL-0049,IQ,pouch sealer,,Eastbrook,validated,2025-03-02,2025-03-15,manufacturing-engineering
+VAL-0050,OQ,pouch sealer,,Eastbrook,validated,2025-03-24,2025-04-08,manufacturing-engineering
+VAL-0051,PQ,pouch sealer,,Eastbrook,validated,2025-04-04,2025-04-18,quality
+VAL-0052,IQ,pouch sealer,,Westfield,validated,2025-07-13,2025-07-18,manufacturing-engineering
+VAL-0053,OQ,pouch sealer,,Westfield,validated,2025-07-30,2025-08-09,manufacturing-engineering
+VAL-0054,PQ,pouch sealer,,Westfield,validated,2025-08-23,2025-08-31,quality
+VAL-0055,IQ,label printer / UDI verifier,,Eastbrook,validated,2025-06-06,2025-06-17,manufacturing-engineering
+VAL-0056,OQ,label printer / UDI verifier,,Eastbrook,validated,2025-06-18,2025-07-04,manufacturing-engineering
+VAL-0057,PQ,label printer / UDI verifier,,Eastbrook,validated,2025-07-08,2025-07-13,quality
+VAL-0058,IQ,label printer / UDI verifier,,Westfield,validated,2025-06-16,2025-06-24,manufacturing-engineering
+VAL-0059,OQ,label printer / UDI verifier,,Westfield,validated,2025-07-11,2025-07-25,manufacturing-engineering
+VAL-0060,PQ,label printer / UDI verifier,,Westfield,validated,2025-07-29,2025-08-04,quality
+VAL-0061,IQ,final functional test fixture rev C,PP3500,Eastbrook,validated,2026-03-23,2026-03-31,manufacturing-engineering
+VAL-0062,OQ,final functional test fixture rev C,PP3500,Eastbrook,validated,2026-05-19,2026-05-31,manufacturing-engineering
+VAL-0063,PQ,final functional test fixture rev C,PP3500,Eastbrook,in-progress,,2026-09-30,quality
+VAL-0064,IQ,final functional test fixture rev C,PP3500,Westfield,validated,2026-03-21,2026-03-31,manufacturing-engineering
+VAL-0065,OQ,final functional test fixture rev C,PP3500,Westfield,validated,2026-05-11,2026-05-31,manufacturing-engineering
+VAL-0066,PQ,final functional test fixture rev C,PP3500,Westfield,in-progress,,2026-09-30,quality
+VAL-0067,OQ,occlusion pressure test process rev C,PP3500,Westfield,not-started,,2026-10-15,manufacturing-engineering
+VAL-0068,calibration,torque driver #01,,Eastbrook,validated,2025-11-25,2026-11-25,metrology
+VAL-0069,calibration,digital pressure gauge #02,PP3000,Eastbrook,validated,2025-12-22,2026-12-22,metrology
+VAL-0070,calibration,flow meter reference #03,,Eastbrook,validated,2026-06-06,2027-06-06,metrology
+VAL-0071,calibration,precision balance #04,IP5000,Eastbrook,overdue,2025-07-12,2026-07-12,metrology
+VAL-0072,calibration,leak tester reference #05,,Eastbrook,validated,2026-01-18,2027-01-18,metrology
+VAL-0073,calibration,thermocouple set #06,PP3000,Eastbrook,validated,2026-02-13,2027-02-13,metrology
+VAL-0074,calibration,caliper #07,IP5000,Eastbrook,validated,2026-05-17,2027-05-17,metrology
+VAL-0075,calibration,electrical safety analyzer #08,,Eastbrook,validated,2025-11-08,2026-11-08,metrology
+VAL-0076,calibration,syringe pump reference #09,PP3000,Eastbrook,validated,2025-11-11,2026-11-11,metrology
+VAL-0077,calibration,hipot tester #10,PP3500,Eastbrook,validated,2026-07-18,2027-07-18,metrology
+VAL-0078,calibration,oscilloscope #11,PP3000,Eastbrook,validated,2026-07-08,2027-07-08,metrology
+VAL-0079,calibration,environmental chamber probe #12,PP3500,Eastbrook,validated,2025-11-23,2026-11-23,metrology
+VAL-0080,calibration,force gauge #13,PP3500,Eastbrook,validated,2026-01-03,2027-01-03,metrology
+VAL-0081,calibration,vision system target #14,PP3500,Eastbrook,validated,2026-03-03,2027-03-03,metrology
+VAL-0082,calibration,DMM reference #15,PP3000,Eastbrook,validated,2026-02-22,2027-02-22,metrology
+VAL-0083,calibration,torque driver #16,,Eastbrook,validated,2026-01-18,2027-01-18,metrology
+VAL-0084,calibration,digital pressure gauge #17,PP3000,Eastbrook,validated,2026-07-19,2027-07-19,metrology
+VAL-0085,calibration,flow meter reference #18,,Eastbrook,validated,2026-01-26,2027-01-26,metrology
+VAL-0086,calibration,precision balance #19,,Eastbrook,validated,2026-04-07,2027-04-07,metrology
+VAL-0087,calibration,leak tester reference #20,PP3500,Eastbrook,validated,2025-11-22,2026-11-22,metrology
+VAL-0088,calibration,thermocouple set #21,,Eastbrook,validated,2026-03-14,2027-03-14,metrology
+VAL-0089,calibration,caliper #22,,Eastbrook,validated,2026-05-28,2027-05-28,metrology
+VAL-0090,calibration,electrical safety analyzer #23,PP3500,Eastbrook,validated,2026-08-21,2027-08-21,metrology
+VAL-0091,calibration,syringe pump reference #24,PP3500,Eastbrook,validated,2025-10-13,2026-10-13,metrology
+VAL-0092,calibration,hipot tester #25,IP5000,Eastbrook,validated,2025-11-08,2026-11-08,metrology
+VAL-0093,calibration,oscilloscope #26,PP3000,Eastbrook,validated,2026-01-18,2027-01-18,metrology
+VAL-0094,calibration,environmental chamber probe #27,,Eastbrook,validated,2025-12-14,2026-12-14,metrology
+VAL-0095,calibration,force gauge #28,PP3000,Eastbrook,validated,2026-02-15,2027-02-15,metrology
+VAL-0096,calibration,vision system target #29,PP3000,Eastbrook,validated,2025-11-15,2026-11-15,metrology
+VAL-0097,calibration,DMM reference #30,PP3500,Eastbrook,validated,2025-10-21,2026-10-21,metrology
+VAL-0098,calibration,torque driver #31,PP3500,Eastbrook,validated,2025-11-25,2026-11-25,metrology
+VAL-0099,calibration,digital pressure gauge #32,PP3000,Eastbrook,validated,2025-12-14,2026-12-14,metrology
+VAL-0100,calibration,flow meter reference #33,,Eastbrook,validated,2026-05-07,2027-05-07,metrology
+VAL-0101,calibration,precision balance #34,,Eastbrook,validated,2025-10-06,2026-10-06,metrology
+VAL-0102,calibration,torque driver #01,,Westfield,overdue,2025-05-13,2026-05-13,metrology
+VAL-0103,calibration,digital pressure gauge #02,SP6500,Westfield,overdue,2025-08-10,2026-08-10,metrology
+VAL-0104,calibration,flow meter reference #03,,Westfield,overdue,2025-08-05,2026-08-05,metrology
+VAL-0105,calibration,precision balance #04,SP6000,Westfield,overdue,2025-07-07,2026-07-07,metrology
+VAL-0106,calibration,leak tester reference #05,PP3500,Westfield,overdue,2025-05-24,2026-05-24,metrology
+VAL-0107,calibration,thermocouple set #06,SP6500,Westfield,overdue,2025-05-02,2026-05-02,metrology
+VAL-0108,calibration,caliper #07,,Westfield,overdue,2025-06-02,2026-06-02,metrology
+VAL-0109,calibration,electrical safety analyzer #08,PP3500,Westfield,overdue,2025-06-03,2026-06-03,metrology
+VAL-0110,calibration,syringe pump reference #09,PP3500,Westfield,overdue,2025-06-13,2026-06-13,metrology
+VAL-0111,calibration,hipot tester #10,PP3500,Westfield,validated,2026-07-08,2027-07-08,metrology
+VAL-0112,calibration,oscilloscope #11,PP3500,Westfield,validated,2026-07-03,2027-07-03,metrology
+VAL-0113,calibration,environmental chamber probe #12,,Westfield,validated,2026-08-19,2027-08-19,metrology
+VAL-0114,calibration,force gauge #13,SP6500,Westfield,validated,2026-02-07,2027-02-07,metrology
+VAL-0115,calibration,vision system target #14,SP6500,Westfield,validated,2026-01-09,2027-01-09,metrology
+VAL-0116,calibration,DMM reference #15,,Westfield,validated,2025-12-22,2026-12-22,metrology
+VAL-0117,calibration,torque driver #16,SP6500,Westfield,validated,2026-05-11,2027-05-11,metrology
+VAL-0118,calibration,digital pressure gauge #17,PP3500,Westfield,validated,2025-10-15,2026-10-15,metrology
+VAL-0119,calibration,flow meter reference #18,PP3500,Westfield,validated,2025-11-18,2026-11-18,metrology
+VAL-0120,calibration,precision balance #19,SP6000,Westfield,validated,2026-06-09,2027-06-09,metrology
+VAL-0121,calibration,leak tester reference #20,SP6000,Westfield,validated,2026-03-03,2027-03-03,metrology
+VAL-0122,calibration,thermocouple set #21,SP6000,Westfield,validated,2026-03-10,2027-03-10,metrology
+VAL-0123,calibration,caliper #22,SP6000,Westfield,validated,2026-05-27,2027-05-27,metrology
+VAL-0124,calibration,electrical safety analyzer #23,SP6500,Westfield,validated,2026-07-26,2027-07-26,metrology
+VAL-0125,calibration,syringe pump reference #24,PP3500,Westfield,validated,2026-08-27,2027-08-27,metrology
+VAL-0126,calibration,hipot tester #25,SP6500,Westfield,validated,2026-08-04,2027-08-04,metrology
+VAL-0127,calibration,oscilloscope #26,SP6000,Westfield,validated,2026-02-04,2027-02-04,metrology
+VAL-0128,calibration,environmental chamber probe #27,PP3500,Westfield,validated,2026-06-05,2027-06-05,metrology
+VAL-0129,calibration,force gauge #28,SP6500,Westfield,validated,2026-02-20,2027-02-20,metrology
+VAL-0130,calibration,vision system target #29,SP6000,Westfield,validated,2026-03-07,2027-03-07,metrology
+VAL-0131,calibration,DMM reference #30,SP6500,Westfield,validated,2026-06-16,2027-06-16,metrology
+VAL-0132,calibration,torque driver #31,SP6500,Westfield,validated,2025-10-03,2026-10-03,metrology
+VAL-0133,calibration,digital pressure gauge #32,,Westfield,validated,2026-02-02,2027-02-02,metrology
+VAL-0134,calibration,flow meter reference #33,PP3500,Westfield,validated,2026-03-25,2027-03-25,metrology
+VAL-0135,calibration,precision balance #34,SP6000,Westfield,validated,2026-08-09,2027-08-09,metrology
+VAL-0136,preventive-maintenance,SMT pick-and-place,,Eastbrook,validated,2026-04-24,2026-10-23,facilities
+VAL-0137,preventive-maintenance,reflow oven,,Eastbrook,validated,2026-06-18,2026-12-17,facilities
+VAL-0138,preventive-maintenance,compressed-air dryer,,Eastbrook,validated,2026-06-18,2026-12-17,facilities
+VAL-0139,preventive-maintenance,HVAC cleanroom unit,,Eastbrook,due,2026-03-04,2026-09-02,facilities
+VAL-0140,preventive-maintenance,conveyor,,Eastbrook,due,2026-03-23,2026-09-21,facilities
+VAL-0141,preventive-maintenance,ultrasonic welder,,Eastbrook,validated,2026-04-18,2026-10-17,facilities
+VAL-0142,preventive-maintenance,pouch sealer,,Eastbrook,due,2026-03-27,2026-09-25,facilities
+VAL-0143,preventive-maintenance,label printer,,Eastbrook,validated,2026-05-19,2026-11-17,facilities
+VAL-0144,preventive-maintenance,burn-in rack,,Eastbrook,validated,2026-07-05,2027-01-03,facilities
+VAL-0145,preventive-maintenance,ESD flooring test,,Eastbrook,validated,2026-06-05,2026-12-04,facilities
+VAL-0146,preventive-maintenance,SMT pick-and-place,,Westfield,due,2026-03-10,2026-09-08,facilities
+VAL-0147,preventive-maintenance,reflow oven,,Westfield,validated,2026-05-26,2026-11-24,facilities
+VAL-0148,preventive-maintenance,compressed-air dryer,,Westfield,due,2026-03-12,2026-09-10,facilities
+VAL-0149,preventive-maintenance,HVAC cleanroom unit,,Westfield,validated,2026-04-22,2026-10-21,facilities
+VAL-0150,preventive-maintenance,conveyor,,Westfield,validated,2026-04-22,2026-10-21,facilities
+VAL-0151,preventive-maintenance,ultrasonic welder,,Westfield,due,2026-03-12,2026-09-10,facilities
+VAL-0152,preventive-maintenance,pouch sealer,,Westfield,validated,2026-07-28,2027-01-26,facilities
+VAL-0153,preventive-maintenance,label printer,,Westfield,validated,2026-06-20,2026-12-19,facilities
+VAL-0154,preventive-maintenance,burn-in rack,,Westfield,validated,2026-04-08,2026-10-07,facilities
+VAL-0155,preventive-maintenance,ESD flooring test,,Westfield,validated,2026-04-26,2026-10-25,facilities
