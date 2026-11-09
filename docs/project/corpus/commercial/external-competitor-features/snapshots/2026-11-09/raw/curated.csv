@@ -1,0 +1,43 @@
+vendor,product,attribute,value,unit,source_type,source_ref,verified
+GlobalLogic,PainEase PCA Advanced (PP3500),pca_mode,yes (flagship patient-controlled analgesia system),,project-doc,docs/project/input-analysis/competitive-landscape/competitive-product-assessment.md,yes
+GlobalLogic,PainEase PCA Advanced (PP3500),predictive_monitoring,no (complete absence of predictive monitoring across portfolio),,project-doc,docs/project/input-analysis/competitive-landscape/competitive-product-assessment.md,yes
+GlobalLogic,PainEase PCA Advanced (PP3500),ders_drug_library,yes (drug library 200+ medications),,project-doc,docs/project/input-analysis/competitive-landscape/competitive-product-assessment.md,yes
+GlobalLogic,PainEase PCA Advanced (PP3500),wireless_connectivity,planned Y1 (Connectivity Adapter MDDS - roadmap F2),,project-doc,docs/project/strategies/commercial-strategy.md,yes
+GlobalLogic,PainEase PCA Advanced (PP3500),remote_update_capability,planned Y1 (Fleet Management + drug-library update cadence - roadmap F1/F3),,project-doc,docs/project/strategies/commercial-strategy.md,yes
+GlobalLogic,PainEase PCA Advanced (PP3500),flow_accuracy_pct,0.35,+/- pct (laboratory),project-doc,docs/project/input-analysis/competitive-landscape/state-of-the-art-analysis.md,yes
+GlobalLogic,PainEase PCA Advanced (PP3500),battery_hours,150,hours (150+ per source),project-doc,docs/project/input-analysis/competitive-landscape/competitive-product-assessment.md,yes
+GlobalLogic,PainEase PCA Advanced (PP3500),weight_kg,0.75,kg,project-doc,docs/project/input-analysis/competitive-landscape/competitive-product-assessment.md,yes
+BD,Alaris (PCA Module),pca_mode,yes (Alaris PCA Module),,project-doc,docs/project/input-analysis/competitive-landscape/state-of-the-art-analysis.md,yes
+BD,Alaris (PCA Module),pca_pause_or_etco2,yes (PCA Pause),,project-doc,docs/project/input-analysis/competitive-landscape/state-of-the-art-analysis.md,yes
+BD,Alaris (PCA Module),integrated_etco2,yes (EtCO2 module integration),,project-doc,docs/project/input-analysis/competitive-landscape/state-of-the-art-analysis.md,yes
+BD,Alaris,ders_drug_library,yes (Guardrails),,project-doc,docs/project/input-analysis/competitive-landscape/state-of-the-art-analysis.md,yes
+BD,Alaris,wireless_connectivity,yes (Wi-Fi),,project-doc,docs/project/input-analysis/competitive-landscape/state-of-the-art-analysis.md,yes
+BD,Alaris,predictive_monitoring,no (reactive alarms only),,project-doc,docs/project/input-analysis/competitive-landscape/competitive-product-assessment.md,yes
+BD,Alaris,flow_accuracy_pct,2.3,+/- pct,project-doc,docs/project/input-analysis/competitive-landscape/competitive-product-assessment.md,yes
+BD,Alaris,battery_hours,6,hours at 25 mL/h,project-doc,docs/project/input-analysis/competitive-landscape/state-of-the-art-analysis.md,yes
+Baxter,Spectrum IQ,predictive_monitoring,no (reactive alarms only),,project-doc,docs/project/input-analysis/competitive-landscape/competitive-product-assessment.md,yes
+Baxter,Spectrum IQ,flow_accuracy_pct,2.3,+/- pct,project-doc,docs/project/input-analysis/competitive-landscape/competitive-product-assessment.md,yes
+Baxter,Spectrum IQ,ders_drug_library,yes (Dose IQ safety software),,public-web,https://www.baxter.com/healthcare-professionals/medication-delivery-nutrition/spectrum-iq-infusion-system,verify
+Baxter,Spectrum IQ,wireless_connectivity,yes (EMR auto-programming integration),,public-web,https://www.baxter.com/healthcare-professionals/medication-delivery-nutrition/spectrum-iq-infusion-system,verify
+Baxter,Sigma Spectrum,ders_drug_library,yes (Dose/Rate Change Error Prevention + drug library),,project-doc,docs/project/input-analysis/competitive-landscape/state-of-the-art-analysis.md,yes
+Baxter,Sigma Spectrum,battery_hours,4,hours at 125 mL/h,project-doc,docs/project/input-analysis/competitive-landscape/state-of-the-art-analysis.md,yes
+Baxter,Novum IQ (LVP),ders_drug_library,yes (Dose IQ safety software - web-based drug library + DERS),,public-web,https://www.baxter.com/baxter-newsroom/baxter-announces-us-fda-clearance-novum-iq-large-volume-infusion-pump-and-dose-iq,yes
+Baxter,Novum IQ (LVP),wireless_connectivity,yes (IQ Enterprise Connectivity Suite),,public-web,https://www.baxter.com/baxter-newsroom/baxter-announces-us-fda-clearance-novum-iq-large-volume-infusion-pump-and-dose-iq,yes
+ICU Medical,Plum 360,ders_drug_library,yes (ICU Medical MedNet - up to 2500 drugs / 40 care areas),,public-web,https://www.pattersonvet.com/Supplies/fluids-iv-administration/iv-pumps/icu-medical-plum-360-infusion-system/PIF_1103394,yes
+ICU Medical,Plum 360,wireless_connectivity,yes (Ethernet + 802.11 a/b/g/n dual-band),,public-web,https://www.pattersonvet.com/Supplies/fluids-iv-administration/iv-pumps/icu-medical-plum-360-infusion-system/PIF_1103394,yes
+ICU Medical,Plum 360,battery_hours,7,hours at 25 mL/h,project-doc,docs/project/input-analysis/competitive-landscape/state-of-the-art-analysis.md,yes
+ICU Medical,Plum 360,predictive_monitoring,no (named reactive-alarm incumbent),,project-doc,docs/project/strategies/commercial-strategy.md,yes
+Smiths Medical (ICU Medical),CADD-Solis,pca_mode,yes (PCA dose / clinician bolus / PIB / PCEA modes),,public-web,https://www.icumed.com/products/infusion-therapy/infusion-pumps-and-software/cadd-pain-and-ambulatory-pumps/cadd-solis-infusion-system/,yes
+Smiths Medical (ICU Medical),CADD-Solis,ders_drug_library,yes (PharmGuard - up to 500 protocols with hard/soft limits),,public-web,https://www.icumed.com/products/infusion-therapy/infusion-pumps-and-software/cadd-pain-and-ambulatory-pumps/cadd-solis-infusion-system/,yes
+Smiths Medical (ICU Medical),CADD-Solis,wireless_connectivity,yes (optional 802.11 a/b/g/n wireless communication module),,public-web,https://www.icumed.com/products/infusion-therapy/infusion-pumps-and-software/cadd-pain-and-ambulatory-pumps/cadd-solis-infusion-system/,yes
+Smiths Medical (ICU Medical),CADD-Solis,flow_accuracy_pct,6,+/- pct (nominal),public-web,https://www.icumed.com/products/infusion-therapy/infusion-pumps-and-software/cadd-pain-and-ambulatory-pumps/cadd-solis-infusion-system/,yes
+Smiths Medical (ICU Medical),CADD-Solis,weight_kg,0.595,kg incl. 4 AA batteries,public-web,https://www.icumed.com/products/infusion-therapy/infusion-pumps-and-software/cadd-pain-and-ambulatory-pumps/cadd-solis-infusion-system/,yes
+Smiths Medical (ICU Medical),CADD Legacy,pca_mode,yes (ambulatory PCA benchmark),,project-doc,docs/project/input-analysis/competitive-landscape/competitive-product-assessment.md,yes
+Smiths Medical (ICU Medical),CADD Legacy,weight_kg,0.45,kg,project-doc,docs/project/input-analysis/competitive-landscape/competitive-product-assessment.md,yes
+Smiths Medical (ICU Medical),CADD Legacy,battery_hours,48-72,hours (2-3 day),project-doc,docs/project/input-analysis/competitive-landscape/competitive-product-assessment.md,yes
+B.Braun,Infusomat Space,predictive_monitoring,no (named reactive-alarm incumbent),,project-doc,docs/project/strategies/commercial-strategy.md,yes
+B.Braun,Infusomat Space,flow_accuracy_pct,5,+/- pct (IEC 60601-2-24),public-web,https://mfimedical.com/products/b-braun-infusomat-space-infusion-pump,yes
+B.Braun,Infusomat Space,battery_hours,3.5-13,hours (rate-dependent; up to 13 h at low rates),public-web,https://mfimedical.com/products/b-braun-infusomat-space-infusion-pump,yes
+B.Braun,Infusomat Space,ders_drug_library,yes (drug library up to 1200 drugs / 10 concentrations per drug),,public-web,https://mfimedical.com/products/b-braun-infusomat-space-infusion-pump,yes
+B.Braun,Infusomat Space,weight_kg,1.4,kg,public-web,https://mfimedical.com/products/b-braun-infusomat-space-infusion-pump,yes
+B.Braun,Infusomat Space,wireless_connectivity,yes (wireless option - battery life spec varies by wireless status),,public-web,https://mfimedical.com/products/b-braun-infusomat-space-infusion-pump,verify

@@ -1,0 +1,555 @@
+account_id,account_name,gpo,region,segment,product_line,fy,revenue_usd,units_installed
+ACC-001,Blue Harbor Health Network,AtlasPoint Purchasing,NA,idn,PP3000,FY2024,78811,4
+ACC-001,Blue Harbor Health Network,AtlasPoint Purchasing,NA,idn,PP3000,FY2025,68388,3
+ACC-001,Blue Harbor Health Network,AtlasPoint Purchasing,NA,idn,PP3000,FY2026H1,22536,3
+ACC-001,Blue Harbor Health Network,AtlasPoint Purchasing,NA,idn,PP3500,FY2024,190162,5
+ACC-001,Blue Harbor Health Network,AtlasPoint Purchasing,NA,idn,PP3500,FY2025,317811,8
+ACC-001,Blue Harbor Health Network,AtlasPoint Purchasing,NA,idn,PP3500,FY2026H1,191908,9
+ACC-001,Blue Harbor Health Network,AtlasPoint Purchasing,NA,idn,SP6000,FY2024,69714,5
+ACC-001,Blue Harbor Health Network,AtlasPoint Purchasing,NA,idn,SP6000,FY2025,67064,5
+ACC-001,Blue Harbor Health Network,AtlasPoint Purchasing,NA,idn,SP6000,FY2026H1,29620,5
+ACC-001,Blue Harbor Health Network,AtlasPoint Purchasing,NA,idn,SP6500,FY2024,44937,3
+ACC-001,Blue Harbor Health Network,AtlasPoint Purchasing,NA,idn,SP6500,FY2025,51426,3
+ACC-001,Blue Harbor Health Network,AtlasPoint Purchasing,NA,idn,SP6500,FY2026H1,24752,3
+ACC-001,Blue Harbor Health Network,AtlasPoint Purchasing,NA,idn,cloud-suite,FY2024,28992,1
+ACC-001,Blue Harbor Health Network,AtlasPoint Purchasing,NA,idn,cloud-suite,FY2025,86925,3
+ACC-001,Blue Harbor Health Network,AtlasPoint Purchasing,NA,idn,cloud-suite,FY2026H1,72475,4
+ACC-002,Sierra Vista Regional Medical Center,AtlasPoint Purchasing,NA,community,PP3000,FY2024,101359,4
+ACC-002,Sierra Vista Regional Medical Center,AtlasPoint Purchasing,NA,community,PP3000,FY2025,56785,3
+ACC-002,Sierra Vista Regional Medical Center,AtlasPoint Purchasing,NA,community,PP3000,FY2026H1,21183,3
+ACC-002,Sierra Vista Regional Medical Center,AtlasPoint Purchasing,NA,community,PP3500,FY2024,186342,7
+ACC-002,Sierra Vista Regional Medical Center,AtlasPoint Purchasing,NA,community,PP3500,FY2025,387813,11
+ACC-002,Sierra Vista Regional Medical Center,AtlasPoint Purchasing,NA,community,PP3500,FY2026H1,305277,13
+ACC-002,Sierra Vista Regional Medical Center,AtlasPoint Purchasing,NA,community,SP6000,FY2024,98814,6
+ACC-002,Sierra Vista Regional Medical Center,AtlasPoint Purchasing,NA,community,SP6000,FY2025,92998,6
+ACC-002,Sierra Vista Regional Medical Center,AtlasPoint Purchasing,NA,community,SP6000,FY2026H1,36717,6
+ACC-002,Sierra Vista Regional Medical Center,AtlasPoint Purchasing,NA,community,SP6500,FY2024,60789,4
+ACC-002,Sierra Vista Regional Medical Center,AtlasPoint Purchasing,NA,community,SP6500,FY2025,70178,4
+ACC-002,Sierra Vista Regional Medical Center,AtlasPoint Purchasing,NA,community,SP6500,FY2026H1,39645,4
+ACC-002,Sierra Vista Regional Medical Center,AtlasPoint Purchasing,NA,community,cloud-suite,FY2024,108059,3
+ACC-002,Sierra Vista Regional Medical Center,AtlasPoint Purchasing,NA,community,cloud-suite,FY2025,152860,6
+ACC-002,Sierra Vista Regional Medical Center,AtlasPoint Purchasing,NA,community,cloud-suite,FY2026H1,90467,8
+ACC-003,Granite Peak Regional Medical Center,Cascadia Health Partners,NA,community,IP5000,FY2024,49574,4
+ACC-003,Granite Peak Regional Medical Center,Cascadia Health Partners,NA,community,IP5000,FY2025,32490,3
+ACC-003,Granite Peak Regional Medical Center,Cascadia Health Partners,NA,community,IP5000,FY2026H1,17974,3
+ACC-003,Granite Peak Regional Medical Center,Cascadia Health Partners,NA,community,PP3000,FY2024,36514,2
+ACC-003,Granite Peak Regional Medical Center,Cascadia Health Partners,NA,community,PP3000,FY2025,50034,2
+ACC-003,Granite Peak Regional Medical Center,Cascadia Health Partners,NA,community,PP3000,FY2026H1,20264,2
+ACC-003,Granite Peak Regional Medical Center,Cascadia Health Partners,NA,community,PP3500,FY2024,113076,4
+ACC-003,Granite Peak Regional Medical Center,Cascadia Health Partners,NA,community,PP3500,FY2025,208618,7
+ACC-003,Granite Peak Regional Medical Center,Cascadia Health Partners,NA,community,PP3500,FY2026H1,129327,8
+ACC-003,Granite Peak Regional Medical Center,Cascadia Health Partners,NA,community,SP6000,FY2024,48998,4
+ACC-003,Granite Peak Regional Medical Center,Cascadia Health Partners,NA,community,SP6000,FY2025,50535,4
+ACC-003,Granite Peak Regional Medical Center,Cascadia Health Partners,NA,community,SP6000,FY2026H1,18978,4
+ACC-003,Granite Peak Regional Medical Center,Cascadia Health Partners,NA,community,SP6500,FY2024,41633,2
+ACC-003,Granite Peak Regional Medical Center,Cascadia Health Partners,NA,community,SP6500,FY2025,27697,2
+ACC-003,Granite Peak Regional Medical Center,Cascadia Health Partners,NA,community,SP6500,FY2026H1,17604,2
+ACC-003,Granite Peak Regional Medical Center,Cascadia Health Partners,NA,community,cloud-suite,FY2024,25209,1
+ACC-003,Granite Peak Regional Medical Center,Cascadia Health Partners,NA,community,cloud-suite,FY2025,55394,2
+ACC-003,Granite Peak Regional Medical Center,Cascadia Health Partners,NA,community,cloud-suite,FY2026H1,40261,3
+ACC-004,Lakeshore Health System,Cascadia Health Partners,NA,idn,IP5000,FY2024,101858,8
+ACC-004,Lakeshore Health System,Cascadia Health Partners,NA,idn,IP5000,FY2025,88526,7
+ACC-004,Lakeshore Health System,Cascadia Health Partners,NA,idn,IP5000,FY2026H1,42444,6
+ACC-004,Lakeshore Health System,Cascadia Health Partners,NA,idn,PP3000,FY2024,74745,5
+ACC-004,Lakeshore Health System,Cascadia Health Partners,NA,idn,PP3000,FY2025,80254,4
+ACC-004,Lakeshore Health System,Cascadia Health Partners,NA,idn,PP3000,FY2026H1,29712,4
+ACC-004,Lakeshore Health System,Cascadia Health Partners,NA,idn,PP3500,FY2024,347100,9
+ACC-004,Lakeshore Health System,Cascadia Health Partners,NA,idn,PP3500,FY2025,484619,14
+ACC-004,Lakeshore Health System,Cascadia Health Partners,NA,idn,PP3500,FY2026H1,301932,16
+ACC-004,Lakeshore Health System,Cascadia Health Partners,NA,idn,SP6000,FY2024,125455,8
+ACC-004,Lakeshore Health System,Cascadia Health Partners,NA,idn,SP6000,FY2025,113116,8
+ACC-004,Lakeshore Health System,Cascadia Health Partners,NA,idn,SP6000,FY2026H1,68379,8
+ACC-004,Lakeshore Health System,Cascadia Health Partners,NA,idn,SP6500,FY2024,78964,5
+ACC-004,Lakeshore Health System,Cascadia Health Partners,NA,idn,SP6500,FY2025,89950,5
+ACC-004,Lakeshore Health System,Cascadia Health Partners,NA,idn,SP6500,FY2026H1,40004,5
+ACC-004,Lakeshore Health System,Cascadia Health Partners,NA,idn,cloud-suite,FY2024,87890,4
+ACC-004,Lakeshore Health System,Cascadia Health Partners,NA,idn,cloud-suite,FY2025,238894,9
+ACC-004,Lakeshore Health System,Cascadia Health Partners,NA,idn,cloud-suite,FY2026H1,131428,11
+ACC-005,Riverbend Health System,Meridian Health Alliance,NA,idn,PP3000,FY2024,376448,21
+ACC-005,Riverbend Health System,Meridian Health Alliance,NA,idn,PP3000,FY2025,410952,18
+ACC-005,Riverbend Health System,Meridian Health Alliance,NA,idn,PP3000,FY2026H1,130561,17
+ACC-005,Riverbend Health System,Meridian Health Alliance,NA,idn,PP3500,FY2024,667789,20
+ACC-005,Riverbend Health System,Meridian Health Alliance,NA,idn,PP3500,FY2025,1057523,31
+ACC-005,Riverbend Health System,Meridian Health Alliance,NA,idn,PP3500,FY2026H1,848085,36
+ACC-005,Riverbend Health System,Meridian Health Alliance,NA,idn,SP6000,FY2024,216186,21
+ACC-005,Riverbend Health System,Meridian Health Alliance,NA,idn,SP6000,FY2025,335180,22
+ACC-005,Riverbend Health System,Meridian Health Alliance,NA,idn,SP6000,FY2026H1,120135,22
+ACC-005,Riverbend Health System,Meridian Health Alliance,NA,idn,SP6500,FY2024,189491,13
+ACC-005,Riverbend Health System,Meridian Health Alliance,NA,idn,SP6500,FY2025,224688,14
+ACC-005,Riverbend Health System,Meridian Health Alliance,NA,idn,SP6500,FY2026H1,102736,14
+ACC-005,Riverbend Health System,Meridian Health Alliance,NA,idn,cloud-suite,FY2024,302579,8
+ACC-005,Riverbend Health System,Meridian Health Alliance,NA,idn,cloud-suite,FY2025,537173,19
+ACC-005,Riverbend Health System,Meridian Health Alliance,NA,idn,cloud-suite,FY2026H1,335171,24
+ACC-006,Aurora Plains University Medical Center,Meridian Health Alliance,NA,academic,IP5000,FY2024,262758,16
+ACC-006,Aurora Plains University Medical Center,Meridian Health Alliance,NA,academic,IP5000,FY2025,161514,13
+ACC-006,Aurora Plains University Medical Center,Meridian Health Alliance,NA,academic,IP5000,FY2026H1,70482,12
+ACC-006,Aurora Plains University Medical Center,Meridian Health Alliance,NA,academic,PP3000,FY2024,217162,15
+ACC-006,Aurora Plains University Medical Center,Meridian Health Alliance,NA,academic,PP3000,FY2025,333491,13
+ACC-006,Aurora Plains University Medical Center,Meridian Health Alliance,NA,academic,PP3000,FY2026H1,115071,12
+ACC-006,Aurora Plains University Medical Center,Meridian Health Alliance,NA,academic,PP3500,FY2024,588029,16
+ACC-006,Aurora Plains University Medical Center,Meridian Health Alliance,NA,academic,PP3500,FY2025,766529,25
+ACC-006,Aurora Plains University Medical Center,Meridian Health Alliance,NA,academic,PP3500,FY2026H1,444277,29
+ACC-006,Aurora Plains University Medical Center,Meridian Health Alliance,NA,academic,SP6000,FY2024,253919,15
+ACC-006,Aurora Plains University Medical Center,Meridian Health Alliance,NA,academic,SP6000,FY2025,245987,16
+ACC-006,Aurora Plains University Medical Center,Meridian Health Alliance,NA,academic,SP6000,FY2026H1,74631,16
+ACC-006,Aurora Plains University Medical Center,Meridian Health Alliance,NA,academic,SP6500,FY2024,194634,10
+ACC-006,Aurora Plains University Medical Center,Meridian Health Alliance,NA,academic,SP6500,FY2025,166426,11
+ACC-006,Aurora Plains University Medical Center,Meridian Health Alliance,NA,academic,SP6500,FY2026H1,72325,11
+ACC-006,Aurora Plains University Medical Center,Meridian Health Alliance,NA,academic,cloud-suite,FY2024,165883,6
+ACC-006,Aurora Plains University Medical Center,Meridian Health Alliance,NA,academic,cloud-suite,FY2025,385619,14
+ACC-006,Aurora Plains University Medical Center,Meridian Health Alliance,NA,academic,cloud-suite,FY2026H1,277358,17
+ACC-007,Cedar Grove Health System,Meridian Health Alliance,NA,idn,PP3000,FY2024,147782,6
+ACC-007,Cedar Grove Health System,Meridian Health Alliance,NA,idn,PP3000,FY2025,116429,5
+ACC-007,Cedar Grove Health System,Meridian Health Alliance,NA,idn,PP3000,FY2026H1,55365,5
+ACC-007,Cedar Grove Health System,Meridian Health Alliance,NA,idn,PP3500,FY2024,472734,16
+ACC-007,Cedar Grove Health System,Meridian Health Alliance,NA,idn,PP3500,FY2025,821473,26
+ACC-007,Cedar Grove Health System,Meridian Health Alliance,NA,idn,PP3500,FY2026H1,482853,30
+ACC-007,Cedar Grove Health System,Meridian Health Alliance,NA,idn,SP6000,FY2024,160404,13
+ACC-007,Cedar Grove Health System,Meridian Health Alliance,NA,idn,SP6000,FY2025,152523,14
+ACC-007,Cedar Grove Health System,Meridian Health Alliance,NA,idn,SP6000,FY2026H1,97169,14
+ACC-007,Cedar Grove Health System,Meridian Health Alliance,NA,idn,SP6500,FY2024,134755,9
+ACC-007,Cedar Grove Health System,Meridian Health Alliance,NA,idn,SP6500,FY2025,142266,9
+ACC-007,Cedar Grove Health System,Meridian Health Alliance,NA,idn,SP6500,FY2026H1,69441,9
+ACC-007,Cedar Grove Health System,Meridian Health Alliance,NA,idn,cloud-suite,FY2024,227883,7
+ACC-007,Cedar Grove Health System,Meridian Health Alliance,NA,idn,cloud-suite,FY2025,485451,17
+ACC-007,Cedar Grove Health System,Meridian Health Alliance,NA,idn,cloud-suite,FY2026H1,418102,21
+ACC-008,Maplewood Health Alliance,NovaBridge Alliance,NA,idn,PP3000,FY2024,47917,2
+ACC-008,Maplewood Health Alliance,NovaBridge Alliance,NA,idn,PP3000,FY2025,41377,2
+ACC-008,Maplewood Health Alliance,NovaBridge Alliance,NA,idn,PP3000,FY2026H1,16419,2
+ACC-008,Maplewood Health Alliance,NovaBridge Alliance,NA,idn,PP3500,FY2024,223937,6
+ACC-008,Maplewood Health Alliance,NovaBridge Alliance,NA,idn,PP3500,FY2025,269687,8
+ACC-008,Maplewood Health Alliance,NovaBridge Alliance,NA,idn,PP3500,FY2026H1,231948,10
+ACC-008,Maplewood Health Alliance,NovaBridge Alliance,NA,idn,SP6000,FY2024,57648,5
+ACC-008,Maplewood Health Alliance,NovaBridge Alliance,NA,idn,SP6000,FY2025,72071,5
+ACC-008,Maplewood Health Alliance,NovaBridge Alliance,NA,idn,SP6000,FY2026H1,23887,5
+ACC-008,Maplewood Health Alliance,NovaBridge Alliance,NA,idn,SP6500,FY2024,46865,3
+ACC-008,Maplewood Health Alliance,NovaBridge Alliance,NA,idn,SP6500,FY2025,42369,3
+ACC-008,Maplewood Health Alliance,NovaBridge Alliance,NA,idn,SP6500,FY2026H1,30322,3
+ACC-008,Maplewood Health Alliance,NovaBridge Alliance,NA,idn,cloud-suite,FY2024,117796,3
+ACC-008,Maplewood Health Alliance,NovaBridge Alliance,NA,idn,cloud-suite,FY2025,135228,6
+ACC-008,Maplewood Health Alliance,NovaBridge Alliance,NA,idn,cloud-suite,FY2026H1,150965,8
+ACC-009,Ironbridge Community Hospital,independent,NA,community,IP5000,FY2024,46350,4
+ACC-009,Ironbridge Community Hospital,independent,NA,community,IP5000,FY2025,50283,3
+ACC-009,Ironbridge Community Hospital,independent,NA,community,IP5000,FY2026H1,19963,3
+ACC-009,Ironbridge Community Hospital,independent,NA,community,PP3000,FY2024,32361,2
+ACC-009,Ironbridge Community Hospital,independent,NA,community,PP3000,FY2025,44714,2
+ACC-009,Ironbridge Community Hospital,independent,NA,community,PP3000,FY2026H1,21870,2
+ACC-009,Ironbridge Community Hospital,independent,NA,community,PP3500,FY2024,119238,4
+ACC-009,Ironbridge Community Hospital,independent,NA,community,PP3500,FY2025,210157,7
+ACC-009,Ironbridge Community Hospital,independent,NA,community,PP3500,FY2026H1,181929,8
+ACC-009,Ironbridge Community Hospital,independent,NA,community,SP6000,FY2024,55384,4
+ACC-009,Ironbridge Community Hospital,independent,NA,community,SP6000,FY2025,53626,4
+ACC-009,Ironbridge Community Hospital,independent,NA,community,SP6000,FY2026H1,27556,4
+ACC-009,Ironbridge Community Hospital,independent,NA,community,SP6500,FY2024,34211,2
+ACC-009,Ironbridge Community Hospital,independent,NA,community,SP6500,FY2025,22883,2
+ACC-009,Ironbridge Community Hospital,independent,NA,community,SP6500,FY2026H1,12528,2
+ACC-009,Ironbridge Community Hospital,independent,NA,community,cloud-suite,FY2024,50012,2
+ACC-009,Ironbridge Community Hospital,independent,NA,community,cloud-suite,FY2025,77734,4
+ACC-009,Ironbridge Community Hospital,independent,NA,community,cloud-suite,FY2026H1,69052,5
+ACC-010,Bright Meadow Regional Medical Center,NovaBridge Alliance,NA,community,IP5000,FY2024,43249,4
+ACC-010,Bright Meadow Regional Medical Center,NovaBridge Alliance,NA,community,IP5000,FY2025,45713,3
+ACC-010,Bright Meadow Regional Medical Center,NovaBridge Alliance,NA,community,IP5000,FY2026H1,19904,3
+ACC-010,Bright Meadow Regional Medical Center,NovaBridge Alliance,NA,community,PP3000,FY2024,42976,2
+ACC-010,Bright Meadow Regional Medical Center,NovaBridge Alliance,NA,community,PP3000,FY2025,34875,2
+ACC-010,Bright Meadow Regional Medical Center,NovaBridge Alliance,NA,community,PP3000,FY2026H1,20684,2
+ACC-010,Bright Meadow Regional Medical Center,NovaBridge Alliance,NA,community,PP3500,FY2024,134037,4
+ACC-010,Bright Meadow Regional Medical Center,NovaBridge Alliance,NA,community,PP3500,FY2025,191481,7
+ACC-010,Bright Meadow Regional Medical Center,NovaBridge Alliance,NA,community,PP3500,FY2026H1,152378,8
+ACC-010,Bright Meadow Regional Medical Center,NovaBridge Alliance,NA,community,SP6000,FY2024,57469,4
+ACC-010,Bright Meadow Regional Medical Center,NovaBridge Alliance,NA,community,SP6000,FY2025,34120,4
+ACC-010,Bright Meadow Regional Medical Center,NovaBridge Alliance,NA,community,SP6000,FY2026H1,32978,4
+ACC-010,Bright Meadow Regional Medical Center,NovaBridge Alliance,NA,community,SP6500,FY2024,24737,2
+ACC-010,Bright Meadow Regional Medical Center,NovaBridge Alliance,NA,community,SP6500,FY2025,36209,2
+ACC-010,Bright Meadow Regional Medical Center,NovaBridge Alliance,NA,community,SP6500,FY2026H1,16992,2
+ACC-010,Bright Meadow Regional Medical Center,NovaBridge Alliance,NA,community,cloud-suite,FY2024,52520,2
+ACC-010,Bright Meadow Regional Medical Center,NovaBridge Alliance,NA,community,cloud-suite,FY2025,81054,4
+ACC-010,Bright Meadow Regional Medical Center,NovaBridge Alliance,NA,community,cloud-suite,FY2026H1,81543,5
+ACC-011,Silver Lake University Medical Center,Meridian Health Alliance,NA,academic,IP5000,FY2024,200710,16
+ACC-011,Silver Lake University Medical Center,Meridian Health Alliance,NA,academic,IP5000,FY2025,186193,13
+ACC-011,Silver Lake University Medical Center,Meridian Health Alliance,NA,academic,IP5000,FY2026H1,98931,12
+ACC-011,Silver Lake University Medical Center,Meridian Health Alliance,NA,academic,PP3000,FY2024,131344,8
+ACC-011,Silver Lake University Medical Center,Meridian Health Alliance,NA,academic,PP3000,FY2025,122401,6
+ACC-011,Silver Lake University Medical Center,Meridian Health Alliance,NA,academic,PP3000,FY2026H1,75234,6
+ACC-011,Silver Lake University Medical Center,Meridian Health Alliance,NA,academic,PP3500,FY2024,622422,19
+ACC-011,Silver Lake University Medical Center,Meridian Health Alliance,NA,academic,PP3500,FY2025,1238487,30
+ACC-011,Silver Lake University Medical Center,Meridian Health Alliance,NA,academic,PP3500,FY2026H1,515385,35
+ACC-011,Silver Lake University Medical Center,Meridian Health Alliance,NA,academic,SP6000,FY2024,156649,15
+ACC-011,Silver Lake University Medical Center,Meridian Health Alliance,NA,academic,SP6000,FY2025,228565,16
+ACC-011,Silver Lake University Medical Center,Meridian Health Alliance,NA,academic,SP6000,FY2026H1,77677,16
+ACC-011,Silver Lake University Medical Center,Meridian Health Alliance,NA,academic,SP6500,FY2024,197933,10
+ACC-011,Silver Lake University Medical Center,Meridian Health Alliance,NA,academic,SP6500,FY2025,134360,11
+ACC-011,Silver Lake University Medical Center,Meridian Health Alliance,NA,academic,SP6500,FY2026H1,88441,11
+ACC-011,Silver Lake University Medical Center,Meridian Health Alliance,NA,academic,cloud-suite,FY2024,165484,6
+ACC-011,Silver Lake University Medical Center,Meridian Health Alliance,NA,academic,cloud-suite,FY2025,373253,13
+ACC-011,Silver Lake University Medical Center,Meridian Health Alliance,NA,academic,cloud-suite,FY2026H1,248793,16
+ACC-012,Northgate Health System,Meridian Health Alliance,NA,idn,IP5000,FY2024,509226,35
+ACC-012,Northgate Health System,Meridian Health Alliance,NA,idn,IP5000,FY2025,410842,30
+ACC-012,Northgate Health System,Meridian Health Alliance,NA,idn,IP5000,FY2026H1,186248,27
+ACC-012,Northgate Health System,Meridian Health Alliance,NA,idn,PP3000,FY2024,604948,25
+ACC-012,Northgate Health System,Meridian Health Alliance,NA,idn,PP3000,FY2025,534192,21
+ACC-012,Northgate Health System,Meridian Health Alliance,NA,idn,PP3000,FY2026H1,237094,20
+ACC-012,Northgate Health System,Meridian Health Alliance,NA,idn,PP3500,FY2024,1564391,37
+ACC-012,Northgate Health System,Meridian Health Alliance,NA,idn,PP3500,FY2025,1852385,58
+ACC-012,Northgate Health System,Meridian Health Alliance,NA,idn,PP3500,FY2026H1,1539974,68
+ACC-012,Northgate Health System,Meridian Health Alliance,NA,idn,SP6000,FY2024,390453,34
+ACC-012,Northgate Health System,Meridian Health Alliance,NA,idn,SP6000,FY2025,534427,36
+ACC-012,Northgate Health System,Meridian Health Alliance,NA,idn,SP6000,FY2026H1,234172,36
+ACC-012,Northgate Health System,Meridian Health Alliance,NA,idn,SP6500,FY2024,403097,23
+ACC-012,Northgate Health System,Meridian Health Alliance,NA,idn,SP6500,FY2025,429232,24
+ACC-012,Northgate Health System,Meridian Health Alliance,NA,idn,SP6500,FY2026H1,143542,24
+ACC-012,Northgate Health System,Meridian Health Alliance,NA,idn,cloud-suite,FY2024,451286,17
+ACC-012,Northgate Health System,Meridian Health Alliance,NA,idn,cloud-suite,FY2025,706107,38
+ACC-012,Northgate Health System,Meridian Health Alliance,NA,idn,cloud-suite,FY2026H1,530324,48
+ACC-013,Eastwood Health Alliance,Meridian Health Alliance,NA,idn,IP5000,FY2024,242819,20
+ACC-013,Eastwood Health Alliance,Meridian Health Alliance,NA,idn,IP5000,FY2025,234728,16
+ACC-013,Eastwood Health Alliance,Meridian Health Alliance,NA,idn,IP5000,FY2026H1,85161,15
+ACC-013,Eastwood Health Alliance,Meridian Health Alliance,NA,idn,PP3000,FY2024,302792,16
+ACC-013,Eastwood Health Alliance,Meridian Health Alliance,NA,idn,PP3000,FY2025,294161,14
+ACC-013,Eastwood Health Alliance,Meridian Health Alliance,NA,idn,PP3000,FY2026H1,168239,13
+ACC-013,Eastwood Health Alliance,Meridian Health Alliance,NA,idn,PP3500,FY2024,819558,21
+ACC-013,Eastwood Health Alliance,Meridian Health Alliance,NA,idn,PP3500,FY2025,1026467,32
+ACC-013,Eastwood Health Alliance,Meridian Health Alliance,NA,idn,PP3500,FY2026H1,634700,38
+ACC-013,Eastwood Health Alliance,Meridian Health Alliance,NA,idn,SP6000,FY2024,253298,19
+ACC-013,Eastwood Health Alliance,Meridian Health Alliance,NA,idn,SP6000,FY2025,296726,20
+ACC-013,Eastwood Health Alliance,Meridian Health Alliance,NA,idn,SP6000,FY2026H1,158694,20
+ACC-013,Eastwood Health Alliance,Meridian Health Alliance,NA,idn,SP6500,FY2024,143562,12
+ACC-013,Eastwood Health Alliance,Meridian Health Alliance,NA,idn,SP6500,FY2025,176571,13
+ACC-013,Eastwood Health Alliance,Meridian Health Alliance,NA,idn,SP6500,FY2026H1,87179,13
+ACC-013,Eastwood Health Alliance,Meridian Health Alliance,NA,idn,cloud-suite,FY2024,244125,8
+ACC-013,Eastwood Health Alliance,Meridian Health Alliance,NA,idn,cloud-suite,FY2025,503011,18
+ACC-013,Eastwood Health Alliance,Meridian Health Alliance,NA,idn,cloud-suite,FY2026H1,310496,23
+ACC-014,Kestrel Bay University Medical Center,Cascadia Health Partners,NA,academic,PP3000,FY2024,132034,9
+ACC-014,Kestrel Bay University Medical Center,Cascadia Health Partners,NA,academic,PP3000,FY2025,105395,7
+ACC-014,Kestrel Bay University Medical Center,Cascadia Health Partners,NA,academic,PP3000,FY2026H1,63967,7
+ACC-014,Kestrel Bay University Medical Center,Cascadia Health Partners,NA,academic,PP3500,FY2024,418602,12
+ACC-014,Kestrel Bay University Medical Center,Cascadia Health Partners,NA,academic,PP3500,FY2025,776047,19
+ACC-014,Kestrel Bay University Medical Center,Cascadia Health Partners,NA,academic,PP3500,FY2026H1,479324,22
+ACC-014,Kestrel Bay University Medical Center,Cascadia Health Partners,NA,academic,SP6000,FY2024,147334,10
+ACC-014,Kestrel Bay University Medical Center,Cascadia Health Partners,NA,academic,SP6000,FY2025,118967,11
+ACC-014,Kestrel Bay University Medical Center,Cascadia Health Partners,NA,academic,SP6000,FY2026H1,61241,11
+ACC-014,Kestrel Bay University Medical Center,Cascadia Health Partners,NA,academic,SP6500,FY2024,86998,7
+ACC-014,Kestrel Bay University Medical Center,Cascadia Health Partners,NA,academic,SP6500,FY2025,105348,7
+ACC-014,Kestrel Bay University Medical Center,Cascadia Health Partners,NA,academic,SP6500,FY2026H1,47455,7
+ACC-014,Kestrel Bay University Medical Center,Cascadia Health Partners,NA,academic,cloud-suite,FY2024,109056,5
+ACC-014,Kestrel Bay University Medical Center,Cascadia Health Partners,NA,academic,cloud-suite,FY2025,193484,11
+ACC-014,Kestrel Bay University Medical Center,Cascadia Health Partners,NA,academic,cloud-suite,FY2026H1,217827,14
+ACC-015,Stonebridge Regional Medical Center,independent,NA,community,IP5000,FY2024,42772,4
+ACC-015,Stonebridge Regional Medical Center,independent,NA,community,IP5000,FY2025,42215,3
+ACC-015,Stonebridge Regional Medical Center,independent,NA,community,IP5000,FY2026H1,21331,3
+ACC-015,Stonebridge Regional Medical Center,independent,NA,community,PP3000,FY2024,21561,1
+ACC-015,Stonebridge Regional Medical Center,independent,NA,community,PP3000,FY2025,25204,1
+ACC-015,Stonebridge Regional Medical Center,independent,NA,community,PP3000,FY2026H1,12305,1
+ACC-015,Stonebridge Regional Medical Center,independent,NA,community,PP3500,FY2024,204605,5
+ACC-015,Stonebridge Regional Medical Center,independent,NA,community,PP3500,FY2025,312485,8
+ACC-015,Stonebridge Regional Medical Center,independent,NA,community,PP3500,FY2026H1,144870,9
+ACC-015,Stonebridge Regional Medical Center,independent,NA,community,SP6000,FY2024,64293,4
+ACC-015,Stonebridge Regional Medical Center,independent,NA,community,SP6000,FY2025,54450,4
+ACC-015,Stonebridge Regional Medical Center,independent,NA,community,SP6000,FY2026H1,20586,4
+ACC-015,Stonebridge Regional Medical Center,independent,NA,community,SP6500,FY2024,28795,2
+ACC-015,Stonebridge Regional Medical Center,independent,NA,community,SP6500,FY2025,31269,2
+ACC-015,Stonebridge Regional Medical Center,independent,NA,community,SP6500,FY2026H1,11944,2
+ACC-015,Stonebridge Regional Medical Center,independent,NA,community,cloud-suite,FY2024,72449,2
+ACC-015,Stonebridge Regional Medical Center,independent,NA,community,cloud-suite,FY2025,85599,5
+ACC-015,Stonebridge Regional Medical Center,independent,NA,community,cloud-suite,FY2026H1,93663,6
+ACC-016,Clearwater Health Alliance,independent,EMEA,idn,IP5000,FY2024,344738,27
+ACC-016,Clearwater Health Alliance,independent,EMEA,idn,IP5000,FY2025,279652,23
+ACC-016,Clearwater Health Alliance,independent,EMEA,idn,IP5000,FY2026H1,142938,21
+ACC-016,Clearwater Health Alliance,independent,EMEA,idn,PP3000,FY2024,299234,20
+ACC-016,Clearwater Health Alliance,independent,EMEA,idn,PP3000,FY2025,285756,17
+ACC-016,Clearwater Health Alliance,independent,EMEA,idn,PP3000,FY2026H1,142713,16
+ACC-016,Clearwater Health Alliance,independent,EMEA,idn,PP3500,FY2024,1084057,30
+ACC-016,Clearwater Health Alliance,independent,EMEA,idn,PP3500,FY2025,1555187,46
+ACC-016,Clearwater Health Alliance,independent,EMEA,idn,PP3500,FY2026H1,807617,54
+ACC-016,Clearwater Health Alliance,independent,EMEA,idn,SP6000,FY2024,302729,27
+ACC-016,Clearwater Health Alliance,independent,EMEA,idn,SP6000,FY2025,401602,28
+ACC-016,Clearwater Health Alliance,independent,EMEA,idn,SP6000,FY2026H1,135921,28
+ACC-016,Clearwater Health Alliance,independent,EMEA,idn,SP6500,FY2024,267546,17
+ACC-016,Clearwater Health Alliance,independent,EMEA,idn,SP6500,FY2025,240958,18
+ACC-016,Clearwater Health Alliance,independent,EMEA,idn,SP6500,FY2026H1,107875,18
+ACC-016,Clearwater Health Alliance,independent,EMEA,idn,cloud-suite,FY2024,317905,8
+ACC-016,Clearwater Health Alliance,independent,EMEA,idn,cloud-suite,FY2025,495515,18
+ACC-016,Clearwater Health Alliance,independent,EMEA,idn,cloud-suite,FY2026H1,403843,23
+ACC-017,Highland Fen Community Hospital,independent,EMEA,community,IP5000,FY2024,106941,6
+ACC-017,Highland Fen Community Hospital,independent,EMEA,community,IP5000,FY2025,102308,6
+ACC-017,Highland Fen Community Hospital,independent,EMEA,community,IP5000,FY2026H1,29037,5
+ACC-017,Highland Fen Community Hospital,independent,EMEA,community,PP3000,FY2024,148005,6
+ACC-017,Highland Fen Community Hospital,independent,EMEA,community,PP3000,FY2025,76284,5
+ACC-017,Highland Fen Community Hospital,independent,EMEA,community,PP3000,FY2026H1,43463,5
+ACC-017,Highland Fen Community Hospital,independent,EMEA,community,PP3500,FY2024,230691,6
+ACC-017,Highland Fen Community Hospital,independent,EMEA,community,PP3500,FY2025,278290,9
+ACC-017,Highland Fen Community Hospital,independent,EMEA,community,PP3500,FY2026H1,231663,11
+ACC-017,Highland Fen Community Hospital,independent,EMEA,community,SP6000,FY2024,102770,6
+ACC-017,Highland Fen Community Hospital,independent,EMEA,community,SP6000,FY2025,69528,6
+ACC-017,Highland Fen Community Hospital,independent,EMEA,community,SP6000,FY2026H1,44295,6
+ACC-017,Highland Fen Community Hospital,independent,EMEA,community,SP6500,FY2024,77609,4
+ACC-017,Highland Fen Community Hospital,independent,EMEA,community,SP6500,FY2025,75655,4
+ACC-017,Highland Fen Community Hospital,independent,EMEA,community,SP6500,FY2026H1,37938,4
+ACC-017,Highland Fen Community Hospital,independent,EMEA,community,cloud-suite,FY2024,25326,1
+ACC-017,Highland Fen Community Hospital,independent,EMEA,community,cloud-suite,FY2025,82319,3
+ACC-017,Highland Fen Community Hospital,independent,EMEA,community,cloud-suite,FY2026H1,54766,4
+ACC-018,Copper Hills Health System,independent,EMEA,idn,PP3000,FY2024,125376,5
+ACC-018,Copper Hills Health System,independent,EMEA,idn,PP3000,FY2025,88814,4
+ACC-018,Copper Hills Health System,independent,EMEA,idn,PP3000,FY2026H1,38190,4
+ACC-018,Copper Hills Health System,independent,EMEA,idn,PP3500,FY2024,239846,7
+ACC-018,Copper Hills Health System,independent,EMEA,idn,PP3500,FY2025,411079,10
+ACC-018,Copper Hills Health System,independent,EMEA,idn,PP3500,FY2026H1,211954,12
+ACC-018,Copper Hills Health System,independent,EMEA,idn,SP6000,FY2024,78851,6
+ACC-018,Copper Hills Health System,independent,EMEA,idn,SP6000,FY2025,77859,6
+ACC-018,Copper Hills Health System,independent,EMEA,idn,SP6000,FY2026H1,45895,6
+ACC-018,Copper Hills Health System,independent,EMEA,idn,SP6500,FY2024,77578,4
+ACC-018,Copper Hills Health System,independent,EMEA,idn,SP6500,FY2025,70627,4
+ACC-018,Copper Hills Health System,independent,EMEA,idn,SP6500,FY2026H1,28075,4
+ACC-018,Copper Hills Health System,independent,EMEA,idn,cloud-suite,FY2024,57390,2
+ACC-018,Copper Hills Health System,independent,EMEA,idn,cloud-suite,FY2025,113137,4
+ACC-018,Copper Hills Health System,independent,EMEA,idn,cloud-suite,FY2026H1,100120,5
+ACC-019,Willow Creek University Medical Center,independent,EMEA,academic,PP3000,FY2024,213130,10
+ACC-019,Willow Creek University Medical Center,independent,EMEA,academic,PP3000,FY2025,196912,8
+ACC-019,Willow Creek University Medical Center,independent,EMEA,academic,PP3000,FY2026H1,57071,8
+ACC-019,Willow Creek University Medical Center,independent,EMEA,academic,PP3500,FY2024,425091,12
+ACC-019,Willow Creek University Medical Center,independent,EMEA,academic,PP3500,FY2025,529056,18
+ACC-019,Willow Creek University Medical Center,independent,EMEA,academic,PP3500,FY2026H1,366856,21
+ACC-019,Willow Creek University Medical Center,independent,EMEA,academic,SP6000,FY2024,185798,10
+ACC-019,Willow Creek University Medical Center,independent,EMEA,academic,SP6000,FY2025,122468,11
+ACC-019,Willow Creek University Medical Center,independent,EMEA,academic,SP6000,FY2026H1,69474,11
+ACC-019,Willow Creek University Medical Center,independent,EMEA,academic,SP6500,FY2024,131594,7
+ACC-019,Willow Creek University Medical Center,independent,EMEA,academic,SP6500,FY2025,95179,7
+ACC-019,Willow Creek University Medical Center,independent,EMEA,academic,SP6500,FY2026H1,61200,7
+ACC-019,Willow Creek University Medical Center,independent,EMEA,academic,cloud-suite,FY2024,56601,2
+ACC-019,Willow Creek University Medical Center,independent,EMEA,academic,cloud-suite,FY2025,133478,6
+ACC-019,Willow Creek University Medical Center,independent,EMEA,academic,cloud-suite,FY2026H1,135983,7
+ACC-020,Foxglove Regional Medical Center,independent,EMEA,community,PP3000,FY2024,135131,8
+ACC-020,Foxglove Regional Medical Center,independent,EMEA,community,PP3000,FY2025,97630,6
+ACC-020,Foxglove Regional Medical Center,independent,EMEA,community,PP3000,FY2026H1,67996,6
+ACC-020,Foxglove Regional Medical Center,independent,EMEA,community,PP3500,FY2024,168444,6
+ACC-020,Foxglove Regional Medical Center,independent,EMEA,community,PP3500,FY2025,273069,8
+ACC-020,Foxglove Regional Medical Center,independent,EMEA,community,PP3500,FY2026H1,181853,10
+ACC-020,Foxglove Regional Medical Center,independent,EMEA,community,SP6000,FY2024,79461,6
+ACC-020,Foxglove Regional Medical Center,independent,EMEA,community,SP6000,FY2025,90084,6
+ACC-020,Foxglove Regional Medical Center,independent,EMEA,community,SP6000,FY2026H1,36031,6
+ACC-020,Foxglove Regional Medical Center,independent,EMEA,community,SP6500,FY2024,74818,4
+ACC-020,Foxglove Regional Medical Center,independent,EMEA,community,SP6500,FY2025,52745,4
+ACC-020,Foxglove Regional Medical Center,independent,EMEA,community,SP6500,FY2026H1,31483,4
+ACC-020,Foxglove Regional Medical Center,independent,EMEA,community,cloud-suite,FY2024,34354,1
+ACC-020,Foxglove Regional Medical Center,independent,EMEA,community,cloud-suite,FY2025,80431,3
+ACC-020,Foxglove Regional Medical Center,independent,EMEA,community,cloud-suite,FY2026H1,54594,4
+ACC-021,Harborlight Community Hospital,independent,EMEA,community,PP3000,FY2024,92942,4
+ACC-021,Harborlight Community Hospital,independent,EMEA,community,PP3000,FY2025,61464,3
+ACC-021,Harborlight Community Hospital,independent,EMEA,community,PP3000,FY2026H1,22580,3
+ACC-021,Harborlight Community Hospital,independent,EMEA,community,PP3500,FY2024,298598,7
+ACC-021,Harborlight Community Hospital,independent,EMEA,community,PP3500,FY2025,355064,11
+ACC-021,Harborlight Community Hospital,independent,EMEA,community,PP3500,FY2026H1,239335,13
+ACC-021,Harborlight Community Hospital,independent,EMEA,community,SP6000,FY2024,83403,6
+ACC-021,Harborlight Community Hospital,independent,EMEA,community,SP6000,FY2025,72962,6
+ACC-021,Harborlight Community Hospital,independent,EMEA,community,SP6000,FY2026H1,51140,6
+ACC-021,Harborlight Community Hospital,independent,EMEA,community,SP6500,FY2024,66199,4
+ACC-021,Harborlight Community Hospital,independent,EMEA,community,SP6500,FY2025,72008,4
+ACC-021,Harborlight Community Hospital,independent,EMEA,community,SP6500,FY2026H1,32002,4
+ACC-021,Harborlight Community Hospital,independent,EMEA,community,cloud-suite,FY2024,29041,1
+ACC-021,Harborlight Community Hospital,independent,EMEA,community,cloud-suite,FY2025,55126,2
+ACC-021,Harborlight Community Hospital,independent,EMEA,community,cloud-suite,FY2026H1,36336,3
+ACC-022,Summit Ridge Health Alliance,independent,EMEA,idn,IP5000,FY2024,138242,8
+ACC-022,Summit Ridge Health Alliance,independent,EMEA,idn,IP5000,FY2025,117334,7
+ACC-022,Summit Ridge Health Alliance,independent,EMEA,idn,IP5000,FY2026H1,44827,6
+ACC-022,Summit Ridge Health Alliance,independent,EMEA,idn,PP3000,FY2024,28869,2
+ACC-022,Summit Ridge Health Alliance,independent,EMEA,idn,PP3000,FY2025,41428,2
+ACC-022,Summit Ridge Health Alliance,independent,EMEA,idn,PP3000,FY2026H1,21339,2
+ACC-022,Summit Ridge Health Alliance,independent,EMEA,idn,PP3500,FY2024,367285,10
+ACC-022,Summit Ridge Health Alliance,independent,EMEA,idn,PP3500,FY2025,679091,15
+ACC-022,Summit Ridge Health Alliance,independent,EMEA,idn,PP3500,FY2026H1,333758,18
+ACC-022,Summit Ridge Health Alliance,independent,EMEA,idn,SP6000,FY2024,105137,8
+ACC-022,Summit Ridge Health Alliance,independent,EMEA,idn,SP6000,FY2025,81035,8
+ACC-022,Summit Ridge Health Alliance,independent,EMEA,idn,SP6000,FY2026H1,44877,8
+ACC-022,Summit Ridge Health Alliance,independent,EMEA,idn,SP6500,FY2024,61815,5
+ACC-022,Summit Ridge Health Alliance,independent,EMEA,idn,SP6500,FY2025,92320,5
+ACC-022,Summit Ridge Health Alliance,independent,EMEA,idn,SP6500,FY2026H1,38538,5
+ACC-022,Summit Ridge Health Alliance,independent,EMEA,idn,cloud-suite,FY2024,148973,4
+ACC-022,Summit Ridge Health Alliance,independent,EMEA,idn,cloud-suite,FY2025,161876,8
+ACC-022,Summit Ridge Health Alliance,independent,EMEA,idn,cloud-suite,FY2026H1,129505,10
+ACC-023,Pinecrest Regional Medical Center,independent,EMEA,community,PP3000,FY2024,76458,5
+ACC-023,Pinecrest Regional Medical Center,independent,EMEA,community,PP3000,FY2025,65626,4
+ACC-023,Pinecrest Regional Medical Center,independent,EMEA,community,PP3000,FY2026H1,29396,4
+ACC-023,Pinecrest Regional Medical Center,independent,EMEA,community,PP3500,FY2024,282775,7
+ACC-023,Pinecrest Regional Medical Center,independent,EMEA,community,PP3500,FY2025,294607,10
+ACC-023,Pinecrest Regional Medical Center,independent,EMEA,community,PP3500,FY2026H1,246625,12
+ACC-023,Pinecrest Regional Medical Center,independent,EMEA,community,SP6000,FY2024,64448,6
+ACC-023,Pinecrest Regional Medical Center,independent,EMEA,community,SP6000,FY2025,68821,6
+ACC-023,Pinecrest Regional Medical Center,independent,EMEA,community,SP6000,FY2026H1,46770,6
+ACC-023,Pinecrest Regional Medical Center,independent,EMEA,community,SP6500,FY2024,59833,4
+ACC-023,Pinecrest Regional Medical Center,independent,EMEA,community,SP6500,FY2025,53497,4
+ACC-023,Pinecrest Regional Medical Center,independent,EMEA,community,SP6500,FY2026H1,22819,4
+ACC-023,Pinecrest Regional Medical Center,independent,EMEA,community,cloud-suite,FY2024,38814,1
+ACC-023,Pinecrest Regional Medical Center,independent,EMEA,community,cloud-suite,FY2025,56008,3
+ACC-023,Pinecrest Regional Medical Center,independent,EMEA,community,cloud-suite,FY2026H1,56614,4
+ACC-024,Marigold Regional Medical Center,independent,EMEA,community,IP5000,FY2024,40498,3
+ACC-024,Marigold Regional Medical Center,independent,EMEA,community,IP5000,FY2025,26518,2
+ACC-024,Marigold Regional Medical Center,independent,EMEA,community,IP5000,FY2026H1,9290,2
+ACC-024,Marigold Regional Medical Center,independent,EMEA,community,PP3000,FY2024,35209,2
+ACC-024,Marigold Regional Medical Center,independent,EMEA,community,PP3000,FY2025,45693,2
+ACC-024,Marigold Regional Medical Center,independent,EMEA,community,PP3000,FY2026H1,19115,2
+ACC-024,Marigold Regional Medical Center,independent,EMEA,community,PP3500,FY2024,72120,2
+ACC-024,Marigold Regional Medical Center,independent,EMEA,community,PP3500,FY2025,110596,3
+ACC-024,Marigold Regional Medical Center,independent,EMEA,community,PP3500,FY2026H1,57671,4
+ACC-024,Marigold Regional Medical Center,independent,EMEA,community,SP6000,FY2024,36061,2
+ACC-024,Marigold Regional Medical Center,independent,EMEA,community,SP6000,FY2025,25226,2
+ACC-024,Marigold Regional Medical Center,independent,EMEA,community,SP6000,FY2026H1,15653,2
+ACC-024,Marigold Regional Medical Center,independent,EMEA,community,SP6500,FY2024,18844,1
+ACC-024,Marigold Regional Medical Center,independent,EMEA,community,SP6500,FY2025,11370,1
+ACC-024,Marigold Regional Medical Center,independent,EMEA,community,SP6500,FY2026H1,5892,1
+ACC-024,Marigold Regional Medical Center,independent,EMEA,community,cloud-suite,FY2025,17776,1
+ACC-024,Marigold Regional Medical Center,independent,EMEA,community,cloud-suite,FY2026H1,15349,1
+ACC-025,Oakhaven Community Hospital,independent,EMEA,community,PP3000,FY2024,29657,2
+ACC-025,Oakhaven Community Hospital,independent,EMEA,community,PP3000,FY2025,36082,2
+ACC-025,Oakhaven Community Hospital,independent,EMEA,community,PP3000,FY2026H1,17022,2
+ACC-025,Oakhaven Community Hospital,independent,EMEA,community,PP3500,FY2024,48465,2
+ACC-025,Oakhaven Community Hospital,independent,EMEA,community,PP3500,FY2025,106431,3
+ACC-025,Oakhaven Community Hospital,independent,EMEA,community,PP3500,FY2026H1,83434,4
+ACC-025,Oakhaven Community Hospital,independent,EMEA,community,SP6000,FY2024,30277,2
+ACC-025,Oakhaven Community Hospital,independent,EMEA,community,SP6000,FY2025,22193,2
+ACC-025,Oakhaven Community Hospital,independent,EMEA,community,SP6000,FY2026H1,12840,2
+ACC-025,Oakhaven Community Hospital,independent,EMEA,community,SP6500,FY2024,11757,1
+ACC-025,Oakhaven Community Hospital,independent,EMEA,community,SP6500,FY2025,14918,1
+ACC-025,Oakhaven Community Hospital,independent,EMEA,community,SP6500,FY2026H1,6142,1
+ACC-025,Oakhaven Community Hospital,independent,EMEA,community,cloud-suite,FY2024,26249,1
+ACC-025,Oakhaven Community Hospital,independent,EMEA,community,cloud-suite,FY2025,42633,2
+ACC-025,Oakhaven Community Hospital,independent,EMEA,community,cloud-suite,FY2026H1,44774,3
+ACC-026,Falcon Ridge University Medical Center,independent,EMEA,academic,IP5000,FY2024,134018,10
+ACC-026,Falcon Ridge University Medical Center,independent,EMEA,academic,IP5000,FY2025,120567,9
+ACC-026,Falcon Ridge University Medical Center,independent,EMEA,academic,IP5000,FY2026H1,68049,8
+ACC-026,Falcon Ridge University Medical Center,independent,EMEA,academic,PP3000,FY2024,97681,4
+ACC-026,Falcon Ridge University Medical Center,independent,EMEA,academic,PP3000,FY2025,70916,3
+ACC-026,Falcon Ridge University Medical Center,independent,EMEA,academic,PP3000,FY2026H1,37991,3
+ACC-026,Falcon Ridge University Medical Center,independent,EMEA,academic,PP3500,FY2024,362988,14
+ACC-026,Falcon Ridge University Medical Center,independent,EMEA,academic,PP3500,FY2025,559998,22
+ACC-026,Falcon Ridge University Medical Center,independent,EMEA,academic,PP3500,FY2026H1,486767,26
+ACC-026,Falcon Ridge University Medical Center,independent,EMEA,academic,SP6000,FY2024,165639,10
+ACC-026,Falcon Ridge University Medical Center,independent,EMEA,academic,SP6000,FY2025,118274,11
+ACC-026,Falcon Ridge University Medical Center,independent,EMEA,academic,SP6000,FY2026H1,85071,11
+ACC-026,Falcon Ridge University Medical Center,independent,EMEA,academic,SP6500,FY2024,97176,7
+ACC-026,Falcon Ridge University Medical Center,independent,EMEA,academic,SP6500,FY2025,99969,7
+ACC-026,Falcon Ridge University Medical Center,independent,EMEA,academic,SP6500,FY2026H1,65936,7
+ACC-026,Falcon Ridge University Medical Center,independent,EMEA,academic,cloud-suite,FY2024,117867,5
+ACC-026,Falcon Ridge University Medical Center,independent,EMEA,academic,cloud-suite,FY2025,281311,10
+ACC-026,Falcon Ridge University Medical Center,independent,EMEA,academic,cloud-suite,FY2026H1,214840,13
+ACC-027,Amberfield Health Network,independent,EMEA,idn,IP5000,FY2024,101054,9
+ACC-027,Amberfield Health Network,independent,EMEA,idn,IP5000,FY2025,142930,8
+ACC-027,Amberfield Health Network,independent,EMEA,idn,IP5000,FY2026H1,56426,7
+ACC-027,Amberfield Health Network,independent,EMEA,idn,PP3000,FY2024,175700,8
+ACC-027,Amberfield Health Network,independent,EMEA,idn,PP3000,FY2025,127428,6
+ACC-027,Amberfield Health Network,independent,EMEA,idn,PP3000,FY2026H1,52714,6
+ACC-027,Amberfield Health Network,independent,EMEA,idn,PP3500,FY2024,374956,9
+ACC-027,Amberfield Health Network,independent,EMEA,idn,PP3500,FY2025,395328,14
+ACC-027,Amberfield Health Network,independent,EMEA,idn,PP3500,FY2026H1,359638,16
+ACC-027,Amberfield Health Network,independent,EMEA,idn,SP6000,FY2024,102357,9
+ACC-027,Amberfield Health Network,independent,EMEA,idn,SP6000,FY2025,116257,9
+ACC-027,Amberfield Health Network,independent,EMEA,idn,SP6000,FY2026H1,53274,9
+ACC-027,Amberfield Health Network,independent,EMEA,idn,SP6500,FY2024,69992,6
+ACC-027,Amberfield Health Network,independent,EMEA,idn,SP6500,FY2025,84609,6
+ACC-027,Amberfield Health Network,independent,EMEA,idn,SP6500,FY2026H1,53248,6
+ACC-027,Amberfield Health Network,independent,EMEA,idn,cloud-suite,FY2024,97691,3
+ACC-027,Amberfield Health Network,independent,EMEA,idn,cloud-suite,FY2025,121107,6
+ACC-027,Amberfield Health Network,independent,EMEA,idn,cloud-suite,FY2026H1,140671,8
+ACC-028,Larkspur Community Hospital,independent,APAC,community,IP5000,FY2024,92382,6
+ACC-028,Larkspur Community Hospital,independent,APAC,community,IP5000,FY2025,60810,6
+ACC-028,Larkspur Community Hospital,independent,APAC,community,IP5000,FY2026H1,24244,5
+ACC-028,Larkspur Community Hospital,independent,APAC,community,PP3000,FY2024,47272,2
+ACC-028,Larkspur Community Hospital,independent,APAC,community,PP3000,FY2025,43028,2
+ACC-028,Larkspur Community Hospital,independent,APAC,community,PP3000,FY2026H1,18267,2
+ACC-028,Larkspur Community Hospital,independent,APAC,community,PP3500,FY2024,303658,8
+ACC-028,Larkspur Community Hospital,independent,APAC,community,PP3500,FY2025,515896,12
+ACC-028,Larkspur Community Hospital,independent,APAC,community,PP3500,FY2026H1,230492,14
+ACC-028,Larkspur Community Hospital,independent,APAC,community,SP6000,FY2024,85379,6
+ACC-028,Larkspur Community Hospital,independent,APAC,community,SP6000,FY2025,64117,6
+ACC-028,Larkspur Community Hospital,independent,APAC,community,SP6000,FY2026H1,49206,6
+ACC-028,Larkspur Community Hospital,independent,APAC,community,SP6500,FY2024,58870,4
+ACC-028,Larkspur Community Hospital,independent,APAC,community,SP6500,FY2025,62026,4
+ACC-028,Larkspur Community Hospital,independent,APAC,community,SP6500,FY2026H1,40471,4
+ACC-028,Larkspur Community Hospital,independent,APAC,community,cloud-suite,FY2024,22555,1
+ACC-028,Larkspur Community Hospital,independent,APAC,community,cloud-suite,FY2025,57963,2
+ACC-028,Larkspur Community Hospital,independent,APAC,community,cloud-suite,FY2026H1,21940,2
+ACC-029,Windmere University Medical Center,independent,APAC,academic,PP3000,FY2024,218296,10
+ACC-029,Windmere University Medical Center,independent,APAC,academic,PP3000,FY2025,142270,8
+ACC-029,Windmere University Medical Center,independent,APAC,academic,PP3000,FY2026H1,70694,8
+ACC-029,Windmere University Medical Center,independent,APAC,academic,PP3500,FY2024,758187,18
+ACC-029,Windmere University Medical Center,independent,APAC,academic,PP3500,FY2025,1146748,28
+ACC-029,Windmere University Medical Center,independent,APAC,academic,PP3500,FY2026H1,685172,33
+ACC-029,Windmere University Medical Center,independent,APAC,academic,SP6000,FY2024,187528,15
+ACC-029,Windmere University Medical Center,independent,APAC,academic,SP6000,FY2025,190374,16
+ACC-029,Windmere University Medical Center,independent,APAC,academic,SP6000,FY2026H1,121288,16
+ACC-029,Windmere University Medical Center,independent,APAC,academic,SP6500,FY2024,147025,10
+ACC-029,Windmere University Medical Center,independent,APAC,academic,SP6500,FY2025,113841,11
+ACC-029,Windmere University Medical Center,independent,APAC,academic,SP6500,FY2026H1,97183,11
+ACC-029,Windmere University Medical Center,independent,APAC,academic,cloud-suite,FY2024,87060,3
+ACC-029,Windmere University Medical Center,independent,APAC,academic,cloud-suite,FY2025,157928,6
+ACC-029,Windmere University Medical Center,independent,APAC,academic,cloud-suite,FY2026H1,96625,8
+ACC-030,Thornbury Health Network,independent,APAC,idn,IP5000,FY2024,142362,9
+ACC-030,Thornbury Health Network,independent,APAC,idn,IP5000,FY2025,131974,8
+ACC-030,Thornbury Health Network,independent,APAC,idn,IP5000,FY2026H1,51935,7
+ACC-030,Thornbury Health Network,independent,APAC,idn,PP3000,FY2024,99905,6
+ACC-030,Thornbury Health Network,independent,APAC,idn,PP3000,FY2025,122764,5
+ACC-030,Thornbury Health Network,independent,APAC,idn,PP3000,FY2026H1,38726,5
+ACC-030,Thornbury Health Network,independent,APAC,idn,PP3500,FY2024,377099,9
+ACC-030,Thornbury Health Network,independent,APAC,idn,PP3500,FY2025,404715,14
+ACC-030,Thornbury Health Network,independent,APAC,idn,PP3500,FY2026H1,264164,17
+ACC-030,Thornbury Health Network,independent,APAC,idn,SP6000,FY2024,111476,9
+ACC-030,Thornbury Health Network,independent,APAC,idn,SP6000,FY2025,80948,9
+ACC-030,Thornbury Health Network,independent,APAC,idn,SP6000,FY2026H1,63860,9
+ACC-030,Thornbury Health Network,independent,APAC,idn,SP6500,FY2024,97343,6
+ACC-030,Thornbury Health Network,independent,APAC,idn,SP6500,FY2025,91100,6
+ACC-030,Thornbury Health Network,independent,APAC,idn,SP6500,FY2026H1,39740,6
+ACC-030,Thornbury Health Network,independent,APAC,idn,cloud-suite,FY2024,25006,1
+ACC-030,Thornbury Health Network,independent,APAC,idn,cloud-suite,FY2025,92131,3
+ACC-030,Thornbury Health Network,independent,APAC,idn,cloud-suite,FY2026H1,59843,4
+ACC-031,Redwing Health System,independent,APAC,idn,IP5000,FY2024,322381,27
+ACC-031,Redwing Health System,independent,APAC,idn,IP5000,FY2025,262236,23
+ACC-031,Redwing Health System,independent,APAC,idn,IP5000,FY2026H1,107611,21
+ACC-031,Redwing Health System,independent,APAC,idn,PP3000,FY2024,276701,16
+ACC-031,Redwing Health System,independent,APAC,idn,PP3000,FY2025,209761,14
+ACC-031,Redwing Health System,independent,APAC,idn,PP3000,FY2026H1,141160,13
+ACC-031,Redwing Health System,independent,APAC,idn,PP3500,FY2024,881436,31
+ACC-031,Redwing Health System,independent,APAC,idn,PP3500,FY2025,1352444,48
+ACC-031,Redwing Health System,independent,APAC,idn,PP3500,FY2026H1,1204214,57
+ACC-031,Redwing Health System,independent,APAC,idn,SP6000,FY2024,363048,27
+ACC-031,Redwing Health System,independent,APAC,idn,SP6000,FY2025,299056,28
+ACC-031,Redwing Health System,independent,APAC,idn,SP6000,FY2026H1,222659,28
+ACC-031,Redwing Health System,independent,APAC,idn,SP6500,FY2024,225108,17
+ACC-031,Redwing Health System,independent,APAC,idn,SP6500,FY2025,291560,18
+ACC-031,Redwing Health System,independent,APAC,idn,SP6500,FY2026H1,149723,18
+ACC-031,Redwing Health System,independent,APAC,idn,cloud-suite,FY2024,182935,5
+ACC-031,Redwing Health System,independent,APAC,idn,cloud-suite,FY2025,229588,11
+ACC-031,Redwing Health System,independent,APAC,idn,cloud-suite,FY2026H1,217506,14
+ACC-032,Saltgrass Home Infusion Services,independent,APAC,home-infusion,IP5000,FY2024,45054,3
+ACC-032,Saltgrass Home Infusion Services,independent,APAC,home-infusion,IP5000,FY2025,23166,2
+ACC-032,Saltgrass Home Infusion Services,independent,APAC,home-infusion,IP5000,FY2026H1,17045,2
+ACC-032,Saltgrass Home Infusion Services,independent,APAC,home-infusion,PP3000,FY2024,84964,4
+ACC-032,Saltgrass Home Infusion Services,independent,APAC,home-infusion,PP3000,FY2025,56479,3
+ACC-032,Saltgrass Home Infusion Services,independent,APAC,home-infusion,PP3000,FY2026H1,26433,3
+ACC-032,Saltgrass Home Infusion Services,independent,APAC,home-infusion,PP3500,FY2024,87528,2
+ACC-032,Saltgrass Home Infusion Services,independent,APAC,home-infusion,PP3500,FY2025,132271,3
+ACC-032,Saltgrass Home Infusion Services,independent,APAC,home-infusion,PP3500,FY2026H1,62761,3
+ACC-032,Saltgrass Home Infusion Services,independent,APAC,home-infusion,SP6000,FY2024,30875,2
+ACC-032,Saltgrass Home Infusion Services,independent,APAC,home-infusion,SP6000,FY2025,18417,2
+ACC-032,Saltgrass Home Infusion Services,independent,APAC,home-infusion,SP6000,FY2026H1,14596,2
+ACC-032,Saltgrass Home Infusion Services,independent,APAC,home-infusion,SP6500,FY2024,16886,1
+ACC-032,Saltgrass Home Infusion Services,independent,APAC,home-infusion,SP6500,FY2025,15061,1
+ACC-032,Saltgrass Home Infusion Services,independent,APAC,home-infusion,SP6500,FY2026H1,8704,1
+ACC-033,Moorland University Medical Center,independent,APAC,academic,PP3000,FY2024,210911,9
+ACC-033,Moorland University Medical Center,independent,APAC,academic,PP3000,FY2025,113013,7
+ACC-033,Moorland University Medical Center,independent,APAC,academic,PP3000,FY2026H1,60351,7
+ACC-033,Moorland University Medical Center,independent,APAC,academic,PP3500,FY2024,433777,12
+ACC-033,Moorland University Medical Center,independent,APAC,academic,PP3500,FY2025,698546,19
+ACC-033,Moorland University Medical Center,independent,APAC,academic,PP3500,FY2026H1,426133,22
+ACC-033,Moorland University Medical Center,independent,APAC,academic,SP6000,FY2024,139859,10
+ACC-033,Moorland University Medical Center,independent,APAC,academic,SP6000,FY2025,130427,11
+ACC-033,Moorland University Medical Center,independent,APAC,academic,SP6000,FY2026H1,88620,11
+ACC-033,Moorland University Medical Center,independent,APAC,academic,SP6500,FY2024,88609,7
+ACC-033,Moorland University Medical Center,independent,APAC,academic,SP6500,FY2025,71688,7
+ACC-033,Moorland University Medical Center,independent,APAC,academic,SP6500,FY2026H1,48120,7
+ACC-033,Moorland University Medical Center,independent,APAC,academic,cloud-suite,FY2024,57675,2
+ACC-033,Moorland University Medical Center,independent,APAC,academic,cloud-suite,FY2025,123885,4
+ACC-033,Moorland University Medical Center,independent,APAC,academic,cloud-suite,FY2026H1,89118,5
+ACC-P34,Glenrose Health System,Cascadia Health Partners,NA,idn,PP3500,FY2026H1,25000,0
+ACC-P35,Bayside University Medical Center,independent,NA,academic,PP3500,FY2026H1,25000,0
+ACC-P36,Corminster Community Hospital,independent,NA,community,PP3500,FY2026H1,25000,0
+ACC-P37,Aldervale University Medical Center,independent,EMEA,academic,PP3500,FY2026H1,12000,0
+ACC-P38,Uplands Community Hospital,independent,EMEA,community,PP3500,FY2026H1,0,0
+ACC-P39,Quarry Bend University Medical Center,independent,APAC,academic,PP3500,FY2026H1,40000,0

@@ -1,0 +1,441 @@
+cfres_id,recalling_firm,product_description,reason_for_recall,recall_status,event_date_initiated,event_date_posted,product_code,res_event_number
+210103,Zyno Medical LLC,"Z-800 Infusion System, Model Numbers Z-800, Z-800F, Z-800W, Z-800WF;
+Software Version: Z-800 6.1.01 and 6-1.07z; Z-800F 4.1.02 and 4.1.08z; Z-800W 3.1.32 and 3.1.64z, Z-800WF 3.1.32 and 3.1.64z",There is a defect in the air-in-line software algorithm.,"Open, Classified",2024-09-13,2024-10-09,FRN,95382
+203008,Smiths Medical ASD Inc.,"Medfusion Syringe Pump, Model 3500-500, v3, v4, v5, and v6","A force sensor in the occlusion detector may drift out of calibration leading to increased occlusion detection times, false occlusion alarms, or a System Failure Alarm. If the force sensor calibration shift is large enough, the pump will display a System Failure Alarm (including Force Sensor BGND Test, Force Sensor Bridge Test, or Force Sensor Test). However, if the calibration shift is not large enough to trigger a System Failure Alarm, the threshold to detect an occlusion may increase, increasing the time to occlusion detection, or the threshold may decrease, leading to false occlusion alarms.  Although shifts in the force sensor calibration may occur over time with any device, an increased potential for such shifts has been reported in devices produced before April 2022 due to mechanical interference between parts of the plunger head assembly. Out of an abundance of caution, we are notifying all customers of this potential issue.","Open, Classified",2023-08-16,2023-10-06,FRN,92956
+203009,Smiths Medical ASD Inc.,"Medfusion Syringe Pump, Model 3500VX-500, v3, v4, v5, and v6","A force sensor in the occlusion detector may drift out of calibration leading to increased occlusion detection times, false occlusion alarms, or a System Failure Alarm. If the force sensor calibration shift is large enough, the pump will display a System Failure Alarm (including Force Sensor BGND Test, Force Sensor Bridge Test, or Force Sensor Test). However, if the calibration shift is not large enough to trigger a System Failure Alarm, the threshold to detect an occlusion may increase, increasing the time to occlusion detection, or the threshold may decrease, leading to false occlusion alarms.  Although shifts in the force sensor calibration may occur over time with any device, an increased potential for such shifts has been reported in devices produced before April 2022 due to mechanical interference between parts of the plunger head assembly. Out of an abundance of caution, we are notifying all customers of this potential issue.","Open, Classified",2023-08-16,2023-10-06,FRN,92956
+203010,Smiths Medical ASD Inc.,"Medfusion Syringe Pump, Model 3500-0600-XX:
+a) 0600-00; 
+b) 0600-01; 
+c) 0600-50; 
+d) 0600-51; 
+e) 0600-82; 
+f) 0600-249; 
+
+software versions:   v3, v4, v5, and v6","A force sensor in the occlusion detector may drift out of calibration leading to increased occlusion detection times, false occlusion alarms, or a System Failure Alarm. If the force sensor calibration shift is large enough, the pump will display a System Failure Alarm (including Force Sensor BGND Test, Force Sensor Bridge Test, or Force Sensor Test). However, if the calibration shift is not large enough to trigger a System Failure Alarm, the threshold to detect an occlusion may increase, increasing the time to occlusion detection, or the threshold may decrease, leading to false occlusion alarms.  Although shifts in the force sensor calibration may occur over time with any device, an increased potential for such shifts has been reported in devices produced before April 2022 due to mechanical interference between parts of the plunger head assembly. Out of an abundance of caution, we are notifying all customers of this potential issue.","Open, Classified",2023-08-16,2023-10-06,FRN,92956
+203011,Smiths Medical ASD Inc.,"Medfusion Syringe Pump, Model 4000-XXXX-XX:
+a)	0100-50, 
+b)	0100-249, 
+c)	0101-50, 
+d)	0101-51, 
+e)	0101-78, 
+f)	0101-249, 
+g)	0105-51, 
+h)	0105-78, 
+i)	0105-249, 
+j)	0106-00, 
+k)	0106-01, 
+l)	0106-231, 
+m)	0107-01, 
+
+
+software versions:   v3, v4, v5, and v6","A force sensor in the occlusion detector may drift out of calibration leading to increased occlusion detection times, false occlusion alarms, or a System Failure Alarm. If the force sensor calibration shift is large enough, the pump will display a System Failure Alarm (including Force Sensor BGND Test, Force Sensor Bridge Test, or Force Sensor Test). However, if the calibration shift is not large enough to trigger a System Failure Alarm, the threshold to detect an occlusion may increase, increasing the time to occlusion detection, or the threshold may decrease, leading to false occlusion alarms.  Although shifts in the force sensor calibration may occur over time with any device, an increased potential for such shifts has been reported in devices produced before April 2022 due to mechanical interference between parts of the plunger head assembly. Out of an abundance of caution, we are notifying all customers of this potential issue.","Open, Classified",2023-08-16,2023-10-06,FRN,92956
+203012,Smiths Medical ASD Inc.,"Medfusion PLUNGER FLOAT PLATE, Component Number G6000069, used on infusion pump","A force sensor in the occlusion detector may drift out of calibration leading to increased occlusion detection times, false occlusion alarms, or a System Failure Alarm. If the force sensor calibration shift is large enough, the pump will display a System Failure Alarm (including Force Sensor BGND Test, Force Sensor Bridge Test, or Force Sensor Test). However, if the calibration shift is not large enough to trigger a System Failure Alarm, the threshold to detect an occlusion may increase, increasing the time to occlusion detection, or the threshold may decrease, leading to false occlusion alarms.  Although shifts in the force sensor calibration may occur over time with any device, an increased potential for such shifts has been reported in devices produced before April 2022 due to mechanical interference between parts of the plunger head assembly. Out of an abundance of caution, we are notifying all customers of this potential issue.","Open, Classified",2023-08-16,2023-10-06,FRN,92956
+203013,Smiths Medical ASD Inc.,"Medfusion ASSEMBLY PLUNGER CASE LEFT 1/EA, Component Number G6001587, used on infusion pump","A force sensor in the occlusion detector may drift out of calibration leading to increased occlusion detection times, false occlusion alarms, or a System Failure Alarm. If the force sensor calibration shift is large enough, the pump will display a System Failure Alarm (including Force Sensor BGND Test, Force Sensor Bridge Test, or Force Sensor Test). However, if the calibration shift is not large enough to trigger a System Failure Alarm, the threshold to detect an occlusion may increase, increasing the time to occlusion detection, or the threshold may decrease, leading to false occlusion alarms.  Although shifts in the force sensor calibration may occur over time with any device, an increased potential for such shifts has been reported in devices produced before April 2022 due to mechanical interference between parts of the plunger head assembly. Out of an abundance of caution, we are notifying all customers of this potential issue.","Open, Classified",2023-08-16,2023-10-06,FRN,92956
+203459,EITAN MEDICAL LTD,"Sapphire Infusion Pumps, Models: Multi-Therapy (REF 15031-000-0028), Epidural (REF 15032-000-0027) and SapphirePlus (REF 15038-000-0001)","Infusion Pumps with affected software revision may fail to detect air in line, which may lead to air embolism.","Open, Classified",2023-09-11,2023-10-20,FRN,93105
+189372,Smiths Medical ASD Inc.,"CADD-Solis VIP ambulatory infusion pump, Model Numbers:
+a. 21-2120-0105-02L
+b. 21-2120-0105-03L
+c. 21-2120-0105-06L
+d. 21-2120-0105-07L
+e. 21-2120-0105-08L
+f. 21-2120-0105-12L
+g. 21-2120-0105-13L
+h. 21-2120-0105-14L
+i. 21-2120-0105-15L
+j. 21-2120-0105-17L
+k. 21-2120-0105-50L
+l. 21-2127-0105-02L
+m. 21-2127-0105-06L
+n. 21-2127-0105-50L","Specific Pumps may exhibit intermittent performance in the AILD (Air in Line Detector) function. If an AILD does not sufficiently discern fluid from air in line, an air in line event may not be recognized by the pump and may not alarm to notify the clinician.",Terminated,2020-03-24,2021-10-19,FRN,88701
+203160,"B. Braun Medical, Inc.","8713051U, Infusomat Large Volume Pump, Wireless; Volumetric Infusion Pump System","Upstream occlusion alarm may sound when no occlusion exists, and the device will stop pumping. Interruption to the infusion of high-risk medications may lead to hemodynamic instability requiring medical intervention to prevent permanent impairment to body structures or body functions.  In some cases, this may be life-threatening or may lead to death.","Open, Classified",2023-09-21,2023-10-25,FRN,92978
+203162,"B. Braun Medical, Inc.","8713052U, Infusomat Large Volume Pump, Non-Wireless BATTERY PACK; Volumetric Infusion Pump System","Upstream occlusion alarm may sound when no occlusion exists, and the device will stop pumping. Interruption to the infusion of high-risk medications may lead to hemodynamic instability requiring medical intervention to prevent permanent impairment to body structures or body functions.  In some cases, this may be life-threatening or may lead to death.","Open, Classified",2023-09-21,2023-10-25,FRN,92978
+203627,Baxter Healthcare Corporation,"Novum IQ Syringe infusion system, Product Code 40800BAXUS","Baxter is issuing an Urgent Medical Device Correction for the Novum IQ Syringe Pump. Baxter identified that after multiple downstream occlusion alarms, the pump may display an  Infusion Complete  alarm even though uninfused fluid remains in the syringe.","Open, Classified",2023-10-13,2023-11-09,FRN,93191
+203460,"CareFusion 303, Inc.",BD Alaris PCU REF 8015,"Alaris PCA Module 8120, Patient Controlled Analgesia infusion pump: compatible syringes labeling contains syringes that have not been validated.","Open, Classified",2023-09-15,2023-11-07,FRN,93106
+203461,"CareFusion 303, Inc.","BD Alaris Syringe Module, REF 8110","Alaris PCA Module 8120, Patient Controlled Analgesia infusion pump: compatible syringes labeling contains syringes that have not been validated.","Open, Classified",2023-09-15,2023-11-07,FRN,93106
+203462,"CareFusion 303, Inc.",Alaris PCA Module 8120,"Alaris PCA Module 8120, Patient Controlled Analgesia infusion pump: compatible syringes labeling contains syringes that have not been validated.","Open, Classified",2023-09-15,2023-11-07,FRN,93106
+209903,Smiths Medical ASD Inc.,"CADD-Solis Li-ion Rechargeable Battery Packs, REF 21-2160-XX, which are also sold as a component of the following CADD Solis Ambulatory Infusion Systems:  21-2101-0100-50, 21-2101-0200-02, 21-2101-0200-03, 21-2101-0200-06, 21-2101-0200-07, 21-2101-0200-12, 21-2101-0200-14, 21-2101-0200-17, 21-2101-0200-238, 21-2101-249, 21-2101-51, 21-2102-0200-02, 21-2102-249, 21-2102-51, 21-2111-0100-00, 21-2111-0100-50, 21-2111-0100-51, 21-2111-0200-02, 21-2111-0200-03, 21-2111-0200-06, 21-2111-0200-07, 21-2111-0200-08, 21-2111-0200-12, 21-2111-0200-14, 21-2111-0200-17, 21-2111-0200-232, 21-2111-0200-50, 21-2111-0300-00, 21-2111-0300-01, 21-2111-0300-02, 21-2111-0300-03, 21-2111-0300-06, 21-2111-0300-07, 21-2111-0300-08, 21-2111-0300-09, 21-2111-0300-12, 21-2111-0300-14, 21-2111-0300-17, 21-2111-0300-231, 21-2111-0300-232, 21-2111-0300-50, 21-2111-0400-01, 21-2111-0400-51, 21-2111-0401-02L, 21-2111-0401-03L, 21-2111-0401-06L, 21-2111-0401-07, 21-2111-0401-07L, 21-2111-0401-08L, 21-2111-0401-12L, 21-2111-0401-14L, 21-2111-0401-17L, 21-2111-0401-249, 21-2111-0401-51, 21-2111-0401-51L, 21-2111-0401-78, 21-2111-0402-02, 21-2111-0402-02L, 21-2111-0402-03L, 21-2111-0402-06L, 21-2111-0402-07L, 21-2111-0402-08, 21-2111-0402-08L, 21-2111-0402-09_LOAN, 21-2111-0402-09-FUK, 21-2111-0402-09JP, 21-2111-0402-09-KYO, 21-2111-0402-09-NAG, 21-2111-0402-09-OKA, 21-2111-0402-09-OSA, 21-2111-0402-09-SAP, 21-2111-0402-09-SEN, 21-2111-0402-09-TOKE, 21-2111-0402-09-TOKW, 21-2111-0402-09-YOK, 21-2111-0402-12L, 21-2111-0402-14L, 21-2111-0402-17L, 21-2111-0402-249, 21-2111-0402-51, 21-2111-0402-51L, 21-2111-0402-78, 21-2112-0100-50, 21-2112-0100-51, 21-2112-0200-02, 21-2112-0200-06, 21-2112-0300-00, 21-2112-0300-01, 21-2112-0300-02, 21-2112-0300-03, 21-2112-0300-06, 21-2112-0300-231, 21-2112-0300-50, 21-2112-0400-01, 21-2112-0400-51, 21-2112-0401-02L, 21-2112-0401-03L, 21-2112-0401-07L, 21-2112-0401-08L, 21-2112-0401-17L, 21-2112-0401-51, 21-2112-0401-51L, 21-2112-0401-78, 21-2112-0402-02, 21-2112-0402-02L, 21-2112-0402-03L, 21-2112-0402-06L, 21-2112-0402-07L, 21-2112-0402-08L, 21-2112-0402-09JP, 21-2112-0402-09-SAI, 21-2112-0402-09-SEN, 21-2112-0402-09-TOKE, 21-2112-0402-17L, 21-2112-0402-249, 21-2112-0402-51, 21-2112-0402-51L, 21-2120-0100-02, 21-2120-0100-03, 21-2120-0100-06, 21-2120-0100-232, 21-2120-0100-233, 21-2120-0100-50, 21-2120-0100-51, 21-2120-0100-95, 21-2120-0102-02, 21-2120-0102-03, 21-2120-0102-06, 21-2120-0102-07, 21-2120-0102-08, 21-2120-0102-12, 21-2120-0102-13, 21-2120-0102-14, 21-2120-0102-15, 21-2120-0102-17, 21-2120-0102-247, 21-2120-0102-249, 21-2120-0102-51, 21-2120-0102-78, 21-2120-0102-92, 21-2120-0102-98, 21-2120-0103-01, 21-2120-0103-02, 21-2120-0103-03, 21-2120-0103-06, 21-2120-0103-07, 21-2120-0103-08, 21-2120-0103-14, 21-2120-0103-15, 21-2120-0103-17, 21-2120-0103-249, 21-2120-0103-51, 21-2120-0103-78, 21-2120-0104-01, 21-2120-0105-00, 21-2120-0105-01, 21-2120-0105-02L, 21-2120-0105-03L, 21-2120-0105-06L, 21-2120-0105-07L, 21-2120-0105-08L, 21-2120-0105-12L, 21-2120-0105-13L, 21-2120-0105-14L, 21-2120-0105-15L, 21-2120-0105-17L, 21-2120-0105-231, 21-2120-0105-50, 21-2120-0105-50L, 21-2125-0104-01, 21-2125-0105-07L, 21-2125-0105-08L, 21-2125-0105-50L, 21-2127-0104-01, 21-2127-0105-01, 21-2127-0105-02L, 21-2127-0105-03L, 21-2127-0105-06L, 21-2127-0105-08L, 21-2127-0105-50L, 22-4095-0203-51, 22-4095-0204-25, 22-4095-0205-25.","Damage to the battery pack may have caused a short to a capacitor within the battery pack.  While the battery encasement is designed to be flame retardant, a short to the capacitor could lead to melting of the battery pack case.  If this issue occurs, the battery pack charging circuit may become inoperable.","Open, Classified",2024-07-16,2024-10-31,FRN,95287
+196592,Smiths Medical ASD Inc.,"Medfusion Model 4000 Syringe Infusion Pump, with software versions V1.6.0 or V1.6.1 that have implemented the Smart Pump Programming (SPP) feature in a clinical treatment environment.
+
+Used for infusion of fluids requiring precisely controlled infusion rates including blood or blood products, lipids, drugs, antibiotics, enteral solutions, and other therapeutic fluids.",Potential for delay in sending Infusion Start Messages to third-party Electronic Health Record systems which may affect infusion auto-programming on the pump and documentation,"Open, Classified",2022-10-10,2022-11-21,FRN,91052
+210440,Baxter Healthcare Corporation,"Baxter Spectrum IQ Infusion System with Dose IQ Safety Software, Product Code 3570009",The door on the Spectrum IQ Infusion pump may not be able to fully close.,"Open, Classified",2024-10-02,2024-11-08,FRN,95505
+215918,"Fresenius Kabi USA, LLC","Ivenix Infusion System (IIS), Large Volume Pump. Model Number: LVP-0004.","Potential issue that can cause the device to register ""phantom"" touches in the lower-left corner of the touchscreen during operation.","Open, Classified",2025-09-03,2025-10-28,FRN,97554
+216289,"CareFusion 303, Inc.","BD Alaris infusion Pump Module 8100, REF: 8100; 
+KIT, BEZEL ASSY 8100BD, REF: 49000437;
+KIT ASSY ONE PIECE BEZEL 8100, REF: 49000270.
+
+Used with the following new and updated documents: BD Alaris Infusion System Inspection Safety Reminder, Part: BD-163124, Revision: 00; Cleaning and Disinfecting Procedure, Part: P00000864; Cleaning and Disinfecting Quick Reference Guide","If infusion pump is dropped or severely jarred this may damage the pump module bezel assembly, which can cause under-infusion, over-infusion, unregulated flow, or pump module failure to calibrate; so dropped/jarred pumps should be removed from use, tested, and inspected by qualified service personnel prior to reuse; tip sheet, cleaning and disinfecting procedure and reference guide updated.","Open, Classified",2025-10-17,2025-11-20,FRN,97669
+210686,"ICU Medical, Inc.","Allegedly counterfeit batteries manufactured by CSB batteries being used with Plum Infusion Systems:  Plum 360"" Infusion System, Pump List Number	30010; Plum A+ & Plum A+3"" Infusion Systems, Pump List Numbers:  11005, 11971, 12391, 12618, 20678, 20679, 20792, 60529, 12348, 1197","ICU Medical has received reports of allegedly counterfeit CSB batteries being used with Plum Infusion Systems. While these non-OEM batteries are visually similar to the Plum batteries supplied by ICU Medical, they are in fact not the same batteries and have not been tested or validated for use with Plum Infusion Systems.  Preliminary reports suggest that these non-OEM batteries fail to hold their charge and the pump may display messages to replace batteries earlier than expected. OSI Batteries and their customers are distributing these non-OEM CSB batteries without authorization from ICU Medical.","Open, Classified",2024-10-22,2024-11-21,FRN,95586
+210742,Zyno Medical LLC,"Z-800 Infusion System. Model/Catalog Number: Z-800, Z-800F, Z-800W, Z-800WF.
+
+
+The Z-800 Infusion system is intended to provide intravenous infusion of parenteral fluids, blood, and blood products to a patient under the direction or supervision of a physician or other certified healthcare professional.",Potential for the battery to deplete over time from self-discharge and internal parasitic leakage current despite being continuously plugged into AC mains.,"Open, Classified",2024-10-18,2024-11-21,FRN,95601
+210846,Zyno Medical LLC,"Brand Name: Z-800 Infusion System
+Product Name: Z-800WF
+Model/Catalog Number: Z-800WF.
+The Z-800 Infusion system is intended to provide intravenous infusion of parenteral fluids, blood, and blood products to a patient under the direction or supervision physician or other certified healthcare professional.","For the Z-800WF pumps, the WiFi software was not compatible with the pump software that had been loaded in accordance with ongoing correction Z-1183-2024.","Open, Classified",2024-09-30,2024-11-22,FRN,95635
+190284,Baxter Healthcare Corporation,"Baxter Spectrum IQ Infusion Pumps, Product code 3570009.","There is the potential for reduced or non-delivery of medication, in some cases without alerting the user via pump alarm. This may occur as a result of incorrect administration set setup and/or incomplete resolution of upstream occlusion alarms when using Spectrum V8 and Spectrum IQ infusion pumps.","Open, Classified",2021-12-29,2022-01-29,FRN,89017
+190891,Baxter Healthcare Corporation,"Baxter SIGMA Spectrum Infusion Pump with Master Drug Library (Version 8), Product code 35700BAX2.","There is the potential for reduced or non-delivery of medication, in some cases without alerting the user via pump alarm. This may occur as a result of incorrect administration set setup and/or incomplete resolution of upstream occlusion alarms when using Spectrum V8 and Spectrum IQ infusion pumps.","Open, Classified",2021-12-29,2022-01-29,FRN,89017
+204472,"Fresenius Kabi USA, LLC","Ivenix Infusion System (IIS), Large Volume Pump LVP-0004","The device may experience mechanical interference on the Fluid Valve pins, which will trigger a Pump Problem alarm. The issue may lead to delay or interruption of therapy. Depending on the therapy and duration of delay/interruption, the issue may lead to serious harm or death.","Open, Classified",2023-11-29,2023-12-20,FRN,93474
+217296,"Fresenius Kabi USA, LLC","IVENIX INFUSION SYSTEM, LVP Primary Administration Set, Dual-Inlet, Low-Sorbing, Needle-Free Port, Dual Y-Site (Qty 25). Large Volume Infusion Pump Administration Set.",Incorrect assembly of specific lot of LVP Primary Administration Set that could result in serious patient injury.,"Open, Classified",2025-11-03,2025-12-03,FRN,97941
+190636,Smiths Medical ASD Inc.,"Medfusion Model 3500 and 4000 Syringe Infusion Pumps and Medfusion 3010 and 3010A Syringe Infusion Pumps serviced during the same time period in which a main board was replaced using replacement main board part numbers G6000361, G6000435, G6001260, G6001560, G6001562 and G6002728.",There have been intermittent issues with Supercap POST (power on self-test) and Backup Audible Alarm error codes outside of the pump warranty period.  These alarms occur at start up when the pump goes through the self-test. This recall occurred in 2015.,"Open, Classified",2015-12-03,2022-02-17,FRN,89144
+211456,"Fresenius Kabi USA, LLC","Ivenix Infusion System (IIS), Large Volume Pump, Model Number: LVP-0004",Potential pneumatic valve failure that may cause the LVP to stop an active infusion and/or could prevent the pump from being used.,"Open, Classified",2024-12-06,2025-01-08,FRN,95891
+211363,Baxter Healthcare Corporation,"Baxter SIGMA Spectrum Infusion Pump with Master Drug Library (Version 6), Product Code 35700BAX","Devices were identified as released after repair without full testing being performed, which includes flow testing.","Open, Classified",2024-11-19,2024-12-27,FRN,95848
+211364,Baxter Healthcare Corporation,"Baxter SIGMA Spectrum Infusion Pump  with Master Drug Library (Version 8), Product Code 35700BAX2","Devices were identified as released after repair without full testing being performed, which includes flow testing.","Open, Classified",2024-11-19,2024-12-27,FRN,95848
+217293,"Fresenius Kabi USA, LLC","Ivenix Infusion System (IIS), Large Volume Pump. Model Number: LVP-0004.",Downstream Occlusion alarms may occur during procedures using low flow infusion rates when a check valve* is added to the Ivenix Administration Set.,"Open, Classified",2025-11-03,2025-12-01,FRN,97939
+205366,Smiths Medical ASD Inc.,smiths medical Medfusion Model 3500 Syringe pump,"Medfusion syringe pumps, with software versions before v6.0.0, may have the following issues:1. Delivery During Motor Not Running High Priority Alarm, 2. Infusion Restarted with Incorrect Parameters, 3. Screen Lock, 4. Interruption of Bolus or Loading Dose Delivery, 5. Pump Displays Incorrect Bolus/Loading Dose, 6. Loading/Bolus Dose Below the Minimum Recommended Rate, 7. Motor Rate Error, 8. Incorrect Recall Last Settings, 9. Corrupt Configuration, 10. Auto Lock, 11. Toolbox Configuration Loading Dose Time Values.
+
+Smiths Medical corrected all issues included in this notification in previous software updates and the corrections were carried forward into all subsequent software releases. Please ensure you have the most recent Medfusion software (v6.0.0) installed on your pumps.","Open, Classified",2023-12-19,2024-02-01,FRN,93754
+205373,Smiths Medical ASD Inc.,smiths medical Medfusion Model 4000 syringe pump,"Medfusion Model 4000 syringe infusion pumps, with the following software versions, may have the following issues: 1. Delivery During Motor Not Running High Priority Alarm (v1.0.0, v1.1.0, v1.1.1, v1.1.2), 2. Re-administered Loading Dose (v1.0.0, v1.1.0, v1.1.1, v1.1.2),  3. Incorrect Critical Data Failure Alarm, 4. Interruption of Bolus or Loading Dose Delivery (v1.0.0, v1.1.0, v1.1.1, v1.1.2), 5. Incorrect Total Bolus/Loading Dose Displayed (v1.1.0, v1.1.1, v1.1.2), 6. Volume Limit Before Bolus/Loading Dose Complete (v1.1.2),  7. Drug Library Lower Limit Displayed Incorrectly (v1.6.0, v1.6.1), 8. Depleted Battery Alarm (All versions previous to v1.6.5), 9. Loss of Wireless Connectivity (v1.5.0, v1.5.1, v1.6.0, v1.6.1, v1.6.4), 10. PharmGuard Server Password (v2.3, v2.4, v2.5). 
+Smiths Medical corrected all issues included in this notification in previous software updates and the corrections were carried forward into all subsequent software releases.
+Please ensure you have the most recent Medfusion software installed on your pumps.","Open, Classified",2023-12-19,2024-02-01,FRN,93757
+217423,"Fresenius Kabi USA, LLC","Ivenix Infusion System (IIS), LVP Software LVP-SW-0005. Software for the controlled administration of fluids to patients.",Software version 5.10.1 and earlier contain anomalies that have the potential to cause serious patient harm or death.,"Open, Classified",2025-11-14,2025-12-16,FRN,98009
+197358,"Bayer Medical Care, Inc.","Source Administration Set (SAS) used with the Medrad Intego PET Infusion System, Sterile
+Catalog number: INT CSS
+Affected material number: 86566621
+
+ Intended to deliver accurate doses of 18F Fluorodeoxyglucose (FDG) or 18F Sodium Fluoride (NaF) radiopharmaceuticals and commonly used flushing solutions to patients during molecular imaging (PET   Positron Emission Tomography - nuclear medicine) diagnostic procedures.",Black specks may be present on the packaged needles,"Open, Classified",2022-11-30,2023-01-06,FRN,91273
+211967,"Fresenius Kabi USA, LLC","Ivenix Infusion System (IIS), LVP Software LVP-SW-0005.
+
+Indicated for use in a hospital and in outpatient care environments for the controlled administration of fluids through clinically accepted routes of administration.","Large Volume Pump Software, version 5.9.2 and earlier has potential for the following anomalies: 
+1. The pump may become nonfunctional if during an alarm condition the Pause Audio option is repeated 70 time or more. 
+2. If a secondary infusion is started at the exact moment a primary infusion completes and VTBI reaches 0, it will switch to primary. The primary infusion will infuse at the previously programed primary rate and continue until the infusion is stopped or the bag is empty.","Open, Classified",2025-01-10,2025-02-04,FRN,96085
+217623,"Fresenius Kabi USA, LLC","Ivenix Infusion System (IIS), LVP Software: LVP-SW-0005.",Emphasizing instructions for LVP duration programming located in the IFU.,"Open, Classified",2025-11-21,2026-01-12,FRN,98106
+217676,"ICU Medical, Inc.","Plum Duo Infusion System, List Number 40002-04-01","ICU Medical received one lot of defective primary speakers from our supplier that may fail to produce an audible sound. If the primary speaker in your Plum Duo Infusion Pump fails, the pump may not produce audible alarms, alerts, or provide audible feedback for touchscreen inputs.","Open, Classified",2025-12-15,2026-01-15,FRN,98129
+211991,Belmont Instrument LLC,"Belmont Medical 3-Spike Disposable Set used with the Belmont Rapid Infuser RI-2. Designed to be used in general operation in hospital or alternate care environments to provide warmed blood and fluids to any patients e10 kg requiring warmed infusion.
+
+Part Number:903-00006","Disposable set may leak during priming from a female quick connector due to a crack in the female quick connector, may lead to a potential delay in treatment since the set will need to be replaced by another set","Open, Classified",2025-01-02,2025-02-04,FRN,96092
+217669,"ICU Medical, Inc.","ICU Medical Plum Duo Infusion Pump, List Numbers:  400020401 (US), 400021001 (Philippines)","Plum Solo and Duo Infusion pumps include a feature, that when selected, automatically flushes the downstream line after a piggyback therapy. The programmed flush volume is delivered from the primary line container at the piggyback therapy rate after the piggyback therapy is complete. In certain cases, as described below, the clinician may receive an Upper Hard Limit (UHL) or Lower Hard Limit (LHL) Violation message when programming a piggyback flush, which prevents the flush from being programmed.","Open, Classified",2025-12-15,2026-01-16,FRN,98128
+217670,"ICU Medical, Inc.","ICU Medical Plum Duo Precision IV Pump, List Numbers:  400020403 (US), 400021003 (Philippines)","Plum Solo and Duo Infusion pumps include a feature, that when selected, automatically flushes the downstream line after a piggyback therapy. The programmed flush volume is delivered from the primary line container at the piggyback therapy rate after the piggyback therapy is complete. In certain cases, as described below, the clinician may receive an Upper Hard Limit (UHL) or Lower Hard Limit (LHL) Violation message when programming a piggyback flush, which prevents the flush from being programmed.","Open, Classified",2025-12-15,2026-01-16,FRN,98128
+217671,"ICU Medical, Inc.","ICU Medical Plum Solo Precision IV Pump, List Numbers:  400010401 (US), 400011001 (Philippines)","Plum Solo and Duo Infusion pumps include a feature, that when selected, automatically flushes the downstream line after a piggyback therapy. The programmed flush volume is delivered from the primary line container at the piggyback therapy rate after the piggyback therapy is complete. In certain cases, as described below, the clinician may receive an Upper Hard Limit (UHL) or Lower Hard Limit (LHL) Violation message when programming a piggyback flush, which prevents the flush from being programmed.","Open, Classified",2025-12-15,2026-01-16,FRN,98128
+217765,Baxter Healthcare Corporation,"SIGMA Spectrum Infusion Pump, Model/Catalog Number: 35700BAX2","Certain pumps have potentially been released from service with defective grease applied to the cam and motor gears. Due to its low viscosity, the defective grease may lead to the device having insufficient lubrication on the cam, which could lead to premature wear of the mechanism assembly, resulting in over-infusion or a free-flow situation.","Open, Classified",2025-11-28,2026-01-16,FRN,98167
+205718,Zyno Medical LLC,"Zyno Medical Z800 Large Volume Infusion Pumps -Intended to provide intravenous infusion of parenteral fluids, blood and blood products to a patient under the direction or supervision of physician or other certified health care professional
+Model: Z-800WF","When utlizing the patient query feature on the Zyno Medical Z-800WF pumps with software version 5.2.05, the alarm volume may inadvertently revert from a higher volume setting to a low one, causing potential delays in therapy and in extreme cases, associated risk of organ failure or death","Open, Classified",2023-12-20,2024-02-23,FRN,93857
+198299,"CareFusion 303, Inc.","Alaris PC Unit 8015 utilizing 802.11 b/g or 802.11 a/b/g wireless network cards, with IP addresses from x.x.x.224 to x.x.x.255","Infusion pump PCs with specific software/network cards/IP addresses can have network/wireless connection failure. Could cause inability to receive new datasets and inability to transfer retrospective analytics data to connected systems. Users with interfaces to electronic medication record or admin discharge transfer, may be unable to receive/send data; infusions may need to be manually programmed","Open, Classified",2023-01-24,2023-03-01,FRN,91582
+216847,"CareFusion 303, Inc.","BD Alaris"" Pump Module model 8100
+UDI-DI code: 10885403810046
+
+The BD AlarisTM System with Guardrails"" Suite MX is a modular infusion pump and monitoring system for the continuous or intermittent administration of fluids to adult, pediatric, and neonatal patients through clinically accepted routes of administration: intravenous (IV), intra-arterial (IA), subcutaneous, epidural, or irrigation of fluid spaces.
+
+The BD AlarisTM System includes the PC Unit (PCU) and one or more of the following: Pump Module, Syringe Module, end-tidal CO2 (EtCO2) Module, Auto-ID Module, patient-controlled analgesia (PCA) Module, and associated software applications.","Due to a number of modules flashed with a date and time associated with the daylight savings time (DST) adjustment that may cause connectivity issue with hospital networks. This issue only affects the Interoperability workflow for devices with a DST  invalid  timestamp, impacting connectivity of the PCU to the hospital network","Open, Classified",2025-11-06,2026-01-29,FRN,97871
+211911,"CareFusion 303, Inc.","BD Alaris Pump Module REF 8100
+
+The BD Alaris System with Guardrails Suite MX is a modular infusion pump and monitoring system for the continuous or intermittent administration of fluids to adult, pediatric, and neonatal patients through clinically accepted routes of administration",Due to User Manual/Direction for Use incorrectly instructing user to leave the safety clamp in the open position when reloading an infusion set.  This issue potentially could result in an accidental over infusion if the roller clamp is left open.,"Open, Classified",2025-01-23,2025-02-24,FRN,96069
+212492,Baxter Healthcare Corporation,"Baxter Sigma Spectrum Infusion System (V6 Platform), Product Code 35700BAX","There is the potential for missing motor mounting screws, which may have occurred during the servicing process.","Open, Classified",2025-02-05,2025-03-06,FRN,96289
+212493,Baxter Healthcare Corporation,"Baxter Spectrum IQ Infusion System with Dose IQ Safety Software, Product Code 3570009","There is the potential for missing motor mounting screws, which may have occurred during the servicing process.","Open, Classified",2025-02-05,2025-03-06,FRN,96289
+206002,"Fresenius Kabi USA, LLC","LVP software of the Ivenix Infusion System (IIS), LVP-SW-0004","Retroactively reported correction from 2022: A software defect may cause an incorrect (Fail-Stop) Alarm when an administration set is loaded with an upstream occlusion present, resulting in a non-recoverable (Fail-Stop) Pump Problem alarm. This may lead to delay of therapy, and patient may experience from no to minimal to serious harm.
+
+This issue was resolved in all fielded product in software version 5.2.1, which was installed in September 2022.",Completed,2022-09-16,2024-03-11,FRN,93958
+206025,"Fresenius Kabi USA, LLC",LVP software of the Ivenix Infusion System (IIS); LVP-SW-0004,"Retroactively reported corrections from 2023: 1) A software defect may cause an incorrect (Fail-Stop) alarm when an administration set is loaded or coupled while the pump is executing the power-up sequence. May lead to delay in therapy. 2) Alert is not annunciated informing the clinician that the bolus cannot be delivered when the entered bolus dose exceeds the Care Profile Hard Rate Max limit and Rapid Bolus is selected. May lead to over infusion. Both issues were resolved in all fielded product in software version 5.8.0, which was installed in affected units May thru August 2023.",Completed,2023-05-10,2024-03-11,FRN,93968
+206384,InfuTronix LLC,"Nimbus Administration Set; 
+Nimbus Flex; 
+Nimbus PainPro (a.k.a. Halo Ambulatory Infusion
+System); 
+
+Catalog Number IT1025.  Ambulatory Infusion Pump and components","InfuTronix is removing the Nimbus Infusion Pump Systems from the market due to multiple potential failure modes, including battery failure, upstream occlusion, system errors, drug product leakage, high or low flow rate, or damaged pump housing. The device will not be available or supported after June 20, 2024.","Open, Classified",2024-02-21,2024-03-28,FRN,94124
+206385,InfuTronix LLC,"Nimbus II Infusion System;  
+Nimbus II PainPRO IT1053; 
+Nimbus II Flex IT1062; 
+Nimbus II Plus IT1078; 
+Nimbus II EpiD IT1124; 
+Nimbus II EMS IT1063;
+  Ambulatory Infusion Pump and components","InfuTronix is removing the Nimbus Infusion Pump Systems from the market due to multiple potential failure modes, including battery failure, upstream occlusion, system errors, drug product leakage, high or low flow rate, or damaged pump housing. The device will not be available or supported after June 20, 2024.","Open, Classified",2024-02-21,2024-03-28,FRN,94124
+199014,Iradimed Corporation,"Iradimed Corporation MRidium MRI 1000 Series Infusion Sets, MRI Infusuui Set - Syringe Adapter Set, REF 1057-50,","Certain Iradimed 1057 Syringe Adapter Sets, used with the MRidium MRI infusion pump, have a problem relating to a defective injection molded part which can limit the effectiveness of the syringe venting function which then can result in occlusion.","Open, Classified",2023-02-24,2023-03-30,FRN,91846
+198841,"Fresenius Kabi USA, LLC","Ivenix Infusion System (IIS), Large Volume Pump, Model No. LVP-0004","Fluid ingress that can cause a loss of electrical funtion and failure of the Set ID Sensory, resulting in the prevention of infusion or halt of infusion.","Open, Classified",2023-03-10,2023-04-18,FRN,91783
+186087,Tenacore LLC,"Alaris Infusion Pump Module, Model 8100, serviced/repaired by Tenacor with an impacted bezel repair part","Bezel repair parts used, not by the original manufacturer, to service and repair infusion pump modules, may over time experience cracking or separation of the posts from the bezel. The separation of one or more bezel repair part posts may result in free flow, over infusion, under infusion or interruption of infusion.",Terminated,2021-02-25,2021-04-02,FRN,87470
+186204,Tenacore LLC,"Alaris Infusion Pump 8100 Bezel (plastic piece only), Part: TIPA-8100-4410","Bezel repair parts used, not by the original manufacturer, to service and repair infusion pump modules, may over time experience cracking or separation of the posts from the bezel. The separation of one or more bezel repair part posts may result in free flow, over infusion, under infusion or interruption of infusion.",Terminated,2021-02-25,2021-04-02,FRN,87470
+218214,Baxter Healthcare Corporation,"Brand Name: Spectrum IQ
+Product Name: Infusion Pump
+Model/Catalog Number: 3570009
+Software Version: N/A
+Product Description: Infusion Pump, one unit per carton
+Component: N/A","Pumps were released without full testing being performed, including occlusion alarm testing.","Open, Classified",2026-01-13,2026-02-13,FRN,98306
+212754,Baxter Healthcare Corporation,"Baxter NovumIQ Syringe INFUSION SYSTEM , REF 40800BAXUS","Baxter Healthcare Corporation is issuing an Urgent Medical Device Recall for the Novum IQ syringe pumps listed below due to an incorrectly installed gasket. A gasket failure could lead to potential fluid ingress due to cleaning, or as a result of an IV fluid spill.","Open, Classified",2025-03-03,2025-03-21,FRN,96388
+206605,"Fresenius Kabi USA, LLC","LVP Software of the Ivenix Infusion System (IIS), Version 5.8.0.","Software has anomalies that have the potential to cause underdose, overdose, or delay in therapy which could lead to serious patient harm or death.","Open, Classified",2024-03-07,2024-04-11,FRN,94228
+205407,Smiths Medical ASD Inc.,"Smiths Medical Medfusion Model 3500 Syringe pumps, Item Numbers:  
+a) 3500
+b) 3500-0600-00
+c) 3500-0600-01
+d) 3500-0600-249
+e) 3500-0600-50
+f) 3500-0600-51
+g) 3500-0600-82
+h) 3500-306
+i) 3500-402
+j) 3500-414
+k) 3500-415
+l) 3500-500
+m) 3500E
+n) 3500VX-306
+o) 3500VX-500","Medfusion Model 4000, 3500, and 3010 pumps manufactured or serviced with Barrel Clamp Guide (Part Number G6000716), Lot Numbers P0407365, P0486670, and P0561740 may contain a molding defect that could potentially lead to slippage of the spring within the barrel clamp assembly. If this occurs, it could result in the inability of the pump to recognize a syringe or the pump may misidentify the size of the syringe loaded.","Open, Classified",2023-12-19,2024-04-15,FRN,93771
+205408,Smiths Medical ASD Inc.,"Smiths Medical Medfusion Model 4000 Syringe pump, Item Numbers:  
+a) 4000-0101-249, 
+b) 4000-0101-50, 
+c) 4000-0101-51, 
+d) 4000-0105-249, 
+e) 4000-0105-50, 
+f) 4000-0105-51, 
+g) 4000-0105-78, 
+h) 4000-0106-00, 
+i) 4000-0106-01, 
+j) 4000-0106-231,","Medfusion Model 4000, 3500, and 3010 pumps manufactured or serviced with Barrel Clamp Guide (Part Number G6000716), Lot Numbers P0407365, P0486670, and P0561740 may contain a molding defect that could potentially lead to slippage of the spring within the barrel clamp assembly. If this occurs, it could result in the inability of the pump to recognize a syringe or the pump may misidentify the size of the syringe loaded.","Open, Classified",2023-12-19,2024-04-15,FRN,93771
+205409,Smiths Medical ASD Inc.,"Smiths Medical Model 3010 Syringe pumps:  
+a. Protege Model 3010,  
+b. Medfusion Model 3010A,
+c. Protege UK Model 3010E","Medfusion Model 4000, 3500, and 3010 pumps manufactured or serviced with Barrel Clamp Guide (Part Number G6000716), Lot Numbers P0407365, P0486670, and P0561740 may contain a molding defect that could potentially lead to slippage of the spring within the barrel clamp assembly. If this occurs, it could result in the inability of the pump to recognize a syringe or the pump may misidentify the size of the syringe loaded.","Open, Classified",2023-12-19,2024-04-15,FRN,93771
+186977,STEP-HAR MEDICAL LLC,"Alaris Pump Module, Model 8100, serviced/repaired by Step-Har Medical with an impacted bezel repair part","Bezel repair parts used, not by the original manufacturer, to service and repair infusion pump modules, may over time experience cracking or separation of the posts from the bezel. The separation of one or more bezel repair part posts may result in free flow, over infusion, under infusion or interruption of infusion.",Terminated,2021-02-26,2021-05-10,FRN,87773
+199088,ICU Medical Inc,"Replacement Battery List Number SUB0000864, found in Plum 360 Infusion System, List Number 30010","Due to a manufacturing defect from the battery supplier, affected batteries may experience a loss of capacity earlier in the battery lifecycle than expected and overall battery runtime may decrease earlier in the battery lifecycle than expected.","Open, Classified",2023-03-22,2023-05-16,FRN,91874
+199089,ICU Medical Inc,"Replacement Battery List Number SUB0000594 found in Plum A+ & Plum A+3 Infusion Systems, List Numbers: a) 11005, b) 11971, c) 12391, d) 12618, e) 20678, f) 20679, g) 20792, h) 60629, i) 12348, j) 11973","Due to a manufacturing defect from the battery supplier, affected batteries may experience a loss of capacity earlier in the battery lifecycle than expected and overall battery runtime may decrease earlier in the battery lifecycle than expected.","Open, Classified",2023-03-22,2023-05-16,FRN,91874
+199476,ICU Medical Inc,"ASM Replacement Battery, Component Number SUB0000864","Due to a manufacturing defect from the battery supplier, affected batteries may experience a loss of capacity earlier in the battery lifecycle than expected and overall battery runtime may decrease earlier in the battery lifecycle than expected.","Open, Classified",2023-03-22,2023-05-16,FRN,91874
+199477,ICU Medical Inc,"ASM Replacement Battery, Component Number SUB0000594","Due to a manufacturing defect from the battery supplier, affected batteries may experience a loss of capacity earlier in the battery lifecycle than expected and overall battery runtime may decrease earlier in the battery lifecycle than expected.","Open, Classified",2023-03-22,2023-05-16,FRN,91874
+218018,"CareFusion 303, Inc.","BD Alaris"" System with Guardrails"" Suite MX with Point of Care Unit",Due to product labeling not indicating which Transport Layer Security (TLS) version that must be enabled on hospital network to ensure secure Wi-Fi communication with Point-of-Care Units,"Open, Classified",2026-02-11,2026-03-26,FRN,98250
+213269,"Smiths Medical ASD, Inc.","CADD-Solis VIP Ambulatory Infusion Pump; 
+Model/Number:
+
+21-2120-0100-02
+21-2120-0100-03
+21-2120-0100-06
+21-2120-0100-232
+21-2120-0100-233
+21-2120-0100-50
+21-2120-0100-51
+21-2120-0100-95
+21-2120-0102-02
+21-2120-0102-03
+21-2120-0102-06
+21-2120-0102-07
+21-2120-0102-08
+21-2120-0102-12
+21-2120-0102-13
+21-2120-0102-14
+21-2120-0102-15
+21-2120-0102-17
+21-2120-0102-237
+21-2120-0102-238
+21-2120-0102-247
+21-2120-0102-249
+21-2120-0102-51
+21-2120-0102-78
+21-2120-0102-92
+21-2120-0102-97
+21-2120-0102-98
+21-2120-0103-01
+21-2120-0103-02
+21-2120-0103-03
+21-2120-0103-06
+21-2120-0103-07
+21-2120-0103-08
+21-2120-0103-12
+21-2120-0103-14
+21-2120-0103-15
+21-2120-0103-17
+21-2120-0103-249
+21-2120-0103-51
+21-2120-0103-78
+21-2120-0104-01
+21-2120-0104-231
+21-2120-0105-00
+21-2120-0105-01
+21-2120-0105-02L
+21-2120-0105-03L
+21-2120-0105-06L
+21-2120-0105-07L
+21-2120-0105-08
+21-2120-0105-08L
+21-2120-0105-12L
+21-2120-0105-13L
+21-2120-0105-14L
+21-2120-0105-15L
+21-2120-0105-17L
+21-2120-0105-50
+21-2120-0105-50L
+21-2125-0104-01
+21-2125-0105-03L
+21-2125-0105-07L
+21-2125-0105-08L
+21-2125-0105-50L
+21-2127-0104-01
+21-2127-0105-01
+21-2127-0105-02L
+21-2127-0105-03L
+21-2127-0105-06L
+21-2127-0105-08L
+21-2127-0105-50L","Affected pumps may trigger an erroneous (false) Upstream Occlusion Alarm under certain conditions, which will interrupt an active infusion. Interruption or delay of therapy can lead to serious patient injury or death.","Open, Classified",2025-04-10,2025-05-07,FRN,96620
+213276,"Smiths Medical ASD, Inc.","CADD Solis VIP Ambulatory Infusion Pump Models:
+
+1) PUMP KIT, CADD-SOLIS VIP, MDL 2120, NA ENGLISH, MANUAL
+MODE, 1/EA, Model Number: 21-2127-0105-01;  
+ 2) PUMP KIT, CADD-SOLIS VIP, MDL 2120, NA ENGLISH, PHARMGUARD
+ENABLED, 1/EA, Model Number: 21-2120-0105-01;  
+ 3) PUMP KIT, CADD-SOLIS VIP, MDL
+2120, NA ENGLISH     1/EA, Model Number: 21-2120-0103-01;  
+ 4) PUMP, CADD-SOLIS VIP, MDL
+2120, ENGLISH 1/EA, Model Number: 21-2120-0102-51;  
+ 5) PUMP KIT, CADD-SOLIS VIP, MDL 2120, NA ENGLISH, PHARMGUARD
+ENABLED    1/EA, Model Number: 21-2120-0104-01;  
+ 6) PUMP KIT, CADD-SOLIS VIP, MDL
+2120, CE GLOBAL ENGLISH     1/EA, Model Number: 21-2120-0103-51;  
+7) PUMP KIT, CADD-SOLIS VIP, MDL 2120, NA ENGLISH, MANUAL MODE     1/EA, Model Number: 21-2127-0104-01; 
+8) PUMP KIT, CADD-SOLIS VIP, MDL 2120, TRIAL/LOANER, NA ENGLISH, PHARMGUARD, 1/EA, Model Number: 21-2120-0105-00; 
+ 9) PUMP, CADD-SOLIS VIP, MDL 2120, TRIAL/LOANER CE GLOBAL
+ENGLISH    1/EA, Model Number: 21-2120-0103-78;  
+ 10) PUMP, CADD-SOLIS VIP, MDL 2120, ENGLISH, TRIAL/LOANER
+1/EA, Model Number: 21-2120-0102-78;  
+ 11) PUMP, CADD-SOLIS VIP, MDL 2120, NFHU, NA ENGLISH,
+PHARMGUARD ENABLED    1/EA, Model Number: 21-2120-0104-231;  
+ 12) PUMP, CADD-SOLIS VIP, MDL
+2120, ENGLISH, NFHU  1/EA, Model Number: 21-2120-0102-249;  
+ 13) PUMP, CADD-SOLIS VIP, MDL 2120, NFHU CE GLOBAL ENGLISH
+1/EA, Model Number: 21-2120-0103-249;  
+14) PUMP KIT, CADD-SOLIS VIP, MDL 2120, NA ENGLISH, FACTORY LIBRARY      1/EA, Model Number: 21-2125-0104-01; 
+ 15) PUMP, CADD-SOLIS VIP, MDL
+2120, ENGLISH, NFHU  1/EA, Model Number: 21-2120-0102-249.",There is a potential for thermal damage in CADD-Solis and CADD- Solis VIP infusion pumps.,"Open, Classified",2025-04-10,2025-05-05,FRN,96624
+200069,"Avanos Medical, Inc.","AVNS ambIT System - PIB/PCA W 2.5in Cath, Product Code: 220509",Some of the ambIT kits were potentially distributed without an air in-line filter.,Terminated,2023-04-24,2023-06-06,FRN,92279
+200070,"Avanos Medical, Inc.","AVNS ambIT System - PIB/PCA W 5in Cath, Product Code: 220507",Some of the ambIT kits were potentially distributed without an air in-line filter.,Terminated,2023-04-24,2023-06-06,FRN,92279
+200071,"Avanos Medical, Inc.","SMMT ambIT Kit Basic Filter Luer Cass, Product Code: 220537",Some of the ambIT kits were potentially distributed without an air in-line filter.,Terminated,2023-04-24,2023-06-06,FRN,92279
+200072,"Avanos Medical, Inc.","SMMT ambIT Reusable Program - Luer Cass, Product Code: 220568",Some of the ambIT kits were potentially distributed without an air in-line filter.,Terminated,2023-04-24,2023-06-06,FRN,92279
+200073,"Avanos Medical, Inc.","ambIT Cassette Filter Male Luer, Product Code: 220266",Some of the ambIT kits were potentially distributed without an air in-line filter.,Terminated,2023-04-24,2023-06-06,FRN,92279
+213458,Baxter Healthcare Corporation,"Baxter Novum IQ LVP INFUSION SYSTEM, REF 40700BAXUS","There is a potential for the Novum IQ LVP due to the potential for underinfusion following use of the ""standby mode"" feature or if the device is powered off with the set loaded.","Open, Classified",2025-04-24,2025-05-20,FRN,96721
+207226,Baxter Healthcare Corporation,"Baxter Spectrum IQ Infusion Pump, Product Code 3570009",One device was improperly performed testing prior to release from a Service Center.,"Open, Classified",2024-03-20,2024-05-03,FRN,94446
+207238,Baxter Healthcare Corporation,"Spectrum IQ Infusion pump, Product Code 357009",There is a potential for cracks on the mount of the front panel of the device.,"Open, Classified",2024-04-09,2024-05-13,FRN,94451
+207307,OptumHealth Care Solutions LLC,"Optum Nimbus II Plus, Model number AAA-00170; Ambulatory Infusion Pump","Nimbus II Plus, Infusion Pump Systems, manufactured by InfuTronix, are being removed the from the market due to multiple potential failure modes, including battery failure, upstream occlusion, system errors, drug product leakage, high or low flow rate, or damaged pump housing.","Open, Classified",2024-04-18,2024-05-21,FRN,94491
+213681,Zyno Medical LLC,"Z-800 Infusion System. Intended to provide intravenous infusion of parenteral fluids, blood, and blood products to a patient.",Unreleased software versions were installed on distributed devices without verification or validation.,"Open, Classified",2025-05-07,2025-06-06,FRN,96796
+213687,Zyno Medical LLC,"Z-800F Infusion System. Intended to provide intravenous infusion of parenteral fluids, blood, and blood products to a patient.",Unreleased software versions were installed on distributed devices without verification or validation.,"Open, Classified",2025-05-07,2025-06-06,FRN,96796
+213688,Zyno Medical LLC,"Z-800W Infusion System. Intended to provide intravenous infusion of parenteral fluids, blood, and blood products to a patient.",Unreleased software versions were installed on distributed devices without verification or validation.,"Open, Classified",2025-05-07,2025-06-06,FRN,96796
+213689,Zyno Medical LLC,"Z-800WF Infusion System. Intended to provide intravenous infusion of parenteral fluids, blood, and blood products to a patient.",Unreleased software versions were installed on distributed devices without verification or validation.,"Open, Classified",2025-05-07,2025-06-06,FRN,96796
+213729,Baxter Healthcare Corporation,"Baxter Novum IQ Syringe Pump, product code 40800BAXUS,","Baxter has identified a design issue which may cause the pump to detect the presence of a syringe flange when no syringe is loaded. When this issue occurs, the pumps 'user interface becomes stuck on the ""Remove Syringe"" screen when an infusion is complete, and the syringe is unloaded. A System Error 21502 (Flange Sensor Failure) may occur. Please note this issue only affects a subset of Novum IQ syringe pumps manufactured or repaired after July 4, 2023.","Open, Classified",2025-05-12,2025-06-12,FRN,96822
+213588,"ICU Medical, Inc.","ICU Medical Plum Duo, Item numbers:  1) 400020401, 2) 400021001
+, and 3) 400021003; infusion pump","Internal testing found that Plum Duo pumps with software version 1.1.1 have a workflow that may result in bypassing the Maximum Dose Limit alert.  The Maximum Dose Limit is set in the LifeShield Drug Library Manager (DLM) within the LifeShield Medication Management Safety Software and specifies the highest dose at which the pump can be programmed for weight or BSA (body surface area) based medication rulesets. The limit can be configured for Dose, Loading Dose, and Bolus Dose.","Open, Classified",2025-04-22,2025-06-18,FRN,96777
+213589,"ICU Medical, Inc.","ICU Medical Plum Solos, Item number 400011001; infusion pump","Internal testing found that Plum Duo pumps with software version 1.1.1 have a workflow that may result in bypassing the Maximum Dose Limit alert.  The Maximum Dose Limit is set in the LifeShield Drug Library Manager (DLM) within the LifeShield Medication Management Safety Software and specifies the highest dose at which the pump can be programmed for weight or BSA (body surface area) based medication rulesets. The limit can be configured for Dose, Loading Dose, and Bolus Dose.","Open, Classified",2025-04-22,2025-06-18,FRN,96777
+201608,Baxter Healthcare Corporation,"SIGMA Spectrum Infusion Pump, Product Code 35700BAX2",A medical device correction is being issued for SIGMA Spectrum Infusion System (V8 Platform) and Spectrum IQ Infusion System with Dose IQ Safety Software infusion pumps due to an increase in reported false upstream occlusion alarms following upgrades to software versions v8.01.01 and v9.02.01.,"Open, Classified",2023-06-15,2023-07-13,FRN,92562
+201609,Baxter Healthcare Corporation,"The Spectrum IQ Infusion System with Dose IQ Safety Software, Product Code 3570009",A medical device correction is being issued for SIGMA Spectrum Infusion System (V8 Platform) and Spectrum IQ Infusion System with Dose IQ Safety Software infusion pumps due to an increase in reported false upstream occlusion alarms following upgrades to software versions v8.01.01 and v9.02.01.,"Open, Classified",2023-06-15,2023-07-13,FRN,92562
+187820,Baxter Healthcare Corporation,"Spectrum IQ Infusion System with Dose IQ Safety Software, Product Code 3570009.  for the controlled administration of fluids.",System errors were noted following changes the customers implemented to the configuration of their network and server systems. Gateway Server System performance anomalies resulted in excessive Spectrum IQ pump connectivity errors.,Terminated,2021-06-04,2021-08-06,FRN,88073
+214769,"ICU Medical, Inc.","Plum Duo Infusion System, List Number: 400020401",ICU Medical identified two sequences of programming events and alarm interactions that may cause the user interface to become unresponsive.,"Open, Classified",2025-07-11,2025-08-06,FRN,97186
+188212,Baxter Healthcare Corporation,Dose IQ Safety Software used with Spectrum IQ Infusion Pump,Software issue:  The defect creates a mismatch between linked drug identifiers (IDs) in the Dose IQ user interface (UI) and the binary drug library (BDL) loaded onto the Spectrum IQ pump.,Terminated,2021-07-07,2021-08-11,FRN,88246
+214709,Baxter Healthcare Corporation,"Baxter Novum IQ Large Volume Pump, Product Code REF 40700BAXUS","Baxter is issuing an Urgent Medical Device Correction for the Novum IQ large volume pump (LVP) due to the potential for underinfusion when transitioning from a flow rate to a higher flow rate that is more than double. (e.g., rate change or bolus). The level of underinfusion is variable based on the current infusion rate, the duration the pump has been running at this flow rate, and the magnitude of the rate change. The longer the duration the pump has been running at the current infusion rate and the larger the magnitude of the rate change, the larger the underinfusion that would be experienced.   
+Additionally, Baxter has identified an increase in customer reports of over and underinfusion potentially due to set misloading. Failure to properly load the tubing into the pump channel may result in the pump infusing at a rate higher or lower than programmed. Consistent with the instructions for use, customers should ensure that:
+1) The door is fully open before loading the set.
+2) The tubing is taut and loaded without slack in the pumping channel.","Open, Classified",2025-07-14,2025-08-14,FRN,97164
+214407,"CareFusion 303, Inc.","BD Alaris Pump Module Model, 8100  with Guardrails, Suite MX software versions","Infusion pump module used with compatible  pump infusion sets  may perform outside the established performance ranges for flow rate and bolus accuracy, downstream and upstream occlusion time to alarm, and post-occlusion bolos volume.","Open, Classified",2025-07-08,2025-08-06,FRN,97067
+214860,"CareFusion 303, Inc.","BD Alaris Pump Infusion Sets
+
+REF: 10013186, BD Alaris Pump Infusion Set, Back Check Valve, 3 SmartSite Y-sites LVP 60D DEHP FREE 3SS CV;
+
+REF: 2452-0007, BD Alaris Pump Infusion Set, 2 Back Check Valves, 3 SmartSite Y-sitesAS LVP 10D 3SS 2CV;
+
+REF: 2204-0007, BD Alaris Pump Infusion SetAS LVP 20D;
+
+REF: 24001-0007, BD Alaris Pump Infusion Set, Back Check Valve, SmartSite Y-siteAS LVP 20D SS CV;
+
+REF: 10015012, BD Alaris Pump Infusion Burette Set, 0.2 Micron Filter, Smallbore Tubing, SmartSite Port (Burette), SmartSite Y-siteAS LVP BUR 20D PE-Lined SMBORE SS 0.2M;
+
+REF: 2432-0007, BD Alaris Pump Infusion Set, 0.2 Micron Filter, Back Check Valve, 3 SmartSite Y-sitesAS LVP 20D 3SS 0.2M CV;
+
+REF: 2434-0007, BD Alaris Pump Infusion Set, 0.2 Micron Filter, Back Check Valve, SmartSite Y-siteAS LVP 20D SS 0.2M CV;
+
+REF: 2202-0007, BD Alaris Pump Infusion Set, 1.2 Micron FilterAS LVP 20D 1.2M;
+
+REF: 11426965, BD Alaris Pump Infusion Set, Back Check Valve, 5 SmartSite Y-sitesAS LVP 20D CV;
+
+REF: 10561554, BD Alaris Pump Infusion Set, 15 Micron Filter, Back Check Valve, 3 SmartSite Y-sitesAS LVP 20D DEHP FREE 3SS 15M CV;
+
+REF: 10863358, BD Alaris Pump Infusion Set, 15 Micron FilterAS LVP 20D DEHP FREE 15M;
+
+REF: 11171447, BD Alaris Pump Infusion Set, 2 Back Check Valves, 3 SmartSite Y-sitesAS LVP 20D 3SS 2CV;
+
+REF: 11532269, BD Alaris Pump Infusion Set, 0.2 Micron Filter, Back Check Valve, PE Lined Tubing, 2 SmartSite Y-sitesAS LVP 20D PE-LINED 2SS 0.2M CV;
+
+REF: 10010454, BD Alaris Pump Infusion Set, 0.2 Micron Filter, PE Lined Tubing, SmartSite Y-siteAS LVP 20D PE-LINED TUBING SS 0.2M;
+
+REF: 2465-0007, BD Alaris Pump Infusion Set, SmartSite Bag Access Non-Vented, 0.2 Micron Filter, Low Sorbing Tubing (PE Lined), SmartSite Y-siteAS LVP SS BAG 20D PE-Lined SS 0.2M;
+
+REF: 10010453, ASBD Alaris Pump Infusion Set, 1.2 Micron Filter, PE Lined Tubing, SmartSite Y-site LVP 20D PE-LINED TUBING SS 1.2M
+
+REF: 11419365, BD Alaris"" Pump Infusion Set, Back Check Valve, Manifold, 3-Way Stopcock, 5 SmartSite"" Y-sites
+
+REF: 10813621,  BD Alaris"" Pump Infusion Set, Back Check Valve, 3 Ganged 4-Way Stopcocks, 4 SmartSite"" Y-sites
+
+REF: 2423-0007, BD Alaris"" Pump Infusion Set, Back Check Valve, 2 Ganged 4-Way Stopcocks, 4 SmartSite"" Y-sites
+
+REF: 10015896, BD Alaris"" Pump Infusion Set, Back Check Valve, 2 Ganged 4-Way Stopcocks, 3 SmartSite"" Y-sites
+
+REF: 24010-0007T, BD Alaris"" Pump Infusion Set, Bonded Texium"", Closed Male Luer with Priming Cap, Back Check Valve, 3 SmartSite"" Y-sites
+
+REF: 10010483, BD Alaris"" Pump Infusion Set, Vented Syringe Adapter, Smallbore Tubing
+
+REF: 2403-0007, BD Alaris"" Pump Infusion Set, Half Set, SmartSite"" Y-site
+
+REF: 24301-0007T, BD Alaris"" Pump Infusion Set, SmartSite"" Bag Access Non-Vented, 0.2 Micron Filter, PE Lined Tubing, Bonded Texium"" Closed Male Luer with Priming Cap, SmartSite"" Y-site","Infusion pump module used with compatible  pump infusion sets  may perform outside the established performance ranges for flow rate and bolus accuracy, downstream and upstream occlusion time to alarm, and post-occlusion bolos volume.","Open, Classified",2025-07-08,2025-08-06,FRN,97067
+188034,BioMedical Equipment Service Co (BMES),"Alaris Infusion Pump Module, Model 8100, serviced/repaired by Biomedical Equipment Service Co. (BMES) with an impacted bezel repair part TIPA-8100-4410","Bezel repair parts used, not by the original manufacturer, to service and repair infusion pump modules, may over time experience cracking or separation of the posts from the bezel. The separation of one or more bezel repair part posts may result in free flow, over infusion, under infusion or interruption of infusion.",Terminated,2021-02-25,2021-08-06,FRN,88170
+220229,"Fresenius Kabi USA, LLC",LVP software of the Ivenix Infusion System (IIS); Product Code LVP-SW-0005.,Potential software anomaly that can cause the pump to report a false battery-health value (typically 69%) and trigger a battery-depletion alarm that will shut down the pump unless it is reconnected to AC mains power.,"Open, Classified",2026-05-06,2026-06-03,FRN,98929
+220255,"Fresenius Kabi USA, LLC","Ivenix Infusion System (IIS), Large Volume Pump, Model Number: LVP-0004","Fresenius Kabi has been made aware via customer complaints that dropping or severe jarring of the Ivenix LVP may cause damage to internal components that may not be apparent or readily visible and the devices therefore remained in service. More specifically, drops or jarring on a hard surface can cause the touchscreen input cable to loosen, resulting in unintended touchscreen behavior on the LVP, including random screen touches and/or lack of screen responsiveness to user input. Under the reported failure condition, unintended touch inputs may register at arbitrary screen locations without user interaction. These inputs occur intermittently and without a predictable pattern.","Open, Classified",2026-05-06,2026-05-29,FRN,98945
+214710,"Fresenius Kabi USA, LLC","LVP Primary Administration Set, Dual-Inlet, Low-Sorbing, Needle-Free Port, Y-Site (Qty 25). Product Code: SET-0013-25.",Potential for external cassette leaks,"Open, Classified",2025-06-24,2025-08-01,FRN,97165
+214711,"Fresenius Kabi USA, LLC","LVP Blood Products Administration Set Dual-Inlet, Low-Sorbing, Y-Site, Mesh Filter (Qty 20). Product Code: SET-0014-20.",Potential for external cassette leaks,"Open, Classified",2025-06-24,2025-08-01,FRN,97165
+214712,"Fresenius Kabi USA, LLC","LVP Primary Administration Set, Single Outlet Low Sorbing (Qty 25). Product Code: SET-0021-25.",Potential for external cassette leaks,"Open, Classified",2025-06-24,2025-08-01,FRN,97165
+214713,"Fresenius Kabi USA, LLC","LVP Primary Administration Set, Dual-Inlet, Low-Sorbing, Needle-Free Port, Dual Y-Site (Qty 25). Product Code: SET-0032-25.",Potential for external cassette leaks,"Open, Classified",2025-06-24,2025-08-01,FRN,97165
+208106,"CareFusion 303, Inc.","BD Alaris System Manager REF: 9601, compatible with BD Alaris PC Units",Due to a software issue the PC unit may not connect to the server which could impact wireless data transmission to and from the server.,"Open, Classified",2024-05-21,2024-07-03,FRN,94718
+208221,Zyno Medical LLC,"Zyno Medical Z800, Z800F, Z800W, and Z800WF Infusion Pumps","Zyno Medical has found that certain Z800, Z800F, Z800W, and Z800WF pumps have faulty power supply modules that will not provide a charge to the rechargeable battery within the pump. This may lead to the battery having insufficient or no charge available to the pump when it is unplugged from the AC mains power.","Open, Classified",2024-06-04,2024-07-03,FRN,94768
+219521,"Fresenius Kabi USA, LLC",The Large Volume Pump (LVP) of the Ivenix Infusion System (IIS). Model Number: LVP-0004.,Potential for the Cassette Loading Lever to break.,"Open, Classified",2026-02-04,2026-05-29,FRN,98699
+220055,"ICU Medical, Inc.","Plum Solo Precision IV Pump, 40001-0401","Under certain conditions, the pump may not display a soft limit alert, and will not notify the clinician of a soft limit violation before confirming and starting delivery. This may potentially lead to under- or over-delivery.","Open, Classified",2026-04-29,2026-06-05,FRN,98872
+220057,"ICU Medical, Inc.","Plum Duo Infusion Pump, 40002-0401","Under certain conditions, the pump may not display a soft limit alert, and will not notify the clinician of a soft limit violation before confirming and starting delivery. This may potentially lead to under- or over-delivery.","Open, Classified",2026-04-29,2026-06-05,FRN,98872
+220058,"ICU Medical, Inc.","Plum Duo Precision IV Pump, 40002-0403","Under certain conditions, the pump may not display a soft limit alert, and will not notify the clinician of a soft limit violation before confirming and starting delivery. This may potentially lead to under- or over-delivery.","Open, Classified",2026-04-29,2026-06-05,FRN,98872
+215108,Baxter Healthcare Corporation,"Novum IQ LVP (Large Volume Pump), Product Code 40700BAXUS, infusion pump",Baxter Healthcare Corporation is issuing an Urgent Medical Device Correction for the Novum IQ Large Volume Pump (LVP) and Novum IQ Syringe Pump (SP) due to software anomalies that may result in a blank Run screen (LVP and SP) and/or false motor movement system error (SP only).,"Open, Classified",2025-08-04,2025-08-29,FRN,97296
+215111,Baxter Healthcare Corporation,"Novum IQ Syringe Pump, Product Code 40800BAXUS, infusion pump",Baxter Healthcare Corporation is issuing an Urgent Medical Device Correction for the Novum IQ Large Volume Pump (LVP) and Novum IQ Syringe Pump (SP) due to software anomalies that may result in a blank Run screen (LVP and SP) and/or false motor movement system error (SP only).,"Open, Classified",2025-08-04,2025-08-29,FRN,97296
+215482,Baxter Healthcare Corporation,"Novum IQ Syringe Pump, Product Code 40700BAX, infusion pump",Baxter Healthcare Corporation is issuing an Urgent Medical Device Correction for the Novum IQ Large Volume Pump (LVP) and Novum IQ Syringe Pump (SP) due to software anomalies that may result in a blank Run screen (LVP and SP) and/or false motor movement system error (SP only).,"Open, Classified",2025-08-04,2025-08-29,FRN,97296
+215246,Baxter Healthcare Corporation,"Spectrum IQ Infusion Pump, Product Code 3570009","Baxter has identified that certain pumps have potentially been released with the grease applied to the cam and motor gears that will break down quickly. The breakdown of the grease will lead to the device having insufficient or ineffective grease applied to the cam, which could lead to premature wear of the mechanism assembly, resulting in excessive therapy.","Open, Classified",2025-07-14,2025-08-22,FRN,97335
+208401,Smiths Medical ASD Inc.,"CADD-Solis VIP ambulatory Infusion Pumps, Model 2120 (21-2120, 21-2125, and 21-2127)
+Indicated for the following uses:
+Intra-arterial, subcutaneous, intraperitoneal, in close proximity to nerves, into an intraoperative site, epidural space or subarachnoid space. Therapies that require a continuous rate of infusion, intermittent bolus, and/or with patient-controlled demand doses.","The CADD Solis VIP Ambulatory Infusion Pump is indicated for the following uses:
+"" For intravenous, intraarterial, subcutaneous, intraperitoneal, perineural, surgical site, epidural space, or subarachnoid space infusion.","Open, Classified",2024-02-27,2024-08-03,FRN,94225
+201873,ICU Medical Inc,"Plum 360 Infusion System, List Numbers:  300100405, 300100409, 300100413, 300100414, 300100415, 300100418, 300100451, 300100452, 300100453, 300100481, 300100483, 300100613, 300101013, 300101113, 300101114, 300101313, 300101379, 300102213, 300102713, 300102913, 300103413, 300103414, 300104213, 300105413, 300105713, 300106313, 300106513, 300106581, 300107813, 300107814, 300108513, 300108813, 300108814, 300109913;  infusion pump","Due to a manufacturing defect of a supplier provided component, there is a potential that the audible signal for an alarm may not sound under certain conditions.","Open, Classified",2023-07-13,2023-08-18,FRN,92630
+208600,B Braun Medical Inc,"Brand Name: Perfusor Space
+Product Name: Perfusor Space Infusion Pump System
+Model/Catalog Number: 8713030U
+Product Description: Perfusor Space Infusion Pump System, Infusion Pump,  1 each
+Component: N/A","Perfusor Space Syringe Pump's instructions for use previously identified Monoject syringes as an option for use. However, changes to manufacturing to Cardinal Health Monoject syringes may result in issues with recognition, compatibility, and pump performance, such as overdose, underdose, delay in therapy, delay in occlusion alarms, and delay in feeding. Cardinal Health Monoject syringes are not compatible with the indicated pumps.","Open, Classified",2024-06-14,2024-07-25,FRN,94890
+208601,B Braun Medical Inc,"Brand Name: Perfusor Space
+Product Name: Perfusor Space Syringe Pump, Wireless
+Model/Catalog Number: 8713031U
+Software Version: 8713031U
+Product Description: Perfusor Space Syringe Pump, Infusion Pump, 1 each
+Component: N/A","Perfusor Space Syringe Pump's instructions for use previously identified Monoject syringes as an option for use. However, changes to manufacturing to Cardinal Health Monoject syringes may result in issues with recognition, compatibility, and pump performance, such as overdose, underdose, delay in therapy, delay in occlusion alarms, and delay in feeding. Cardinal Health Monoject syringes are not compatible with the indicated pumps.","Open, Classified",2024-06-14,2024-07-25,FRN,94890
+208602,B Braun Medical Inc,"Brand Name: Perfusor Space
+Product Name: Perfusor PCA Syringe Pump
+Model/Catalog Number: 8713080U
+Product Description: Perfusor Space Syringe Pump, Infusion Pump, 1 each
+Component: N/A","Perfusor Space Syringe Pump's instructions for use previously identified Monoject syringes as an option for use. However, changes to manufacturing to Cardinal Health Monoject syringes may result in issues with recognition, compatibility, and pump performance, such as overdose, underdose, delay in therapy, delay in occlusion alarms, and delay in feeding. Cardinal Health Monoject syringes are not compatible with the indicated pumps.","Open, Classified",2024-06-14,2024-07-25,FRN,94890
+208603,B Braun Medical Inc,"Brand Name: Perfusor Space
+Product Name: PERFUSOR SPACE ACM-KIT
+Model/Catalog Number: 8713040U
+Product Description: Perfusor Space, Infusion Pump Kit, 1 each
+Component: N/A","Perfusor Space Syringe Pump's instructions for use previously identified Monoject syringes as an option for use. However, changes to manufacturing to Cardinal Health Monoject syringes may result in issues with recognition, compatibility, and pump performance, such as overdose, underdose, delay in therapy, delay in occlusion alarms, and delay in feeding. Cardinal Health Monoject syringes are not compatible with the indicated pumps.","Open, Classified",2024-06-14,2024-07-25,FRN,94890
+208605,B Braun Medical Inc,"Brand Name: Perfusor Space
+Product Name: Perfusor Space Syringe Pump, Non-Wireless
+Model/Catalog Number: 8713032U
+Product Description: Perfusor Space Syringe Pump, Non-Wireless, Infusion Pump, 1 each
+Component: N/A","Perfusor Space Syringe Pump's instructions for use previously identified Monoject syringes as an option for use. However, changes to manufacturing to Cardinal Health Monoject syringes may result in issues with recognition, compatibility, and pump performance, such as overdose, underdose, delay in therapy, delay in occlusion alarms, and delay in feeding. Cardinal Health Monoject syringes are not compatible with the indicated pumps.","Open, Classified",2024-06-14,2024-07-25,FRN,94890
+208005,ICU Medical Inc,"Replacement Battery List Number SUB0000864, found in Plum 360 Infusion System, List Number 30010. Product description is PLUM 360 Infuser.
+
+OUS units marketed with the following descriptions: Bomba de infusin Plum 360 compatible con el software ICU Medical MedNet, Plum 360 Infusion System, PLUM 360, PLUM 360"" Infuser, Plum 360 Infuser compatible with ICU Medical MedNet Software, Plum 360 Infuser compatible with ICU Medical MedNet Software Refurb, Plum 360 sistema infusionale compatibile con ICU Medical MedNet Software, Pompe a perfusion Plum 360, compatible avec le logiciel ICU Medical MedNet","Due to a manufacturing defect from the battery supplier, affected batteries may experience a loss of capacity earlier in the battery lifecycle than expected and overall battery runtime may decrease earlier in the battery lifecycle than expected.","Open, Classified",2024-05-07,2024-08-09,FRN,94690
+208006,ICU Medical Inc,"Replacement Battery List Number SUB0000594 and SUB0000864 found in Plum A+ & Plum A+3 Infusion Systems, Pump List Numbers: 11005, 11971, 12391, 12618, 20678, 20679, 20792, 60529, 12348, 11973.
+
+OUS units marketed with the following descriptions: Plum A+ Mednet TM Firmware New 13.6 Span, Plum A+3, PLUM A+3 INFUSION PUMPS and Plum A+3 Wireless Refurb, PLUM A+, PLUM A+ Infusion System, PlumA+3IV Pump Multi 1' Set","Due to a manufacturing defect from the battery supplier, affected batteries may experience a loss of capacity earlier in the battery lifecycle than expected and overall battery runtime may decrease earlier in the battery lifecycle than expected.","Open, Classified",2024-05-07,2024-08-09,FRN,94690
+209046,ICU Medical Inc,Plum 360/A+ spare batteries. Item Number: SUB0000864.,"Due to a manufacturing defect from the battery supplier, affected batteries may experience a loss of capacity earlier in the battery lifecycle than expected and overall battery runtime may decrease earlier in the battery lifecycle than expected.","Open, Classified",2024-05-07,2024-08-09,FRN,94690
+208943,Baxter Healthcare Corporation,"Baxter SIGMA Spectrum Infusion Pump, Product Code: 35700BAX2",Improperly performed testing prior to release,"Open, Classified",2024-06-14,2024-08-07,FRN,94959
+209039,Baxter Healthcare Corporation,"Baxter Spectrum Wireless Battery Modules A/B/G/N, product code 35223, used with either of the following:  35700BAX2 (Spectrum V8 infusion pump) or 3570009 (Spectrum IQ infusion pump) Baxter SIGMA Spectrum V8 Infusion Pump",The Spectrum WBM may fail to auto-document infusion status information back to the hospital's Electronic Medical Record (EMR) system. This software issue only impacts customers where the Spectrum V8 or Spectrum IQ infusion system is integrated with the hospital s EMR system.,"Open, Classified",2024-07-17,2024-08-16,FRN,94988
+209040,Baxter Healthcare Corporation,"Spectrum Wireless Battery Modules A/B/G/N, product code 36010, used with either of the following 35700BAX2 (Spectrum V8 infusion pump) and 3570009 (Spectrum IQ infusion pump)",The Spectrum WBM may fail to auto-document infusion status information back to the hospital's Electronic Medical Record (EMR) system. This software issue only impacts customers where the Spectrum V8 or Spectrum IQ infusion system is integrated with the hospital s EMR system.,"Open, Classified",2024-07-17,2024-08-16,FRN,94988
+203046,"Fresenius Kabi USA, LLC","Ivenix Infusion System (IIS), Large Volume Pump (LVP) Software: 5.0.0 and 5.0.1
+Part Number: LVP-SW-0004.
+
+ Indicated for use in a hospital and in outpatient care environments for the controlled administration of fluids through clinically accepted routes of administration.","Start-up time for the flow rate range greater than 50 ml/hr, and less than 200 ml/hr may exceed the specified 6 minutes, depending on the characteristics of air bubble entrapment within the Intermediate Pumping Chamber (IPC) of the administration set","Open, Classified",2022-04-22,2023-09-25,FRN,92973
+221022,"ICU Medical, Inc.","ICU Medical Plum Duo Infusion Pump, v1.2.3:  1) Item Number 400020401 and 2)  Item Number 400020403; infusion pump","In a specific scenario, the pump will not decrement the Volume to be Infused (VTBI) displayed on the Delivery screen and may deliver up to twice the VTBI at the programmed rate.","Open, Classified",2026-06-10,2026-07-10,FRN,99192
+221024,"ICU Medical, Inc.","ICU Medical Plum Solo Precision IV Pump, v1.0.3, Item Number 400010401; infusion pump","In a specific scenario, the pump will not decrement the Volume to be Infused (VTBI) displayed on the Delivery screen and may deliver up to twice the VTBI at the programmed rate.","Open, Classified",2026-06-10,2026-07-10,FRN,99192
+209490,B Braun Medical Inc,"Infusomat Space Infusion System/ Large Volume Pump, Product Code 8713050U",Extension of previous recall RES 92978. Pumps have the potential for upstream occlusion sensor to cease proper function due to buildup of electrostatic charge during operation triggering false downstream and upstream occlusion alarms. Additional devices have been affected.,"Open, Classified",2024-08-07,2024-09-07,FRN,95093
+221856,Baxter Healthcare Corporation,"Baxter Novum IQ Syringe Pump, Model Number 40800BAXUS",A software issue that may occur during a Volume/Time (VOT) multi-syringe infusion when a syringe reaches empty and is replaced while a Volume To Be Infused (VTBI) remains.,"Open, Classified",2026-08-11,2026-08-31,FRN,99557
+221857,Baxter Healthcare Corporation,"Baxter Novum IQ Syringe Pump, Loaner, Model Number 40800BAXUSL",A software issue that may occur during a Volume/Time (VOT) multi-syringe infusion when a syringe reaches empty and is replaced while a Volume To Be Infused (VTBI) remains.,"Open, Classified",2026-08-11,2026-08-31,FRN,99557
+208847,"CareFusion 303, Inc.",Alaris System PC Unit Model 8015 - a modular infusion pump and monitoring system,Due to affected devices that may have bent female IUI connector and may not be operable and potentially cause delays in the start of the infusion or monitoring.,"Open, Classified",2024-08-15,2024-09-13,FRN,94937
+208848,"CareFusion 303, Inc.","Alaris PCA Module Model 8120, a modular infusion pump and monitoring system",Due to affected devices that may have bent female IUI connector and may not be operable and potentially cause delays in the start of the infusion or monitoring.,"Open, Classified",2024-08-15,2024-09-13,FRN,94937
+208849,"CareFusion 303, Inc.","Alaris EtCO2 Module Model 8300, a modular infusion pump and monitoring system",Due to affected devices that may have bent female IUI connector and may not be operable and potentially cause delays in the start of the infusion or monitoring.,"Open, Classified",2024-08-15,2024-09-13,FRN,94937
+208850,"CareFusion 303, Inc.","Alaris Syringe Module Model 8110, a modular infusion pump and monitoring system",Due to affected devices that may have bent female IUI connector and may not be operable and potentially cause delays in the start of the infusion or monitoring.,"Open, Classified",2024-08-15,2024-09-13,FRN,94937
+208851,"CareFusion 303, Inc.","Alaris Pump Module Model 8100, a modular infusion pump and monitoring system",Due to affected devices that may have bent female IUI connector and may not be operable and potentially cause delays in the start of the infusion or monitoring.,"Open, Classified",2024-08-15,2024-09-13,FRN,94937
+209801,"Fresenius Kabi USA, LLC","Ivenix Infusion System (IIS), LVP Software; LVP-SW-0004, Software Version 5.9.1 and prior.  Infusion pump software for infusion management system.","The software has anomalies that have the potential to cause alarms, nonfunctioning pump, or unresponsive screen while continuing therapy.  These could cause serious patient harm or death.","Open, Classified",2024-08-30,2024-09-26,FRN,95240
+221887,"ICU Medical, Inc.",IV Sets with drip chambers,Intravascular administration tubing set drip chambers may have black specks potentially due to the plastic molding process leaving discolored polyvinyl chloride (PVC) material within the drip chamber wall. The presence of discoloration and particulate matter in the fluid path has not been ruled out.,"Open, Classified",2026-05-12,2026-09-11,FRN,99058
